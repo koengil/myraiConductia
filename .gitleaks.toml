@@ -1,0 +1,85 @@
+# Secret scan config (the required "Secret scan" job in .github/workflows/ci.yml).
+#
+# Keep the default rules: without [extend] a custom config replaces them. The
+# job's self-test fails if the effective config stops detecting them.
+#
+# Pull requests are scanned with the base branch's copy of this file, so a new
+# allowlist entry takes effect only after it merges. Land an allowlist change
+# in its own small pull request, then the fixture that needs it.
+#
+# Each entry allowlists one reviewed synthetic value, not a file: the path,
+# the rule and the exact value must all match (condition = "AND"), so a new
+# credential in the same file is still a finding. Write every path as
+# '''(^|/)<path>$''' with only "." escaped: the job's self-test reads them to
+# seed a new credential into each allowlisted path. Never allowlist a real
+# credential: rotate it instead.
+
+title = "Conductia gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Scrubber inputs: the cassette scrubber test feeds it fake paging tokens, a fake JWT and a PEM header to prove they are removed."
+condition = "AND"
+targetRules = ["generic-api-key", "jwt", "private-key"]
+paths = ['''(^|/)tests/graph/cassette-scrub\.test\.ts$''']
+regexes = [
+  '''^AbCdEf0123456789$''',
+  '''^eyJhbGciOiJSUzI1NiJ9\.eyJhdWQiOiJmYWtlIn0\.c2lnbmF0dXJlLWJ5dGVz$''',
+  '''^-----BEGIN PRIVATE KEY-----"\}' \}\), \['key-material'\]\],\n''',
+]
+
+[[allowlists]]
+description = "Canaries for the Supabase secret-key shape check, assembled from parts at run time, not real keys."
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)tests/supabase/secret-key-shape\.test\.ts$''',
+  '''(^|/)tests/discovery/worker-env\.test\.ts$''',
+]
+regexes = ['''^canary0123456789$''']
+
+[[allowlists]]
+description = "Placeholder token string in the team-mailbox probe test, not a credential."
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)tests/google/probe-team-mailbox\.test\.ts$''']
+regexes = ['''^ya29\.DWD-SECRET$''']
+
+[[allowlists]]
+description = "RFC 6238 public test vector for the TOTP helper, published in the RFC."
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)tests/e2e-totp\.test\.ts$''',
+  '''(^|/)docs/superpowers/plans/2026-08-27-invite-onboarding-e2e\.md$''',
+]
+regexes = ['''^GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ$''']
+
+[[allowlists]]
+description = "Hex message keys in the tenant purge tests, identifiers rather than credentials."
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)tests/discovery/purge-tenant\.test\.ts$''',
+  '''(^|/)supabase/tests/discovery_purge\.sql$''',
+]
+regexes = [
+  '''^1604d28ce6c9c71520c827b85e9af7f6f7b93fb7dd7c6dc007f9569a857d86c0$''',
+  '''^4d9cdc623861466ff4e82fbe2f20592e649cfd40d56ca0d55d4d7e6375dc8cb4$''',
+]
+
+[[allowlists]]
+description = "Prose false positive in a recorded agent review transcript."
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/agent-duo/runs/smart-onboarding/reviewer\.txt$''']
+regexes = ['''^responsive/a11y$''']
+
+[[allowlists]]
+description = "Forged alg:none probe token in the agent-seam rollout runbook, rejected by design and never valid."
+condition = "AND"
+targetRules = ["curl-auth-header"]
+paths = ['''(^|/)docs/04-operations/agent-seam-edge-and-rollout\.md$''']
+regexes = ['''^eyJhbGciOiJub25lIn0\.eyJhZ2VudE5hbWUiOiJwcm9iZSIsImRlYWxJZCI6InByb2JlIn0\.local-dev$''']

@@ -1,0 +1,21 @@
+{
+  "name": "@conductia/eval-deal-discovery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deal-discovery eval harness: scores a discovery:export against an answer key held outside the repository.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p . && node dist/src/buildStamp.js",
+    "score": "npm run --silent build && node dist/src/cli.js score",
+    "check-key": "npm run --silent build && node dist/src/cli.js check-key",
+    "convert": "npm run --silent build && node dist/src/cli.js convert",
+    "test": "npm run --silent build && node --test \"dist/test/*.test.js\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "typescript": "~5.9.3"
+  }
+}

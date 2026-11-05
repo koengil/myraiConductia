@@ -1,0 +1,8 @@
+{
+  "_source": "gh api repos/Conductia/Conductia/git/ref/heads/main (GET, 2026-10-21); URLs and node id stripped",
+  "ref": "refs/heads/main",
+  "object": {
+    "sha": "39c7d05a6d25e8661d72fa0405e2b0029fa2689c",
+    "type": "commit"
+  }
+}

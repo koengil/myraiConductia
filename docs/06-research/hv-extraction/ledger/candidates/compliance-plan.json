@@ -1,0 +1,26 @@
+{
+ "source": "compliance-build-plan-v2",
+ "steps": [],
+ "horizontalApps": [
+  {"name": "Inference Audit Log", "buildOwner": "futureproofing-os", "what": "Append-only store, one record per LLM inference (record_id, user, deal, model+version, params, prompt hashes, verbatim prompt/output, rag context, hash chain); export JSON/CSV by date/deal/user; tamper-evident", "priorityBuild": true, "sourceRef": "compliance-plan Phase 1 + Inference Record Schema"},
+  {"name": "Access Control & Information Barriers", "buildOwner": "futureproofing-os", "what": "Deal-scoped RBAC (need-to-know), SSO (SAML/OIDC) + SCIM; wall-crossing = logged, approver-gated event", "priorityBuild": true, "sourceRef": "compliance-plan Phase 1"},
+  {"name": "Egress Control", "buildOwner": "futureproofing-os", "what": "MVP blocks external send/share entirely; copy/download events logged with content hash", "priorityBuild": true, "sourceRef": "compliance-plan Phase 1"},
+  {"name": "Supervision / Approval Workflow", "buildOwner": "futureproofing-os", "what": "Principal review: draft → reviewer → approved states for client-facing outputs; attestation (who/when/what version) to audit log; no export without approval record", "priorityBuild": false, "sourceRef": "compliance-plan Phase 2"},
+  {"name": "Lineage & Reproducibility", "buildOwner": "futureproofing-os", "what": "Every generated claim links to doc/page/chunk; replay any historical inference with pinned model version", "priorityBuild": false, "sourceRef": "compliance-plan Phase 3"},
+  {"name": "Agentic Guardrails", "buildOwner": "futureproofing-os", "what": "Action allowlist per client; human approval gate on externally-visible actions; global + per-deal kill switch (halts ≤5s); autonomous actions as first-class audit events", "priorityBuild": false, "sourceRef": "compliance-plan Phase 3"},
+  {"name": "Compliance Console", "buildOwner": "futureproofing-os", "what": "CCO-facing dashboard: exception reports, access reviews, wall-crossing history, approval backlog", "priorityBuild": false, "sourceRef": "compliance-plan Phase 3"}
+ ],
+ "complianceNotes": [
+  "Enable, don't be, the system of record — exportable, immutable, complete records that plug into the bank's retention/surveillance rails (SEC 17a-4, FINRA)",
+  "Procurement gates before regulators: SOC 2 Type II evidence collection starts at MVP; zero-retention LLM terms; DDQ pack",
+  "Defined log schema over state capture: audit defensibility = finite, versioned inference record",
+  "MVP scope-out: no external send, no email/chat integration, no public share links (kills off-channel problem); archive integrations (Smarsh, Global Relay) in Phase 2",
+  "Phase 2: 17a-4-compatible export (WORM pass-through or 2022-amendment audit-trail method); VPC + CMEK deployment; model change management (versioned prompts, regression evals, SR 11-7 lens)",
+  "Phase 4: ISO 42001, on-prem/air-gapped option, full DORA if EU"
+ ],
+ "conflicts": [],
+ "notes": [
+  "Open decisions (sprint-1 blockers): target tier for Phase 2 pilots (boutique/MM vs bulge affects VPC-in-MVP); EU in 24-month plan (DORA timing); archiving posture (pass-through recommended vs hosted WORM); LLM provider redundancy (single zero-retention vs dual-provider)",
+  "App-surface implication: supervision workflow states (draft→reviewer→approved) and per-step attestation should be visible in the rails UI; egress posture means 'send' affordances are queue-to-approval, not direct send"
+ ]
+}

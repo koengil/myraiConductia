@@ -1,0 +1,21 @@
+{
+  "_source": "gh api repos/Conductia/Conductia/actions/runs/39649323445 (GET, 2026-10-21): a pull_request CI run re-run as attempt 2. Actors, commit message and URLs stripped. A re-run keeps the run's created_at; updated_at moves",
+  "id": 39649323445,
+  "name": "CI",
+  "path": ".github/workflows/ci.yml",
+  "event": "pull_request",
+  "head_branch": "feat/639-a-deploy-routing",
+  "head_sha": "cf88365d84f30dd9f82e854cfed138201827fe3f",
+  "status": "completed",
+  "conclusion": "success",
+  "run_attempt": 2,
+  "created_at": "2026-10-21T18:03:46Z",
+  "run_started_at": "2026-10-21T18:12:16Z",
+  "updated_at": "2026-10-21T18:19:13Z",
+  "head_repository": {
+    "full_name": "Conductia/Conductia"
+  },
+  "repository": {
+    "full_name": "Conductia/Conductia"
+  }
+}

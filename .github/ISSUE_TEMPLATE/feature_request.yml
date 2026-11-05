@@ -1,0 +1,59 @@
+name: Feature / product change
+description: New capability or change to MD-facing behavior
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Conductia surfaces **decisions for the bank MD**, not data dumps. Note compliance, seam (`ConductiaAPI`), and deterministic scoring if relevant.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What decision does the MD need to make, and what is missing today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: User-visible outcome; keep copy decisive (no em-dashes in UI copy).
+    validations:
+      required: true
+
+  - type: dropdown
+    id: destination
+    attributes:
+      label: Primary destination
+      options:
+        - Mandate
+        - Acquirers
+        - Deep-dive (acquirer workspace)
+        - Team
+        - Skills
+        - Shell / rail / command console
+        - Cross-cutting / platform
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Engineering touchpoints
+      options:
+        - label: Typed API seam (`src/lib/api/`)
+        - label: Compliance ribbon / three-state verdict
+        - label: Scoring (`src/lib/scoring/composite.ts`)
+        - label: Session / mandate gating
+        - label: ADR or docs update expected
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: Bullet list of testable outcomes
+    validations:
+      required: false

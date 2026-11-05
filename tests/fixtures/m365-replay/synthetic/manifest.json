@@ -1,0 +1,27 @@
+{
+  "format": "conductia.graph-cassette/v1",
+  "recordedAt": "2026-09-29T00:00:00.000Z",
+  "sources": [
+    {
+      "kind": "mailbox",
+      "address": "alex.chen@bank.example"
+    },
+    {
+      "kind": "sharepoint_site",
+      "address": "bank.sharepoint.com:/sites/Deals"
+    },
+    {
+      "kind": "mailbox",
+      "address": "morgan.vale@bank.example"
+    },
+    {
+      "kind": "mailbox",
+      "address": "storm.duncan@bank.example"
+    }
+  ],
+  "interactions": 50,
+  "bodies": {
+    "607fb888c4b0f8a444849a323da6c36dcd5a16e2ef54f7eec7f51b67b2ff3ca1": 605,
+    "64b8d345e0b2f4b7e619ed31e2e62013cf36ab5c1cdbcce35e8a030e687e91f7": 16
+  }
+}

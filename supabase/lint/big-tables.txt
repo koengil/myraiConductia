@@ -1,0 +1,21 @@
+# Tables a full-scan lock must not hit: the append-only ledgers and the
+# per-message tables a mailbox backfill fills. Read by scripts/check-migration-lint.ts
+# (heavy-lock rule). One table per line; # starts a comment.
+
+# Append-only ledgers
+audit_log
+ai_usage
+model_calls
+routing_ledger
+milestone_events
+stage_assessments
+notifications
+
+# Per-message tables
+source_items
+source_item_texts
+source_item_sources
+evidence_links
+discovery_message_index
+inbound_messages
+outbound_messages

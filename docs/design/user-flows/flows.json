@@ -1,0 +1,6422 @@
+{
+ "meta": {
+  "wordmark": "Conductia",
+  "title": "USER FLOWS · MD, DEAL TEAM, CCO, ADMIN, OUTSIDE PARTIES",
+  "prepared": "Prepared for the 2026-10-22 walkthrough",
+  "updated": "Updated Oct 22, 2026",
+  "round": "As-is (develop cb6e5170)",
+  "source": "context/journeys.md, read from the code at develop cb6e5170"
+ },
+ "groups": [
+  {
+   "id": "J01",
+   "title": "Sign-in, two-factor and sign-out",
+   "persona": "Any user: MD, deal team, CCO, admin, outside party",
+   "entry": "Any signed-in-only URL",
+   "exit": "The original destination, or /projects",
+   "flags": [
+    "work_identity_onboarding"
+   ],
+   "specs": [
+    "e2e/journeys/route-guards.spec.ts",
+    "e2e/steps/assertSignedOutRouteGuards.ts",
+    "e2e/steps/signOutFromShell.ts"
+   ],
+   "links": "J04 home; J09 and J10 for invitees",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J01-01",
+     "type": "term",
+     "label": "Open any signed-in page",
+     "key": "J01:e"
+    },
+    {
+     "id": "J01-02",
+     "type": "system",
+     "label": "Redirect to \"/sign-in?redirectTo=%2Fprojects\" (no session)",
+     "notes": "src/middleware.ts sees no session.",
+     "key": "J01:mw"
+    },
+    {
+     "id": "J01-anchor1",
+     "type": "anchor",
+     "label": "Sign-in page",
+     "at": "J01-03",
+     "anchorKey": "signin",
+     "key": "J01:A"
+    },
+    {
+     "id": "J01-03",
+     "type": "page",
+     "label": "Show \"/sign-in\": \"Sign in to your deals.\"",
+     "notes": "src/app/sign-in/page.client.tsx",
+     "key": "J01:sp"
+    },
+    {
+     "id": "J01-hub1",
+     "type": "hub",
+     "label": "Sign-in page",
+     "key": "J01:h"
+    },
+    {
+     "id": "J01-04",
+     "type": "decision",
+     "label": "Sign in with a work account?",
+     "notes": "The work-account buttons only show with work_identity_onboarding on.",
+     "flags": [
+      "work_identity_onboarding"
+     ],
+     "key": "J01:dWork"
+    },
+    {
+     "id": "J01-05",
+     "type": "action",
+     "label": "Fill \"Email\" and \"Password\", click \"Sign in\"",
+     "notes": "Calls supabase.auth.signInWithPassword.",
+     "key": "J01:aPw"
+    },
+    {
+     "id": "J01-06",
+     "type": "decision",
+     "label": "Sign-in failed?",
+     "key": "J01:dFail"
+    },
+    {
+     "id": "J01-07",
+     "type": "system",
+     "label": "Show the inline error (role=alert)",
+     "key": "J01:sErr"
+    },
+    {
+     "id": "J01-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J01-hub1",
+     "key": "J01:r1"
+    },
+    {
+     "id": "J01-08",
+     "type": "action",
+     "label": "Click \"Continue with Google Workspace\" or \"Continue with Microsoft\"",
+     "notes": "Goes to /auth/work/signin?provider=…",
+     "flags": [
+      "work_identity_onboarding"
+     ],
+     "key": "J01:aWork"
+    },
+    {
+     "id": "J01-09",
+     "type": "system",
+     "label": "Return from the provider to \"/auth/work/callback\"",
+     "key": "J01:sCb"
+    },
+    {
+     "id": "J01-10",
+     "type": "decision",
+     "label": "Known, connected, active identity?",
+     "key": "J01:dBound"
+    },
+    {
+     "id": "J01-11",
+     "type": "system",
+     "label": "Show the alert on \"/sign-in\" (work_identity_not_connected, or suspended)",
+     "key": "J01:sNo"
+    },
+    {
+     "id": "J01-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J01-hub1",
+     "key": "J01:r2"
+    },
+    {
+     "id": "J01-12",
+     "type": "decision",
+     "label": "Two-factor needed and session below aal2?",
+     "notes": "isMfaRequiredForUser (src/lib/auth/mfaPolicy.ts): always for work-identity users; in invite_only mode only for accounts created from an invite; otherwise required unless the dev bypass is set.",
+     "key": "J01:dMfa"
+    },
+    {
+     "id": "J01-13",
+     "type": "sub",
+     "label": "TOTP ENROLMENT SUB-FLOW",
+     "sub": "S1",
+     "key": "J01:sub"
+    },
+    {
+     "id": "J01-14",
+     "type": "system",
+     "label": "Redirect to the original destination",
+     "key": "J01:sDest"
+    },
+    {
+     "id": "J01-15",
+     "type": "term",
+     "label": "Land on \"/projects\"",
+     "key": "J01:x"
+    },
+    {
+     "id": "J01-jump1",
+     "type": "jump",
+     "label": "Conductor Center",
+     "to": "home",
+     "key": "J01:jHome"
+    },
+    {
+     "id": "J01-16",
+     "type": "term",
+     "label": "Signed in, anywhere in the shell",
+     "key": "J01:e2"
+    },
+    {
+     "id": "J01-17",
+     "type": "action",
+     "label": "Click \"…open profile menu\", then \"Sign out\"",
+     "notes": "src/components/profile/ProfileMenu.tsx",
+     "key": "J01:aOut"
+    },
+    {
+     "id": "J01-18",
+     "type": "system",
+     "label": "Go to \"/sign-in\"; the old session is revoked (a replay against /api/v1/me returns 401)",
+     "key": "J01:sOut"
+    },
+    {
+     "id": "J01-jump2",
+     "type": "jump",
+     "label": "Sign-in page",
+     "to": "signin",
+     "key": "J01:jSign"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J01-01",
+     "to": "J01-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-02",
+     "to": "J01-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-03",
+     "to": "J01-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-hub1",
+     "to": "J01-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-04",
+     "to": "J01-08",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J01-04",
+     "to": "J01-05",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J01-05",
+     "to": "J01-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-06",
+     "to": "J01-07",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J01-07",
+     "to": "J01-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-06",
+     "to": "J01-12",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J01-08",
+     "to": "J01-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-09",
+     "to": "J01-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-10",
+     "to": "J01-11",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J01-11",
+     "to": "J01-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-10",
+     "to": "J01-12",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J01-12",
+     "to": "J01-13",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J01-12",
+     "to": "J01-14",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J01-13",
+     "to": "J01-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-14",
+     "to": "J01-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-15",
+     "to": "J01-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J01-16",
+     "to": "J01-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-17",
+     "to": "J01-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J01-18",
+     "to": "J01-jump2",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J02",
+   "title": "First run: mailbox connect, Discovery, promote to deal",
+   "persona": "MD (Storm); firm admin (team inboxes, ingestion health); CCO (health and every candidate)",
+   "entry": "/projects banner, or the \"Discovery\" nav item",
+   "exit": "/projects/{code}/rail?new=1",
+   "flags": [
+    "deal_discovery",
+    "discovery_worker_enabled",
+    "discovery_model_proposals_demo"
+   ],
+   "specs": [
+    "e2e/journeys/discovery-demo.spec.ts",
+    "e2e/journeys/discovery-list.spec.ts",
+    "e2e/journeys/team-inbox-demo.spec.ts"
+   ],
+   "links": "J05 rail; J03 the lighter Gate 0 variant; J13 Deal Folder \"Deal email\" tab",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J02-01",
+     "type": "term",
+     "label": "Open \"/projects\" after first sign-in",
+     "key": "J02:e"
+    },
+    {
+     "id": "J02-02",
+     "type": "page",
+     "label": "Show \"/projects\" with the \"Connect your work email\" banner",
+     "notes": "src/components/discovery/ConnectGmailBanner.tsx",
+     "key": "J02:pHome"
+    },
+    {
+     "id": "J02-03",
+     "type": "decision",
+     "label": "Mailbox connected?",
+     "notes": "Eligible but not consented: \"Connect work email\". Admin refused Google delegation: \"See what to do\". Connected, or status unknown: no banner.",
+     "key": "J02:dBanner"
+    },
+    {
+     "id": "J02-04",
+     "type": "action",
+     "label": "Click \"Connect work email\" (to \"/profile#deal-discovery\")",
+     "key": "J02:aConnect"
+    },
+    {
+     "id": "J02-anchor1",
+     "type": "anchor",
+     "label": "Deal discovery card",
+     "at": "J02-05",
+     "anchorKey": "profileDiscovery",
+     "key": "J02:P"
+    },
+    {
+     "id": "J02-05",
+     "type": "page",
+     "label": "Show \"/profile\": Deal discovery card",
+     "notes": "src/app/(authed)/profile/MailboxConsentCard.tsx. Built for Google: Gmail consent, the Google admin grant and Gmail sync.",
+     "key": "J02:pProf"
+    },
+    {
+     "id": "J02-06",
+     "type": "action",
+     "label": "Tick \"I agree that Conductia reads my mailbox for deal discovery.\", click \"Connect my mailbox\"",
+     "key": "J02:aConsent"
+    },
+    {
+     "id": "J02-07",
+     "type": "data",
+     "label": "Record consent, connect the Google mailbox",
+     "route": "POST /api/v1/discovery/mailbox-consent, then /api/v1/discovery/google-mailbox",
+     "key": "J02:dConsent"
+    },
+    {
+     "id": "J02-08",
+     "type": "decision",
+     "label": "Reading switched on for the firm?",
+     "flags": [
+      "discovery_worker_enabled"
+     ],
+     "key": "J02:dWorker"
+    },
+    {
+     "id": "J02-09",
+     "type": "system",
+     "label": "Show \"Reading is switched off for your firm\"",
+     "key": "J02:sOff"
+    },
+    {
+     "id": "J02-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J02-hub3",
+     "key": "J02:r0"
+    },
+    {
+     "id": "J02-10",
+     "type": "system",
+     "label": "Show the status chip: \"Waiting to be added to the group\", \"Access not granted\", \"First sync running\" or \"Up to date\"",
+     "key": "J02:sChip"
+    },
+    {
+     "id": "J02-11",
+     "type": "action",
+     "label": "Click \"Discovery\" in the nav",
+     "key": "J02:aNav"
+    },
+    {
+     "id": "J02-12",
+     "type": "page",
+     "label": "Show \"/discovery\": \"Proposed deals\", \"Deals found in your own mail…\"",
+     "notes": "src/app/(authed)/discovery/page.tsx, CandidateList.tsx",
+     "flags": [
+      "deal_discovery"
+     ],
+     "key": "J02:pDisc"
+    },
+    {
+     "id": "J02-hub1",
+     "type": "hub",
+     "label": "Proposed deals",
+     "key": "J02:hD"
+    },
+    {
+     "id": "J02-13",
+     "type": "action",
+     "label": "Admin: \"Connect team inbox\", then \"Add\" (\"Checking the address\" to \"Ready\")",
+     "notes": "TeamInboxes.tsx and IngestionHealth.tsx. The firm's admins and the CCO get a notification.",
+     "key": "J02:aAdmin"
+    },
+    {
+     "id": "J02-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J02-hub1",
+     "key": "J02:rA"
+    },
+    {
+     "id": "J02-14",
+     "type": "decision",
+     "label": "Your own mail is evidence for a deal?",
+     "key": "J02:dEmpty"
+    },
+    {
+     "id": "J02-15",
+     "type": "system",
+     "label": "Show \"No proposed deals. A deal appears here once your own mail is evidence for it.\"",
+     "key": "J02:sEmpty"
+    },
+    {
+     "id": "J02-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J02-hub1",
+     "key": "J02:rB"
+    },
+    {
+     "id": "J02-16",
+     "type": "note",
+     "label": "Banker: only candidates their own mail supports. CCO: every candidate plus \"Ingestion health\". Admin: health only. Outside party: DiscoveryUnavailable.",
+     "title": "Who sees what",
+     "key": "J02:nView"
+    },
+    {
+     "id": "J02-17",
+     "type": "action",
+     "label": "Open a candidate at \"/discovery/[candidateId]\"",
+     "key": "J02:aOpen"
+    },
+    {
+     "id": "J02-18",
+     "type": "page",
+     "label": "Show the candidate: \"Suggested station\", \"Milestones\", \"Evidence\", \"Decision history\"",
+     "notes": "Evidence: your own mail as an excerpt, a colleague's mail as \"metadata only\".",
+     "key": "J02:pCand"
+    },
+    {
+     "id": "J02-hub2",
+     "type": "hub",
+     "label": "Candidate",
+     "key": "J02:hC"
+    },
+    {
+     "id": "J02-19",
+     "type": "action",
+     "label": "\"Rename\", \"Set station\", \"Merge into…\", \"Split…\", \"Move an email…\" or \"Reject\", each with a reason",
+     "notes": "src/components/discovery/CandidateActions.tsx. Corrections survive a full re-run of discovery.",
+     "key": "J02:aFix"
+    },
+    {
+     "id": "J02-20",
+     "type": "data",
+     "label": "Save the correction (discovery.correction audit row)",
+     "route": "POST /api/v1/discovery/candidates/{id}/{rename|station|merge|split|reassign|reject}",
+     "key": "J02:dFix"
+    },
+    {
+     "id": "J02-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J02-hub2",
+     "key": "J02:rC"
+    },
+    {
+     "id": "J02-21",
+     "type": "action",
+     "label": "Click \"Promote to mandate\" (\"Promote to mandate · Gate 0\")",
+     "notes": "PromoteDialog.tsx",
+     "key": "J02:aPromote"
+    },
+    {
+     "id": "J02-22",
+     "type": "action",
+     "label": "Fill \"Code name\", \"Target name\", \"Entry station\", \"Conflicts approved by\", \"Approved on\"; click \"Open mandate\"",
+     "key": "J02:aFill"
+    },
+    {
+     "id": "J02-23",
+     "type": "data",
+     "label": "Open the deal (discovery.candidate_promoted audit row)",
+     "route": "POST /api/v1/deals/from-discovery",
+     "key": "J02:dPromote"
+    },
+    {
+     "id": "J02-24",
+     "type": "system",
+     "label": "Redirect to \"/projects/{code}/rail?new=1\": \"Mandate opened from discovery · MNPI screen: Compliant\"",
+     "key": "J02:sDone"
+    },
+    {
+     "id": "J02-jump1",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J02:jRail"
+    },
+    {
+     "id": "J02-hub3",
+     "type": "hub",
+     "label": "Deal discovery card",
+     "key": "J02:hP"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J02-01",
+     "to": "J02-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-02",
+     "to": "J02-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-03",
+     "to": "J02-04",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J02-03",
+     "to": "J02-11",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J02-04",
+     "to": "J02-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-05",
+     "to": "J02-hub3",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-hub3",
+     "to": "J02-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-06",
+     "to": "J02-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-07",
+     "to": "J02-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-08",
+     "to": "J02-09",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J02-09",
+     "to": "J02-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-08",
+     "to": "J02-10",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J02-10",
+     "to": "J02-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-11",
+     "to": "J02-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-12",
+     "to": "J02-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-hub1",
+     "to": "J02-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-13",
+     "to": "J02-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-hub1",
+     "to": "J02-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-14",
+     "to": "J02-15",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J02-15",
+     "to": "J02-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-14",
+     "to": "J02-17",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J02-14",
+     "to": "J02-16",
+     "kind": "ref"
+    },
+    {
+     "from": "J02-17",
+     "to": "J02-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-18",
+     "to": "J02-hub2",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-hub2",
+     "to": "J02-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-19",
+     "to": "J02-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-20",
+     "to": "J02-ret4",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-hub2",
+     "to": "J02-21",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-21",
+     "to": "J02-22",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-22",
+     "to": "J02-23",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-23",
+     "to": "J02-24",
+     "kind": "flow"
+    },
+    {
+     "from": "J02-24",
+     "to": "J02-jump1",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J03",
+   "title": "New mandate (Gate 0 wizard)",
+   "persona": "MD. Shown only when showNewDealNav allows: admin or CCO firm role, company permission deals.create, or bank-side",
+   "entry": "Deal switcher \"Switch deal\" / \"Select a deal\", then \"New deal\"",
+   "exit": "/projects/{code}/rail?new=1",
+   "flags": [
+    "gate0_api_create",
+    "platform_onboarding",
+    "rail_templates",
+    "project_rail_model"
+   ],
+   "specs": [
+    "e2e/steps/gate0.ts",
+    "e2e/steps/createDeal.ts",
+    "e2e/steps/createDealWithColleagueInvite.ts",
+    "e2e/journeys/rail-templates.spec.ts"
+   ],
+   "links": "J15 (a lead must exist first); J05; J08 (outside parties are invited from Team, not here); J07",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J03-01",
+     "type": "term",
+     "label": "Click \"Switch deal\" or \"Select a deal\", then \"New deal\"",
+     "key": "J03:e"
+    },
+    {
+     "id": "J03-anchor1",
+     "type": "anchor",
+     "label": "New mandate dialog",
+     "at": "J03-02",
+     "anchorKey": "gate0",
+     "key": "J03:G"
+    },
+    {
+     "id": "J03-02",
+     "type": "page",
+     "label": "Show the \"New mandate\" dialog: \"Gate 0 · n of 5 · {action}\"",
+     "notes": "src/components/wizard/Gate0Wizard.tsx, NewMandateDialog.tsx",
+     "key": "J03:pDlg"
+    },
+    {
+     "id": "J03-hub1",
+     "type": "hub",
+     "label": "New mandate dialog",
+     "key": "J03:h"
+    },
+    {
+     "id": "J03-03",
+     "type": "action",
+     "label": "Step 1 \"Create the code name\": \"Search a registered lead…\", pick from \"Matching companies\"",
+     "key": "J03:a1"
+    },
+    {
+     "id": "J03-04",
+     "type": "system",
+     "label": "Suggest a code name (\"Regenerate\", or overwrite \"Code name\")",
+     "route": "POST /api/v1/codenames/suggest",
+     "key": "J03:s1"
+    },
+    {
+     "id": "J03-05",
+     "type": "decision",
+     "label": "Template choice switched on?",
+     "notes": "All three flags must be on. The default is the standard rail.",
+     "flags": [
+      "rail_templates",
+      "project_rail_model",
+      "gate0_api_create"
+     ],
+     "key": "J03:dT"
+    },
+    {
+     "id": "J03-06",
+     "type": "action",
+     "label": "Pick from \"Rail\" (preview: \"Saved rail steps\")",
+     "key": "J03:aRail"
+    },
+    {
+     "id": "J03-07",
+     "type": "action",
+     "label": "Step 2 \"Record the conflicts approval\": \"Approved by\", tick \"Confirm the conflicts approval\"",
+     "key": "J03:a2"
+    },
+    {
+     "id": "J03-08",
+     "type": "action",
+     "label": "Step 3 \"Assign the team\": tick colleagues, set \"Deal role for X\"",
+     "key": "J03:a3"
+    },
+    {
+     "id": "J03-09",
+     "type": "decision",
+     "label": "Invite someone by email?",
+     "notes": "Type into \"colleague@bank.com\", then \"Check and add invitation\". A verified domain adds a chip to \"Queued invitations\"; otherwise \"Confirm and add\".",
+     "key": "J03:dInv"
+    },
+    {
+     "id": "J03-10",
+     "type": "sub",
+     "label": "INVITE PREFLIGHT SUB-FLOW",
+     "flags": [
+      "platform_onboarding",
+      "gate0_api_create"
+     ],
+     "sub": "S4",
+     "key": "J03:subInv"
+    },
+    {
+     "id": "J03-11",
+     "type": "action",
+     "label": "Step 4 \"Notify Compliance\": review \"Will notify on create\"",
+     "key": "J03:a4"
+    },
+    {
+     "id": "J03-12",
+     "type": "decision",
+     "label": "Anyone set to receive the notice?",
+     "notes": "A failed recipient lookup shows \"Retry\".",
+     "key": "J03:d4"
+    },
+    {
+     "id": "J03-13",
+     "type": "system",
+     "label": "Hold creation: \"Assign Receive new-mandate notices on Roles, or seat a bank director\"",
+     "key": "J03:s4"
+    },
+    {
+     "id": "J03-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J03-hub1",
+     "key": "J03:r1"
+    },
+    {
+     "id": "J03-14",
+     "type": "action",
+     "label": "Step 5 \"Confirm the lifecycle entry point\": \"Entry station\" (default 04 · Relationship Pathing)",
+     "key": "J03:a5"
+    },
+    {
+     "id": "J03-15",
+     "type": "action",
+     "label": "Click \"Create the mandate\"",
+     "key": "J03:a6"
+    },
+    {
+     "id": "J03-16",
+     "type": "decision",
+     "label": "Live create switched on?",
+     "flags": [
+      "gate0_api_create"
+     ],
+     "key": "J03:dApi"
+    },
+    {
+     "id": "J03-17",
+     "type": "system",
+     "label": "Save the deal in this browser only; the ribbon goes to clear",
+     "key": "J03:sFix"
+    },
+    {
+     "id": "J03-18",
+     "type": "data",
+     "label": "Create the deal, parties, memberships, notices and the create audit row",
+     "route": "POST /api/v1/deals (create_deal_gate0)",
+     "key": "J03:dCreate"
+    },
+    {
+     "id": "J03-19",
+     "type": "system",
+     "label": "Run the MNPI screen over the Gate 0 notice text: compliant, hold or blocked",
+     "notes": "No rejection branch found: the deal is created whatever the verdict (inferred). Only the MNPI screen runs at Gate 0.",
+     "key": "J03:sMnpi"
+    },
+    {
+     "id": "J03-20",
+     "type": "data",
+     "label": "Send the queued invites",
+     "route": "POST /api/v1/invites",
+     "key": "J03:dInvites"
+    },
+    {
+     "id": "J03-21",
+     "type": "decision",
+     "label": "Template create failed or interrupted?",
+     "key": "J03:dFail"
+    },
+    {
+     "id": "J03-22",
+     "type": "system",
+     "label": "Show \"Abandon and start over\", or a retry (idempotent through requestId)",
+     "key": "J03:sRetry"
+    },
+    {
+     "id": "J03-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J03-hub1",
+     "key": "J03:r2"
+    },
+    {
+     "id": "J03-23",
+     "type": "system",
+     "label": "Redirect to \"/rail?new=1\"; \"Mandate opened\": \"MNPI screen: Compliant / Held for review / Blocked\", \"N compliance recipients notified\", \"Dismiss\"",
+     "notes": "Gate0ReceiptBanner shows once.",
+     "key": "J03:sRcpt"
+    },
+    {
+     "id": "J03-24",
+     "type": "system",
+     "label": "The CCO's bell gets \"New mandate opened\"",
+     "key": "J03:sBell"
+    },
+    {
+     "id": "J03-jump1",
+     "type": "jump",
+     "label": "Notifications",
+     "to": "bell",
+     "key": "J03:jBell"
+    },
+    {
+     "id": "J03-jump2",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J03:jRail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J03-01",
+     "to": "J03-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-02",
+     "to": "J03-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-hub1",
+     "to": "J03-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-03",
+     "to": "J03-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-04",
+     "to": "J03-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-05",
+     "to": "J03-06",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J03-05",
+     "to": "J03-07",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J03-06",
+     "to": "J03-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-07",
+     "to": "J03-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-08",
+     "to": "J03-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-09",
+     "to": "J03-10",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J03-09",
+     "to": "J03-11",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J03-10",
+     "to": "J03-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-11",
+     "to": "J03-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-12",
+     "to": "J03-13",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J03-13",
+     "to": "J03-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-12",
+     "to": "J03-14",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J03-14",
+     "to": "J03-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-15",
+     "to": "J03-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-16",
+     "to": "J03-17",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J03-16",
+     "to": "J03-18",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J03-18",
+     "to": "J03-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-19",
+     "to": "J03-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-20",
+     "to": "J03-21",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-21",
+     "to": "J03-22",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J03-22",
+     "to": "J03-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-21",
+     "to": "J03-23",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J03-17",
+     "to": "J03-23",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-23",
+     "to": "J03-jump2",
+     "kind": "backnav"
+    },
+    {
+     "from": "J03-23",
+     "to": "J03-24",
+     "kind": "flow"
+    },
+    {
+     "from": "J03-24",
+     "to": "J03-jump1",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J04",
+   "title": "Conductor Center: Console and Book",
+   "persona": "MD and bank-side users. Outside parties are diverted",
+   "entry": "/ or /projects",
+   "exit": "A deal's rail, a deal's book, or a notification target",
+   "flags": [
+    "book_view",
+    "platform_onboarding"
+   ],
+   "specs": [
+    "e2e/journeys/book.spec.ts",
+    "e2e/steps/openBookHome.ts",
+    "e2e/steps/assertInMotionNamesNextStep.ts",
+    "e2e/steps/closeDealInBook.ts"
+   ],
+   "links": "J05; J16 bell; J11 access requests; J03 via \"New deal\"",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J04-01",
+     "type": "term",
+     "label": "Open \"/\" or \"/projects\"",
+     "key": "J04:e"
+    },
+    {
+     "id": "J04-02",
+     "type": "decision",
+     "label": "Outside party?",
+     "notes": "src/app/(authed)/projects/page.tsx",
+     "flags": [
+      "platform_onboarding"
+     ],
+     "key": "J04:dExt"
+    },
+    {
+     "id": "J04-03",
+     "type": "system",
+     "label": "Company director: plain Command Center. One deal: redirect to \"/projects/{id}\". Several: \"Select a deal\". None: \"No deal access yet.\"",
+     "key": "J04:sExt"
+    },
+    {
+     "id": "J04-jump1",
+     "type": "jump",
+     "label": "Outside party deal home",
+     "to": "welcome",
+     "key": "J04:jWel"
+    },
+    {
+     "id": "J04-anchor1",
+     "type": "anchor",
+     "label": "Conductor Center",
+     "at": "J04-04",
+     "anchorKey": "home",
+     "key": "J04:H"
+    },
+    {
+     "id": "J04-04",
+     "type": "page",
+     "label": "Show BankHome",
+     "notes": "src/components/book/BankHome.tsx",
+     "key": "J04:pBank"
+    },
+    {
+     "id": "J04-05",
+     "type": "decision",
+     "label": "Book view switched on?",
+     "flags": [
+      "book_view"
+     ],
+     "key": "J04:dBook"
+    },
+    {
+     "id": "J04-06",
+     "type": "action",
+     "label": "Pick \"Home view\": \"Console\" or \"Book\" (remembered)",
+     "key": "J04:aView"
+    },
+    {
+     "id": "J04-07",
+     "type": "page",
+     "label": "Show Console: \"Conductor Center\", \"N need you now across M live deals\"",
+     "notes": "src/components/workspace/CommandCenter.tsx",
+     "key": "J04:pCon"
+    },
+    {
+     "id": "J04-hub1",
+     "type": "hub",
+     "label": "Console",
+     "key": "J04:hC"
+    },
+    {
+     "id": "J04-08",
+     "type": "system",
+     "label": "\"Needs you now\": unread notifications (\"Nothing is waiting on you.\" when empty)",
+     "key": "J04:sNeeds"
+    },
+    {
+     "id": "J04-09",
+     "type": "decision",
+     "label": "Row is an access request?",
+     "key": "J04:dAcc"
+    },
+    {
+     "id": "J04-10",
+     "type": "action",
+     "label": "Click \"Approve\" or \"Deny\"",
+     "notes": "AccessDecideButtons",
+     "key": "J04:aDecide"
+    },
+    {
+     "id": "J04-11",
+     "type": "data",
+     "label": "Decide the access request",
+     "route": "PATCH /api/v1/access-requests/{id}",
+     "key": "J04:dDecide"
+    },
+    {
+     "id": "J04-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J04-hub1",
+     "key": "J04:rC1"
+    },
+    {
+     "id": "J04-12",
+     "type": "term",
+     "label": "Open the row's target",
+     "key": "J04:xRow"
+    },
+    {
+     "id": "J04-13",
+     "type": "system",
+     "label": "\"In motion\": each deal's real cursor step",
+     "key": "J04:sMotion"
+    },
+    {
+     "id": "J04-14",
+     "type": "action",
+     "label": "Click \"Open {codename}: {step}\"",
+     "key": "J04:aMotion"
+    },
+    {
+     "id": "J04-jump2",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J04:jRail1"
+    },
+    {
+     "id": "J04-15",
+     "type": "system",
+     "label": "\"Live deals\" cards: codename, status, deal role, \"Entered at station NN of 61\"",
+     "key": "J04:sLive"
+    },
+    {
+     "id": "J04-16",
+     "type": "action",
+     "label": "Click a deal card",
+     "key": "J04:aCard"
+    },
+    {
+     "id": "J04-jump3",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J04:jRail2"
+    },
+    {
+     "id": "J04-17",
+     "type": "action",
+     "label": "Click \"Switch deal\", then \"New deal\"",
+     "key": "J04:aNew"
+    },
+    {
+     "id": "J04-jump4",
+     "type": "jump",
+     "label": "New mandate",
+     "to": "gate0",
+     "key": "J04:jG0"
+    },
+    {
+     "id": "J04-18",
+     "type": "page",
+     "label": "Show Book: \"Every deal in the book, conducted to the day.\"",
+     "notes": "BookHome.tsx. A \"Live deals\" table (Deal | Stage | Close | Status | Fee), then Pitches, Prospects…, Mandate hold, Terminated, Closed, Lost.",
+     "key": "J04:pBook"
+    },
+    {
+     "id": "J04-hub2",
+     "type": "hub",
+     "label": "Book",
+     "key": "J04:hB"
+    },
+    {
+     "id": "J04-19",
+     "type": "action",
+     "label": "Click a deal in the \"Live deals\" table",
+     "key": "J04:aDeal"
+    },
+    {
+     "id": "J04-20",
+     "type": "page",
+     "label": "Show \"/projects/{id}/book\"",
+     "notes": "src/components/book/BookDeal.tsx",
+     "key": "J04:pBD"
+    },
+    {
+     "id": "J04-21",
+     "type": "decision",
+     "label": "Can this member edit?",
+     "key": "J04:dEdit"
+    },
+    {
+     "id": "J04-22",
+     "type": "system",
+     "label": "Read-only: no Save buttons; the PATCH is refused",
+     "key": "J04:sRO"
+    },
+    {
+     "id": "J04-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J04-hub2",
+     "key": "J04:rB1"
+    },
+    {
+     "id": "J04-23",
+     "type": "action",
+     "label": "Set \"Target close date\", \"Fee in US dollars\", \"Schedule status\" or \"Lifecycle category\"; click its \"Save …\"",
+     "key": "J04:aSet"
+    },
+    {
+     "id": "J04-24",
+     "type": "data",
+     "label": "Save the field (update audit rows; closing changes lifecycle_category and status)",
+     "route": "PATCH /api/v1/deals/{id}",
+     "key": "J04:dSet"
+    },
+    {
+     "id": "J04-25",
+     "type": "system",
+     "label": "Show \"Saved.\"",
+     "key": "J04:sSaved"
+    },
+    {
+     "id": "J04-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J04-hub2",
+     "key": "J04:rB2"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J04-01",
+     "to": "J04-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-02",
+     "to": "J04-03",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J04-03",
+     "to": "J04-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J04-02",
+     "to": "J04-04",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J04-04",
+     "to": "J04-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-05",
+     "to": "J04-07",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J04-05",
+     "to": "J04-06",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J04-06",
+     "to": "J04-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-06",
+     "to": "J04-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-07",
+     "to": "J04-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-hub1",
+     "to": "J04-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-08",
+     "to": "J04-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-09",
+     "to": "J04-10",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J04-10",
+     "to": "J04-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-11",
+     "to": "J04-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-09",
+     "to": "J04-12",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J04-hub1",
+     "to": "J04-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-13",
+     "to": "J04-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-14",
+     "to": "J04-jump2",
+     "kind": "backnav"
+    },
+    {
+     "from": "J04-hub1",
+     "to": "J04-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-15",
+     "to": "J04-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-16",
+     "to": "J04-jump3",
+     "kind": "backnav"
+    },
+    {
+     "from": "J04-hub1",
+     "to": "J04-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-17",
+     "to": "J04-jump4",
+     "kind": "backnav"
+    },
+    {
+     "from": "J04-18",
+     "to": "J04-hub2",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-hub2",
+     "to": "J04-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-19",
+     "to": "J04-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-20",
+     "to": "J04-21",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-21",
+     "to": "J04-22",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J04-22",
+     "to": "J04-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-21",
+     "to": "J04-23",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J04-23",
+     "to": "J04-24",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-24",
+     "to": "J04-25",
+     "kind": "flow"
+    },
+    {
+     "from": "J04-25",
+     "to": "J04-ret3",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J05",
+   "title": "Working the rail",
+   "persona": "MD, deal team. Outside parties see the rail read-only (inferred)",
+   "entry": "/projects/{code}/rail (\"Full Array\"), \"?view=focus\", or a \"?step=\" deep link",
+   "exit": "The step is complete or skipped and the cursor moves on",
+   "flags": [
+    "project_rail_model",
+    "gate0_api_create",
+    "skill_output_revisions",
+    "skill_authoring",
+    "teaser_sandbox_runner"
+   ],
+   "specs": [
+    "e2e/journeys/step-completion.spec.ts",
+    "e2e/journeys/step-ownership.spec.ts",
+    "e2e/journeys/skill-run.spec.ts",
+    "e2e/journeys/skill-output-revisions.spec.ts",
+    "e2e/journeys/skill-enhancement.spec.ts",
+    "e2e/journeys/rail-model-verification.spec.ts",
+    "e2e/journeys/md-spine.spec.ts"
+   ],
+   "links": "J06; J07 template banner; J02 evidence marker; J13; every action shows in J14",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J05-01",
+     "type": "term",
+     "label": "Open \"/projects/{code}/rail\"",
+     "key": "J05:e"
+    },
+    {
+     "id": "J05-anchor1",
+     "type": "anchor",
+     "label": "Deal rail",
+     "at": "J05-02",
+     "anchorKey": "rail",
+     "key": "J05:R"
+    },
+    {
+     "id": "J05-02",
+     "type": "page",
+     "label": "Show DealRail: \"Full Array\" and \"Focus\" tabs",
+     "notes": "src/components/rail/DealRail.tsx. Banners can appear above it: Gate 0 receipt, evidence suggestion, template update.",
+     "key": "J05:pRail"
+    },
+    {
+     "id": "J05-hub1",
+     "type": "hub",
+     "label": "Deal rail",
+     "key": "J05:hR"
+    },
+    {
+     "id": "J05-03",
+     "type": "decision",
+     "label": "\"Evidence suggests Station NN · …\": move the rail?",
+     "notes": "EvidenceSuggestionMarker.tsx. No: \"Dismiss this suggestion\" with a reason (MD only).",
+     "flags": [
+      "deal_discovery"
+     ],
+     "key": "J05:dEv"
+    },
+    {
+     "id": "J05-04",
+     "type": "data",
+     "label": "\"Move rail to station NN\" (advance audit row)",
+     "route": "PATCH /api/v1/deals/{id}/progress",
+     "key": "J05:dMove"
+    },
+    {
+     "id": "J05-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub1",
+     "key": "J05:rR1"
+    },
+    {
+     "id": "J05-jump1",
+     "type": "jump",
+     "label": "\"Template updated\" banner",
+     "to": "templateReview",
+     "key": "J05:jTpl"
+    },
+    {
+     "id": "J05-05",
+     "type": "action",
+     "label": "Click a station card",
+     "key": "J05:aCard"
+    },
+    {
+     "id": "J05-06",
+     "type": "page",
+     "label": "Show Focus: \"Station NN of 61 · Phase P\", \"Previous station\" / \"Next station\"",
+     "notes": "StepFocus.tsx, StepContract.tsx",
+     "key": "J05:pFocus"
+    },
+    {
+     "id": "J05-hub2",
+     "type": "hub",
+     "label": "Step in Focus",
+     "key": "J05:hF"
+    },
+    {
+     "id": "J05-07",
+     "type": "decision",
+     "label": "Viewer owns the step?",
+     "key": "J05:dOwn"
+    },
+    {
+     "id": "J05-08",
+     "type": "system",
+     "label": "\"Assigned to {X}\"; \"Save progress\" and \"Mark step complete\" disabled (API: 403 \"Not permitted to edit step work\")",
+     "key": "J05:sNotOwn"
+    },
+    {
+     "id": "J05-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub2",
+     "key": "J05:rF1"
+    },
+    {
+     "id": "J05-09",
+     "type": "decision",
+     "label": "What kind of step?",
+     "notes": "Manual checklist (ManualStepPanel), relationship pathing (RelationshipPathingPanel), skill-backed (SkillStepRunner), handled off the platform, or ahead of the cursor.",
+     "key": "J05:dKind"
+    },
+    {
+     "id": "J05-10",
+     "type": "system",
+     "label": "Lock actions: \"Ahead of the cursor. Advance the rail to act on this step.\"",
+     "key": "J05:sAhead"
+    },
+    {
+     "id": "J05-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub2",
+     "key": "J05:rF2"
+    },
+    {
+     "id": "J05-11",
+     "type": "action",
+     "label": "Fill the \"Manual checklist\" fields, click \"Save progress\"",
+     "flags": [
+      "gate0_api_create"
+     ],
+     "key": "J05:aMan"
+    },
+    {
+     "id": "J05-12",
+     "type": "data",
+     "label": "Save step work (step_work)",
+     "route": "PATCH /api/v1/deals/{id}/steps/{stepId}",
+     "key": "J05:dSave"
+    },
+    {
+     "id": "J05-13",
+     "type": "action",
+     "label": "\"Add stakeholder\", \"Save stakeholder\", set \"Warm path\", click \"Approve paths\"",
+     "flags": [
+      "gate0_api_create"
+     ],
+     "key": "J05:aPath"
+    },
+    {
+     "id": "J05-14",
+     "type": "action",
+     "label": "Fill the declared fields and \"Additional instructions\", click \"Draft this step\"",
+     "notes": "Required fields block the run, e.g. \"As of is required.\". teaser_sandbox_runner drives station seq 36.",
+     "route": "POST /api/v1/deals/{id}/steps/{stepId}/skill-runs/stream",
+     "key": "J05:aSkill"
+    },
+    {
+     "id": "J05-15",
+     "type": "system",
+     "label": "Add the result to \"Run history\": \"Version 1 of 1\"; \"Mark complete\" stays a human action",
+     "notes": "\"Skill version\" select with \"Use on this step\", and \"Improve this skill\" (opens \"Enhance skill\", \"Publish and use on this step\").",
+     "key": "J05:sRun"
+    },
+    {
+     "id": "J05-16",
+     "type": "action",
+     "label": "Click \"Review output\": edit a passage or \"Add comment\", then \"Apply N edit(s)\"",
+     "notes": "Shows \"1 edit applied. Version 2 is recorded.\" \"Earlier version\" is read-only; \"Restore this version\" records a new version. Comments stay \"Pending\" without the skill service.",
+     "flags": [
+      "skill_output_revisions"
+     ],
+     "route": "POST /api/v1/deals/{id}/steps/{stepId}/skill-runs/{runId}/revisions",
+     "key": "J05:aRev"
+    },
+    {
+     "id": "J05-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub2",
+     "key": "J05:rF3"
+    },
+    {
+     "id": "J05-17",
+     "type": "action",
+     "label": "Click \"Mark step complete\" (or \"Mark complete\")",
+     "key": "J05:aDone"
+    },
+    {
+     "id": "J05-18",
+     "type": "decision",
+     "label": "Required fields filled?",
+     "notes": "No shows the inline alert from validateManualWork.",
+     "key": "J05:dReq"
+    },
+    {
+     "id": "J05-ret5",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub2",
+     "key": "J05:rF4"
+    },
+    {
+     "id": "J05-19",
+     "type": "data",
+     "label": "Complete the step and move the cursor (complete_step, advance)",
+     "route": "PATCH /api/v1/deals/{id}/steps/{stepId}",
+     "key": "J05:dDone"
+    },
+    {
+     "id": "J05-20",
+     "type": "system",
+     "label": "The cursor moves on; \"In motion\" on the Conductor Center updates; the Audit Trail records it",
+     "key": "J05:sAdv"
+    },
+    {
+     "id": "J05-ret6",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub1",
+     "key": "J05:rR2"
+    },
+    {
+     "id": "J05-21",
+     "type": "action",
+     "label": "Set \"Assigned to\" (owner gets \"Step assigned to you\")",
+     "route": "PATCH /api/v1/deals/{id}/steps/{stepId} (assign_step)",
+     "key": "J05:aAssign"
+    },
+    {
+     "id": "J05-ret7",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub2",
+     "key": "J05:rF5"
+    },
+    {
+     "id": "J05-22",
+     "type": "action",
+     "label": "File a document with the step's upload label",
+     "route": "POST /api/v1/deals/{id}/steps/{stepId}/dataroom/upload",
+     "key": "J05:aUp"
+    },
+    {
+     "id": "J05-jump2",
+     "type": "jump",
+     "label": "Deal Folder",
+     "to": "dealFolder",
+     "key": "J05:jFolder"
+    },
+    {
+     "id": "J05-23",
+     "type": "action",
+     "label": "Click \"Skip…\": \"Approved by\", \"Reason\", then \"Skip step\"",
+     "notes": "SkipModal.tsx. Writes the skipped status, the completion note and an advance audit row.",
+     "route": "POST /api/v1/deals/{id}/rail/steps/{stepId}/skip",
+     "key": "J05:aSkip"
+    },
+    {
+     "id": "J05-24",
+     "type": "action",
+     "label": "Click \"Remove\", then \"Remove step\" (to \"Removed steps\", with \"Restore\")",
+     "notes": "Disabled for required or completed steps, with a stated reason.",
+     "flags": [
+      "project_rail_model"
+     ],
+     "key": "J05:aRemove"
+    },
+    {
+     "id": "J05-ret8",
+     "type": "ret",
+     "label": "",
+     "hub": "J05-hub1",
+     "key": "J05:rR3"
+    },
+    {
+     "id": "J05-25",
+     "type": "action",
+     "label": "Click \"Add step\" (\"Full Array\" header only)",
+     "flags": [
+      "skill_authoring"
+     ],
+     "key": "J05:aAdd"
+    },
+    {
+     "id": "J05-jump3",
+     "type": "jump",
+     "label": "Skill builder",
+     "to": "skillBuilder",
+     "key": "J05:jSB"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J05-01",
+     "to": "J05-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-02",
+     "to": "J05-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub1",
+     "to": "J05-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-03",
+     "to": "J05-04",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J05-04",
+     "to": "J05-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-03",
+     "to": "J05-ret1",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J05-hub1",
+     "to": "J05-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J05-hub1",
+     "to": "J05-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-05",
+     "to": "J05-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-06",
+     "to": "J05-hub2",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub2",
+     "to": "J05-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-07",
+     "to": "J05-08",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J05-08",
+     "to": "J05-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-07",
+     "to": "J05-09",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J05-09",
+     "to": "J05-10",
+     "kind": "flow",
+     "label": "Ahead"
+    },
+    {
+     "from": "J05-10",
+     "to": "J05-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-09",
+     "to": "J05-11",
+     "kind": "flow",
+     "label": "Manual"
+    },
+    {
+     "from": "J05-11",
+     "to": "J05-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-12",
+     "to": "J05-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-09",
+     "to": "J05-13",
+     "kind": "flow",
+     "label": "Pathing"
+    },
+    {
+     "from": "J05-13",
+     "to": "J05-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-09",
+     "to": "J05-14",
+     "kind": "flow",
+     "label": "Skill"
+    },
+    {
+     "from": "J05-14",
+     "to": "J05-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-15",
+     "to": "J05-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-16",
+     "to": "J05-ret4",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-15",
+     "to": "J05-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-09",
+     "to": "J05-17",
+     "kind": "flow",
+     "label": "Off platform"
+    },
+    {
+     "from": "J05-17",
+     "to": "J05-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-18",
+     "to": "J05-ret5",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J05-18",
+     "to": "J05-19",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J05-19",
+     "to": "J05-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-20",
+     "to": "J05-ret6",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub2",
+     "to": "J05-21",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-21",
+     "to": "J05-ret7",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub2",
+     "to": "J05-22",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-22",
+     "to": "J05-jump2",
+     "kind": "backnav"
+    },
+    {
+     "from": "J05-hub2",
+     "to": "J05-23",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-23",
+     "to": "J05-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub1",
+     "to": "J05-24",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-24",
+     "to": "J05-ret8",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-hub1",
+     "to": "J05-25",
+     "kind": "flow"
+    },
+    {
+     "from": "J05-25",
+     "to": "J05-jump3",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J06",
+   "title": "Add a step with the Skill builder, save the rail as a template",
+   "persona": "MD who can edit structure (rail.canEditStructure). Members get no \"Add step\"",
+   "entry": "\"Add step\" in the Full Array header (never shown in Focus)",
+   "exit": "The new step is on the rail, or the rail is saved as a company template",
+   "flags": [
+    "skill_authoring",
+    "rail_templates",
+    "project_rail_model",
+    "gate0_api_create"
+   ],
+   "specs": [
+    "e2e/journeys/full-abc-live.spec.ts",
+    "e2e/journeys/skill-publication.spec.ts",
+    "e2e/journeys/rail-templates.spec.ts"
+   ],
+   "links": "J03 (the template appears in \"Rail\"); J07",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J06-01",
+     "type": "term",
+     "label": "Click \"Add step\"",
+     "flags": [
+      "skill_authoring"
+     ],
+     "key": "J06:e"
+    },
+    {
+     "id": "J06-anchor1",
+     "type": "anchor",
+     "label": "Skill builder",
+     "at": "J06-02",
+     "anchorKey": "skillBuilder",
+     "key": "J06:S"
+    },
+    {
+     "id": "J06-02",
+     "type": "page",
+     "label": "Show the \"Skill builder\" dialog",
+     "notes": "src/components/rail/SkillBuilderDialog.tsx",
+     "key": "J06:pSB"
+    },
+    {
+     "id": "J06-hub1",
+     "type": "hub",
+     "label": "Skill builder",
+     "key": "J06:h"
+    },
+    {
+     "id": "J06-03",
+     "type": "action",
+     "label": "Type into \"Message\" (\"Describe what this step should do.\"), click \"Send\"",
+     "key": "J06:aMsg"
+    },
+    {
+     "id": "J06-04",
+     "type": "data",
+     "label": "Save the draft and the message",
+     "route": "POST /api/v1/deals/{id}/skill-drafts and …/messages",
+     "key": "J06:dDraft"
+    },
+    {
+     "id": "J06-05",
+     "type": "system",
+     "label": "Show \"Generating…\"; the agent asks a question or proposes a candidate (\"Retry\" on failure)",
+     "key": "J06:sGen"
+    },
+    {
+     "id": "J06-06",
+     "type": "decision",
+     "label": "Candidate ready?",
+     "key": "J06:dReady"
+    },
+    {
+     "id": "J06-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J06-hub1",
+     "key": "J06:r1"
+    },
+    {
+     "id": "J06-07",
+     "type": "system",
+     "label": "Show \"Ready to save\" and \"Skill preview\"",
+     "key": "J06:sReady"
+    },
+    {
+     "id": "J06-08",
+     "type": "action",
+     "label": "Fill \"Step name\" and \"Position\" (start of phase, end of phase, or after a step); the draft shows \"Saved\"",
+     "key": "J06:aName"
+    },
+    {
+     "id": "J06-09",
+     "type": "action",
+     "label": "Click \"Save skill and add step\"",
+     "key": "J06:aSave"
+    },
+    {
+     "id": "J06-10",
+     "type": "sub",
+     "label": "SKILL BUILDER PUBLISH SUB-FLOW",
+     "sub": "S3",
+     "key": "J06:sub"
+    },
+    {
+     "id": "J06-11",
+     "type": "system",
+     "label": "The dialog closes; the new step heading shows in Focus and in Full Array",
+     "key": "J06:sNew"
+    },
+    {
+     "id": "J06-jump1",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J06:jRail"
+    },
+    {
+     "id": "J06-12",
+     "type": "action",
+     "label": "Click \"Discard draft\"",
+     "key": "J06:aDiscard"
+    },
+    {
+     "id": "J06-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J06-hub1",
+     "key": "J06:r2"
+    },
+    {
+     "id": "J06-13",
+     "type": "term",
+     "label": "Click \"Save rail\" on the deal rail",
+     "notes": "Shows only with the save-template permission and the template flags.",
+     "flags": [
+      "rail_templates"
+     ],
+     "key": "J06:e2"
+    },
+    {
+     "id": "J06-14",
+     "type": "page",
+     "label": "Show the \"Save rail\" dialog",
+     "notes": "SaveRailDialog.tsx",
+     "key": "J06:pSave"
+    },
+    {
+     "id": "J06-15",
+     "type": "decision",
+     "label": "Create new?",
+     "notes": "\"Create new\" or \"Replace existing\".",
+     "key": "J06:dMode"
+    },
+    {
+     "id": "J06-16",
+     "type": "action",
+     "label": "Fill \"Name\" and \"Description\", click \"Save rail\"",
+     "key": "J06:aCreate"
+    },
+    {
+     "id": "J06-17",
+     "type": "action",
+     "label": "Pick from \"Saved rail\", click \"Replace rail\"",
+     "notes": "A replace affects only later deals.",
+     "key": "J06:aReplace"
+    },
+    {
+     "id": "J06-18",
+     "type": "data",
+     "label": "Save the company template",
+     "route": "POST /api/v1/rail-templates",
+     "key": "J06:dTpl"
+    },
+    {
+     "id": "J06-19",
+     "type": "decision",
+     "label": "Duplicate name or stale revision?",
+     "key": "J06:dDup"
+    },
+    {
+     "id": "J06-20",
+     "type": "system",
+     "label": "Refuse the save",
+     "key": "J06:sRef"
+    },
+    {
+     "id": "J06-21",
+     "type": "system",
+     "label": "Show \"Saved as {name}, version N. New mandates in your company can start from it.\"",
+     "key": "J06:sSaved"
+    },
+    {
+     "id": "J06-jump2",
+     "type": "jump",
+     "label": "New mandate (\"Rail\")",
+     "to": "gate0",
+     "key": "J06:jG0"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J06-01",
+     "to": "J06-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-02",
+     "to": "J06-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-hub1",
+     "to": "J06-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-03",
+     "to": "J06-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-04",
+     "to": "J06-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-05",
+     "to": "J06-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-06",
+     "to": "J06-ret1",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J06-06",
+     "to": "J06-07",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J06-07",
+     "to": "J06-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-08",
+     "to": "J06-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-09",
+     "to": "J06-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-10",
+     "to": "J06-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-11",
+     "to": "J06-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J06-hub1",
+     "to": "J06-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-12",
+     "to": "J06-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-13",
+     "to": "J06-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-14",
+     "to": "J06-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-15",
+     "to": "J06-16",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J06-15",
+     "to": "J06-17",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J06-16",
+     "to": "J06-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-17",
+     "to": "J06-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-18",
+     "to": "J06-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J06-19",
+     "to": "J06-20",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J06-19",
+     "to": "J06-21",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J06-21",
+     "to": "J06-jump2",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J07",
+   "title": "Rails configuration: company templates and publish",
+   "persona": "A user with the rail_templates.manage company permission; everyone else sees \"Request access\"",
+   "entry": "\"Rails configuration\" (/rail-templates)",
+   "exit": "Changes are published and deals review them",
+   "flags": [
+    "rail_templates",
+    "project_rail_model",
+    "gate0_api_create",
+    "template_change_review",
+    "skill_authoring"
+   ],
+   "specs": [
+    "e2e/journeys/rail-templates.spec.ts"
+   ],
+   "links": "J06 Skill builder in template mode; J05 deal-side review",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J07-01",
+     "type": "term",
+     "label": "Click \"Rails configuration\"",
+     "key": "J07:e"
+    },
+    {
+     "id": "J07-02",
+     "type": "decision",
+     "label": "Can manage rail templates?",
+     "notes": "Flags checked together in src/lib/railTemplates/access.ts.",
+     "flags": [
+      "rail_templates",
+      "project_rail_model",
+      "gate0_api_create"
+     ],
+     "key": "J07:dPerm"
+    },
+    {
+     "id": "J07-jump1",
+     "type": "jump",
+     "label": "Access needed",
+     "to": "access",
+     "key": "J07:jAcc"
+    },
+    {
+     "id": "J07-03",
+     "type": "page",
+     "label": "Show \"/rail-templates\": \"Saved rail templates\"",
+     "notes": "The \"House template\" is read-only: \"Create a copy to add or remove steps.\"",
+     "key": "J07:pList"
+    },
+    {
+     "id": "J07-hub1",
+     "type": "hub",
+     "label": "Saved rail templates",
+     "key": "J07:hL"
+    },
+    {
+     "id": "J07-04",
+     "type": "action",
+     "label": "Click \"New template\", then \"Create template\"",
+     "route": "POST /api/v1/rail-catalog",
+     "key": "J07:aNew"
+    },
+    {
+     "id": "J07-05",
+     "type": "action",
+     "label": "Click \"View\" on a template",
+     "key": "J07:aView"
+    },
+    {
+     "id": "J07-06",
+     "type": "page",
+     "label": "Show \"Template steps\": Kind (Skill / House / Custom step), Sequence, Description",
+     "key": "J07:pSteps"
+    },
+    {
+     "id": "J07-hub2",
+     "type": "hub",
+     "label": "Template steps",
+     "key": "J07:hS"
+    },
+    {
+     "id": "J07-07",
+     "type": "action",
+     "label": "Click \"Add a step here\" (Skill builder in template mode)",
+     "notes": "TemplateSkillBuilder.tsx: the same Skill builder as J06, steps 2 to 9.",
+     "key": "J07:aAddHere"
+    },
+    {
+     "id": "J07-08",
+     "type": "sub",
+     "label": "SKILL BUILDER PUBLISH SUB-FLOW",
+     "flags": [
+      "skill_authoring"
+     ],
+     "sub": "S3",
+     "key": "J07:subSB"
+    },
+    {
+     "id": "J07-09",
+     "type": "action",
+     "label": "Click \"Remove {title}\"",
+     "key": "J07:aRm"
+    },
+    {
+     "id": "J07-10",
+     "type": "action",
+     "label": "Click \"Add context for this step\", then \"Save\"",
+     "key": "J07:aCtx"
+    },
+    {
+     "id": "J07-11",
+     "type": "system",
+     "label": "Show \"Changes not published\" with a \"History\" list (undo)",
+     "key": "J07:sChg"
+    },
+    {
+     "id": "J07-12",
+     "type": "action",
+     "label": "Click \"Publish changes\"",
+     "key": "J07:aPub"
+    },
+    {
+     "id": "J07-13",
+     "type": "data",
+     "label": "Publish the template",
+     "route": "POST /api/v1/rail-catalog/{id}/publish",
+     "key": "J07:dPub"
+    },
+    {
+     "id": "J07-14",
+     "type": "system",
+     "label": "Deals built from the template get \"Template updated\"",
+     "flags": [
+      "template_change_review"
+     ],
+     "key": "J07:sNote"
+    },
+    {
+     "id": "J07-15",
+     "type": "action",
+     "label": "Click \"Delete template\"",
+     "key": "J07:aDel"
+    },
+    {
+     "id": "J07-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J07-hub2",
+     "key": "J07:rS"
+    },
+    {
+     "id": "J07-anchor1",
+     "type": "anchor",
+     "label": "Template review",
+     "at": "J07-16",
+     "anchorKey": "templateReview",
+     "key": "J07:T"
+    },
+    {
+     "id": "J07-16",
+     "type": "page",
+     "label": "Deal rail shows the \"Template updated\" banner",
+     "notes": "TemplateChangeBanner.tsx",
+     "key": "J07:pBan"
+    },
+    {
+     "id": "J07-17",
+     "type": "action",
+     "label": "Click \"Review changes\" or \"Review decisions\"",
+     "notes": "TemplateChangesDialog.tsx",
+     "key": "J07:aRev"
+    },
+    {
+     "id": "J07-18",
+     "type": "decision",
+     "label": "Viewer on the deal team?",
+     "key": "J07:dTeam"
+    },
+    {
+     "id": "J07-hub3",
+     "type": "hub",
+     "label": "Template review",
+     "key": "J07:hB"
+    },
+    {
+     "id": "J07-19",
+     "type": "system",
+     "label": "Show \"Only the deal team can change this rail.\"",
+     "key": "J07:sNo"
+    },
+    {
+     "id": "J07-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J07-hub3",
+     "key": "J07:rB"
+    },
+    {
+     "id": "J07-20",
+     "type": "decision",
+     "label": "Accept this change?",
+     "notes": "Added step: \"Add\" or \"Discard\". Removed step: \"Remove\" or \"Keep\".",
+     "key": "J07:dKeep"
+    },
+    {
+     "id": "J07-21",
+     "type": "system",
+     "label": "Keep the rail as it is for this change (\"Discard\" or \"Keep\")",
+     "key": "J07:sKeep"
+    },
+    {
+     "id": "J07-22",
+     "type": "data",
+     "label": "Record the decision; the rail refreshes",
+     "route": "POST /api/v1/deals/{id}/rail/template-changes/{changeId}/decision",
+     "key": "J07:dDec"
+    },
+    {
+     "id": "J07-jump2",
+     "type": "jump",
+     "label": "Deal rail",
+     "to": "rail",
+     "key": "J07:jRail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J07-01",
+     "to": "J07-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-02",
+     "to": "J07-jump1",
+     "kind": "backnav",
+     "label": "No"
+    },
+    {
+     "from": "J07-02",
+     "to": "J07-03",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J07-03",
+     "to": "J07-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub1",
+     "to": "J07-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-04",
+     "to": "J07-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub1",
+     "to": "J07-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-05",
+     "to": "J07-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-06",
+     "to": "J07-hub2",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub2",
+     "to": "J07-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-07",
+     "to": "J07-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-08",
+     "to": "J07-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub2",
+     "to": "J07-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-09",
+     "to": "J07-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub2",
+     "to": "J07-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-10",
+     "to": "J07-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-11",
+     "to": "J07-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-12",
+     "to": "J07-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-13",
+     "to": "J07-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-14",
+     "to": "J07-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub2",
+     "to": "J07-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-15",
+     "to": "J07-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-16",
+     "to": "J07-hub3",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-hub3",
+     "to": "J07-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-17",
+     "to": "J07-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-18",
+     "to": "J07-19",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J07-19",
+     "to": "J07-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-18",
+     "to": "J07-20",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J07-20",
+     "to": "J07-22",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J07-20",
+     "to": "J07-21",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J07-21",
+     "to": "J07-22",
+     "kind": "flow"
+    },
+    {
+     "from": "J07-22",
+     "to": "J07-jump2",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J08",
+   "title": "Team: parties, member drawer, raise phase, invite",
+   "persona": "MD or deal manager. An outside director may invite inside their own company only",
+   "entry": "\"Team\" (/projects/{code}/team)",
+   "exit": "An invite is pending, a seat is granted, or a phase is raised",
+   "flags": [
+    "platform_onboarding",
+    "work_identity_onboarding"
+   ],
+   "specs": [
+    "e2e/steps/inviteExternalDirector.ts",
+    "e2e/steps/grantMemberSeat.ts",
+    "e2e/steps/resendInvite.ts",
+    "e2e/steps/revokeInvite.ts",
+    "e2e/journeys/invite-rotation.spec.ts"
+   ],
+   "links": "J09 outside party accepts; J10 colleague accepts with a work account; J12 \"Add X in Team\"",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J08-01",
+     "type": "term",
+     "label": "Click \"Team\"",
+     "key": "J08:e"
+    },
+    {
+     "id": "J08-02",
+     "type": "decision",
+     "label": "Live team switched on?",
+     "flags": [
+      "platform_onboarding"
+     ],
+     "key": "J08:dLive"
+    },
+    {
+     "id": "J08-03",
+     "type": "system",
+     "label": "Show the fixture team workspace",
+     "key": "J08:sFix"
+    },
+    {
+     "id": "J08-anchor1",
+     "type": "anchor",
+     "label": "Team roster",
+     "at": "J08-04",
+     "anchorKey": "team",
+     "key": "J08:T"
+    },
+    {
+     "id": "J08-04",
+     "type": "page",
+     "label": "Show \"Team roster\": Advisory bank, Counterparty, Other firm; \"On platform\" / \"Invite pending\"; \"Pending invitations\"",
+     "notes": "LiveTeamRoster.tsx, TeamRoster.tsx",
+     "key": "J08:pRos"
+    },
+    {
+     "id": "J08-hub1",
+     "type": "hub",
+     "label": "Team roster",
+     "key": "J08:h"
+    },
+    {
+     "id": "J08-05",
+     "type": "action",
+     "label": "Click a member",
+     "key": "J08:aMem"
+    },
+    {
+     "id": "J08-06",
+     "type": "page",
+     "label": "Show MemberDrawer (right side): Email, Seat (Internal/External), Phase, Status",
+     "key": "J08:pDr"
+    },
+    {
+     "id": "J08-07",
+     "type": "decision",
+     "label": "Viewer is the MD?",
+     "key": "J08:dMD"
+    },
+    {
+     "id": "J08-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "J08:r1"
+    },
+    {
+     "id": "J08-08",
+     "type": "action",
+     "label": "Set \"Phase for this member\" (live preview of what they would see), click \"Raise phase\"",
+     "notes": "PerimeterPreview",
+     "key": "J08:aPh"
+    },
+    {
+     "id": "J08-09",
+     "type": "data",
+     "label": "Raise the phase; send \"Phase promoted\"",
+     "route": "PATCH /api/v1/deals/{id}/members/{userId}",
+     "key": "J08:dPh"
+    },
+    {
+     "id": "J08-10",
+     "type": "system",
+     "label": "Show \"Phase updated.\"",
+     "key": "J08:sPh"
+    },
+    {
+     "id": "J08-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "J08:r2"
+    },
+    {
+     "id": "J08-11",
+     "type": "action",
+     "label": "\"Raise whole company\": \"Phase for the whole company\", click \"Raise all\"",
+     "key": "J08:aAll"
+    },
+    {
+     "id": "J08-12",
+     "type": "system",
+     "label": "Each row shows done or failed; \"Retry failed\"",
+     "key": "J08:sAll"
+    },
+    {
+     "id": "J08-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "J08:r3"
+    },
+    {
+     "id": "J08-13",
+     "type": "action",
+     "label": "Click \"Invite to platform\"",
+     "key": "J08:aInv"
+    },
+    {
+     "id": "J08-14",
+     "type": "page",
+     "label": "Show the \"Invite to platform\" dialog",
+     "notes": "InviteModal.tsx",
+     "key": "J08:pInv"
+    },
+    {
+     "id": "J08-15",
+     "type": "action",
+     "label": "Fill \"Email\" (company suggested from the domain); pick \"Company\", \"Deal relationship\", \"Role\", \"Starting disclosure phase\"",
+     "notes": "Role: Member, Director or Deal Team. SmartLookupCard and PerimeterPreview.",
+     "key": "J08:aFill"
+    },
+    {
+     "id": "J08-16",
+     "type": "sub",
+     "label": "INVITE PREFLIGHT SUB-FLOW",
+     "sub": "S4",
+     "key": "J08:subPre"
+    },
+    {
+     "id": "J08-17",
+     "type": "decision",
+     "label": "Company has a mapped work-account provider?",
+     "notes": "Chosen on the server: work_identity if the flag is on and the company has a mapped provider, otherwise email_code (src/app/api/v1/invites/route.ts:250).",
+     "flags": [
+      "work_identity_onboarding"
+     ],
+     "key": "J08:dCred"
+    },
+    {
+     "id": "J08-jump1",
+     "type": "jump",
+     "label": "Accept invite (email code)",
+     "to": "accept",
+     "key": "J08:jAcc"
+    },
+    {
+     "id": "J08-jump2",
+     "type": "jump",
+     "label": "Join with a work account",
+     "to": "join",
+     "key": "J08:jJoin"
+    },
+    {
+     "id": "J08-18",
+     "type": "action",
+     "label": "Pending row: click \"Resend\" (rotates the code; the old code is rejected)",
+     "route": "POST /api/v1/invites/{id}/resend",
+     "key": "J08:aResend"
+    },
+    {
+     "id": "J08-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "J08:r4"
+    },
+    {
+     "id": "J08-19",
+     "type": "action",
+     "label": "Pending row: click \"Revoke\" (the link then dead-ends)",
+     "route": "DELETE /api/v1/invites/{id}",
+     "key": "J08:aRevoke"
+    },
+    {
+     "id": "J08-ret5",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "J08:r5"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J08-01",
+     "to": "J08-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-02",
+     "to": "J08-03",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J08-02",
+     "to": "J08-04",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J08-04",
+     "to": "J08-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-hub1",
+     "to": "J08-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-05",
+     "to": "J08-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-06",
+     "to": "J08-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-07",
+     "to": "J08-ret1",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J08-07",
+     "to": "J08-08",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J08-08",
+     "to": "J08-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-09",
+     "to": "J08-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-10",
+     "to": "J08-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-hub1",
+     "to": "J08-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-11",
+     "to": "J08-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-12",
+     "to": "J08-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-hub1",
+     "to": "J08-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-13",
+     "to": "J08-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-14",
+     "to": "J08-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-15",
+     "to": "J08-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-16",
+     "to": "J08-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-17",
+     "to": "J08-jump2",
+     "kind": "backnav",
+     "label": "Yes"
+    },
+    {
+     "from": "J08-17",
+     "to": "J08-jump1",
+     "kind": "backnav",
+     "label": "No"
+    },
+    {
+     "from": "J08-hub1",
+     "to": "J08-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-18",
+     "to": "J08-ret4",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-hub1",
+     "to": "J08-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J08-19",
+     "to": "J08-ret5",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J09",
+   "title": "Invitation acceptance by an outside party (email code)",
+   "persona": "An invited outside party, e.g. a seller director or counterparty",
+   "entry": "Two emails: \"You have a Conductia invitation\" (link) and \"Your Conductia verification code (N)\"",
+   "exit": "A scoped deal shell at /projects/{code}",
+   "flags": [
+    "platform_onboarding"
+   ],
+   "specs": [
+    "e2e/journeys/invite-onboarding.spec.ts",
+    "e2e/steps/readInviteMail.ts",
+    "e2e/steps/acceptInvite.ts",
+    "e2e/steps/enrolMfa.ts",
+    "e2e/steps/assertScopedShell.ts"
+   ],
+   "links": "J01 two-factor; J08 roster",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J09-01",
+     "type": "term",
+     "label": "Click the link in \"You have a Conductia invitation\"",
+     "key": "J09:e"
+    },
+    {
+     "id": "J09-anchor1",
+     "type": "anchor",
+     "label": "Accept invite",
+     "at": "J09-02",
+     "anchorKey": "accept",
+     "key": "J09:A"
+    },
+    {
+     "id": "J09-02",
+     "type": "page",
+     "label": "Show \"/accept-invite\"",
+     "notes": "Opening a deal URL first sends the user back to /two-factor or /accept-invite; the deal API returns 403.",
+     "key": "J09:pAcc"
+    },
+    {
+     "id": "J09-hub1",
+     "type": "hub",
+     "label": "Accept invite",
+     "key": "J09:h"
+    },
+    {
+     "id": "J09-03",
+     "type": "action",
+     "label": "Fill \"Verification code\", click \"Verify code\"",
+     "key": "J09:aCode"
+    },
+    {
+     "id": "J09-04",
+     "type": "data",
+     "label": "Verify the code",
+     "route": "POST /api/v1/invites/verify",
+     "key": "J09:dVer"
+    },
+    {
+     "id": "J09-05",
+     "type": "decision",
+     "label": "Code valid?",
+     "key": "J09:dCode"
+    },
+    {
+     "id": "J09-06",
+     "type": "system",
+     "label": "Show \"That verification code is not valid.\"",
+     "key": "J09:sBad"
+    },
+    {
+     "id": "J09-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J09-hub1",
+     "key": "J09:r1"
+    },
+    {
+     "id": "J09-07",
+     "type": "system",
+     "label": "Show \"This verification code is locked…\", or the revoked, expired or used message (no way forward)",
+     "key": "J09:sLock"
+    },
+    {
+     "id": "J09-08",
+     "type": "term",
+     "label": "Dead end",
+     "key": "J09:xDead"
+    },
+    {
+     "id": "J09-09",
+     "type": "action",
+     "label": "Fill \"Your name\", \"Password\", \"Confirm password\", tick the terms, click \"Accept invitation\"",
+     "flags": [
+      "platform_onboarding"
+     ],
+     "key": "J09:aAcc"
+    },
+    {
+     "id": "J09-10",
+     "type": "data",
+     "label": "Accept: invite accepted, user active, seat gets its deal role and phase (invite_accepted, grant)",
+     "route": "POST /api/v1/invites/accept",
+     "key": "J09:dAcc"
+    },
+    {
+     "id": "J09-11",
+     "type": "system",
+     "label": "Redirect to \"/two-factor?redirectTo=/projects/{code}\"",
+     "key": "J09:sTwo"
+    },
+    {
+     "id": "J09-12",
+     "type": "sub",
+     "label": "TOTP ENROLMENT SUB-FLOW",
+     "sub": "S1",
+     "key": "J09:sub"
+    },
+    {
+     "id": "J09-anchor2",
+     "type": "anchor",
+     "label": "Outside party deal home",
+     "at": "J09-13",
+     "anchorKey": "welcome",
+     "key": "J09:W"
+    },
+    {
+     "id": "J09-13",
+     "type": "page",
+     "label": "Show WelcomeBrief: \"Data Room\": \"Documents shared with your side, gated by phase.\" / \"Nothing released to your phase yet.\"; \"Invite a teammate\"",
+     "notes": "src/components/onboarding/WelcomeBrief.tsx",
+     "key": "J09:pWel"
+    },
+    {
+     "id": "J09-14",
+     "type": "system",
+     "label": "Scoped nav: Rails, Team, Mail, Data Room, Audit Trail. \"/deal-folder\", \"/skills\", \"/acquirers\" redirect to \"/projects/{code}\"",
+     "key": "J09:sNav"
+    },
+    {
+     "id": "J09-15",
+     "type": "system",
+     "label": "MD side: the roster shows the invitee \"On platform\" and drops \"Invite pending\"",
+     "key": "J09:sMD"
+    },
+    {
+     "id": "J09-jump1",
+     "type": "jump",
+     "label": "Team roster",
+     "to": "team",
+     "key": "J09:jTeam"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J09-01",
+     "to": "J09-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-02",
+     "to": "J09-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-hub1",
+     "to": "J09-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-03",
+     "to": "J09-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-04",
+     "to": "J09-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-05",
+     "to": "J09-06",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J09-06",
+     "to": "J09-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-05",
+     "to": "J09-07",
+     "kind": "flow",
+     "label": "Locked"
+    },
+    {
+     "from": "J09-07",
+     "to": "J09-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-05",
+     "to": "J09-09",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J09-09",
+     "to": "J09-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-10",
+     "to": "J09-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-11",
+     "to": "J09-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-12",
+     "to": "J09-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-13",
+     "to": "J09-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-10",
+     "to": "J09-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J09-15",
+     "to": "J09-jump1",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "J10",
+   "title": "Colleague joins with a work account",
+   "persona": "A bank colleague invited by the MD while the firm has a mapped provider",
+   "entry": "One email with a link to /join?invite=…&k=…",
+   "exit": "The deal, at /projects/{code}",
+   "flags": [
+    "work_identity_onboarding"
+   ],
+   "specs": [
+    "e2e/journeys/work-identity-onboarding.spec.ts (Google and Microsoft variants)"
+   ],
+   "links": "J01 work path on later visits",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J10-01",
+     "type": "term",
+     "label": "Click the link in the invite email",
+     "key": "J10:e"
+    },
+    {
+     "id": "J10-anchor1",
+     "type": "anchor",
+     "label": "Join",
+     "at": "J10-02",
+     "anchorKey": "join",
+     "key": "J10:J"
+    },
+    {
+     "id": "J10-02",
+     "type": "page",
+     "label": "Show \"/join\": \"Your firm signs you in with its work account. There is no password to create.\"",
+     "flags": [
+      "work_identity_onboarding"
+     ],
+     "key": "J10:pJoin"
+    },
+    {
+     "id": "J10-hub1",
+     "type": "hub",
+     "label": "Join",
+     "key": "J10:h"
+    },
+    {
+     "id": "J10-03",
+     "type": "action",
+     "label": "Click \"Continue with Google Workspace\" or \"Continue with Microsoft\"",
+     "key": "J10:aProv"
+    },
+    {
+     "id": "J10-04",
+     "type": "system",
+     "label": "Provider round trip to \"/auth/work/callback\"; the attempt is claimed",
+     "key": "J10:sCb"
+    },
+    {
+     "id": "J10-05",
+     "type": "decision",
+     "label": "Provider step failed?",
+     "key": "J10:dFail"
+    },
+    {
+     "id": "J10-06",
+     "type": "system",
+     "label": "Back to \"/join?error=…\": \"Use a different account\" or \"Try again\"",
+     "key": "J10:sFail"
+    },
+    {
+     "id": "J10-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J10-hub1",
+     "key": "J10:r1"
+    },
+    {
+     "id": "J10-07",
+     "type": "sub",
+     "label": "TOTP ENROLMENT SUB-FLOW",
+     "notes": "Two-factor always applies here; the provider's own MFA does not count.",
+     "sub": "S1",
+     "key": "J10:sub"
+    },
+    {
+     "id": "J10-08",
+     "type": "page",
+     "label": "Show \"/join/confirm\": Work account, Firm, Role, Deal",
+     "key": "J10:pConf"
+    },
+    {
+     "id": "J10-09",
+     "type": "action",
+     "label": "Fill the display name, tick the checkbox, click \"Accept invitation\"",
+     "key": "J10:aAcc"
+    },
+    {
+     "id": "J10-10",
+     "type": "data",
+     "label": "Accept the work-account invite",
+     "route": "POST /api/v1/work-identity/accept",
+     "key": "J10:dAcc"
+    },
+    {
+     "id": "J10-11",
+     "type": "decision",
+     "label": "Approved work organization?",
+     "notes": "A Microsoft guest, a missing xms_edov claim, or a foreign directory gets 403 organization_mismatch.",
+     "key": "J10:dOrg"
+    },
+    {
+     "id": "J10-12",
+     "type": "system",
+     "label": "Show \"approved work organization\" error; stay on the page",
+     "key": "J10:sOrg"
+    },
+    {
+     "id": "J10-13",
+     "type": "system",
+     "label": "Redirect to \"/projects/{code}\"",
+     "key": "J10:sDeal"
+    },
+    {
+     "id": "J10-14",
+     "type": "term",
+     "label": "The deal opens",
+     "key": "J10:x"
+    },
+    {
+     "id": "J10-15",
+     "type": "term",
+     "label": "Later visit",
+     "key": "J10:e2"
+    },
+    {
+     "id": "J10-16",
+     "type": "action",
+     "label": "Use the provider button on \"/sign-in\"",
+     "notes": "Removing the account binding ends the session at the next token refresh.",
+     "key": "J10:aLater"
+    },
+    {
+     "id": "J10-jump1",
+     "type": "jump",
+     "label": "Sign-in page",
+     "to": "signin",
+     "key": "J10:jSign"
+    },
+    {
+     "id": "J10-17",
+     "type": "term",
+     "label": "Existing user, signed in",
+     "key": "J10:e3"
+    },
+    {
+     "id": "J10-18",
+     "type": "action",
+     "label": "Profile menu: click \"Connect\" for the firm's provider",
+     "key": "J10:aConn"
+    },
+    {
+     "id": "J10-19",
+     "type": "system",
+     "label": "Show \"Work account connected. Use it to sign in from now on.\"",
+     "notes": "src/app/(authed)/profile/ConnectResult.tsx",
+     "key": "J10:sConn"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J10-01",
+     "to": "J10-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-02",
+     "to": "J10-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-hub1",
+     "to": "J10-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-03",
+     "to": "J10-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-04",
+     "to": "J10-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-05",
+     "to": "J10-06",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J10-06",
+     "to": "J10-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-05",
+     "to": "J10-07",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J10-07",
+     "to": "J10-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-08",
+     "to": "J10-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-09",
+     "to": "J10-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-10",
+     "to": "J10-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-11",
+     "to": "J10-12",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J10-11",
+     "to": "J10-13",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J10-13",
+     "to": "J10-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-15",
+     "to": "J10-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-16",
+     "to": "J10-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J10-17",
+     "to": "J10-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J10-18",
+     "to": "J10-19",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J11",
+   "title": "Organization members, roles and access requests",
+   "persona": "Firm admin or company director (manage); an employee or member requests access",
+   "entry": "\"My organization\" (or \"Employees\"): /organization redirects to /companies/{id}/members",
+   "exit": "An invite is sent, access is saved, or a request is decided",
+   "flags": [
+    "company_access_management"
+   ],
+   "specs": [
+    "e2e/journeys/access-denial.spec.ts",
+    "e2e/journeys/access-propagation.spec.ts"
+   ],
+   "links": "J04 and J16 (requests appear there); J15 and J07 (walls lead here)",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J11-01",
+     "type": "term",
+     "label": "Click \"My organization\" (or \"Employees\")",
+     "key": "J11:e"
+    },
+    {
+     "id": "J11-02",
+     "type": "page",
+     "label": "Show \"/companies/{id}/members\": \"Members\" table, \"Filter members\"",
+     "notes": "Tabs come from CompanyTabs.",
+     "key": "J11:pMem"
+    },
+    {
+     "id": "J11-hub1",
+     "type": "hub",
+     "label": "Members",
+     "key": "J11:h"
+    },
+    {
+     "id": "J11-03",
+     "type": "action",
+     "label": "Click \"Invite a member\" (or \"Invite an employee\"): \"Email address\", \"Company role\"",
+     "notes": "InviteMemberDialog. Company role: Member/Director, or Employee/Administrator.",
+     "key": "J11:aInv"
+    },
+    {
+     "id": "J11-04",
+     "type": "data",
+     "label": "Create the invite",
+     "route": "POST /api/v1/invites",
+     "key": "J11:dInv"
+    },
+    {
+     "id": "J11-05",
+     "type": "decision",
+     "label": "Emails sent?",
+     "key": "J11:dMail"
+    },
+    {
+     "id": "J11-06",
+     "type": "system",
+     "label": "Show \"The invite was created but the emails did not send. Resend the invitation.\"",
+     "key": "J11:sMail"
+    },
+    {
+     "id": "J11-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J11-hub1",
+     "key": "J11:r1"
+    },
+    {
+     "id": "J11-07",
+     "type": "action",
+     "label": "\"Actions for {name}\": \"Allow invites\" / \"Withdraw invite right\", or \"Remove\"",
+     "key": "J11:aRight"
+    },
+    {
+     "id": "J11-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J11-hub1",
+     "key": "J11:r2"
+    },
+    {
+     "id": "J11-08",
+     "type": "action",
+     "label": "\"Actions for {name}\": click \"Manage access\" (or \"See permissions\")",
+     "key": "J11:aMan"
+    },
+    {
+     "id": "J11-09",
+     "type": "page",
+     "label": "Show the side drawer \"Access for {name}\": \"Employee access\" checkboxes",
+     "notes": "src/components/company/MemberAccessDrawer.tsx",
+     "key": "J11:pAcc"
+    },
+    {
+     "id": "J11-10",
+     "type": "action",
+     "label": "Toggle permissions (e.g. view or create leads), click \"Save access\"",
+     "key": "J11:aTog"
+    },
+    {
+     "id": "J11-11",
+     "type": "data",
+     "label": "Save access",
+     "route": "PATCH /api/v1/companies/{id}/members/{userId}/access",
+     "key": "J11:dAcc"
+    },
+    {
+     "id": "J11-12",
+     "type": "decision",
+     "label": "Changed by someone else meanwhile?",
+     "key": "J11:dStale"
+    },
+    {
+     "id": "J11-13",
+     "type": "system",
+     "label": "Reload with \"Access changed while you were editing…\"",
+     "key": "J11:sStale"
+    },
+    {
+     "id": "J11-14",
+     "type": "system",
+     "label": "Show \"Access saved.\"",
+     "key": "J11:sOk"
+    },
+    {
+     "id": "J11-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J11-hub1",
+     "key": "J11:r3"
+    },
+    {
+     "id": "J11-15",
+     "type": "action",
+     "label": "Open \"/companies/{id}/roles\" (\"Company roles\"): \"Create role\", \"Save role\", \"Archive\" (blocked while assigned)",
+     "key": "J11:aRoles"
+    },
+    {
+     "id": "J11-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J11-hub1",
+     "key": "J11:r4"
+    },
+    {
+     "id": "J11-16",
+     "type": "term",
+     "label": "Requester opens a gated surface",
+     "key": "J11:e2"
+    },
+    {
+     "id": "J11-anchor1",
+     "type": "anchor",
+     "label": "Access needed",
+     "at": "J11-17",
+     "anchorKey": "access",
+     "key": "J11:X"
+    },
+    {
+     "id": "J11-17",
+     "type": "page",
+     "label": "Show AccessNeededPanel, e.g. \"Access needed to register a lead\"",
+     "key": "J11:pWall"
+    },
+    {
+     "id": "J11-18",
+     "type": "action",
+     "label": "Click \"Request access\"",
+     "key": "J11:aReq"
+    },
+    {
+     "id": "J11-19",
+     "type": "data",
+     "label": "Create the access request",
+     "route": "POST /api/v1/access-requests",
+     "key": "J11:dReq"
+    },
+    {
+     "id": "J11-20",
+     "type": "system",
+     "label": "Director's bell and \"Needs you now\": \"Access request · {permission} · {name}\"",
+     "key": "J11:sBell"
+    },
+    {
+     "id": "J11-21",
+     "type": "action",
+     "label": "Director clicks \"Approve\" or \"Deny\"",
+     "key": "J11:aDecide"
+    },
+    {
+     "id": "J11-22",
+     "type": "data",
+     "label": "Decide the request",
+     "route": "PATCH /api/v1/access-requests/{id}",
+     "key": "J11:dDecD"
+    },
+    {
+     "id": "J11-23",
+     "type": "decision",
+     "label": "Approved?",
+     "key": "J11:dDec"
+    },
+    {
+     "id": "J11-24",
+     "type": "system",
+     "label": "The requester's locked dialog unlocks without a reload",
+     "notes": "A revoke brings the wall back when the requester's tab regains focus.",
+     "key": "J11:sUn"
+    },
+    {
+     "id": "J11-25",
+     "type": "system",
+     "label": "It stays locked, and the requester is told",
+     "key": "J11:sDen"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J11-01",
+     "to": "J11-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-02",
+     "to": "J11-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-hub1",
+     "to": "J11-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-03",
+     "to": "J11-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-04",
+     "to": "J11-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-05",
+     "to": "J11-06",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J11-05",
+     "to": "J11-ret1",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J11-06",
+     "to": "J11-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-hub1",
+     "to": "J11-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-07",
+     "to": "J11-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-hub1",
+     "to": "J11-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-08",
+     "to": "J11-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-09",
+     "to": "J11-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-10",
+     "to": "J11-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-11",
+     "to": "J11-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-12",
+     "to": "J11-13",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J11-12",
+     "to": "J11-14",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J11-13",
+     "to": "J11-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-14",
+     "to": "J11-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-hub1",
+     "to": "J11-15",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-15",
+     "to": "J11-ret4",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-16",
+     "to": "J11-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-17",
+     "to": "J11-18",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-18",
+     "to": "J11-19",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-19",
+     "to": "J11-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-20",
+     "to": "J11-21",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-21",
+     "to": "J11-22",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-22",
+     "to": "J11-23",
+     "kind": "flow"
+    },
+    {
+     "from": "J11-23",
+     "to": "J11-24",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J11-23",
+     "to": "J11-25",
+     "kind": "flow",
+     "label": "No"
+    }
+   ]
+  },
+  {
+   "id": "J12",
+   "title": "Mail: compose, compliance screen, overrides, supervisory queue",
+   "persona": "MD or deal team (send); CCO or admin as overseer (release or reject); outside parties have Mail in their nav",
+   "entry": "\"Mail\" (/projects/{code}/mail), or \"Reply\" on a Deal Folder \"Deal email\" thread",
+   "exit": "The message is Sent, Held, Blocked or Rejected",
+   "flags": [
+    "mail_channel",
+    "mail_jev_second_opinion"
+   ],
+   "specs": [
+    "e2e/steps/composeAndSendMail.ts",
+    "e2e/steps/addSentRecipient.ts",
+    "e2e/steps/openDealThread.ts"
+   ],
+   "links": "J08 \"Add {email} in Team\"; J13 Deal email",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J12-01",
+     "type": "term",
+     "label": "Click \"Mail\"",
+     "notes": "With mail_channel off every mail route returns 404.",
+     "flags": [
+      "mail_channel"
+     ],
+     "key": "J12:e"
+    },
+    {
+     "id": "J12-anchor1",
+     "type": "anchor",
+     "label": "Mail",
+     "at": "J12-02",
+     "anchorKey": "mail",
+     "key": "J12:M"
+    },
+    {
+     "id": "J12-02",
+     "type": "page",
+     "label": "Show MailClient: \"Mail folders\" (Inbox, Drafts, Sent, Held for review, Blocked), \"Message list\", \"Search mail\", \"Mail settings\"",
+     "notes": "src/components/mail/MailClient.tsx",
+     "key": "J12:pMail"
+    },
+    {
+     "id": "J12-hub1",
+     "type": "hub",
+     "label": "Mail",
+     "key": "J12:h"
+    },
+    {
+     "id": "J12-03",
+     "type": "action",
+     "label": "Click \"New message\" (\"Compose email\")",
+     "notes": "MailComposer.tsx",
+     "key": "J12:aNew"
+    },
+    {
+     "id": "J12-04",
+     "type": "action",
+     "label": "Fill \"To\", \"Cc\", \"Subject\", \"Message\"; \"Email subject preview\" adds \"[Confidential] \" on live deals",
+     "key": "J12:aFill"
+    },
+    {
+     "id": "J12-05",
+     "type": "sub",
+     "label": "COMPLIANCE SCREEN SUB-FLOW (FAST, AS YOU TYPE)",
+     "sub": "S2",
+     "key": "J12:subS"
+    },
+    {
+     "id": "J12-06",
+     "type": "action",
+     "label": "Click \"Send\" (\"Screening…\")",
+     "key": "J12:aSend"
+    },
+    {
+     "id": "J12-07",
+     "type": "decision",
+     "label": "Flagged terms not yet acknowledged?",
+     "key": "J12:dFlag"
+    },
+    {
+     "id": "J12-08",
+     "type": "system",
+     "label": "Dialog \"Flagged terms need your sign-off\": \"Back to editing\" or \"Acknowledge and send\"",
+     "key": "J12:sFlag"
+    },
+    {
+     "id": "J12-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "J12:r1"
+    },
+    {
+     "id": "J12-09",
+     "type": "decision",
+     "label": "Recipients need review?",
+     "notes": "Uses /api/v1/deals/{id}/recipient-check.",
+     "key": "J12:dRec"
+    },
+    {
+     "id": "J12-10",
+     "type": "system",
+     "label": "Dialog \"Review email recipients\" (\"EXTERNAL NON-DEAL ASSOCIATED PARTY…\"): \"Back to editing\", \"Approve recipients and continue\", \"Send anyway and add as known recipient(s)\"",
+     "key": "J12:sRec"
+    },
+    {
+     "id": "J12-11",
+     "type": "decision",
+     "label": "Firm requires external send confirmation?",
+     "key": "J12:dExt"
+    },
+    {
+     "id": "J12-12",
+     "type": "system",
+     "label": "Dialog \"Confirm external send\"",
+     "notes": "ExternalSendConfirmDialog.tsx",
+     "key": "J12:sExt"
+    },
+    {
+     "id": "J12-13",
+     "type": "data",
+     "label": "Full screen on the server (screen and send audit rows)",
+     "route": "POST /api/v1/outbox",
+     "key": "J12:dOut"
+    },
+    {
+     "id": "J12-14",
+     "type": "decision",
+     "label": "Risk issues (MNPI or front-page test)?",
+     "key": "J12:dRisk"
+    },
+    {
+     "id": "J12-15",
+     "type": "system",
+     "label": "Dialog \"Risk issues: your call\" with \"Risk read\": \"Draft it myself\", \"Fix the risk issues and send\", \"Send as-is\"",
+     "notes": "The second opinion from Jev (an outside AI checker) is gated by mail_jev_second_opinion.",
+     "flags": [
+      "mail_jev_second_opinion"
+     ],
+     "key": "J12:sRisk"
+    },
+    {
+     "id": "J12-16",
+     "type": "decision",
+     "label": "Verdict?",
+     "key": "J12:dVer"
+    },
+    {
+     "id": "J12-17",
+     "type": "system",
+     "label": "Show \"Sent\", or \"Sent · queued for review\"",
+     "key": "J12:sSent"
+    },
+    {
+     "id": "J12-18",
+     "type": "system",
+     "label": "Show \"Held: Not sent. Routed to supervisory review.\"",
+     "key": "J12:sHeld"
+    },
+    {
+     "id": "J12-19",
+     "type": "system",
+     "label": "Show \"Blocked: Not sent. This message never left the platform.\" (possibly with a rewrite)",
+     "key": "J12:sBlk"
+    },
+    {
+     "id": "J12-20",
+     "type": "decision",
+     "label": "Sent to a new outsider?",
+     "key": "J12:dNew"
+    },
+    {
+     "id": "J12-21",
+     "type": "system",
+     "label": "\"Email sent. Add a recipient to the working group…\": \"Add {email} in Team\" or \"Not now\"",
+     "key": "J12:sAdd"
+    },
+    {
+     "id": "J12-jump1",
+     "type": "jump",
+     "label": "Team: invite pre-filled",
+     "to": "team",
+     "key": "J12:jTeam"
+    },
+    {
+     "id": "J12-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "J12:r2"
+    },
+    {
+     "id": "J12-22",
+     "type": "action",
+     "label": "Overseer opens the held message, adds a \"Review note\", clicks \"Release and send\" or \"Reject\"",
+     "key": "J12:aRel"
+    },
+    {
+     "id": "J12-23",
+     "type": "data",
+     "label": "Release or reject",
+     "route": "PATCH /api/v1/outbox/{id}",
+     "key": "J12:dRel"
+    },
+    {
+     "id": "J12-24",
+     "type": "system",
+     "label": "\"Released and sent.\" or \"Rejected and returned to the sender.\"; the sender sees \"N messages returned to you\" with \"Open\"",
+     "key": "J12:sRel"
+    },
+    {
+     "id": "J12-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "J12:r3"
+    },
+    {
+     "id": "J12-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "J12:r4"
+    },
+    {
+     "id": "J12-25",
+     "type": "action",
+     "label": "\"Mail settings\", \"Your mailbox\": connect Gmail for sending; CCO: \"Firm compliance settings\"",
+     "notes": "Firm compliance settings: \"Confirm external sends\", queued and sampled bands.",
+     "route": "/api/v1/mailbox/google/connect",
+     "key": "J12:aSet"
+    },
+    {
+     "id": "J12-ret5",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "J12:r5"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J12-01",
+     "to": "J12-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-02",
+     "to": "J12-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-hub1",
+     "to": "J12-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-03",
+     "to": "J12-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-04",
+     "to": "J12-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-05",
+     "to": "J12-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-06",
+     "to": "J12-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-07",
+     "to": "J12-08",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J12-08",
+     "to": "J12-ret1",
+     "kind": "flow",
+     "label": "Back to editing"
+    },
+    {
+     "from": "J12-08",
+     "to": "J12-09",
+     "kind": "flow",
+     "label": "Acknowledge"
+    },
+    {
+     "from": "J12-07",
+     "to": "J12-09",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J12-09",
+     "to": "J12-10",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J12-10",
+     "to": "J12-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-09",
+     "to": "J12-11",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J12-11",
+     "to": "J12-12",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J12-12",
+     "to": "J12-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-11",
+     "to": "J12-13",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J12-13",
+     "to": "J12-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-14",
+     "to": "J12-15",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J12-15",
+     "to": "J12-16",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-14",
+     "to": "J12-16",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J12-16",
+     "to": "J12-17",
+     "kind": "flow",
+     "label": "Compliant"
+    },
+    {
+     "from": "J12-16",
+     "to": "J12-18",
+     "kind": "flow",
+     "label": "Hold"
+    },
+    {
+     "from": "J12-16",
+     "to": "J12-19",
+     "kind": "flow",
+     "label": "Blocked"
+    },
+    {
+     "from": "J12-17",
+     "to": "J12-20",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-20",
+     "to": "J12-21",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J12-21",
+     "to": "J12-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J12-20",
+     "to": "J12-ret2",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J12-18",
+     "to": "J12-22",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-22",
+     "to": "J12-23",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-23",
+     "to": "J12-24",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-24",
+     "to": "J12-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-19",
+     "to": "J12-ret4",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-hub1",
+     "to": "J12-25",
+     "kind": "flow"
+    },
+    {
+     "from": "J12-25",
+     "to": "J12-ret5",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J13",
+   "title": "Deal Folder and Data Room documents",
+   "persona": "MD or deal team (both); outside party (Data Room only, limited by phase)",
+   "entry": "\"Deal Folder\" or \"Data Room\" in the deal nav, or a step upload (J05)",
+   "exit": "A document is filed or downloaded",
+   "flags": [
+    "platform_onboarding",
+    "deal_data_room_nav",
+    "deal_discovery"
+   ],
+   "specs": [
+    "e2e/journeys/data-room-wall.spec.ts",
+    "e2e/steps/uploadToDealFolder.ts",
+    "e2e/steps/uploadToDataRoom.ts",
+    "e2e/steps/assertExternalRoomWall.ts",
+    "e2e/steps/downloadFromDataRoom.ts"
+   ],
+   "links": "J12 \"Reply\"; J05 step uploads",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J13-01",
+     "type": "term",
+     "label": "Click \"Deal Folder\" or \"Data Room\"",
+     "key": "J13:e"
+    },
+    {
+     "id": "J13-02",
+     "type": "decision",
+     "label": "Live documents switched on?",
+     "notes": "DealFolderSwitch.tsx, DataRoomSwitch.tsx",
+     "flags": [
+      "platform_onboarding"
+     ],
+     "key": "J13:dLive"
+    },
+    {
+     "id": "J13-03",
+     "type": "system",
+     "label": "Show the fixture explorers",
+     "key": "J13:sFix"
+    },
+    {
+     "id": "J13-04",
+     "type": "decision",
+     "label": "Viewer is an outside party?",
+     "notes": "Outside parties see only \"Client documents\"; typing /deal-folder redirects to the deal home.",
+     "key": "J13:dExt"
+    },
+    {
+     "id": "J13-anchor1",
+     "type": "anchor",
+     "label": "Deal Folder",
+     "at": "J13-05",
+     "anchorKey": "dealFolder",
+     "key": "J13:F"
+    },
+    {
+     "id": "J13-05",
+     "type": "page",
+     "label": "Show \"/deal-folder\": \"Deal Folder view\" tabs \"Documents\" and \"Deal email\"",
+     "notes": "src/components/dataroom/DealFolderLive.tsx",
+     "key": "J13:pFol"
+    },
+    {
+     "id": "J13-hub1",
+     "type": "hub",
+     "label": "Deal Folder",
+     "key": "J13:hF"
+    },
+    {
+     "id": "J13-06",
+     "type": "action",
+     "label": "Pick a \"Deal folder\" (eight folders), choose \"File\", click \"Upload\"",
+     "key": "J13:aUp"
+    },
+    {
+     "id": "J13-07",
+     "type": "data",
+     "label": "File into the internal room (upload audit row)",
+     "route": "POST /api/v1/deals/{id}/documents",
+     "key": "J13:dUp"
+    },
+    {
+     "id": "J13-08",
+     "type": "system",
+     "label": "The \"Folder tree\" count updates; a file click shows type and size",
+     "key": "J13:sTree"
+    },
+    {
+     "id": "J13-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J13-hub1",
+     "key": "J13:r1"
+    },
+    {
+     "id": "J13-09",
+     "type": "action",
+     "label": "\"Deal email\" tab: open a thread (\"Deal thread\")",
+     "flags": [
+      "deal_discovery"
+     ],
+     "key": "J13:aThr"
+    },
+    {
+     "id": "J13-10",
+     "type": "action",
+     "label": "Click \"Reply\" (prefills To and \"Re:\"; discarding sends nothing)",
+     "key": "J13:aReply"
+    },
+    {
+     "id": "J13-jump1",
+     "type": "jump",
+     "label": "Mail",
+     "to": "mail",
+     "key": "J13:jMail"
+    },
+    {
+     "id": "J13-11",
+     "type": "page",
+     "label": "Show \"/data-room\": \"Deal Folder\" (\"Bank work product. The client cannot see these.\") and \"Client documents\"",
+     "notes": "DataRoomLive.tsx. Internal users see Data Room in the nav only with deal_data_room_nav on; outside parties always see it.",
+     "flags": [
+      "deal_data_room_nav"
+     ],
+     "key": "J13:pRoom"
+    },
+    {
+     "id": "J13-hub2",
+     "type": "hub",
+     "label": "Data Room",
+     "key": "J13:hD"
+    },
+    {
+     "id": "J13-12",
+     "type": "action",
+     "label": "\"Upload a document\": choose \"File\", \"Name override (optional)\", click \"Upload\"",
+     "key": "J13:aUp2"
+    },
+    {
+     "id": "J13-13",
+     "type": "data",
+     "label": "File the document (upload audit row)",
+     "route": "POST /api/v1/deals/{id}/documents",
+     "key": "J13:dUp2"
+    },
+    {
+     "id": "J13-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J13-hub2",
+     "key": "J13:r2"
+    },
+    {
+     "id": "J13-14",
+     "type": "decision",
+     "label": "Seat cleared for this file's phase?",
+     "key": "J13:dPh"
+    },
+    {
+     "id": "J13-15",
+     "type": "system",
+     "label": "Show \"Restricted\": \"Your seat is not cleared to open this file yet.\"",
+     "key": "J13:sRes"
+    },
+    {
+     "id": "J13-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J13-hub2",
+     "key": "J13:r3"
+    },
+    {
+     "id": "J13-16",
+     "type": "action",
+     "label": "Click \"Download\"",
+     "key": "J13:aDl"
+    },
+    {
+     "id": "J13-17",
+     "type": "data",
+     "label": "Download (download audit row; opening the room writes nothing)",
+     "route": "GET /api/v1/deals/{id}/documents/{documentId}/download",
+     "key": "J13:dDl"
+    },
+    {
+     "id": "J13-ret4",
+     "type": "ret",
+     "label": "",
+     "hub": "J13-hub2",
+     "key": "J13:r4"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J13-01",
+     "to": "J13-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-02",
+     "to": "J13-03",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J13-02",
+     "to": "J13-04",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J13-04",
+     "to": "J13-05",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J13-04",
+     "to": "J13-11",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J13-05",
+     "to": "J13-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-hub1",
+     "to": "J13-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-06",
+     "to": "J13-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-07",
+     "to": "J13-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-08",
+     "to": "J13-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-hub1",
+     "to": "J13-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-09",
+     "to": "J13-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-10",
+     "to": "J13-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J13-11",
+     "to": "J13-hub2",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-hub2",
+     "to": "J13-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-12",
+     "to": "J13-13",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-13",
+     "to": "J13-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-hub2",
+     "to": "J13-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-14",
+     "to": "J13-15",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J13-15",
+     "to": "J13-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-14",
+     "to": "J13-16",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J13-16",
+     "to": "J13-17",
+     "kind": "flow"
+    },
+    {
+     "from": "J13-17",
+     "to": "J13-ret4",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J14",
+   "title": "Audit trail",
+   "persona": "MD, CCO, outside party (in their nav)",
+   "entry": "\"Audit Trail\" (/projects/{code}/audit)",
+   "exit": "The reader has the compliance record",
+   "flags": [],
+   "specs": [
+    "e2e/journeys/audit-scoping.spec.ts",
+    "e2e/steps/readAuditTrail.ts",
+    "e2e/steps/assertStepAudit.ts",
+    "e2e/steps/assertDocumentAuditTrail.ts"
+   ],
+   "links": "Every write in J03, J05, J08, J09, J12 and J13 shows up here",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J14-01",
+     "type": "term",
+     "label": "Click \"Audit Trail\"",
+     "key": "J14:e"
+    },
+    {
+     "id": "J14-02",
+     "type": "page",
+     "label": "Show \"Audit Trail\": \"Compliance record\" and an event count",
+     "notes": "src/components/audit/AuditTrail.tsx",
+     "key": "J14:pAud"
+    },
+    {
+     "id": "J14-hub1",
+     "type": "hub",
+     "label": "Audit Trail",
+     "key": "J14:h"
+    },
+    {
+     "id": "J14-03",
+     "type": "data",
+     "label": "Read this deal's log, merged with the browser's demo log",
+     "route": "GET /api/v1/deals/{id}/audit",
+     "key": "J14:dLog"
+    },
+    {
+     "id": "J14-04",
+     "type": "decision",
+     "label": "Any activity?",
+     "key": "J14:dAny"
+    },
+    {
+     "id": "J14-05",
+     "type": "system",
+     "label": "Show \"No activity yet. Actions you take across the deal are recorded here.\"",
+     "key": "J14:sEmpty"
+    },
+    {
+     "id": "J14-06",
+     "type": "system",
+     "label": "Rows: \"Marked complete\", \"Skipped · Approved by X · reason\", \"Advanced the rail · Step a → b · by {name}\", \"Uploaded a document\", \"Downloaded a document\"; grouped Today, Yesterday",
+     "key": "J14:sRows"
+    },
+    {
+     "id": "J14-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J14-hub1",
+     "key": "J14:r1"
+    },
+    {
+     "id": "J14-07",
+     "type": "action",
+     "label": "\"Filter audit events\": All, Chats, Steps, Documents, Skills, Platform",
+     "key": "J14:aFil"
+    },
+    {
+     "id": "J14-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J14-hub1",
+     "key": "J14:r2"
+    },
+    {
+     "id": "J14-08",
+     "type": "action",
+     "label": "Export the trail (file named \"intellibank-audit-…\")",
+     "notes": "AuditTrail.tsx:200",
+     "key": "J14:aExp"
+    },
+    {
+     "id": "J14-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J14-hub1",
+     "key": "J14:r3"
+    },
+    {
+     "id": "J14-09",
+     "type": "system",
+     "label": "AiSpendPanel: this deal's AI spend",
+     "key": "J14:sSpend"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J14-01",
+     "to": "J14-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-02",
+     "to": "J14-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-hub1",
+     "to": "J14-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-03",
+     "to": "J14-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-04",
+     "to": "J14-05",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J14-04",
+     "to": "J14-06",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J14-06",
+     "to": "J14-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-hub1",
+     "to": "J14-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-07",
+     "to": "J14-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-hub1",
+     "to": "J14-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-08",
+     "to": "J14-ret3",
+     "kind": "flow"
+    },
+    {
+     "from": "J14-hub1",
+     "to": "J14-09",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J15",
+   "title": "Leads (CRM)",
+   "persona": "MD or bank-side users; employees may need leads.view or leads.create",
+   "entry": "\"Leads\" (/leads)",
+   "exit": "A registered lead, which the Gate 0 wizard picks up",
+   "flags": [],
+   "specs": [
+    "e2e/steps/registerLead.ts",
+    "e2e/journeys/lead-relationships.spec.ts"
+   ],
+   "links": "J03 finds the lead; J11 access requests",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J15-01",
+     "type": "term",
+     "label": "Click \"Leads\"",
+     "key": "J15:e"
+    },
+    {
+     "id": "J15-02",
+     "type": "decision",
+     "label": "Can view or create leads?",
+     "key": "J15:dCan"
+    },
+    {
+     "id": "J15-jump1",
+     "type": "jump",
+     "label": "Access needed",
+     "to": "access",
+     "key": "J15:jAcc"
+    },
+    {
+     "id": "J15-03",
+     "type": "page",
+     "label": "Show \"/leads\": \"CRM catalog\" tabs Companies, People, Network",
+     "notes": "src/components/leads/LeadsCrmTabs.tsx",
+     "key": "J15:pLeads"
+    },
+    {
+     "id": "J15-hub1",
+     "type": "hub",
+     "label": "Leads",
+     "key": "J15:h"
+    },
+    {
+     "id": "J15-04",
+     "type": "action",
+     "label": "Click \"Register a lead\", fill \"Company name (e.g. Atlassian)\", click \"Register lead\"",
+     "key": "J15:aReg"
+    },
+    {
+     "id": "J15-05",
+     "type": "data",
+     "label": "Register the company (type=client)",
+     "route": "POST /api/v1/companies",
+     "key": "J15:dReg"
+    },
+    {
+     "id": "J15-06",
+     "type": "system",
+     "label": "The lead appears under \"Registered leads\"",
+     "key": "J15:sReg"
+    },
+    {
+     "id": "J15-jump2",
+     "type": "jump",
+     "label": "New mandate finds the lead",
+     "to": "gate0",
+     "key": "J15:jG0"
+    },
+    {
+     "id": "J15-07",
+     "type": "action",
+     "label": "Expand a lead, \"Add relationship\": \"Person\", \"Relationship type\", \"Strength\", \"Save relationship\"",
+     "key": "J15:aRel"
+    },
+    {
+     "id": "J15-08",
+     "type": "data",
+     "label": "Save the relationship",
+     "route": "POST /api/v1/companies/{id}/relationships",
+     "key": "J15:dRel"
+    },
+    {
+     "id": "J15-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J15-hub1",
+     "key": "J15:r1"
+    },
+    {
+     "id": "J15-09",
+     "type": "action",
+     "label": "\"Add stakeholder\": \"Name\", \"Save stakeholder\"",
+     "key": "J15:aSt"
+    },
+    {
+     "id": "J15-10",
+     "type": "data",
+     "label": "Save the stakeholder",
+     "route": "POST /api/v1/companies/{id}/stakeholders",
+     "key": "J15:dSt"
+    },
+    {
+     "id": "J15-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J15-hub1",
+     "key": "J15:r2"
+    },
+    {
+     "id": "J15-11",
+     "type": "action",
+     "label": "\"Run presearch\" (First call, Working session, Closing), \"Extract from debrief\", \"Message the twin\"",
+     "notes": "PresearchRunner.tsx, DebriefSkills.tsx",
+     "key": "J15:aSk"
+    },
+    {
+     "id": "J15-ret3",
+     "type": "ret",
+     "label": "",
+     "hub": "J15-hub1",
+     "key": "J15:r3"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J15-01",
+     "to": "J15-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-02",
+     "to": "J15-jump1",
+     "kind": "backnav",
+     "label": "No"
+    },
+    {
+     "from": "J15-02",
+     "to": "J15-03",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J15-03",
+     "to": "J15-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-hub1",
+     "to": "J15-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-04",
+     "to": "J15-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-05",
+     "to": "J15-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-06",
+     "to": "J15-jump2",
+     "kind": "backnav"
+    },
+    {
+     "from": "J15-hub1",
+     "to": "J15-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-07",
+     "to": "J15-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-08",
+     "to": "J15-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-hub1",
+     "to": "J15-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-09",
+     "to": "J15-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-10",
+     "to": "J15-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-hub1",
+     "to": "J15-11",
+     "kind": "flow"
+    },
+    {
+     "from": "J15-11",
+     "to": "J15-ret3",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "J16",
+   "title": "Profile and notifications",
+   "persona": "Any signed-in user",
+   "entry": "\"…open profile menu\", then \"Profile\"; or the bell \"Notifications, N unread\"",
+   "exit": "Profile saved, or a notification opened",
+   "flags": [
+    "deal_discovery",
+    "work_identity_onboarding"
+   ],
+   "specs": [],
+   "links": "J02 Deal discovery card; J11 access requests",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J16-01",
+     "type": "term",
+     "label": "Click \"…open profile menu\", then \"Profile\"",
+     "key": "J16:e"
+    },
+    {
+     "id": "J16-02",
+     "type": "page",
+     "label": "Show \"/profile\": fields (Role read-only), \"Add photo\" / \"Change photo\", \"Copy email\"",
+     "notes": "The photo is kept in this browser only (src/lib/auth/useProfilePhoto.ts).",
+     "key": "J16:pProf"
+    },
+    {
+     "id": "J16-hub1",
+     "type": "hub",
+     "label": "Profile",
+     "key": "J16:h"
+    },
+    {
+     "id": "J16-03",
+     "type": "action",
+     "label": "Edit fields, click \"Save\"",
+     "key": "J16:aSave"
+    },
+    {
+     "id": "J16-04",
+     "type": "data",
+     "label": "Save the profile",
+     "route": "PATCH /api/v1/me",
+     "key": "J16:dSave"
+    },
+    {
+     "id": "J16-05",
+     "type": "system",
+     "label": "Show \"Profile saved.\"",
+     "key": "J16:sSaved"
+    },
+    {
+     "id": "J16-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J16-hub1",
+     "key": "J16:r1"
+    },
+    {
+     "id": "J16-jump1",
+     "type": "jump",
+     "label": "Deal discovery card",
+     "to": "profileDiscovery",
+     "key": "J16:jDisc"
+    },
+    {
+     "id": "J16-06",
+     "type": "action",
+     "label": "Click \"Stop reading my mailbox\", then \"Stop reading\"",
+     "flags": [
+      "deal_discovery"
+     ],
+     "key": "J16:aStop"
+    },
+    {
+     "id": "J16-07",
+     "type": "data",
+     "label": "Withdraw mailbox consent",
+     "route": "DELETE /api/v1/discovery/mailbox-consent",
+     "key": "J16:dStop"
+    },
+    {
+     "id": "J16-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J16-hub1",
+     "key": "J16:r2"
+    },
+    {
+     "id": "J16-08",
+     "type": "term",
+     "label": "Click the bell \"Notifications, N unread\"",
+     "key": "J16:e2"
+    },
+    {
+     "id": "J16-anchor1",
+     "type": "anchor",
+     "label": "Notifications",
+     "at": "J16-09",
+     "anchorKey": "bell",
+     "key": "J16:B"
+    },
+    {
+     "id": "J16-09",
+     "type": "page",
+     "label": "Show the \"Notifications\" menu: \"New mandate opened\", \"Step assigned to you\", \"Phase promoted\", \"Template updated\", \"AI budget alert\", \"Sent mail queued for your review\"",
+     "notes": "NotificationsBell.tsx; labels from src/lib/notifications/eventLabels.ts.",
+     "key": "J16:pBell"
+    },
+    {
+     "id": "J16-10",
+     "type": "decision",
+     "label": "Row is an access request?",
+     "key": "J16:dReq"
+    },
+    {
+     "id": "J16-11",
+     "type": "action",
+     "label": "Click \"Approve\" or \"Deny\"",
+     "key": "J16:aDec"
+    },
+    {
+     "id": "J16-12",
+     "type": "data",
+     "label": "Decide the request",
+     "route": "PATCH /api/v1/access-requests/{id}",
+     "key": "J16:dDec"
+    },
+    {
+     "id": "J16-13",
+     "type": "action",
+     "label": "Click the row, or \"Mark read\"",
+     "key": "J16:aOpen"
+    },
+    {
+     "id": "J16-14",
+     "type": "term",
+     "label": "Open the notification target",
+     "key": "J16:x"
+    },
+    {
+     "id": "J16-15",
+     "type": "note",
+     "label": "There is no screen for notification preferences.",
+     "title": "Gap",
+     "key": "J16:nPref"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J16-01",
+     "to": "J16-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-02",
+     "to": "J16-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-hub1",
+     "to": "J16-03",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-03",
+     "to": "J16-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-04",
+     "to": "J16-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-05",
+     "to": "J16-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-hub1",
+     "to": "J16-jump1",
+     "kind": "backnav"
+    },
+    {
+     "from": "J16-hub1",
+     "to": "J16-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-06",
+     "to": "J16-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-07",
+     "to": "J16-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-08",
+     "to": "J16-09",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-09",
+     "to": "J16-10",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-10",
+     "to": "J16-11",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J16-11",
+     "to": "J16-12",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-10",
+     "to": "J16-13",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "J16-13",
+     "to": "J16-14",
+     "kind": "flow"
+    },
+    {
+     "from": "J16-09",
+     "to": "J16-15",
+     "kind": "ref"
+    }
+   ]
+  },
+  {
+   "id": "J17",
+   "title": "AI costs",
+   "persona": "Firm admin, CCO or company director. Not outside parties, not Research or Trading",
+   "entry": "\"AI Costs\" (/ai-costs)",
+   "exit": "Budget set, spend read",
+   "flags": [],
+   "specs": [],
+   "links": "J16 \"AI budget alert\"",
+   "kind": "journey",
+   "nodes": [
+    {
+     "id": "J17-01",
+     "type": "term",
+     "label": "Click \"AI Costs\"",
+     "key": "J17:e"
+    },
+    {
+     "id": "J17-02",
+     "type": "decision",
+     "label": "Allowed role?",
+     "key": "J17:dRole"
+    },
+    {
+     "id": "J17-jump1",
+     "type": "jump",
+     "label": "Redirect home",
+     "to": "home",
+     "key": "J17:jHome"
+    },
+    {
+     "id": "J17-03",
+     "type": "page",
+     "label": "Show \"AI costs\": \"Recorded AI spend across the firm, by deal, person, task and model.\"",
+     "key": "J17:pCost"
+    },
+    {
+     "id": "J17-hub1",
+     "type": "hub",
+     "label": "AI costs",
+     "key": "J17:h"
+    },
+    {
+     "id": "J17-04",
+     "type": "action",
+     "label": "Set and save \"Monthly AI budget per banker\"",
+     "notes": "src/components/audit/AiBudgetCard.tsx",
+     "key": "J17:aBud"
+    },
+    {
+     "id": "J17-05",
+     "type": "data",
+     "label": "Save the budget",
+     "route": "PUT /api/v1/ai-budget",
+     "key": "J17:dBud"
+    },
+    {
+     "id": "J17-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J17-hub1",
+     "key": "J17:r1"
+    },
+    {
+     "id": "J17-06",
+     "type": "data",
+     "label": "Read recorded spend",
+     "route": "GET /api/v1/ai-spend",
+     "key": "J17:dSp"
+    },
+    {
+     "id": "J17-07",
+     "type": "system",
+     "label": "AiSpendPanel: By deal, By person, By task, By model",
+     "key": "J17:sSp"
+    },
+    {
+     "id": "J17-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "J17-hub1",
+     "key": "J17:r2"
+    },
+    {
+     "id": "J17-08",
+     "type": "system",
+     "label": "Crossing a threshold sends \"AI budget alert\"",
+     "key": "J17:sAl"
+    },
+    {
+     "id": "J17-jump2",
+     "type": "jump",
+     "label": "Notifications",
+     "to": "bell",
+     "key": "J17:jBell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "J17-01",
+     "to": "J17-02",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-02",
+     "to": "J17-jump1",
+     "kind": "backnav",
+     "label": "No"
+    },
+    {
+     "from": "J17-02",
+     "to": "J17-03",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "J17-03",
+     "to": "J17-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-hub1",
+     "to": "J17-04",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-04",
+     "to": "J17-05",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-05",
+     "to": "J17-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-hub1",
+     "to": "J17-06",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-06",
+     "to": "J17-07",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-07",
+     "to": "J17-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-hub1",
+     "to": "J17-08",
+     "kind": "flow"
+    },
+    {
+     "from": "J17-08",
+     "to": "J17-jump2",
+     "kind": "backnav"
+    }
+   ]
+  },
+  {
+   "id": "S1",
+   "title": "TOTP enrolment sub-flow",
+   "from": "J01 steps 10 to 13; used by J01, J09, J10",
+   "kind": "subflow",
+   "nodes": [
+    {
+     "id": "S1-01",
+     "type": "page",
+     "label": "Show \"/two-factor\"",
+     "notes": "src/app/two-factor/page.client.tsx",
+     "key": "S1:p"
+    },
+    {
+     "id": "S1-hub1",
+     "type": "hub",
+     "label": "Two-factor",
+     "key": "S1:h"
+    },
+    {
+     "id": "S1-02",
+     "type": "decision",
+     "label": "First time?",
+     "key": "S1:dFirst"
+    },
+    {
+     "id": "S1-03",
+     "type": "system",
+     "label": "Show \"Set up two-factor authentication\" with a QR code and the manual key",
+     "key": "S1:sSet"
+    },
+    {
+     "id": "S1-04",
+     "type": "system",
+     "label": "Show \"Verify your identity\"",
+     "key": "S1:sVer"
+    },
+    {
+     "id": "S1-05",
+     "type": "action",
+     "label": "Fill \"Six-digit code\", click \"Verify and continue\"",
+     "key": "S1:a"
+    },
+    {
+     "id": "S1-06",
+     "type": "decision",
+     "label": "Code accepted?",
+     "key": "S1:dOk"
+    },
+    {
+     "id": "S1-07",
+     "type": "system",
+     "label": "Show \"The authenticator code was not accepted\"; clear the field",
+     "key": "S1:sNo"
+    },
+    {
+     "id": "S1-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "S1-hub1",
+     "key": "S1:r1"
+    },
+    {
+     "id": "S1-08",
+     "type": "data",
+     "label": "Write the security record and the mfa_enrolled audit row",
+     "route": "POST /api/v1/auth/mfa/complete",
+     "key": "S1:dRec"
+    },
+    {
+     "id": "S1-09",
+     "type": "decision",
+     "label": "Security record saved?",
+     "key": "S1:dSaved"
+    },
+    {
+     "id": "S1-10",
+     "type": "system",
+     "label": "Show \"Retry the security record\"",
+     "key": "S1:sRetry"
+    },
+    {
+     "id": "S1-ret2",
+     "type": "ret",
+     "label": "",
+     "hub": "S1-hub1",
+     "key": "S1:r2"
+    },
+    {
+     "id": "S1-11",
+     "type": "term",
+     "label": "Return to \"redirectTo\"",
+     "key": "S1:x"
+    }
+   ],
+   "edges": [
+    {
+     "from": "S1-01",
+     "to": "S1-hub1",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-hub1",
+     "to": "S1-02",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-02",
+     "to": "S1-03",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "S1-02",
+     "to": "S1-04",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "S1-03",
+     "to": "S1-05",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-04",
+     "to": "S1-05",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-05",
+     "to": "S1-06",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-06",
+     "to": "S1-07",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "S1-07",
+     "to": "S1-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-06",
+     "to": "S1-08",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "S1-08",
+     "to": "S1-09",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-09",
+     "to": "S1-10",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "S1-10",
+     "to": "S1-ret2",
+     "kind": "flow"
+    },
+    {
+     "from": "S1-09",
+     "to": "S1-11",
+     "kind": "flow",
+     "label": "Yes"
+    }
+   ]
+  },
+  {
+   "id": "S2",
+   "title": "Compliance screen sub-flow (fast and full)",
+   "from": "J12 steps 4 to 11; Gate 0 uses only the MNPI screen",
+   "kind": "subflow",
+   "nodes": [
+    {
+     "id": "S2-01",
+     "type": "term",
+     "label": "Type in \"Compose email\"",
+     "key": "S2:p"
+    },
+    {
+     "id": "S2-02",
+     "type": "data",
+     "label": "Fast screen as you type",
+     "route": "POST /api/v1/screen",
+     "key": "S2:dFast"
+    },
+    {
+     "id": "S2-03",
+     "type": "system",
+     "label": "List \"Flagged terms\" and \"Vocabulary signals\"",
+     "key": "S2:sList"
+    },
+    {
+     "id": "S2-04",
+     "type": "decision",
+     "label": "External recipient?",
+     "key": "S2:dExt"
+    },
+    {
+     "id": "S2-05",
+     "type": "system",
+     "label": "Show the boundary warning \"External recipient\"",
+     "key": "S2:sWarn"
+    },
+    {
+     "id": "S2-06",
+     "type": "term",
+     "label": "Back to compose; click \"Send\"",
+     "key": "S2:x1"
+    },
+    {
+     "id": "S2-07",
+     "type": "data",
+     "label": "Full screen on the server",
+     "route": "POST /api/v1/outbox",
+     "key": "S2:dFull"
+    },
+    {
+     "id": "S2-08",
+     "type": "decision",
+     "label": "Verdict?",
+     "key": "S2:dVer"
+    },
+    {
+     "id": "S2-09",
+     "type": "system",
+     "label": "Compliant: \"Sent\" or \"Sent · queued for review\"",
+     "key": "S2:sC"
+    },
+    {
+     "id": "S2-10",
+     "type": "system",
+     "label": "Hold: \"Held: Not sent. Routed to supervisory review.\"",
+     "key": "S2:sH"
+    },
+    {
+     "id": "S2-11",
+     "type": "system",
+     "label": "Blocked: \"Blocked: Not sent. This message never left the platform.\"",
+     "key": "S2:sB"
+    },
+    {
+     "id": "S2-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J12-hub1",
+     "key": "S2:rM"
+    },
+    {
+     "id": "S2-12",
+     "type": "note",
+     "label": "Gate 0 runs only the MNPI screen over the notice text. Its verdict drives the receipt and the compliance ribbon; it never stops the create.",
+     "title": "Gate 0",
+     "key": "S2:n"
+    }
+   ],
+   "edges": [
+    {
+     "from": "S2-01",
+     "to": "S2-02",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-02",
+     "to": "S2-03",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-03",
+     "to": "S2-04",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-04",
+     "to": "S2-05",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "S2-04",
+     "to": "S2-06",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "S2-05",
+     "to": "S2-06",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-06",
+     "to": "S2-07",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-07",
+     "to": "S2-08",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-08",
+     "to": "S2-09",
+     "kind": "flow",
+     "label": "Compliant"
+    },
+    {
+     "from": "S2-08",
+     "to": "S2-10",
+     "kind": "flow",
+     "label": "Hold"
+    },
+    {
+     "from": "S2-08",
+     "to": "S2-11",
+     "kind": "flow",
+     "label": "Blocked"
+    },
+    {
+     "from": "S2-09",
+     "to": "S2-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-10",
+     "to": "S2-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-11",
+     "to": "S2-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S2-08",
+     "to": "S2-12",
+     "kind": "ref"
+    }
+   ]
+  },
+  {
+   "id": "S3",
+   "title": "Skill builder publish and duplicate check",
+   "from": "J06 steps 7 to 10; also Rails configuration \"Add a step here\"",
+   "kind": "subflow",
+   "nodes": [
+    {
+     "id": "S3-01",
+     "type": "term",
+     "label": "Click \"Save skill and add step\"",
+     "key": "S3:p"
+    },
+    {
+     "id": "S3-02",
+     "type": "system",
+     "label": "Show \"Checking project\"",
+     "key": "S3:s"
+    },
+    {
+     "id": "S3-03",
+     "type": "data",
+     "label": "Publish the draft",
+     "route": "POST /api/v1/deals/{id}/skill-drafts/{draftId}/publish",
+     "key": "S3:dPub"
+    },
+    {
+     "id": "S3-04",
+     "type": "decision",
+     "label": "Duplicate check",
+     "notes": "Candidate invalid or stale: the user is told to correct and save again. Skill bench unreachable: stays in progress.",
+     "key": "S3:dDup"
+    },
+    {
+     "id": "S3-05",
+     "type": "system",
+     "label": "Block: \"An active step already covers this skill.\"",
+     "key": "S3:sExact"
+    },
+    {
+     "id": "S3-06",
+     "type": "decision",
+     "label": "Similar match: \"Save anyway\"?",
+     "key": "S3:dSim"
+    },
+    {
+     "id": "S3-07",
+     "type": "data",
+     "label": "Record the duplicate decision",
+     "route": "POST /api/v1/deals/{id}/skill-publications/{id}/duplicate-decision",
+     "key": "S3:dDec"
+    },
+    {
+     "id": "S3-08",
+     "type": "action",
+     "label": "Click \"Decline and revise\"",
+     "key": "S3:aRev"
+    },
+    {
+     "id": "S3-09",
+     "type": "action",
+     "label": "Anchor removed: \"Choose a new position\", \"New phase\", \"New position\"",
+     "key": "S3:aPos"
+    },
+    {
+     "id": "S3-10",
+     "type": "data",
+     "label": "Save the placement",
+     "route": "POST /api/v1/deals/{id}/skill-publications/{id}/placement",
+     "key": "S3:dPl"
+    },
+    {
+     "id": "S3-11",
+     "type": "term",
+     "label": "Step added; back to the calling flow",
+     "key": "S3:x"
+    },
+    {
+     "id": "S3-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J06-hub1",
+     "key": "S3:rB"
+    }
+   ],
+   "edges": [
+    {
+     "from": "S3-01",
+     "to": "S3-02",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-02",
+     "to": "S3-03",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-03",
+     "to": "S3-04",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-04",
+     "to": "S3-05",
+     "kind": "flow",
+     "label": "Exact"
+    },
+    {
+     "from": "S3-04",
+     "to": "S3-06",
+     "kind": "flow",
+     "label": "Similar"
+    },
+    {
+     "from": "S3-04",
+     "to": "S3-09",
+     "kind": "flow",
+     "label": "Anchor removed"
+    },
+    {
+     "from": "S3-04",
+     "to": "S3-11",
+     "kind": "flow",
+     "label": "Clear"
+    },
+    {
+     "from": "S3-05",
+     "to": "S3-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-06",
+     "to": "S3-07",
+     "kind": "flow",
+     "label": "Yes"
+    },
+    {
+     "from": "S3-06",
+     "to": "S3-08",
+     "kind": "flow",
+     "label": "No"
+    },
+    {
+     "from": "S3-08",
+     "to": "S3-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-07",
+     "to": "S3-11",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-09",
+     "to": "S3-10",
+     "kind": "flow"
+    },
+    {
+     "from": "S3-10",
+     "to": "S3-11",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "S4",
+   "title": "Invite preflight sub-flow",
+   "from": "J08 steps 9 to 12; Gate 0 step 3 uses \"Check and add invitation\"",
+   "kind": "subflow",
+   "nodes": [
+    {
+     "id": "S4-01",
+     "type": "term",
+     "label": "Click \"Check and send invite\"",
+     "key": "S4:p"
+    },
+    {
+     "id": "S4-02",
+     "type": "data",
+     "label": "Classify the domain",
+     "route": "POST /api/v1/invites/preflight",
+     "key": "S4:dPre"
+    },
+    {
+     "id": "S4-03",
+     "type": "decision",
+     "label": "Domain classification",
+     "key": "S4:dDom"
+    },
+    {
+     "id": "S4-04",
+     "type": "system",
+     "label": "The button becomes \"Confirm and send\" (no verified email domain, personal address, or mismatch)",
+     "key": "S4:sConf"
+    },
+    {
+     "id": "S4-05",
+     "type": "action",
+     "label": "Click \"Confirm and send\"",
+     "key": "S4:aConf"
+    },
+    {
+     "id": "S4-06",
+     "type": "system",
+     "label": "Blocked: \"This company needs its first active director…\" (a firm admin must send it)",
+     "key": "S4:sBlock"
+    },
+    {
+     "id": "S4-07",
+     "type": "system",
+     "label": "Refused: an invite is already pending",
+     "key": "S4:sPend"
+    },
+    {
+     "id": "S4-08",
+     "type": "data",
+     "label": "Send the invite (invite_sent)",
+     "route": "POST /api/v1/invites",
+     "key": "S4:dSend"
+    },
+    {
+     "id": "S4-09",
+     "type": "system",
+     "label": "\"Invite pending for {email}.\", \"{email} already has an account and was added to this deal.\" or \"Email failed. Resend.\"",
+     "key": "S4:sOut"
+    },
+    {
+     "id": "S4-10",
+     "type": "term",
+     "label": "Click \"Done\"",
+     "key": "S4:x"
+    },
+    {
+     "id": "S4-ret1",
+     "type": "ret",
+     "label": "",
+     "hub": "J08-hub1",
+     "key": "S4:rT"
+    }
+   ],
+   "edges": [
+    {
+     "from": "S4-01",
+     "to": "S4-02",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-02",
+     "to": "S4-03",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-03",
+     "to": "S4-08",
+     "kind": "flow",
+     "label": "Matches"
+    },
+    {
+     "from": "S4-03",
+     "to": "S4-04",
+     "kind": "flow",
+     "label": "Unverified"
+    },
+    {
+     "from": "S4-03",
+     "to": "S4-06",
+     "kind": "flow",
+     "label": "First director"
+    },
+    {
+     "from": "S4-03",
+     "to": "S4-07",
+     "kind": "flow",
+     "label": "Pending"
+    },
+    {
+     "from": "S4-04",
+     "to": "S4-05",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-05",
+     "to": "S4-08",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-08",
+     "to": "S4-09",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-09",
+     "to": "S4-10",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-06",
+     "to": "S4-ret1",
+     "kind": "flow"
+    },
+    {
+     "from": "S4-07",
+     "to": "S4-ret1",
+     "kind": "flow"
+    }
+   ]
+  },
+  {
+   "id": "S5",
+   "title": "Overlay patterns (as-is)",
+   "from": "surface-map-people §7; UX-01 to UX-06",
+   "kind": "subflow",
+   "nodes": [
+    {
+     "id": "S5-01",
+     "type": "term",
+     "label": "Open a record, a form or a menu",
+     "key": "S5:p"
+    },
+    {
+     "id": "S5-02",
+     "type": "decision",
+     "label": "What opens?",
+     "key": "S5:d"
+    },
+    {
+     "id": "S5-03",
+     "type": "page",
+     "label": "Centered dialog: \"New mandate\", \"Skill builder\", \"Invite to platform\", \"Review output\", \"Save rail\"",
+     "key": "S5:o1"
+    },
+    {
+     "id": "S5-04",
+     "type": "page",
+     "label": "Right side drawer for record detail: MemberDrawer, MemberAccessDrawer, SkillDetailPanel",
+     "key": "S5:o2"
+    },
+    {
+     "id": "S5-05",
+     "type": "page",
+     "label": "\"…\" menu: \"Actions for {name}\" (RosterActionsMenu)",
+     "key": "S5:o3"
+    },
+    {
+     "id": "S5-06",
+     "type": "page",
+     "label": "Three inline dialogs inside \"/rail-templates\"",
+     "key": "S5:o4"
+    },
+    {
+     "id": "S5-07",
+     "type": "note",
+     "label": "8 overlays bypass useModalDialog, so scrims, focus and motion differ from one surface to the next.",
+     "title": "Warning",
+     "key": "S5:n"
+    }
+   ],
+   "edges": [
+    {
+     "from": "S5-01",
+     "to": "S5-02",
+     "kind": "flow"
+    },
+    {
+     "from": "S5-02",
+     "to": "S5-03",
+     "kind": "flow",
+     "label": "Form"
+    },
+    {
+     "from": "S5-02",
+     "to": "S5-04",
+     "kind": "flow",
+     "label": "Record"
+    },
+    {
+     "from": "S5-02",
+     "to": "S5-05",
+     "kind": "flow",
+     "label": "Row actions"
+    },
+    {
+     "from": "S5-02",
+     "to": "S5-06",
+     "kind": "flow",
+     "label": "Rails config"
+    },
+    {
+     "from": "S5-02",
+     "to": "S5-07",
+     "kind": "ref"
+    }
+   ]
+  },
+  {
+   "id": "G",
+   "title": "Orphans and gaps",
+   "kind": "orphans",
+   "nodes": [
+    {
+     "id": "G-01",
+     "type": "note",
+     "label": "CommandBar (the hero intent bar with the KYC, FINRA, MNPI animation) was not rendered anywhere, and command_bar_live_answers had no visible surface. Both were retired on 2026-10-25.",
+     "title": "Unrendered",
+     "key": "G:g1"
+    },
+    {
+     "id": "G-02",
+     "type": "note",
+     "label": "Gate 0 runs only the MNPI screen. KYC and FINRA appear only as static labels in ComplianceRibbon (CommandBar also showed them until it was retired on 2026-10-25).",
+     "title": "Gate 0",
+     "key": "G:g2"
+    },
+    {
+     "id": "G-03",
+     "type": "note",
+     "label": "No first-run screen. setup_walkthroughs gates two API routes and nothing else. The real first run is sign-in, home, \"Connect work email\", Profile, Discovery.",
+     "title": "First run",
+     "key": "G:g3"
+    },
+    {
+     "id": "G-04",
+     "type": "note",
+     "label": "No notification preferences screen. Notifications live in the bell and in \"Needs you now\".",
+     "title": "Notifications",
+     "key": "G:g4"
+    },
+    {
+     "id": "G-05",
+     "type": "note",
+     "label": "/insight/[company] has no nav entry and no inbound link.",
+     "title": "Orphan route",
+     "key": "G:g5"
+    },
+    {
+     "id": "G-06",
+     "type": "note",
+     "label": "/projects/{id}/skills and /acquirers are reachable by URL only, not from the deal nav.",
+     "title": "URL only",
+     "key": "G:g6"
+    },
+    {
+     "id": "G-07",
+     "type": "note",
+     "label": "/projects/{id}/chat returns 404 on purpose.",
+     "title": "Removed",
+     "key": "G:g7"
+    },
+    {
+     "id": "G-08",
+     "type": "note",
+     "label": "The Book's \"Today's Tasks\" panel was removed on Aug 31, 2026.",
+     "title": "Removed",
+     "key": "G:g8"
+    },
+    {
+     "id": "G-09",
+     "type": "note",
+     "label": "Profile's Deal discovery card is built for Google only; Discovery itself can read Microsoft mail and SharePoint.",
+     "title": "Google only",
+     "key": "G:g9"
+    },
+    {
+     "id": "G-10",
+     "type": "note",
+     "label": "With workbench_top_nav off, the shell falls back to the sidebar (AppShell.tsx).",
+     "title": "Shell",
+     "key": "G:g10"
+    }
+   ],
+   "edges": []
+  }
+ ]
+}

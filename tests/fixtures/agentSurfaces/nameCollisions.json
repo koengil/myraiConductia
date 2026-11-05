@@ -1,0 +1,5 @@
+[
+  { "file": "src/lib/constants/notifications.ts", "name": "mailbox_allowlist_drift", "reason": "The notification event kind for allowlist drift shares its string with the drift table; it is an event_type value, never a table name." },
+  { "file": "src/lib/notifications/accessNotifications.ts", "name": "mailbox_allowlist_drift", "reason": "Passes the drift notification event kind as an event_type value; the string is not a table name here." },
+  { "file": "src/lib/notifications/notificationDetail.ts", "name": "mailbox_allowlist_drift", "reason": "Compares a notification's event_type with the drift event kind to pick the bell's second line (#173 G-04); the string is not a table name here." }
+]

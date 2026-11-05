@@ -1,0 +1,77 @@
+{
+  "format": "conductia.recall-corpus/v1",
+  "messages": [
+    {
+      "id": "smoke-4",
+      "internetMessageId": "<smoke-4@smoke.example>",
+      "conversationId": null,
+      "subject": "Weekly market wrap",
+      "sentDateTime": "2026-09-01T09:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "newsletter@marketwire.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "quinn@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Equities closed mixed as rates held steady." },
+      "sources": ["smoke-personal"]
+    },
+    {
+      "id": "smoke-5",
+      "internetMessageId": "<smoke-5@smoke.example>",
+      "conversationId": null,
+      "subject": "Lunch order for Thursday",
+      "sentDateTime": "2026-09-01T10:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "quinn@smoke.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "marcus@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "The menu is on the shared drive." },
+      "sources": ["smoke-personal"]
+    },
+    {
+      "id": "smoke-1",
+      "internetMessageId": "<smoke-1@smoke.example>",
+      "conversationId": null,
+      "subject": "Project Quill: CIM draft",
+      "sentDateTime": "2026-09-01T11:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "marcus@smoke.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "deals@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Draft attached for review." },
+      "sources": ["smoke-deals"]
+    },
+    {
+      "id": "smoke-2",
+      "internetMessageId": "<smoke-2@smoke.example>",
+      "conversationId": null,
+      "subject": "Quill bidder call",
+      "sentDateTime": "2026-09-01T12:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "quinn@smoke.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "deals@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Dial-in is in the invite." },
+      "sources": ["smoke-deals"]
+    },
+    {
+      "id": "smoke-3",
+      "internetMessageId": "<smoke-3@smoke.example>",
+      "conversationId": null,
+      "subject": "Fenwick Foods CIM comments",
+      "sentDateTime": "2026-09-01T13:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "quinn@smoke.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "deals@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Comments from the client are consolidated below." },
+      "sources": ["smoke-deals"]
+    },
+    {
+      "id": "smoke-6",
+      "internetMessageId": "<smoke-6@smoke.example>",
+      "conversationId": null,
+      "subject": "Quarterly compliance attestation due",
+      "sentDateTime": "2026-09-01T14:00:00Z",
+      "from": { "emailAddress": { "name": null, "address": "compliance@smoke.example" } },
+      "toRecipients": [{ "emailAddress": { "name": null, "address": "deals@smoke.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Complete the attestation by the end of the month." },
+      "sources": ["smoke-deals"]
+    }
+  ]
+}

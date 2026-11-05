@@ -1,0 +1,5 @@
+{
+  "source": "fallback",
+  "reason": "no gateway key on the agent host",
+  "status": "calibration pending the owner's gateway key; the conservative fallback of 3.0 bytes per token and 600 output tokens per item applies until a measured run replaces this file"
+}

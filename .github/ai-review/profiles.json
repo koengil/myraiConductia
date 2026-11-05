@@ -1,0 +1,42 @@
+{
+  "small_pr_max_lines": 50,
+  "lenses": {
+    "generalist": {
+      "always": true,
+      "paths": [],
+      "labels": [],
+      "model": { "trial": "claude-generalist", "production": "codex" }
+    },
+    "governance": {
+      "paths": [
+        "supabase/migrations/**",
+        "src/lib/api/v1/**",
+        "src/app/api/**",
+        "src/middleware.ts",
+        "src/lib/auth/**",
+        "src/lib/mailboxAccess/**",
+        "src/lib/modelGateway/**",
+        "src/lib/ai/**",
+        "src/lib/compliance/**",
+        "infra/**"
+      ],
+      "labels": ["governance", "security"],
+      "model": { "trial": "claude-lens", "production": "claude-lens" }
+    },
+    "tests-agentic": {
+      "paths": [
+        "tests/**",
+        "e2e/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "src/lib/ai/**",
+        "src/lib/orchestration/**",
+        "src/lib/modelGateway/**",
+        "src/lib/discovery/**",
+        "worker/**"
+      ],
+      "labels": ["agentic", "tests"],
+      "model": { "trial": "claude-lens", "production": "claude-lens" }
+    }
+  }
+}

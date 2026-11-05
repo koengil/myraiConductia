@@ -1,0 +1,66 @@
+{
+  "_source": "derived from gh api repos/Conductia/Conductia/actions/runs/39649323445/jobs?filter=all (GET, 2026-10-21; steps, runner names and URLs stripped). The first three jobs are recorded: attempt 1's failed E2E job, attempt 2's re-run of it, and a skipped job that never had a runner. The fourth is added in the same shape: a group-targeted job of attempt 2 that a deploy runner (group 7, runner 5004) started and finished between two launcher ticks. No such job has run; this is the case the post-hoc check exists for",
+  "total_count": 4,
+  "jobs": [
+    {
+      "id": 119393595480,
+      "run_id": 39649323445,
+      "run_attempt": 1,
+      "name": "E2E (hermetic)",
+      "status": "completed",
+      "conclusion": "failure",
+      "labels": ["conductia-ci-heavy"],
+      "runner_id": 21,
+      "runner_group_id": 1,
+      "runner_group_name": "Default",
+      "created_at": "2026-10-21T18:04:35Z",
+      "started_at": "2026-10-21T18:04:59Z",
+      "completed_at": "2026-10-21T18:06:07Z"
+    },
+    {
+      "id": 119397580443,
+      "run_id": 39649323445,
+      "run_attempt": 2,
+      "name": "E2E (hermetic)",
+      "status": "completed",
+      "conclusion": "success",
+      "labels": ["conductia-ci-heavy"],
+      "runner_id": 27,
+      "runner_group_id": 1,
+      "runner_group_name": "Default",
+      "created_at": "2026-10-21T18:12:18Z",
+      "started_at": "2026-10-21T18:12:19Z",
+      "completed_at": "2026-10-21T18:19:12Z"
+    },
+    {
+      "id": 119397582254,
+      "run_id": 39649323445,
+      "run_attempt": 2,
+      "name": "E2E discovery demo (Gmail replay)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "labels": [],
+      "runner_id": null,
+      "runner_group_id": null,
+      "runner_group_name": null,
+      "created_at": "2026-10-21T18:12:18Z",
+      "started_at": "2026-10-21T18:12:18Z",
+      "completed_at": "2026-10-21T18:12:18Z"
+    },
+    {
+      "id": 119397590001,
+      "run_id": 39649323445,
+      "run_attempt": 2,
+      "name": "group-targeted job",
+      "status": "completed",
+      "conclusion": "success",
+      "labels": ["conductia-deploy"],
+      "runner_id": 5004,
+      "runner_group_id": 7,
+      "runner_group_name": "conductia-deploy",
+      "created_at": "2026-10-21T18:12:18Z",
+      "started_at": "2026-10-21T18:12:25Z",
+      "completed_at": "2026-10-21T18:13:05Z"
+    }
+  ]
+}

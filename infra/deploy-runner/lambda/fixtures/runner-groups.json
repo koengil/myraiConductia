@@ -1,0 +1,28 @@
+{
+  "_source": "hand-written in the documented shape of GET /orgs/{org}/actions/runner-groups (the research token got 403; O2 creates the group). Replace with a recording after O2",
+  "total_count": 2,
+  "runner_groups": [
+    {
+      "id": 1,
+      "name": "Default",
+      "visibility": "all",
+      "default": true,
+      "allows_public_repositories": false,
+      "restricted_to_workflows": false,
+      "selected_workflows": [],
+      "workflow_restrictions_read_only": false,
+      "inherited": false
+    },
+    {
+      "id": 7,
+      "name": "conductia-deploy",
+      "visibility": "selected",
+      "default": false,
+      "allows_public_repositories": false,
+      "restricted_to_workflows": false,
+      "selected_workflows": [],
+      "workflow_restrictions_read_only": false,
+      "inherited": false
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+# Line endings.
+#
+# The repo is uniformly LF (verified: 0 of 869 TypeScript sources carried CRLF
+# when this was added), so `eol=lf` is a no-op on existing content and causes no
+# renormalisation churn. It is here to keep it that way: a checkout on Windows
+# with core.autocrlf=true would otherwise hand every contributor CRLF working
+# copies, and the next tool that rewrites a file bakes that into a commit.
+#
+# .githooks/pre-commit reads these attributes rather than hardcoding its own
+# exemption list, so anything declared binary or eol=crlf below is left alone.
+
+* text=auto eol=lf
+
+# Windows batch files are the real exception: some interpreters need CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary: never touch, never diff as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary

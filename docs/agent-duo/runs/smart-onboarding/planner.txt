@@ -1,0 +1,54 @@
+/loop You are the PLANNER/EXECUTOR and COORDINATOR in a two-agent workflow.
+
+WORK ITEM
+Implement the approved brief at docs/agent-duo/runs/smart-onboarding/brief.md: smart company/email lookup, a live server-authoritative access-perimeter preview, and a personalized invitee welcome brief. These must form one demo-ready experience in the existing real onboarding flow. The brief is authoritative; do not invent adjacent product scope.
+
+RUN SETUP
+- Product run_id: smart-onboarding
+- Run folder: docs/agent-duo/runs/smart-onboarding/
+- Reviewer terminal handle: {{REVIEWER_HANDLE}}
+- You and the reviewer share this one dedicated worktree. Do not create another worktree.
+- FIRST: read brief.md, README.md, and CLAUDE.md in full. Confirm the branch is based on origin/develop. Append a timestamped start entry to log-planner.md.
+- SECOND: run `orca orchestration run-create --objective "Implement and review smart-onboarding: smart lookup, live perimeter preview, and personalized invitee brief" --json`. Record the returned orchestration Run ID in log-planner.md. All review Tasks and Dispatches belong to that Run.
+- Append every action to log-planner.md. Never write to log-reviewer.md.
+- The reviewer has been primed with its persistent role and is waiting for a tracked Dispatch.
+
+REPO RULES
+- Base and PR target: develop. Never commit directly to develop or main. Stop without merging.
+- Read the existing onboarding run’s frozen spec and current implementation where useful, but do not read docs/agent-duo/lessons.md or lessons-pending.md; those are reviewer-only cross-run memory.
+- Preserve all server-side access walls, feature-flag behavior, TOS, out-of-band verification, 2FA, Box mediation, and audit invariants stated in the brief and CLAUDE.md.
+- If integration credentials are required for a relevant live gate, copy the untracked .env.local from /Users/martincasado/FutureProofing/intellibank into this worktree. Never commit it or print secrets.
+- You are the sole implementation editor. Do not spawn additional agents; this is intentionally an agent duo.
+
+ARTIFACT PROTOCOL
+Every artifact starts with YAML frontmatter containing:
+---
+run_id: smart-onboarding
+type: spec | plan | pr-request | escalation | review | log
+round: <n>
+---
+Never edit a reviewed spec/plan version in place. A later round is a new file.
+
+REVIEW CONTRACT FOR SPEC, PLAN, AND PR REQUEST
+1. Write the artifact.
+2. Create a Task with a fixed, complete spec:
+   `orca orchestration task-create --task-title "Review <file> (run smart-onboarding)" --display-name "<phase> review r<n>" --spec "Review <absolute artifact path> against docs/agent-duo/runs/smart-onboarding/brief.md and your persistent rubric. Write <absolute run folder>/cr-<source-filename>.md with exact source filename and authoritative approved or changes_requested status. Answer all five rubric sections explicitly. Report worker_done exactly once with --task-id and --dispatch-id, --report-path, and explicit outcome." --json`
+3. Start/reuse the reviewer with `orca orchestration worker-start --task <taskId> --terminal {{REVIEWER_HANDLE}} --json`. Do not use an untracked terminal prompt for reviews.
+4. Wait with `orca orchestration check --wait --types worker_done,escalation,question --timeout-ms 900000 --json`.
+5. Process every Delivery message. Read the report file and treat its frontmatter status as authoritative. Reject a report missing any of the five numbered rubric sections.
+6. Confirm the Task and Dispatch settled. Before acknowledging the Delivery, either prepare the immediate next artifact/Task and transfer the same reviewer terminal with worker-start, or, when the run is ending, run worker-release for the settled Dispatch. Then acknowledge the Delivery.
+7. changes_requested means address every numbered blocking item in a new version and redispatch. Approval freezes that phase.
+8. A timeout is a checkpoint, not failure. Inspect task/worker state and bounded worker output, then keep waiting if alive. Never kill/retry a live worker merely for taking time.
+9. Maximum three substantive review rounds per phase. If round three remains unresolved, write escalation.md with both positions and stop for a user decision; do not silently choose.
+
+PHASE 1 — SPEC (WHAT)
+Write spec-v1.md with problem, goals, non-goals, complete user behavior, concrete acceptance criteria derived from every brief requirement, out-of-scope boundaries, and resolved product questions. Do not put implementation choices in the spec. Obtain reviewer approval and freeze it.
+
+PHASE 2 — PLAN (HOW)
+Only after spec approval, inspect the current code and write plan-v1.md. Map every frozen acceptance criterion to technical changes, exact likely files/surfaces, policy reuse, API contracts, migrations/rollback if any, leakage and race edge cases, feature-flag behavior, demo fixture/runbook work, and tests. If planning requires changing the frozen spec, escalate. Obtain reviewer approval and freeze it.
+
+PHASE 3 — EXECUTE
+Implement the approved plan yourself. Preserve unrelated user changes. Add/update tests and docs. Run focused verification during development, then the repository’s mandatory full lint, test, and production build gates. Also run type checking, migration probes, or end-to-end checks required by the plan. Log exact results. Do not open a PR while a mandatory gate is red.
+
+PHASE 4 — PR
+Commit intentionally on this feature branch, push it, and open a draft PR into develop. Write prr-<number>.md with URL, number, title, head SHA, frozen spec and plan links, implementation summary, acceptance-criteria evidence, tests, residual risks, and demo steps. Dispatch it through the same tracked reviewer contract. Address blocking PR comments, push fixes, and redispatch delta review as needed. When the reviewer has posted an exact `PR APPROVED` comment and its report is approved, make the PR ready, record a final summary in log-planner.md, release the reviewer terminal, and stop without merging.

@@ -1,0 +1,199 @@
+{
+ "format": "conductia.recall-corpus/v1",
+ "firm": {
+  "companyId": "co-firm",
+  "domain": "hqpartners.example",
+  "approvals": [
+   "firm_name_alias"
+  ]
+ },
+ "sources": [
+  {
+   "id": "src-deals",
+   "address": "deals@hqpartners.example",
+   "kind": "team",
+   "readerPersonIds": [
+    "p-ines",
+    "p-tobias",
+    "p-priya"
+   ],
+   "headline": true
+  },
+  {
+   "id": "src-ines",
+   "address": "ines@hqpartners.example",
+   "kind": "personal",
+   "ownerPersonId": "p-ines"
+  },
+  {
+   "id": "src-tobias",
+   "address": "tobias@hqpartners.example",
+   "kind": "personal",
+   "ownerPersonId": "p-tobias"
+  },
+  {
+   "id": "src-priya",
+   "address": "priya@hqpartners.example",
+   "kind": "personal",
+   "ownerPersonId": "p-priya"
+  },
+  {
+   "id": "src-dario",
+   "address": "dario@hqpartners.example",
+   "kind": "personal",
+   "ownerPersonId": "p-dario"
+  },
+  {
+   "id": "src-legacy",
+   "address": "marcus.holt@hqpartners.example",
+   "kind": "personal"
+  }
+ ],
+ "people": [
+  {
+   "id": "p-ines",
+   "address": "ines@hqpartners.example",
+   "companyId": "co-firm",
+   "leadsView": true,
+   "searchCompanies": true
+  },
+  {
+   "id": "p-tobias",
+   "address": "tobias@hqpartners.example",
+   "companyId": "co-firm",
+   "leadsView": true,
+   "searchCompanies": true
+  },
+  {
+   "id": "p-priya",
+   "address": "priya@hqpartners.example",
+   "companyId": "co-firm",
+   "leadsView": false,
+   "searchCompanies": true
+  },
+  {
+   "id": "p-dario",
+   "address": "dario@hqpartners.example",
+   "companyId": "co-firm",
+   "leadsView": true,
+   "searchCompanies": false
+  }
+ ],
+ "companies": [
+  {
+   "id": "co-firm",
+   "name": "Halvorsen Quill Partners",
+   "type": "bank",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-coadv",
+   "name": "Marlow Vance Advisory",
+   "type": "bank",
+   "registeredByCompanyId": "co-coadv"
+  },
+  {
+   "id": "co-corvane",
+   "name": "Corvane Hydraulics",
+   "type": "client",
+   "registeredByCompanyId": "co-coadv"
+  },
+  {
+   "id": "co-tessaly",
+   "name": "Tessaly Foods",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-northgate",
+   "name": "Northgate Dental Group",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-brightwater",
+   "name": "Brightwater Logistics",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-ostrander",
+   "name": "Ostrander Aggregates",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-wrenfield",
+   "name": "Wrenfield Pharma Services",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-pellam",
+   "name": "Pellam Marine Systems",
+   "type": "client",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-dunmore",
+   "name": "Dunmore Capital Partners",
+   "type": "acquirer",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-veridane",
+   "name": "Veridane Industrial",
+   "type": "acquirer",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-lowell",
+   "name": "Lowell Health Holdings",
+   "type": "acquirer",
+   "registeredByCompanyId": "co-firm"
+  },
+  {
+   "id": "co-fairhaven",
+   "name": "Fairhaven Partners",
+   "type": "acquirer",
+   "registeredByCompanyId": "co-firm"
+  }
+ ],
+ "deals": {
+  "alder": {
+   "keys": [
+    "alder",
+    "firm:corvane-hydraulics"
+   ]
+  },
+  "kestrel": {
+   "keys": [
+    "kestrel",
+    "firm:northgate-dental-group"
+   ]
+  },
+  "fenwick": {
+   "keys": [
+    "fenwick"
+   ]
+  },
+  "tessaly": {
+   "keys": [
+    "firm:tessaly-foods"
+   ]
+  },
+  "quarry": {
+   "keys": [
+    "quarry"
+   ]
+  },
+  "sable": {
+   "keys": [
+    "sable"
+   ]
+  },
+  "pellam": {
+   "keys": []
+  }
+ }
+}

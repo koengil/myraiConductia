@@ -1,0 +1,1140 @@
+{
+  "source": "execution-guide-v2",
+  "executionClassDefs": {
+    "A": "Fully agentic. The agent completes the step autonomously; reversible, internal, low-risk; fully logged. A human sees the result but does not gate it.",
+    "A+H": "Agentic-led, human-in-the-loop. The agent does the work end-to-end; a banker reviews and approves before it is used, sent, or relied on.",
+    "H+A": "Human-led, agentic check. A banker does the core work (judgment, build, negotiation); an agent checks, sources, or assists.",
+    "H": "Fully human. Relationship, live judgment, or irreversible sign-off. Agents only observe to learn."
+  },
+  "steps": [
+    {
+      "seq": 1,
+      "name": "Target Universe",
+      "description": "Defines the firm's market thesis and coverage universe: priority sectors/subsectors, geography, ownership profile, growth metrics, strategic pressure points, buyer themes, likely exit triggers, flexed by company quality and Ignatious mandate fit. Produces a prioritized target list with thesis tags and outreach priorities, every data point source-cited; a banker reviews before any coverage activity.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Sector and company screening data", "format": null, "source": "Capital IQ, PitchBook"}],
+        "transformation": "Screens sector/company data against the firm's thesis criteria and mandate fit to produce a prioritized, thesis-tagged, source-cited target list.",
+        "outputs": [{"what": "Prioritized target lists with thesis tags, source citations, and outreach priorities", "format": null}],
+        "constraints": ["Public-source data only unless use of other sources is authorized", "Estimates labeled as estimates", "Restricted-list and conflicted entities excluded from every target list"]
+      },
+      "tools": ["Capital IQ", "PitchBook", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Banker reviews before the list drives any coverage activity"},
+      "compliance": ["Public-source data only unless authorized; estimates labeled; restricted-list and conflicted entities excluded"],
+      "sourceRefs": ["execution-guide-v2 Seq 1"],
+      "confidence": "high"
+    },
+    {
+      "seq": 2,
+      "name": "Exit Readiness",
+      "description": "Scores seller propensity — which companies in the universe are most likely to sell soon — from funding history, sponsor hold period, founder/board dynamics, capital needs, strategic pressure, growth/margin profile, known inbound interest, and timing catalysts. Each scored company carries a timing hypothesis and likely sale rationale so outreach can be sequenced toward the ripest opportunities.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Funding, ownership, and pressure signals per company", "format": null, "source": "Capital IQ, PitchBook, HubSpot (CRM)"}],
+        "transformation": "Scores each company's likelihood and timing of a sale from ownership, funding, and pressure signals; attaches rationale, owner, and next action.",
+        "outputs": [{"what": "Seller-propensity score with timing hypothesis, likely rationale, banker owner, and next action", "format": null}],
+        "constraints": ["Public signals kept separate from confidential observations", "Source provenance preserved on every signal", "Output framed strictly as decision support, not a determination"]
+      },
+      "tools": ["Capital IQ", "PitchBook", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Banker reviews the scoring before acting on it"},
+      "compliance": ["Public signals separated from confidential observations; provenance preserved; decision support only"],
+      "sourceRefs": ["execution-guide-v2 Seq 2"],
+      "confidence": "high"
+    },
+    {
+      "seq": 3,
+      "name": "Acquirer Strategy",
+      "description": "Mirror image of Exit Readiness: identifies companies likely to buy and the likely targets for each buyer. Maps per acquirer: product gaps, M&A history, capital capacity, strategic priorities, corp-dev contacts, and stated or inferred acquisition criteria. Seeds later buyer-universe work with a defensible, source-cited answer to who would buy this company and why.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Buyer M&A history, capital capacity, and strategic-priority data", "format": null, "source": "Capital IQ, PitchBook"}],
+        "transformation": "Builds a buyer-propensity map pairing likely acquirers with likely targets, acquisition criteria, and contacts.",
+        "outputs": [{"what": "Likely-buyer list with targets-per-buyer map, acquisition criteria, and corp-dev contacts", "format": null}],
+        "constraints": ["Conflict and restricted-list screening on every buyer", "Confidential buyer preferences respected", "All rationale source-cited"]
+      },
+      "tools": ["Capital IQ", "PitchBook"],
+      "approval": {"required": true, "by": "Banker reviews before the map informs outreach"},
+      "compliance": ["Conflict/restricted-list screening on every buyer; confidential buyer preferences respected; rationale source-cited"],
+      "sourceRefs": ["execution-guide-v2 Seq 3"],
+      "confidence": "high"
+    },
+    {
+      "seq": 4,
+      "name": "Lead Registration",
+      "description": "The moment a lead arrives (inbound, referral, or MD-originated) it is registered — target within 24 hours — with source, referrer, company, transaction type, status, estimated size, confidentiality level, and lead owner, and written into the Pipeline CRM funnel under Live lead. Runs fully agentically because it is internal, reversible, and logged.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Inbound lead, referral, or MD-originated opportunity", "format": null, "source": "Inbound / referral / MD"}],
+        "transformation": "Creates the lead record, source attribution, referrer record, and company/contact profile; writes the funnel entry under Live lead within 24 hours.",
+        "outputs": [{"what": "Registered lead record in the funnel with source, owner, size, and confidentiality level", "format": "CRM record"}],
+        "constraints": ["Registration mandatory for every lead", "Record labels prospect vs client", "Solicitation, restricted-list, and confidentiality issues flagged at intake"]
+      },
+      "tools": ["HubSpot (CRM)"],
+      "approval": {"required": false, "by": "None — banker sees the result but does not gate it (class A)"},
+      "compliance": ["Lead registration mandatory for every lead; prospect vs client labeled; solicitation/restricted-list/confidentiality flags at intake"],
+      "sourceRefs": ["execution-guide-v2 Seq 4"],
+      "confidence": "high"
+    },
+    {
+      "seq": 5,
+      "name": "Source Intelligence",
+      "description": "When a lead comes through a referrer or supporter, captures everything that person knows — client goals, decision-makers, decision criteria, stakeholder sensitivities, supporters/detractors, competing banks, estimated win probability, best path to the mandate — converting an informal tip into a structured pursuit brief.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Referrer/supporter conversations", "format": null, "source": "Referrer or supporter"}],
+        "transformation": "Converts informal referrer knowledge into a structured intelligence record covering goals, criteria, stakeholders, competitors, win probability, and path to mandate.",
+        "outputs": [{"what": "Structured intelligence record: client goals, decision criteria, stakeholder map, competing banks, win probability, path to mandate", "format": null}],
+        "constraints": ["Supporter commentary treated as confidential", "Opinion explicitly separated from fact", "Sensitive relationship information protected"]
+      },
+      "tools": ["HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Banker reviews the capture before it shapes pitch strategy"},
+      "compliance": ["Supporter commentary confidential; opinion separated from fact; sensitive relationship info protected"],
+      "sourceRefs": ["execution-guide-v2 Seq 5"],
+      "confidence": "high"
+    },
+    {
+      "seq": 6,
+      "name": "Conflicts Checklist",
+      "description": "Before anyone reviews private information, a conflicts check runs covering the restricted list, existing NDAs, board roles, and prior engagements. Deliberately human-led today (Ignatious handles conflicts manually; v9 deprioritized automation here) — the agent assembles the checklist and evidence, banker and compliance make the determination; the OS later productizes a full conflicts engine.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Company, counterparties, and firm history", "format": null, "source": "Compliance restricted list, HubSpot (CRM)"}],
+        "transformation": "Agent assembles the conflicts checklist and evidence; humans make the determination; unresolved issues escalated rather than judged by the agent.",
+        "outputs": [{"what": "Completed conflicts/restricted-list check with status, walling notes, and required approvals", "format": null}],
+        "constraints": ["Runs before any private information is reviewed", "Unresolved issues are escalated, never judged by the agent"]
+      },
+      "tools": ["Compliance restricted list", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Senior banker, compliance, or legal — the human/compliance decision gates the step, not the agent"},
+      "compliance": ["Unresolved conflicts must route to a senior banker, compliance, or legal and be resolved before any private information review"],
+      "sourceRefs": ["execution-guide-v2 Seq 6"],
+      "confidence": "high"
+    },
+    {
+      "seq": 7,
+      "name": "Codename / Deal Shell",
+      "description": "Once the opportunity is real enough to hold confidential material, assigns a preliminary codename and creates the deal shell: workspace folder structure, early access list, confidentiality level, allowed document categories, project code, permission record, audit identifier, initial deal checklist. From this point the codename — not the real company name — appears in communications and file names.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Qualified opportunity", "format": null, "source": "Upstream qualification"}],
+        "transformation": "Assigns a codename and stands up the deal shell — folders, access list, confidentiality level, document categories, permission record, audit identifier, initial checklist — that downstream agents inherit.",
+        "outputs": [{"what": "Codename and deal shell with folder structure, early access list, confidentiality level, allowed document categories, and audit identifier", "format": null}],
+        "constraints": ["Codename is not a substitute for canonical identity — real identities remain access-controlled and logged", "Every permission on the shell is explicit and auditable"]
+      },
+      "tools": ["SharePoint (M365)", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Banker approves the shell configuration"},
+      "compliance": ["Real identities remain access-controlled and logged; every shell permission explicit and auditable"],
+      "sourceRefs": ["execution-guide-v2 Seq 7"],
+      "confidence": "high"
+    },
+    {
+      "seq": 8,
+      "name": "Relationship Pathing",
+      "description": "Maps who actually decides and who can open the door: decision makers, influencers, board members, investors, corp-dev contacts, CEOs/CFOs, sponsor partners, existing relationships, warm paths, and best introducers. For founder-led or VC-backed sellers, builds an explicit board/investor alignment map since those stakeholders can approve or kill a sale independently of management.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Company ownership, board, and contact data", "format": null, "source": "HubSpot (CRM), Knowledge Graph / Relationship Strength (OS Build #15)"}],
+        "transformation": "Maps decision-makers, influencers, warm paths, and introducers; builds board/investor alignment map for founder-led or VC-backed sellers.",
+        "outputs": [{"what": "Decision-maker/influencer map with warm paths, best introducers, and board/investor alignment map", "format": null}],
+        "constraints": ["Privacy-aware and permitted-source only", "Confidence and source of every relationship claim is logged"]
+      },
+      "tools": ["HubSpot (CRM)", "Knowledge Graph / Relationship Strength application (horizontal, OS Build #15)"],
+      "approval": {"required": true, "by": "Banker reviews the paths before any approach is made"},
+      "compliance": ["Privacy-aware, permitted-source only; confidence and source of every relationship claim logged"],
+      "sourceRefs": ["execution-guide-v2 Seq 8"],
+      "confidence": "high"
+    },
+    {
+      "seq": 9,
+      "name": "MD Briefing + Company Backgrounding",
+      "description": "Before the MD's first call, produces one document with three layers: (1) MD brief — call objectives, questions, relationship context, qualification score; (2) source-cited company profile — product, model, customers, ownership, investors, financings, board, competitors, likely buyers, valuation indicators, rationale; (3) Relevant Past Deals as full detailed case studies ranked by relevance, with an 'If they ask about X' objection cross-reference.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Public and internal data on the company", "format": null, "source": "Capital IQ, PitchBook, HubSpot (CRM), Case Study Library (Seq 18, RTS Build #11)"}],
+        "transformation": "Assembles a single briefing document: MD brief up front, source-cited company profile, ranked detailed case studies with objection cross-references.",
+        "outputs": [{"what": "Single briefing document: MD brief + source-cited company profile + ranked detailed case studies with objection cross-references", "format": null}],
+        "constraints": ["Public data separated from banker/client-confidential data", "Every claim source-cited; estimates flagged", "Past-deal content passes a client-confidentiality scrub before reuse"]
+      },
+      "tools": ["Capital IQ", "PitchBook", "HubSpot (CRM)", "Case Study Library application (Seq 18)"],
+      "approval": {"required": true, "by": "MD reviews the document before use"},
+      "compliance": ["Public vs confidential data separated; claims source-cited; estimates flagged; confidentiality scrub before past-deal reuse"],
+      "sourceRefs": ["execution-guide-v2 Seq 9"],
+      "confidence": "high"
+    },
+    {
+      "seq": 10,
+      "name": "Meeting Intelligence",
+      "description": "At the start of the first client meeting the client is asked whether AI note-taking is permitted. If yes, AI takes notes/transcript per consent terms; if no, the MD sends their own notes for structured capture. Either way, summarizes issues, financials, timing, rationale, buyer mentions, sensitivities, and next actions into CRM activity, contacts, tasks, relationship notes, and deal facts.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Consent-gated meeting capture (or MD notes)", "format": "Notes or transcript", "source": "Meeting notes/transcription tooling or MD"}],
+        "transformation": "Structures meeting content into a summary with deal facts, sensitivities, action items, and CRM updates; records the consent decision.",
+        "outputs": [{"what": "Structured summary with deal facts, sensitivities, action items, and CRM updates", "format": null}],
+        "constraints": ["No capture without recorded consent", "Transcript kept distinct from AI summary", "Sensitive notes privileged as needed"]
+      },
+      "tools": ["Meeting notes/transcription tooling", "HubSpot (CRM)", "Client Consent Tracker"],
+      "approval": {"required": true, "by": "Banker reviews the structured output before it is relied on"},
+      "compliance": ["AI-notes consent must be asked and recorded at meeting start — no capture without it; transcript distinct from summary; sensitive notes privileged as needed"],
+      "sourceRefs": ["execution-guide-v2 Seq 10"],
+      "confidence": "high"
+    },
+    {
+      "seq": 11,
+      "name": "Deal Qualification",
+      "description": "The go/no-go decision. The agent scores mandate fit across eight dimensions — fee potential, transaction likelihood, banker credibility, strategic relevance, conflicts, resource burden, reputation risk, ability to win — producing a pursue/pass recommendation with reasons. Scoring is decision support only: a senior banker makes the actual pursue/pass call on the record.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Opportunity profile and firm context", "format": null, "source": "HubSpot (CRM)"}],
+        "transformation": "Scores eight qualification dimensions into a go/no-go recommendation with documented reasons; human makes the call.",
+        "outputs": [{"what": "Qualification score with go/no-go recommendation and documented pursue/pass reasons", "format": null}],
+        "constraints": ["Scoring is decision support only", "Confidential rationale is protected"]
+      },
+      "tools": ["HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Senior banker approval required for every pursue/pass decision — the agent recommends, the senior banker decides"},
+      "compliance": ["Senior banker decides on the record; confidential rationale protected"],
+      "sourceRefs": ["execution-guide-v2 Seq 11"],
+      "confidence": "high"
+    },
+    {
+      "seq": 12,
+      "name": "Client NDA Workflow",
+      "description": "Before the firm can request the company's private documents, an NDA or confidentiality arrangement is put in place where required. Prepares the NDA workflow, compares the draft against firm precedent to flag non-standard terms, tracks execution status so no private-document request goes out before signing; archives executed documents and resulting permitted information categories.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Client NDA need", "format": null, "source": "Deal context"}],
+        "transformation": "Prepares and precedent-compares the NDA, flags non-standard terms, tracks execution status, archives the executed document and permitted information categories.",
+        "outputs": [{"what": "Prepared, precedent-compared NDA with tracked execution status and archived executed document, gating any private-document request", "format": "Word document + archive"}],
+        "constraints": ["No private-document request before NDA execution where an NDA is required", "Legal review required for non-standard terms"]
+      },
+      "tools": ["Word (M365) / contract templates", "SharePoint (executed-document archive)"],
+      "approval": {"required": true, "by": "Banker approves before anything is sent to the client; legal review for non-standard terms"},
+      "compliance": ["Legal review required for non-standard terms; no private-document request before NDA execution where required"],
+      "sourceRefs": ["execution-guide-v2 Seq 12"],
+      "confidence": "high"
+    },
+    {
+      "seq": 13,
+      "name": "Initial Diligence Request List",
+      "description": "Once the NDA is executed, drafts the initial diligence request list — the first formal ask for the company's internal information — from sector-specific templates adapted to company size, type, and transaction type, covering financial, legal, HR, customer/commercial, IP, regulatory, technology, and ESG categories. Sensitive vs general information categorized up front so the company can stage what it shares.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Sector-specific templates + company profile", "format": null, "source": "Diligence-template library"}],
+        "transformation": "Adapts sector templates to company size, type, and transaction type into a tailored request list with sensitive vs general categorization.",
+        "outputs": [{"what": "Tailored initial diligence request list, sent to the company only after NDA execution", "format": "Word document"}],
+        "constraints": ["No request before NDA execution", "Sensitive vs general information categorized up front"]
+      },
+      "tools": ["Word (M365)", "Diligence-template library"],
+      "approval": {"required": true, "by": "Banker review and approval before the list is sent"},
+      "compliance": ["No request before NDA execution; banker review and approval before send; sensitive vs general categorized up front"],
+      "sourceRefs": ["execution-guide-v2 Seq 13"],
+      "confidence": "high"
+    },
+    {
+      "seq": 14,
+      "name": "Outreach Strategy",
+      "description": "For each target person and company, recommends the best approach and messaging hypothesis — CEO narrative, CFO economics case, sponsor thesis, board angle, market-timing argument — anticipates each person's likely objections, and produces a personalized outreach sequence per contact, because a CEO, CFO, board member, and sponsor each respond to different arguments.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Persona and company data", "format": null, "source": "CRM and Relationship Pathing (Seq 8)"}],
+        "transformation": "Produces per-person approach, angle, anticipated objections, and a personalized outreach sequence per contact.",
+        "outputs": [{"what": "Per-person approach, angle, likely objections, and personalized outreach sequence", "format": null}],
+        "constraints": ["No misleading transaction claims", "No disclosure of MNPI", "Pre-send review on all outreach"]
+      },
+      "tools": ["HubSpot/CRM"],
+      "approval": {"required": true, "by": "Banker approval required before any outreach is sent"},
+      "compliance": ["Pre-send review on all outreach; no misleading transaction claims; no MNPI disclosure; banker approval before send"],
+      "sourceRefs": ["execution-guide-v2 Seq 14"],
+      "confidence": "high"
+    },
+    {
+      "seq": 15,
+      "name": "Strategy / SWOT",
+      "description": "Builds the strategic analysis underpinning the pitch: company SWOT, strategic alternatives, the why-sell-(or buy)-now argument, likely buyer theses, market timing, risk issues, valuation drivers, and a recommended process strategy — the analytical backbone the rest of the pitch narrative hangs on.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Company and market data", "format": null, "source": "Capital IQ"}],
+        "transformation": "Synthesizes company and market data into a strategy memo: SWOT, alternatives, why-now rationale, buyer theses, valuation drivers, process strategy.",
+        "outputs": [{"what": "Strategy memo covering SWOT, strategic alternatives, why-sell-now rationale, buyer theses, valuation drivers, and recommended process strategy", "format": "Word memo (M365)"}],
+        "constraints": ["Every claim source-cited", "Hypotheses clearly separated from facts"]
+      },
+      "tools": ["Capital IQ", "Word (M365)"],
+      "approval": {"required": true, "by": "MD approves the narrative before it is used"},
+      "compliance": ["Claims source-cited; hypotheses separated from facts; MD approval before use"],
+      "sourceRefs": ["execution-guide-v2 Seq 15"],
+      "confidence": "high"
+    },
+    {
+      "seq": 16,
+      "name": "Stakeholder Psychology",
+      "description": "Maps each individual stakeholder — CEO, CFO, board members, investors, advisors — on decision style, anxieties, desired outcome, status concerns, timing pressure, likely objections, and what Ignatious must prove to win their support; produces an explicit board/investor alignment map for founder-led or VC-backed sellers. Shapes who says what in the pitch room.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Stakeholder data", "format": null, "source": "CRM and prior source intelligence (Seq 5)"}],
+        "transformation": "Profiles each stakeholder's decision style, anxieties, and objections; builds board–investor alignment map.",
+        "outputs": [{"what": "Decision-style / anxiety / objection map plus a board–investor alignment map", "format": null}],
+        "constraints": ["Confidential internal use only", "Must avoid manipulative or misleading claims"]
+      },
+      "tools": ["HubSpot/CRM"],
+      "approval": {"required": true, "by": "A senior banker controls how the analysis is used"},
+      "compliance": ["Confidential internal use only; no manipulative or misleading claims; senior banker controls use"],
+      "sourceRefs": ["execution-guide-v2 Seq 16"],
+      "confidence": "high"
+    },
+    {
+      "seq": 17,
+      "name": "Buyer Universe",
+      "description": "Before the pitch, constructs a detailed universe of strategic buyers and sponsors: best buyers, rationale for each, acquisition history, contacts, existing relationships, access paths, ability to pay, likelihood to engage. A credible ranked buyer list in the pitch demonstrates the firm already knows who will buy and how to reach them. Drafted in Phase 1; approved buyer list finalized in Phase 2.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Strategic and sponsor screening data", "format": null, "source": "Capital IQ, PitchBook"}],
+        "transformation": "Screens and ranks strategic and sponsor buyers with per-buyer rationale, contacts, access paths, ability to pay, and engagement likelihood.",
+        "outputs": [{"what": "Ranked buyer universe with per-buyer rationale, contacts, access paths, ability-to-pay assessment, and likelihood-to-engage score", "format": null}],
+        "constraints": ["Conflict and restricted-party screening on every name", "No confidential outreach to any buyer before the mandate is won and the client approves"]
+      },
+      "tools": ["Capital IQ", "PitchBook", "HubSpot/CRM"],
+      "approval": {"required": true, "by": "Banker review (A+H); client approval plus a won mandate required before any confidential buyer outreach"},
+      "compliance": ["Conflict/restricted-party screening on every name; no confidential outreach before mandate won and client approval"],
+      "sourceRefs": ["execution-guide-v2 Seq 17"],
+      "confidence": "high"
+    },
+    {
+      "seq": 18,
+      "name": "Case Study Library",
+      "description": "Maintains a five-tier ranked library of deal case studies (Tier 1: Ignatious deals with the target firm's prior bankers; Tier 2: same sub-sector; Tier 3: same sector; Tiers 4–5: curated external precedents). Proactively surfaces the 3–5 highest-tier matches on every MD Briefing, Outreach Strategy run, Buyer Universe construction, and pitchbook draft. Each entry is a full payload, not a tombstone.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Firm deal history plus curated external precedents", "format": null, "source": "Internal deal database; Win/Loss Debrief, Deal Learning, Transaction Marketing / Asset Library agents; Sector Intelligence (external precedents)"}],
+        "transformation": "Ranks case studies into five relevance tiers and auto-surfaces the top 3–5 matches into briefings and pitch materials.",
+        "outputs": [{"what": "3–5 highest-relevance case studies surfaced automatically into briefings and pitch materials", "format": null}],
+        "constraints": ["Client consent verified via the Client Approval Tracker before any Ignatious deal is used externally", "Confidentiality scrub on every external precedent before pitch use"]
+      },
+      "tools": ["Internal deal database (SharePoint/M365)"],
+      "approval": {"required": true, "by": "Client consent (verified via the Client Approval Tracker) before any Ignatious deal is used externally"},
+      "compliance": ["Client consent verified before external use of any Ignatious deal; confidentiality scrub on every external precedent before pitch use"],
+      "sourceRefs": ["execution-guide-v2 Seq 18"],
+      "confidence": "high"
+    },
+    {
+      "seq": 19,
+      "name": "Engagement Economics",
+      "description": "Before the pitch deck is built, analyzes what the firm should propose to charge: fee structure, retainer, success fee, minimum fee, tail, expense terms, fairness-opinion fee, and likely negotiation points. Pulls the firm's own fee history plus cross-firm anonymized benchmarks from the Fee Structure Pool (OS Build #21), grounding proposed economics in precedent rather than guesswork.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Firm fee history plus anonymized pool benchmarks", "format": null, "source": "Fee precedent database; Operating System Fee Structure Pool feed (OS Build #21)"}],
+        "transformation": "Benchmarks firm fee history against anonymized cross-firm pool data into a proposed economics structure with rationale and fallback positions.",
+        "outputs": [{"what": "Proposed fee / retainer / success-fee / tail structure with rationale and accepted/fallback positions", "format": null}],
+        "constraints": ["Deviations from firm-standard terms are tracked"]
+      },
+      "tools": ["Fee precedent database", "Operating System Fee Structure Pool feed", "Excel"],
+      "approval": {"required": true, "by": "Legal / commercial review before proposed economics are used"},
+      "compliance": ["Legal/commercial review before use; deviations from firm-standard terms tracked"],
+      "sourceRefs": ["execution-guide-v2 Seq 19"],
+      "confidence": "high"
+    },
+    {
+      "seq": 20,
+      "name": "Engagement Letter Strategy",
+      "description": "Drafts the structure and key provisions of the Engagement Letter as internal strategy: which clauses to propose, which risk positions to hold, and what approvals each provision requires. Preparation only — actual sending and negotiation of the EL happen later at Seq 25 (Engagement Negotiation).",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Firm clause library plus deal specifics", "format": null, "source": "Firm clause library"}],
+        "transformation": "Assembles an internal EL framework: proposed clauses, risk positions, approval requirements, and drafting notes.",
+        "outputs": [{"what": "Internal EL framework with key provisions, risk positions, and drafting notes", "format": null}],
+        "constraints": ["All drafts version-controlled", "Preparation only — sending/negotiation happens at Seq 25"]
+      },
+      "tools": ["CLM (contract lifecycle management)", "Word"],
+      "approval": {"required": true, "by": "Counsel / senior banker review required for final terms"},
+      "compliance": ["Counsel/senior banker review for final terms; all drafts version-controlled"],
+      "sourceRefs": ["execution-guide-v2 Seq 20"],
+      "confidence": "high"
+    },
+    {
+      "seq": 21,
+      "name": "Pitchbook Drafting",
+      "description": "Generates the pitch deck in the firm template: company analysis, buyer universe, strategic rationale, valuation, engagement approach, timeline, team credibility, war stories. v9 adds two mandatory elements: league-table rankings (overall, sector, sub-sector — fed by Seq 55) and detailed case studies (top 3–5 from the Case Study Library, each a full page, prioritized by a client-overlap heuristic).",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Firm template plus upstream outputs (strategy/SWOT, buyer universe, engagement economics, case studies, league-table data)", "format": null, "source": "Firm template library; Seq 15, 17, 19, 18, 55; Capital IQ / PitchBook data feeds"}],
+        "transformation": "Assembles upstream analytical outputs into a client-ready pitch deck on the firm template with mandatory league-table and case-study elements.",
+        "outputs": [{"what": "Client-ready pitch deck with source appendix", "format": "PowerPoint"}],
+        "constraints": ["Source appendix required", "League-table rankings and detailed case studies are mandatory v9 elements"]
+      },
+      "tools": ["PowerPoint", "Firm template library", "Capital IQ", "PitchBook"],
+      "approval": {"required": true, "by": "No client delivery until senior banker approval; communications review before external use"},
+      "compliance": ["No client delivery until senior banker approval; source appendix required; communications review before external use"],
+      "sourceRefs": ["execution-guide-v2 Seq 21"],
+      "confidence": "high"
+    },
+    {
+      "seq": 22,
+      "name": "Pitch Page QC",
+      "description": "Reviews every page of the pitch deck against eight checks: point (one clear point per page), simplicity, story impact, uniqueness versus other banks, source accuracy, formatting, number consistency, and client relevance. Output is a page-by-page QC report with specific fixes, applied before the deck leaves the building.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Draft pitch deck", "format": "PowerPoint", "source": "Pitchbook Drafting (Seq 21)"}],
+        "transformation": "Runs eight per-page quality checks and produces findings and fixes with a pass/fail result.",
+        "outputs": [{"what": "Page-by-page QC findings and fixes, with a pass/fail result gating release", "format": null}],
+        "constraints": ["Must pass before the pitch deck is sent or presented"]
+      },
+      "tools": ["PowerPoint"],
+      "approval": {"required": true, "by": "QC pass/fail result gates release — must pass before the deck is sent or presented"},
+      "compliance": ["Must pass before the pitch deck is sent or presented"],
+      "sourceRefs": ["execution-guide-v2 Seq 22"],
+      "confidence": "high"
+    },
+    {
+      "seq": 23,
+      "name": "Pitch Rehearsal",
+      "description": "The bankers rehearse; the agent prepares and captures. Assigns speaking roles and page owners, compiles likely objections, war stories, and Q&A, produces dry-run notes, designates follow-up owners, and handles meeting logistics. The live rehearsal and the pitch itself remain human work — the agent ensures no one walks into the room unprepared.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Final deck plus team roster", "format": null, "source": "Seq 21/22 output; deal team"}],
+        "transformation": "Compiles a rehearsal pack: speaking roles, page owners, objections, Q&A, dry-run notes, follow-up owners, logistics.",
+        "outputs": [{"what": "Rehearsal pack (speaking roles, page owners, likely objections, Q&A, dry-run notes, follow-up owners, logistics)", "format": null}],
+        "constraints": ["Internal-only work product — never distributed externally"]
+      },
+      "tools": ["Platform (internal)", "M365"],
+      "approval": null,
+      "compliance": ["Internal-only work product, never distributed externally; purpose is consistency and reducing avoidable mistakes in the live pitch"],
+      "sourceRefs": ["execution-guide-v2 Seq 23"],
+      "confidence": "high"
+    },
+    {
+      "seq": 24,
+      "name": "Pitch Follow-Up",
+      "description": "After the pitch, runs the internal debrief and drafts stakeholder-specific follow-ups: requests for missing data, permissions, and references; answers to client questions; delivery of promised items; and surprise-to-the-upside incremental material beyond what was promised. Every commitment made during the pitch is tracked to completion so nothing promised is dropped.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Pitch debrief plus stakeholder map", "format": null, "source": "Deal team; Seq 16"}],
+        "transformation": "Converts pitch debrief into stakeholder-specific follow-up drafts and a tracked promised-deliverables list.",
+        "outputs": [{"what": "Follow-up drafts, promised-deliverables tracker, and open-question list", "format": null}],
+        "constraints": ["No private-document request before an NDA is in place", "All commitments tracked"]
+      },
+      "tools": ["HubSpot/CRM", "Outlook/M365 email"],
+      "approval": {"required": true, "by": "A banker approves every follow-up before it goes out (pre-send review)"},
+      "compliance": ["Pre-send review on every follow-up; no private-document request before NDA; all commitments tracked"],
+      "sourceRefs": ["execution-guide-v2 Seq 24"],
+      "confidence": "high"
+    },
+    {
+      "seq": 25,
+      "name": "Engagement Negotiation",
+      "description": "The banker negotiates the mandate to signature; the agent manages the paper. Sends the approved EL, manages client comments, compares redlines across versions, prepares negotiation positions (with the Negotiation Copilot, OS Build #16, surfacing market precedent), and tracks the document to execution. The negotiation itself, and every concession, is human judgment.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Approved EL draft plus client redlines", "format": null, "source": "Seq 20 output; client"}],
+        "transformation": "Manages EL paper flow — sends approved draft, compares redlines, prepares precedent-backed positions, tracks to execution.",
+        "outputs": [{"what": "Negotiated, fully executed Engagement Letter with complete version history", "format": null}],
+        "constraints": ["The banker, not the agent, conducts the negotiation", "Full audit trail maintained", "Executed agreement archived"]
+      },
+      "tools": ["CLM / Word", "Negotiation Copilot precedent database (OS Build #16)"],
+      "approval": {"required": true, "by": "Counsel / senior banker approval on final terms"},
+      "compliance": ["Counsel/senior banker approval on final terms; banker conducts the negotiation; full audit trail; executed agreement archived"],
+      "sourceRefs": ["execution-guide-v2 Seq 25"],
+      "confidence": "high"
+    },
+    {
+      "seq": 26,
+      "name": "Mandate Activation Checklist",
+      "description": "Converts the won prospect into an active mandate by driving a manual activation checklist to completion (from v9): final conflicts check, signed EL, IRS Form W-9, code name, deal team assignment, system permissions, compliance registration, folder setup, engagement scope, fee economics, timeline, kickoff plan. Nothing downstream begins until every item is checked; the agent assembles, tracks, and chases; humans perform judgment steps.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Executed EL + won-pitch record", "format": null, "source": "Seq 25; CRM"}],
+        "transformation": "Drives the activation checklist to completion, stands up the deal workspace, and moves the CRM entry from Live Lead to Won Mandate.",
+        "outputs": [{"what": "Completed activation checklist, live deal workspace, and a registered mandate in the CRM", "format": null}],
+        "constraints": ["Nothing downstream (kickoff, data room, materials) begins until every checklist item is complete", "Records-retention schedule initialized at activation"]
+      },
+      "tools": ["HubSpot (CRM)", "Compliance log", "M365/SharePoint deal workspace and permission groups"],
+      "approval": {"required": true, "by": "Final conflicts check must clear before activation; bankers and compliance perform the judgment steps"},
+      "compliance": ["Final conflicts check must clear before activation; information barriers stand up with deal-team assignment; retention schedule initialized at activation"],
+      "sourceRefs": ["execution-guide-v2 Seq 26"],
+      "confidence": "high"
+    },
+    {
+      "seq": 27,
+      "name": "Win/Loss Debrief",
+      "description": "Mandatory debrief on every pitch outcome, won or lost, no exceptions. Wins: what resonated, supporting factors, which slides and pitchers moved the needle. Losses: who won, why the firm lost, client-articulated reasons, deal-team gaps, missing data, competitive positioning. Agent structures and files; a banker supplies and validates substance. Builds the firm's best-pitcher / best-pitch database — a v9 'secret sauce' asset.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Pitch outcome + deal-team and client feedback", "format": null, "source": "Deal team; client"}],
+        "transformation": "Structures win/loss feedback into a debrief record feeding the pitch-performance database and effectiveness scores.",
+        "outputs": [{"what": "Structured debrief record feeding the pitch-performance database", "format": null}],
+        "constraints": ["Internal confidential learning only", "Client-specific content separated from reusable patterns"]
+      },
+      "tools": ["HubSpot (CRM)", "Internal pitch-performance database"],
+      "approval": {"required": true, "by": "Banker supplies and validates the substance (A+H review)"},
+      "compliance": ["Internal confidential learning only; banker-attributed performance data under privacy/HR controls; client content separated from reusable patterns"],
+      "sourceRefs": ["execution-guide-v2 Seq 27"],
+      "confidence": "high"
+    },
+    {
+      "seq": 28,
+      "name": "Kickoff / Org Meeting",
+      "description": "The organizational kickoff meeting is run by humans — bankers and client agree how the transaction will be executed. The agent generates outputs from that meeting: the initial Working Group List (handed to Seq 30), milestone targets (handed to Seq 29), roles, deliverables, weekly meeting cadence, and the client-vs-banker ownership split per workstream. This single meeting seeds most of the Stage 3 machinery.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Kickoff meeting content", "format": "Meeting notes", "source": "Kickoff meeting"}],
+        "transformation": "Converts kickoff decisions into the initial WGL, milestone targets, responsibility matrix, deliverable list, and cadence plan; initializes the deal's task engine and dashboard.",
+        "outputs": [{"what": "Initial WGL, milestone targets, responsibility matrix, deliverable list, and cadence plan", "format": null}],
+        "constraints": ["Material schedule changes captured under firm recordkeeping"]
+      },
+      "tools": ["Operating System (task engine, project dashboard)", "M365/SharePoint", "Meeting notes"],
+      "approval": {"required": true, "by": "The client must approve the process plan"},
+      "compliance": ["Client must approve the process plan; material schedule changes captured under firm recordkeeping"],
+      "sourceRefs": ["execution-guide-v2 Seq 28"],
+      "confidence": "high"
+    },
+    {
+      "seq": 29,
+      "name": "Timeline",
+      "description": "Builds the detailed transaction timeline from a template matched to the deal's sector, size, and transaction type, then tracks every milestone against that baseline for the life of the deal. When a milestone slips, it alerts both the banker and the MD. The timeline refreshes weekly.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Sector/size/transaction-type template + kickoff milestone targets", "format": null, "source": "Timeline-template library; Seq 28"}],
+        "transformation": "Instantiates a matched template into a living timeline; tracks baseline variance and raises slippage alerts; refreshes weekly.",
+        "outputs": [{"what": "Living transaction timeline with baseline-variance tracking and slippage alerts", "format": "Excel/Google Sheets"}],
+        "constraints": ["Client-approved baseline retained as evidence", "Material schedule changes captured under firm recordkeeping"]
+      },
+      "tools": ["Operating System", "Excel/Google Sheets"],
+      "approval": null,
+      "compliance": ["Material schedule changes captured under firm recordkeeping; client-approved baseline retained as evidence"],
+      "sourceRefs": ["execution-guide-v2 Seq 29"],
+      "confidence": "high"
+    },
+    {
+      "seq": 30,
+      "name": "WGL",
+      "description": "Maintains the Working Group List — the master roster of every party working the deal — as a continuously updated shared online document rather than a static attachment. Visibility is segregated by design: the Company and its advisors see all parties, while each buyer sees only the Company and its own advisors — never another buyer. Updates on every new contact across all parties.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "New contacts and party changes from every workstream", "format": null, "source": "All deal workstreams; HubSpot (CRM)"}],
+        "transformation": "Continuously updates the master party roster with visibility segregation applied per viewer group.",
+        "outputs": [{"what": "The always-current, visibility-segregated WGL", "format": "Shared online document (M365/SharePoint)"}],
+        "constraints": ["Access controls enforce buyer segregation — no cross-buyer visibility", "Every WGL view and edit captured in an audit trail"]
+      },
+      "tools": ["Shared online document (M365/SharePoint)", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "Banker (A+H class review before relied on); access controls enforce buyer segregation"},
+      "compliance": ["Access controls enforce buyer segregation — no cross-buyer visibility; every view and edit captured in an audit trail"],
+      "sourceRefs": ["execution-guide-v2 Seq 30"],
+      "confidence": "high"
+    },
+    {
+      "seq": 31,
+      "name": "VDR Setup",
+      "description": "Creates the internal VDR architecture immediately after mandate activation, well before any buyer enters: folder structure, file-naming conventions, permission scheme, indexing, upload rules, draft/final tagging, and access plan. Establishes clean-team / highly-confidential schedule folders — competitively sensitive material only cleared individuals may see — separate from general buyer-access folders.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Deal scope + document plan", "format": null, "source": "Mandate activation; deal team"}],
+        "transformation": "Designs and configures the VDR: taxonomy, naming, permissions, indexing, upload rules, tagging, access plan, clean-team carve-outs.",
+        "outputs": [{"what": "Configured VDR with folder taxonomy, permissions, and documented clean-team carve-outs", "format": null}],
+        "constraints": ["No buyer access until NDA execution and client approval", "Sensitive folders isolated", "Clean-team carve-out documented"]
+      },
+      "tools": ["VDR (Box/Datasite or client-selected provider)", "M365/SharePoint staging"],
+      "approval": {"required": true, "by": "Banker approves the architecture and the permission plan before the room goes live"},
+      "compliance": ["No buyer access until NDA execution and client approval; sensitive folders isolated; clean-team carve-out documented"],
+      "sourceRefs": ["execution-guide-v2 Seq 31"],
+      "confidence": "high"
+    },
+    {
+      "seq": 32,
+      "name": "Document Intake / Metadata",
+      "description": "As client documents flow in, curates the corpus for both human use now and machine retrieval later: folder structure, naming, metadata, draft/final tagging, source ownership (who provided each document), and document health (completeness, currency, version integrity). v9 frames this explicitly as future RAG readiness — disciplined metadata today enables permission-aware, citation-ready AI retrieval later.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Raw client document inflow", "format": null, "source": "Client"}],
+        "transformation": "Curates incoming documents: structure, naming, metadata, draft/final tagging, source ownership, and health assessment.",
+        "outputs": [{"what": "Curated, tagged, metadata-complete corpus plus a document-health report", "format": null}],
+        "constraints": ["Sensitive classification applied at intake", "Retrieval must remain permission-aware", "Citation readiness enforced from day one"]
+      },
+      "tools": ["M365/SharePoint", "VDR"],
+      "approval": null,
+      "compliance": ["Sensitive classification at intake; permission-aware retrieval; citation readiness enforced from day one"],
+      "sourceRefs": ["execution-guide-v2 Seq 32"],
+      "confidence": "high"
+    },
+    {
+      "seq": 33,
+      "name": "Data Room Diligence",
+      "description": "Once the data room is populated, the agent reviews it as a buyer's diligence team eventually will: strengths, weaknesses, missing information, internal inconsistencies, MNPI and private data, highly confidential strategic information, disclosure risk, and red flags. Separately tags clean-team / restricted-access materials so they can be withheld or released only under clean-team rules.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Populated data room", "format": null, "source": "VDR"}],
+        "transformation": "Reviews the corpus from a buyer's-diligence perspective, producing risk, gap, and sensitivity findings plus clean-team tagging and remediation tasks.",
+        "outputs": [{"what": "Risk register, missing-info log, strengths/weaknesses memo, strategic-info index, clean-team taxonomy, and remediation task list", "format": null}],
+        "constraints": ["Clean-team rules enforced before any buyer release", "Buyer-access restrictions flagged"]
+      },
+      "tools": ["VDR", "Excel trackers", "Operating System"],
+      "approval": {"required": true, "by": "Banker reviews the findings and owns the remediation decisions before anything is fixed, disclosed, or restricted"},
+      "compliance": ["Highly confidential / MNPI issues escalate to the banker; buyer-access restrictions flagged; clean-team rules enforced before any buyer release"],
+      "sourceRefs": ["execution-guide-v2 Seq 33"],
+      "confidence": "high"
+    },
+    {
+      "seq": 34,
+      "name": "Financial Normalization",
+      "description": "A banker — typically with the client's finance team — owns the numbers; the agent performs mechanical normalization and checking. v9 scope: normalize historical financials, build the ARR/revenue bridge, gross margin, EBITDA, customer concentration, cohort/KPI data, working capital, and addbacks. These figures feed the financial model, QoE inputs, and ultimately every number a buyer sees — which is why the human owns them.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Raw historical financials + KPI/cohort data", "format": null, "source": "Client accounting exports"}],
+        "transformation": "Mechanically normalizes historicals into model-ready figures (ARR bridge, margins, EBITDA, concentration, working capital, addbacks) with full source mapping.",
+        "outputs": [{"what": "Normalized financial database, assumptions log, and model-ready inputs with full source mapping", "format": "Excel/Google Sheets"}],
+        "constraints": ["Calculations must be deterministic — spreadsheet-verifiable, never model-estimated"]
+      },
+      "tools": ["Excel/Google Sheets", "Client accounting exports", "M365/SharePoint"],
+      "approval": {"required": true, "by": "Human approval required for all numbers used externally"},
+      "compliance": ["Deterministic, spreadsheet-verifiable calculations only — never model-estimated; human approval for all externally used numbers"],
+      "sourceRefs": ["execution-guide-v2 Seq 34"],
+      "confidence": "high"
+    },
+    {
+      "seq": 35,
+      "name": "Deal Pulse Checklist",
+      "description": "Produces the daily or weekly deal pulse — the Daily Deal Update Email from the original project requirements. Each pulse covers overdue items, current-week priorities, owners, blockers, document gaps, open items, and updated expected timeline. Where data is sufficient it includes a risk-to-signing indicator, banker-reviewed before any distribution. Also produces the recurring weekly client update.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Live task, timeline, and document status across the deal's applications", "format": null, "source": "Operating System (task engine, timeline, document trackers)"}],
+        "transformation": "Aggregates live deal state into a daily/weekly pulse digest with overdue items, priorities, owners, blockers, gaps, and timeline.",
+        "outputs": [{"what": "Daily/weekly pulse digest to the deal team (plus the recurring weekly client update)", "format": "Email"}],
+        "constraints": ["Distribution limited to authorized deal-team recipients — no cross-wall exposure", "Risk-to-signing indicator requires banker review before inclusion"]
+      },
+      "tools": ["Operating System (task engine, timeline, document trackers)", "Email distribution"],
+      "approval": {"required": true, "by": "Banker reviews the risk-to-signing indicator before it appears in any distribution"},
+      "compliance": ["Distribution limited to authorized deal-team recipients, no cross-wall exposure; risk-to-signing indicator banker-reviewed before inclusion"],
+      "sourceRefs": ["execution-guide-v2 Seq 35"],
+      "confidence": "high"
+    },
+    {
+      "seq": 36,
+      "name": "Teaser",
+      "description": "Drafts the anonymized teaser (blind profile) — the 1–2 page document testing buyer interest before the company's identity is revealed. From approved deal data only, assembles the four v9 elements: key metrics, investment highlights, process overview, confidentiality-safe positioning. Because it circulates pre-NDA, every description, metric, and market detail is checked so the combination cannot identify the client.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Approved deal data", "format": null, "source": "SharePoint deal shell"}],
+        "transformation": "Assembles approved data into an anonymized 1–2 page blind profile, checked for de-anonymization risk.",
+        "outputs": [{"what": "Anonymized 1–2 page teaser / blind profile, checked for de-anonymization risk and queued for client and banker approval", "format": "Word/PowerPoint (M365)"}],
+        "constraints": ["Anonymization checks on every draft", "Works only from approved deal data"]
+      },
+      "tools": ["Word/PowerPoint (M365)", "SharePoint deal shell"],
+      "approval": {"required": true, "by": "No release without client and banker approval"},
+      "compliance": ["Anonymization checks on every draft; no release without client and banker approval"],
+      "sourceRefs": ["execution-guide-v2 Seq 36"],
+      "confidence": "high"
+    },
+    {
+      "seq": 37,
+      "name": "CIM / Management Presentation",
+      "description": "Drafts the Confidential Information Memorandum (shared only after buyer NDA) and the Management Presentation in the firm template, built strictly from approved data. v9 section set: investment highlights, market, company, products, financials, KPIs, growth strategy, risks, appendix. Every claim tied to a source/citation map; sensitive-information review before anything reaches a buyer. CIM draft completion triggers Expert Panel Review red-teaming (PASS/REVISE/REWRITE) before buyer release.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Approved, normalized deal data", "format": null, "source": "SharePoint/VDR source documents; Seq 34 outputs"}],
+        "transformation": "Drafts CIM and MP on the firm template from approved data with a complete source/citation map per claim.",
+        "outputs": [{"what": "CIM plus Management Presentation in the firm template, with a complete source/citation map", "format": "Word and PowerPoint (M365)"}],
+        "constraints": ["Built strictly from approved data", "Source/citation map required", "Expert Panel red-team review triggered on draft completion"]
+      },
+      "tools": ["Word (M365)", "PowerPoint (M365)", "SharePoint/VDR"],
+      "approval": {"required": true, "by": "Senior and client approval before any buyer release"},
+      "compliance": ["Source/citation map required; sensitive-information review before buyer release; Expert Panel red-team review on draft completion; senior and client approval before buyer release"],
+      "sourceRefs": ["execution-guide-v2 Seq 37"],
+      "confidence": "high"
+    },
+    {
+      "seq": 38,
+      "name": "FAQ&A",
+      "description": "Builds the anticipated buyer FAQ&A — pre-drafted questions buyers are expected to ask, with sourced answers prepared before the questions arrive — then continually updates it with every real question from the MP, buyer calls, diligence, formal Q&A, and follow-ups. Downstream feeds: Management Meeting writes MP themes back; Buyer Q&A (Seq 45) updates from live questions. Each answer carries a source citation and an assigned owner.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Anticipated buyer questions plus every live question from MP, calls, diligence, Q&A, and follow-ups", "format": null, "source": "Management Meeting (Seq 44), Buyer Q&A (Seq 45), diligence and follow-ups; source documents in M365/SharePoint and the VDR"}],
+        "transformation": "Pre-drafts sourced answers to anticipated questions and continuously folds in live questions, keeping the FAQ&A current across the marketing phase.",
+        "outputs": [{"what": "A continuously updated, source-linked buyer FAQ&A", "format": "Platform Q&A knowledge base with responsive-document links"}],
+        "constraints": ["Every answer requires a source citation and an assigned owner", "Full question/answer history retained"]
+      },
+      "tools": ["Platform (reusable Q&A knowledge base)", "M365/SharePoint", "VDR"],
+      "approval": {"required": true, "by": "Banker approval per answer before buyer distribution"},
+      "compliance": ["Every answer requires a source citation and banker approval before buyer distribution; full history retained"],
+      "sourceRefs": ["execution-guide-v2 Seq 38"],
+      "confidence": "high"
+    },
+    {
+      "seq": 39,
+      "name": "Outreach Sequencing",
+      "description": "With materials approved, plans how to approach the buyer universe — under the deal code name, never the client's real name. Segments the approved buyer list into outreach waves, tailors the acquisition rationale per buyer, assigns a banker owner to every buyer, prepares call scripts and follow-up cadence per wave, and prioritizes warm relationship paths over cold contact. The output is a sequenced plan the deal team executes — not outreach itself.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Approved buyer universe + conflicts/restricted-list clearance", "format": null, "source": "Seq 17; compliance screening"}],
+        "transformation": "Segments the approved buyer list into waves with per-buyer rationale, banker owners, call scripts, and follow-up cadence; prioritizes warm paths.",
+        "outputs": [{"what": "Wave plan with banker owners, tailored rationale, call scripts, and follow-up cadence in the CRM", "format": null}],
+        "constraints": ["Code name only — never the client's real name", "The agent plans and sequences but does not initiate contact"]
+      },
+      "tools": ["HubSpot (CRM)", "Outlook/M365 email", "SharePoint (outreach plan)"],
+      "approval": {"required": true, "by": "Conflicts/restricted-list screening, client approval of the contact list, and banker approval of the outreach — all before any buyer is contacted"},
+      "compliance": ["No buyer contacted before conflicts/restricted-list screening, client approval of the contact list, and banker approval of the outreach; agent never initiates contact"],
+      "sourceRefs": ["execution-guide-v2 Seq 39"],
+      "confidence": "high"
+    },
+    {
+      "seq": 40,
+      "name": "Buyer Synergies Model + Valuation",
+      "description": "For each named buyer on the outreach list, generates a revenue-plus-cost synergies summary, a buyer-specific accretion/dilution model, and a buyer-specific valuation covering ability and willingness to pay — mapping target capabilities against each buyer's gaps and quantifying cross-sell, channel, overhead, and infrastructure synergies. Lets the banker argue a different, higher number to each buyer. The banker owns the valuation judgment.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Named buyer list + approved target financials and CIM data", "format": null, "source": "Seq 39; Seq 34/37; Capital IQ and PitchBook for buyer financials"}],
+        "transformation": "Builds and maintains per-buyer synergy, accretion/dilution, and valuation models under the banker's judgment; all arithmetic in deterministic engines.",
+        "outputs": [{"what": "Per-buyer synergies summary, accretion/dilution model, and ability/willingness-to-pay valuation", "format": "Excel models"}],
+        "constraints": ["All arithmetic routed to deterministic engines (Excel/Python), never LLM math", "Every figure source-cited with estimates clearly labeled", "Numbers walled to the authorized deal team only"]
+      },
+      "tools": ["Excel (deterministic model engine)", "Capital IQ", "PitchBook", "SharePoint"],
+      "approval": {"required": true, "by": "All numbers human-approved, with MD approval before any external use"},
+      "compliance": ["Every figure source-cited, estimates labeled; all numbers human-approved with MD approval before external use; numbers walled to authorized deal team"],
+      "sourceRefs": ["execution-guide-v2 Seq 40"],
+      "confidence": "high"
+    },
+    {
+      "seq": 41,
+      "name": "Buyer Log / Feedback",
+      "description": "Drafts buyer outreach, tracks responses, and maintains the buyer log as waves go out. Every buyer touch is logged into the target's CRM record: buyer firm, contact name/title, outreach date, response (interested/declined/no-response), and pass reason if declined. Proactively requests feedback from passing buyers, converting it into follow-on relationship meetings and targeted coverage lists. Over time this becomes the firm's proprietary buyer-intelligence asset.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Outreach activity + buyer responses", "format": null, "source": "Outlook/M365 tracked correspondence; deal team"}],
+        "transformation": "Logs every buyer touch and response, harvests pass feedback, and drafts follow-up outreach and coverage lists.",
+        "outputs": [{"what": "Complete CRM buyer log with pass reasons, drafted follow-up outreach, and targeted coverage lists", "format": "CRM records"}],
+        "constraints": ["All communications recorded", "No cross-wall exposure", "Confidential process information protected under the deal code name"]
+      },
+      "tools": ["HubSpot (CRM) as system of record", "Outlook/M365 email"],
+      "approval": {"required": true, "by": "Banker releases all buyer outreach — no autonomous send"},
+      "compliance": ["No autonomous send — banker releases all buyer outreach; all communications recorded; no cross-wall exposure; code-name protection"],
+      "sourceRefs": ["execution-guide-v2 Seq 41"],
+      "confidence": "high"
+    },
+    {
+      "seq": 42,
+      "name": "Buyer NDA",
+      "description": "Interested buyers must sign an NDA before receiving anything beyond the anonymous teaser. Tracks each buyer's NDA status, redlines, approvals, and versions; flags VDR-access readiness the moment an NDA fully executes; compares each buyer's requested deviations against firm precedent NDAs so the team sees instantly which redlines are standard and which need counsel. High-volume tracking in a live auction — dozens of buyers, each with their own markup history.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Buyer NDA drafts and redlines", "format": null, "source": "Buyers; CLM tooling"}],
+        "transformation": "Tracks NDA status, versions, and redlines per buyer; compares deviations against precedent; flags VDR-access readiness on execution.",
+        "outputs": [{"what": "Executed-NDA status tracker with legal issue list, precedent-deviation comparison, and VDR-access-readiness flags", "format": null}],
+        "constraints": ["No buyer receives confidential access before NDA execution and approval"]
+      },
+      "tools": ["CLM (Contract Lifecycle Management) tooling", "VDR (varies by deal)", "SharePoint (NDA archive)"],
+      "approval": {"required": true, "by": "Legal review required for any deviation from standard terms"},
+      "compliance": ["Legal review required for any deviation from standard terms; no confidential access before NDA execution and approval"],
+      "sourceRefs": ["execution-guide-v2 Seq 42"],
+      "confidence": "high"
+    },
+    {
+      "seq": 43,
+      "name": "Buyer VDR Access",
+      "description": "Once a buyer's NDA is executed, provisions staged VDR access by buyer group: permissions scoped to what that group is cleared to see, watermarking, full access logs, download rules, and clean-team restrictions on restricted materials. 'Staged' means access widens as a buyer advances rather than exposing everything at once. An Operating System build — requires platform-level access control and audit infrastructure, so not on the Ignatious consulting-partner build list.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Executed NDAs + client approval", "format": null, "source": "Seq 42; client"}],
+        "transformation": "Provisions staged, watermarked, permissioned VDR access per buyer group with clean-team restrictions and full logging.",
+        "outputs": [{"what": "Staged, watermarked, permissioned VDR access per buyer group with complete access and download logs", "format": null}],
+        "constraints": ["Access granted only on executed NDA plus client approval", "Access revoked immediately on pass or process termination", "Clean-team carve-outs enforced"]
+      },
+      "tools": ["Operating System access-control layer", "Deal VDR (provider varies by deal)"],
+      "approval": {"required": true, "by": "Executed NDA plus client approval required before any access is granted"},
+      "compliance": ["Access only on executed NDA plus client approval; every wall-crossing logged; strict permission controls; immediate revocation on pass/termination; full audit trail; clean-team carve-outs enforced"],
+      "sourceRefs": ["execution-guide-v2 Seq 43"],
+      "confidence": "high"
+    },
+    {
+      "seq": 44,
+      "name": "Management Meeting",
+      "description": "Serious buyers get a management meeting — the client's leadership presenting to the buyer's team. The live meeting is human; the application does preparation and capture. Before each meeting: a buyer-specific deck, management coaching notes, and talking points covering that buyer's acquisition rationale, prior deals, synergies case, known weaknesses, and anticipated questions. After: a structured post-meeting summary and routed follow-ups.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Buyer profile + approved CIM and synergies materials", "format": null, "source": "Seq 37/40; buyer records"}],
+        "transformation": "Prepares buyer-specific meeting materials and coaching, then captures and structures the post-meeting summary and follow-ups.",
+        "outputs": [{"what": "Buyer-specific deck, coaching notes, anticipated-question prep, and post-meeting summary with next steps", "format": "PowerPoint + structured notes"}],
+        "constraints": ["Only approved materials go in front of buyers", "Content is buyer-specific and MNPI-safe", "Meeting capture is structured and consent-based"]
+      },
+      "tools": ["PowerPoint (M365)", "Meeting notes/transcript capture", "SharePoint"],
+      "approval": {"required": true, "by": "Only approved materials go in front of buyers"},
+      "compliance": ["Only approved materials in front of buyers; buyer-specific and MNPI-safe content; consent-based meeting capture; recordkeeping for material follow-ups"],
+      "sourceRefs": ["execution-guide-v2 Seq 44"],
+      "confidence": "high"
+    },
+    {
+      "seq": 45,
+      "name": "Buyer Q&A",
+      "description": "Manages the buyer question queue as questions pour in from every active buyer digging into the VDR and management meetings: logs each question, assigns an owner (banker, management, or advisor), drafts answers exclusively from approved sources, and updates the shared FAQ&A so the same question is never re-worked twice. Tracks response time and answer quality — every buyer receives the same approved answer to the same question.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Incoming buyer questions", "format": null, "source": "Active buyers via VDR Q&A module and management meetings"}],
+        "transformation": "Logs, owner-assigns, and drafts source-linked answers from approved sources; updates the shared FAQ&A; tracks response time and quality.",
+        "outputs": [{"what": "Owner-assigned, source-linked, approved answers plus a continuously updated FAQ&A", "format": null}],
+        "constraints": ["Answers drafted exclusively from approved sources", "Full question-and-answer history retained for the record"]
+      },
+      "tools": ["Operating System Q&A tracker", "VDR Q&A module (varies by deal)", "SharePoint"],
+      "approval": {"required": true, "by": "No answer released to a buyer without a source link and banker approval"},
+      "compliance": ["No answer released without source link and banker approval; full Q&A history retained"],
+      "sourceRefs": ["execution-guide-v2 Seq 45"],
+      "confidence": "high"
+    },
+    {
+      "seq": 46,
+      "name": "LOI / Process Letter",
+      "description": "Drafts and distributes process letters and/or LOI forms to advancing bidders. Process letters tell remaining buyers exactly how to submit offers — bid instructions, deadlines, required terms — while a standard LOI form makes bids directly comparable. Tracks every version and redline per bidder. Because bid instructions must be consistent across all buyers, the tracked record of what was sent to whom, and when, is part of the work product itself.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Advancing-bidder list + process timeline and required terms", "format": null, "source": "Deal team; process calendar"}],
+        "transformation": "Drafts and distributes process letters / LOI forms, tracking per-bidder versions, redlines, instructions, and deadlines.",
+        "outputs": [{"what": "Distributed process letters / LOI forms, per-bidder version and redline history, deadline calendar", "format": "Word / M365 documents"}],
+        "constraints": ["Consistent terms and instructions to all buyers", "Full audit trail of versions and redlines"]
+      },
+      "tools": ["Word / M365", "SharePoint (bidder instruction log, LOI tracker, process calendar)"],
+      "approval": {"required": true, "by": "Legal/client and senior approval before distribution — no autonomous send"},
+      "compliance": ["Legal/client and senior approval before distribution; no autonomous send; consistent terms to all buyers; full audit trail"],
+      "sourceRefs": ["execution-guide-v2 Seq 46"],
+      "confidence": "high"
+    },
+    {
+      "seq": 47,
+      "name": "Bid Comparison",
+      "description": "Compares IOIs and bids term by term across the v9 dimensions: price, structure, cash/stock mix, rollover, earnout, escrow, conditionality, timing, certainty, diligence burden, and buyer fit. Output is the side-by-side comparison used to decide which bidders advance and shape next-round strategy. Also feeds a growing term precedent library and per-buyer reliability scoring — v9 classifies this agent as part of the firm's proprietary edge.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Received IOIs / bids and their underlying documents", "format": null, "source": "Bidders"}],
+        "transformation": "Extracts and compares bid terms dimension by dimension, sourced from the actual bid documents, into a decision-support matrix.",
+        "outputs": [{"what": "Term-by-term bid comparison matrix + next-round strategy input, with updates to the bid database", "format": "Excel matrix"}],
+        "constraints": ["Every term sourced from the actual bid documents rather than paraphrased or reconstructed", "Decision support only"]
+      },
+      "tools": ["Excel", "Bid database, term precedent library, and buyer reliability scores (platform / SharePoint)"],
+      "approval": {"required": true, "by": "MD / legal review — the banker interprets the comparison; the application is decision support only"},
+      "compliance": ["MD/legal review; decision support only; all terms sourced from actual bid documents"],
+      "sourceRefs": ["execution-guide-v2 Seq 47"],
+      "confidence": "high"
+    },
+    {
+      "seq": 48,
+      "name": "LOI Review",
+      "description": "The banker and counsel own negotiation of the LOI and exclusivity; the application prepares the analysis underneath: negotiation points (with the Negotiation Copilot surfacing precedent), fallback positions, a risk map, and a client decision memo framing what exclusivity gives up and on what terms. Per v9, the Negotiation Copilot is advisory only, and drafted LOI responses route through Expert Panel Review for posture and language before release.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Selected buyer's LOI draft + exclusivity terms", "format": null, "source": "Selected buyer; CLM"}],
+        "transformation": "Analyzes the LOI and exclusivity issues into negotiation points, precedent-backed fallbacks, a risk map, and a client decision memo.",
+        "outputs": [{"what": "Negotiation points, fallback positions, risk map, and client decision memo", "format": null}],
+        "constraints": ["Negotiation Copilot advisory only — never responds autonomously to a counterparty", "Drafted LOI responses routed through Expert Panel Review before release", "No autonomous legal advice"]
+      },
+      "tools": ["CLM / Word (M365)", "Negotiation Copilot precedent library (OS Build #16)", "SharePoint"],
+      "approval": {"required": true, "by": "Legal/MD approval and counsel/senior review — the human negotiates; client sign-off required before exclusivity terms are accepted"},
+      "compliance": ["Legal/MD approval and counsel/senior review; human negotiates, no autonomous legal advice; client sign-off before exclusivity accepted"],
+      "sourceRefs": ["execution-guide-v2 Seq 48"],
+      "confidence": "high"
+    },
+    {
+      "seq": 49,
+      "name": "Merger Agreement Distribution",
+      "description": "Distributes the form merger / purchase agreement to buyers and tracks comments and issues. Timing depends on process type per v9: in an auction the form agreement is distributed pre-exclusivity; in a single-bidder process it goes out post-LOI and exclusivity. Tracks comments, open issues, and buyer positions across versions with complete history. The agreement itself is legal-team work product — the application handles distribution logistics and issue tracking.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Counsel's form merger / purchase agreement + distribution list", "format": null, "source": "Legal team; deal team"}],
+        "transformation": "Distributes the form agreement and tracks buyer markups, open issues, and positions across versions.",
+        "outputs": [{"what": "Distributed agreement, comment and issue tracker, buyer position log, version history", "format": null}],
+        "constraints": ["Privileged materials protected", "Version control and full audit trail maintained", "Distribution timing per process type (auction pre-exclusivity; single-bidder post-LOI/exclusivity)"]
+      },
+      "tools": ["CLM (Contract Lifecycle Management)", "VDR (provider varies by deal)", "SharePoint / M365 (version tracking)"],
+      "approval": {"required": true, "by": "Legal-team controlled and counsel-owned — the application provides banker support only"},
+      "compliance": ["Legal-team controlled, counsel-owned; privileged materials protected; version control and full audit trail"],
+      "sourceRefs": ["execution-guide-v2 Seq 49"],
+      "confidence": "high"
+    },
+    {
+      "seq": 50,
+      "name": "Definitive Agreement Support",
+      "description": "Counsel and the banker own this phase; the application is a tracking and support layer, not a drafter. Tracks confirmatory diligence, disclosure schedules, purchase agreement issues, closing conditions, open points, reps and covenants, and issue resolution; the Negotiation Copilot surfaces market precedent on contested reps and escrow/earnout positions. Output: a single live picture of what remains open, who owns each item, and what stands between the deal and signing. Board approval of the transaction happens here, before signing.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Purchase agreement drafts and redlines, confirmatory diligence requests, VDR activity, and counsel issue lists", "format": null, "source": "Counsel; buyer; VDR"}],
+        "transformation": "Maintains the live issue log, disclosure schedule tracker, closing conditions checklist, and open-points status so deal team and counsel work from the same current state.",
+        "outputs": [{"what": "Live issue log, disclosure schedule tracker, closing conditions checklist, and open-points status with owners", "format": null}],
+        "constraints": ["The agent tracks only — counsel and banker own the definitive agreement", "Disclosure schedules verified against the record", "All approvals and version history preserved for the audit trail"]
+      },
+      "tools": ["VDR (varies by deal)", "CLM (Contract Lifecycle Management) tool", "M365/SharePoint", "Negotiation Copilot (OS Build #16)"],
+      "approval": {"required": true, "by": "Legal controlled — counsel and banker own the agreement; legal approval required; board approval of the transaction occurs here before signing"},
+      "compliance": ["Legal controlled; agent tracks only; legal approval required; disclosure schedules verified against the record; approvals and version history preserved"],
+      "sourceRefs": ["execution-guide-v2 Seq 50"],
+      "confidence": "high"
+    },
+    {
+      "seq": 51,
+      "name": "Signing / Announcement Prep",
+      "description": "In the run-up to signing, assembles everything needed for the moment the deal signs and goes public: signing checklist, board and client updates, announcement draft, press release, tombstone draft, closing timeline, and the stakeholder communications plan so client, buyer, employees, and press each hear the right message in the right order. Staging in advance lets Announcement, LinkedIn Post, Email Blast, and League Table Submission fire the instant the announcement goes live.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Signed definitive agreement + deal record", "format": null, "source": "Seq 50; deal record"}],
+        "transformation": "Assembles and stages the full signing/announcement package: checklist, updates, drafts, timeline, and communications plan.",
+        "outputs": [{"what": "Signing checklist, board/client updates, announcement/press-release/tombstone drafts, closing timeline, and stakeholder communications plan", "format": "Word/PowerPoint drafts on M365/SharePoint"}],
+        "constraints": ["Final terms verified against the signed definitive agreement", "Communications review on all drafted materials"]
+      },
+      "tools": ["Word/PowerPoint (M365)", "SharePoint"],
+      "approval": {"required": true, "by": "Client and legal approval before any release"},
+      "compliance": ["Communications review on all drafted materials; final terms verified against the signed definitive agreement; client and legal approval before any release"],
+      "sourceRefs": ["execution-guide-v2 Seq 51"],
+      "confidence": "high"
+    },
+    {
+      "seq": 52,
+      "name": "Announcement",
+      "description": "The human deal team runs the public release; the application assembles and sequences the materials behind it: coordinates release timing across channels, prepares press, web, and social materials, finalizes the transaction description and quotes, manages tombstone approvals, and enforces client confidentiality constraints (some clients restrict disclosure of deal value, buyer identity, or specific terms). H+A by design — the MD and communications team own the go/no-go and the moment of release.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Approved announcement package from Seq 51 + client confidentiality constraints", "format": null, "source": "Seq 51; client"}],
+        "transformation": "Assembles, sequences, and times the coordinated public release inside the client's confidentiality limits; humans execute the release.",
+        "outputs": [{"what": "Coordinated public release (press, web, social) with final transaction description, quotes, and approved tombstone", "format": null}],
+        "constraints": ["Release must stay inside client confidentiality limits (deal value, buyer identity, specific terms)", "Final-terms accuracy checks"]
+      },
+      "tools": ["Communications/PR tools", "Firm website queue", "M365/SharePoint", "HubSpot (CRM)"],
+      "approval": {"required": true, "by": "No public release without client + MD + Comms approval — the human coordinates the release"},
+      "compliance": ["Publicity approval and final-terms accuracy checks; client consent on all disclosed content; no public release without client + MD + Comms approval"],
+      "sourceRefs": ["execution-guide-v2 Seq 52"],
+      "confidence": "high"
+    },
+    {
+      "seq": 53,
+      "name": "LinkedIn Post",
+      "description": "During signing prep, pre-drafts the firm's LinkedIn deal post so it is ready before the news is public: client and buyer logos, deal-team tags (MD, VP, associate, analysts, legal partner), a one-line transaction descriptor, an MD-approved quote, and hashtags. Once approved, the post is queued for release at the exact announcement timestamp so the firm's social presence lands simultaneously with the announcement.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Announcement facts + deal-team roster + MD-approved quote", "format": null, "source": "Seq 51; deal team"}],
+        "transformation": "Drafts and queues the LinkedIn post with logos, tags, descriptor, quote, and hashtags for release at the announcement timestamp.",
+        "outputs": [{"what": "Approved LinkedIn post queued and released at the announcement timestamp", "format": "LinkedIn post"}],
+        "constraints": ["Tag verification and banker-name spelling check", "No MNPI; authorized disclosure only", "Conforms to firm social-media policy"]
+      },
+      "tools": ["LinkedIn (queued via the firm's comms/social tooling)", "HubSpot (engagement tracking)"],
+      "approval": {"required": true, "by": "Client + MD + Comms approval before the post is queued — no autonomous posting"},
+      "compliance": ["Tag verification and name spelling check; no MNPI; authorized disclosure only; firm social-media policy; client + MD + Comms approval before queuing"],
+      "sourceRefs": ["execution-guide-v2 Seq 53"],
+      "confidence": "high"
+    },
+    {
+      "seq": 54,
+      "name": "Email Blast",
+      "description": "Pre-drafts the deal-announcement email blast during signing prep, targeting five recipient sets: the firm distribution list, deal-team relationship contacts, prior pitch attendees, prospects harvested from the buyer log, and referrer thank-yous. Each message carries a personalized salutation and the one-line transaction descriptor. On announcement, the approved blast releases immediately so the firm's network hears the news from the firm first.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Deal announcement + segmented CRM contact lists", "format": null, "source": "Seq 51; HubSpot (CRM)"}],
+        "transformation": "Drafts personalized blast messages per recipient segment and pre-stages them for immediate release on announcement.",
+        "outputs": [{"what": "Pre-staged, personalized email blast released on announcement", "format": "Outlook/M365 email"}],
+        "constraints": ["Reg FD and solicitation rules observed", "CAN-SPAM compliance with opt-outs honored", "Restricted-list scrub of recipients; suppression/consent lists respected"]
+      },
+      "tools": ["Outlook/M365 email", "HubSpot (CRM) distribution lists and engagement tracking"],
+      "approval": {"required": true, "by": "Pre-send review and Comms approval before release — no autonomous send"},
+      "compliance": ["Reg FD and solicitation rules; CAN-SPAM with opt-outs; restricted-list scrub; suppression/consent lists respected; pre-send review and Comms approval before release"],
+      "sourceRefs": ["execution-guide-v2 Seq 54"],
+      "confidence": "high"
+    },
+    {
+      "seq": 55,
+      "name": "League Table Submission",
+      "description": "On the announcement timestamp, submits the signed (or closed) transaction to every league-table-credit database and deal aggregator: Mergermarket, LSEG Workspace / Refinitiv SDC, Dealogic (ION), S&P Capital IQ, Bloomberg M&A, PitchBook, The Deal, 451 Research, Crunchbase, sector trade press, and industry league tables. Submissions pre-staged during signing prep with attribution mapped to each platform's taxonomy; tracks confirmation receipts, flags missed platforms, and files corrections after publication.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Signed transaction details + deal-team attribution", "format": null, "source": "Seq 51; signed definitive agreement"}],
+        "transformation": "Pre-stages and submits the transaction to every league-table/aggregator platform, tracks receipts, monitors publication cycles, and files corrections.",
+        "outputs": [{"what": "Submissions to every league-table/aggregator platform, confirmation receipts, and post-publication correction filings", "format": null}],
+        "constraints": ["Final-terms accuracy verified against the signed definitive agreement", "Authorized disclosure categories tracked per engagement letter"]
+      },
+      "tools": ["Mergermarket", "LSEG Workspace / Refinitiv SDC", "Dealogic", "S&P Capital IQ", "Bloomberg", "PitchBook", "Other aggregator submission portals", "Platform receipt tracking"],
+      "approval": {"required": true, "by": "Client + MD + Comms approval before any submission"},
+      "compliance": ["Final-terms accuracy verified against the signed agreement; authorized disclosure categories per EL; client + MD + Comms approval before any submission"],
+      "sourceRefs": ["execution-guide-v2 Seq 55"],
+      "confidence": "high"
+    },
+    {
+      "seq": 56,
+      "name": "Regulatory Approval Tracker",
+      "description": "Signing starts the regulatory clocks. Tracks every approval and consent standing between signing and closing: HSR antitrust clearance, foreign-investment approvals, lender consents, shareholder approvals, customer consents, board approvals, and other third-party consents — maintaining deadline, responsible party, and supporting evidence per item, with escalation alerts as dates approach. A tracking application, not a filing application — outside counsel and legal/compliance own the actual filings.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "Signed definitive agreement conditions + regulatory requirements", "format": null, "source": "Definitive agreement; counsel"}],
+        "transformation": "Maintains a live checklist of every approval/consent with deadlines, responsible parties, and evidence; raises escalation alerts.",
+        "outputs": [{"what": "Live approval checklist with deadlines, responsible parties, evidence, and escalation alerts", "format": "Checklist on M365/SharePoint with Excel exports"}],
+        "constraints": ["Tracks and alerts, never files — filings are counsel-owned"]
+      },
+      "tools": ["Platform tracker (M365/SharePoint checklist, Excel exports)"],
+      "approval": null,
+      "compliance": ["Legal/compliance controlled; regulatory deadlines and evidence logged; filings are counsel-owned — the application tracks and alerts, never files"],
+      "sourceRefs": ["execution-guide-v2 Seq 56"],
+      "confidence": "high"
+    },
+    {
+      "seq": 57,
+      "name": "Closing Checklist",
+      "description": "The deal is legally consummated: documents signed, closing conditions satisfied, purchase funds wired. Tracks every closing deliverable to completion — funds flow, wires, signatures, certificates, board approvals, conditions, final releases — with a live checklist of done/outstanding/owner. Runs anti-fraud checks on wire instructions (spoofed payment instructions are a known M&A closing attack vector). The human banker owns all funds-flow, wire, and signature actions outright.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Definitive agreement, funds-flow memo, wire instructions, signature pages, certificates, board approvals, and condition list", "format": null, "source": "Counsel; deal team; buyer"}],
+        "transformation": "Tracks closing deliverables to completion and verifies wire instructions; humans execute all payments and signatures.",
+        "outputs": [{"what": "Completed closing checklist with document status, confirmed funds flow, and final releases", "format": "Word/Excel checklist"}],
+        "constraints": ["Funds movement is never agent-initiated", "Dual control on wires — two humans must authorize before money moves", "Anti-fraud wire checks on all payment instructions"]
+      },
+      "tools": ["Word/Excel (checklist and funds-flow tracking)", "SharePoint (M365) document record"],
+      "approval": {"required": true, "by": "Explicit human confirmation required for all payments and signatures; dual control (two humans) on wires"},
+      "compliance": ["Anti-fraud wire checks on all payment instructions; human confirmation for all payments and signatures; dual control on wires; funds movement never agent-initiated"],
+      "sourceRefs": ["execution-guide-v2 Seq 57"],
+      "confidence": "high"
+    },
+    {
+      "seq": 58,
+      "name": "Fee Realization / Invoice",
+      "description": "With the deal closed, calculates the success fee per the engagement letter — applying retainer credits, expenses, broker-dealer/partner splits, reimbursables, and interest — generates the invoice from a Word template, attaches the executed EL, and drafts the client cover email. The complete package routes to the MD for review, approval, and send; the agent never sends the invoice itself. Payment collection is handled through Finalis.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Executed engagement letter, closing terms (final transaction value), retainer and expense records, and partner-split terms", "format": null, "source": "EL; Seq 57 closing record; firm records"}],
+        "transformation": "Calculates the fee per the EL, generates the invoice package (invoice + executed EL + cover email), and routes it to the MD.",
+        "outputs": [{"what": "Approved invoice package (invoice + executed EL + client cover email) routed to the MD, with collection via Finalis", "format": "Word invoice + email"}],
+        "constraints": ["Every fee component reconciled to the engagement letter", "Payment collected through Finalis", "The agent never sends the invoice itself"]
+      },
+      "tools": ["Word (invoice template and cover email)", "Finalis (payment collection)", "Excel (fee calculation support)"],
+      "approval": {"required": true, "by": "MD / finance approval required before send — no autonomous send"},
+      "compliance": ["Fee components reconciled to the EL; MD/finance approval before send; invoice + EL + email recorded in the compliance archive; payment collected through Finalis"],
+      "sourceRefs": ["execution-guide-v2 Seq 58"],
+      "confidence": "high"
+    },
+    {
+      "seq": 59,
+      "name": "Closing Compliance Checklist / Binder",
+      "description": "After close, assembles the post-closing compliance file — the closing binder regulators, auditors, or litigators would ask for years later: executed documents, approvals, communications, diligence records, fee evidence, the public announcement, final work product, and an archive index. Output: the binder plus a retention checklist and final transaction record. Per v9, automated routing into an SEC 17a-4 audit-trail archive comes in a later build; for now a human works a manual supervisory evidence checklist.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Executed deal documents, approvals, communications, diligence records, fee evidence, and the public announcement", "format": null, "source": "Deal folders, email, and the VDR"}],
+        "transformation": "Compiles the full engagement record into an organized closing binder with archive index, retention checklist, and final transaction record.",
+        "outputs": [{"what": "Closing binder, retention checklist, final transaction record, and compliance evidence package", "format": "SharePoint (M365) archive"}],
+        "constraints": ["SEC Rule 17a-4 records must be complete and preserved", "Automated 17a-4 / audit-trail archive routing deferred to a later build"]
+      },
+      "tools": ["SharePoint (M365) as archive of record", "Deal folders, email, VDR (source records)"],
+      "approval": {"required": true, "by": "A human completes the manual supervisory evidence checklist (automated 17a-4 routing deferred)"},
+      "compliance": ["SEC 17a-4 records complete and preserved; automated audit-trail archive routing deferred to a later build — human completes the manual supervisory evidence checklist now"],
+      "sourceRefs": ["execution-guide-v2 Seq 59"],
+      "confidence": "high"
+    },
+    {
+      "seq": 60,
+      "name": "Post-Close Fee Monitor",
+      "description": "Not all fees arrive at closing. Tracks every deferred economic right under the engagement letter — earnouts, second closings, escrow releases, milestone payments, contingent fees, expense reimbursements, trailing invoices. When a trigger event approaches or occurs, raises alerts, generates collection tasks, and prepares trailing invoice drafts — but never sends them on its own. Fee collection routes through Finalis.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Engagement-letter fee terms plus purchase-agreement earnout, escrow, and milestone schedules", "format": null, "source": "EL; purchase agreement"}],
+        "transformation": "Monitors deferred fee triggers, raises alerts, generates collection tasks, and drafts trailing invoices for human release.",
+        "outputs": [{"what": "Fee-event alerts, collection tasks, and draft trailing invoices for human release", "format": null}],
+        "constraints": ["All tracking aligned to the executed engagement letter", "Every fee event logged", "The agent never autonomously invoices or escalates a client"]
+      },
+      "tools": ["Platform fee tracker", "Finalis (collection)", "Excel (fee calculations)"],
+      "approval": {"required": true, "by": "Human approval before any invoice or escalation"},
+      "compliance": ["Tracking aligned to the executed EL; every fee event logged; human approval before any invoice or escalation; collection routes through Finalis"],
+      "sourceRefs": ["execution-guide-v2 Seq 60"],
+      "confidence": "high"
+    },
+    {
+      "seq": 61,
+      "name": "Relationship Follow-Up (closing dinner)",
+      "description": "Human-led: the banker owns the relationship; the agent preps the materials. Suggests the closing dinner or celebration and attendee list, drafts thank-you notes, proposes closing gifts, and queues the asks that convert a closed deal into future business — testimonials, reference requests, future opportunities, referral asks. Nothing goes out except through the relationship owner.",
+      "executionClass": "H+A",
+      "io": {
+        "inputs": [{"what": "Deal-team roster and client/buyer contact history", "format": null, "source": "HubSpot (CRM); Outlook/M365"}],
+        "transformation": "Prepares the celebration plan, note drafts, gift suggestions, and a testimonial/reference/referral task list for the relationship owner.",
+        "outputs": [{"what": "Dinner/celebration plan, thank-you note drafts, gift suggestions, and a testimonial/reference/referral task list for the relationship owner", "format": null}],
+        "constraints": ["Nothing goes out except through the relationship owner", "FINRA gift and entertainment policy limits apply to all gifts and celebrations"]
+      },
+      "tools": ["HubSpot (CRM)", "Outlook/M365"],
+      "approval": {"required": true, "by": "Relationship owner (human leads, agent assists); client approval required before any public use of references or testimonials"},
+      "compliance": ["Relationship-owner led; FINRA gift and entertainment policy limits; client approval before any public use of references or testimonials"],
+      "sourceRefs": ["execution-guide-v2 Seq 61"],
+      "confidence": "high"
+    },
+    {
+      "seq": 62,
+      "name": "Transaction Marketing / Asset Library",
+      "description": "Harvests the closed deal twice: for marketing (tombstone, lucite, swag, closing gift, firm website update) and for reuse (deal learnings plus reusable materials extracted from the full document trail — pitch, teaser, MP, advocacy deck, Q&A, buyer email, LOI, definitive agreement, QoE report — each tagged into the firm's asset library). Feeds the Case Study Library and receives deal credentials and league-table credit from Seq 55.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "The closed-deal document set from pitch through definitive agreement", "format": null, "source": "Full deal document trail; League Table Submission (Seq 55) credentials"}],
+        "transformation": "Extracts and tags reusable assets and deal learnings; produces the marketing deliverables and files assets into the credential database and slide library.",
+        "outputs": [{"what": "Tombstone/website/gift deliverables plus tagged reusable assets filed into the credential database and slide library", "format": null}],
+        "constraints": ["Confidentiality scrub of every harvested asset", "Final-terms accuracy verified before publication", "No unapproved case-study use"]
+      },
+      "tools": ["Firm website/CMS", "SharePoint (M365) asset library and best-practice folders", "HubSpot marketing queue"],
+      "approval": {"required": true, "by": "Client consent required; comms approval before anything is published"},
+      "compliance": ["Client consent required; confidentiality scrub of every asset; final-terms accuracy verified; no unapproved case-study use; comms approval before publication"],
+      "sourceRefs": ["execution-guide-v2 Seq 62"],
+      "confidence": "high"
+    },
+    {
+      "seq": 63,
+      "name": "Earned / Paid Publication",
+      "description": "Within 48 hours of the deal announcement, pursues earned media first — journalist coverage of the transaction — turning to paid placement or a contributed article/op-ed only where strategically useful and clearly disclosed as paid. Bylined pieces carry the MD byline. Content is limited to contextual deal insight; MNPI is never included. The agent drafts and pitches; humans approve everything before it reaches an editor.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Approved announcement facts and deal narrative", "format": null, "source": "Seq 51/52 approved package"}],
+        "transformation": "Drafts earned-media pitches and bylined articles/op-eds from approved announcement facts for MD and comms review.",
+        "outputs": [{"what": "Earned-media pitches to trade press plus drafted bylined articles or op-eds for MD and comms review", "format": "Drafts in M365"}],
+        "constraints": ["Content limited to contextual deal insight; no MNPI", "Advertorial/paid-placement disclosure wherever required", "Earned media first; paid only where strategically useful"]
+      },
+      "tools": ["Comms/PR tooling", "Sector trade-press relationship map", "M365 (drafts)", "HubSpot (reach tracking)"],
+      "approval": {"required": true, "by": "MD plus Comms approval before pitching or publication; client consent for any byline content"},
+      "compliance": ["Client consent for byline content; final-terms accuracy; MD + Comms approval before pitching/publication; paid-placement disclosure where required; no MNPI"],
+      "sourceRefs": ["execution-guide-v2 Seq 63"],
+      "confidence": "high"
+    },
+    {
+      "seq": 64,
+      "name": "Deal Learning / Post-Mortem",
+      "description": "The structured post-mortem closing the learning loop on every deal: what worked and failed, buyer feedback, process timing, fees, diligence issues, winning buyer's rationale, lost-buyer reasons, template improvements, banker lessons. Findings convert into approved reusable playbooks under controlled-learning rules — edits, outcomes, feedback, and accepted outputs become firm knowledge without training indiscriminately on client-confidential data. v9 classifies this agent SECRET SAUCE — core competitive moat, never disclosed externally.",
+      "executionClass": "A+H",
+      "io": {
+        "inputs": [{"what": "Full deal record, buyer feedback, and deal-team debrief", "format": null, "source": "Deal record; deal team"}],
+        "transformation": "Structures post-mortem findings and converts them into approved reusable playbooks, skill/prompt updates, and buyer-score writebacks under controlled-learning rules.",
+        "outputs": [{"what": "Post-mortem findings plus approved updates to skills, prompts, buyer scores, and sector playbooks", "format": null}],
+        "constraints": ["Confidential client data separated from generalized learning", "No indiscriminate training on client-confidential data", "Never disclosed externally (v9: SECRET SAUCE)"]
+      },
+      "tools": ["Platform learning store", "HubSpot (CRM)", "SharePoint (M365) training library"],
+      "approval": {"required": true, "by": "Reusable patterns require approval before they enter shared playbooks"},
+      "compliance": ["Client-confidential data separated from generalized learning; reusable patterns require approval before entering shared playbooks"],
+      "sourceRefs": ["execution-guide-v2 Seq 64"],
+      "confidence": "high"
+    },
+    {
+      "seq": 65,
+      "name": "Tail Rights & Termination Monitor",
+      "description": "Activates on either trigger: the EL does not result in a close, or the engagement is terminated (automatic expiration or voluntary). Tracks the tail period — the post-termination window during which a subsequent sale still owes the bank a fee — monitoring relevant process buyers, client capital-raise and change-of-control events, fee triggers, and client/buyer activity. As tail expiration approaches, sends date-approaching alerts to the deal team and group head so live fee rights are asserted before they lapse.",
+      "executionClass": "A",
+      "io": {
+        "inputs": [{"what": "EL tail terms and termination type + buyer list and public market-event feeds", "format": null, "source": "EL; process buyer list; Capital IQ/PitchBook public-event monitoring"}],
+        "transformation": "Monitors the tail window for fee-trigger events and client/buyer activity; builds the evidence record; alerts before tail expiration; updates funnel status.",
+        "outputs": [{"what": "Tail calendar, fee-trigger alerts, potential fee claims, and Pipeline CRM funnel status (Terminated or Died)", "format": null}],
+        "constraints": ["All monitoring must be engagement-letter aligned per the EL's tail terms", "The agent is not used for closed deals", "Fee-trigger events logged as they occur to build the evidence record"]
+      },
+      "tools": ["HubSpot (Pipeline CRM)", "Capital IQ/PitchBook (public-event monitoring)", "SharePoint evidence folder"],
+      "approval": {"required": true, "by": "Legal/commercial review before any fee claim is asserted"},
+      "compliance": ["Monitoring EL-aligned per tail terms; fee-trigger events logged for the evidence record; not used for closed deals; legal/commercial review before any fee claim asserted"],
+      "sourceRefs": ["execution-guide-v2 Seq 65"],
+      "confidence": "high"
+    }
+  ],
+  "conflicts": [
+    "Deferred-application tension with the canon digest: the guide builds a Negotiation Copilot (horizontal, OS Build #16, H+A), CIM + Management Presentation drafting (Seq 37, A+H, RTS Build #34), and pitch/management-presentation drafting (Seq 21), all of which the canon lists among explicitly deferred applications / protected v1 exclusions (canon 'Deferred applications' per Founders §4.5 and 'Protected v1 exclusions' per Blueprint §9). The guide assigns them build numbers as first-take assignments.",
+    "Models direction: the guide's horizontal Multi-Model Verification (OS Build #7 — two or more alternate frontier models cross-checking every consequential output) and Model Optimization (OS Build #24 — routing every task to the most cost-effective model across connected providers) conflict with the canon's Jul 2 'Models, v1' direction (single Anthropic enterprise API behind an internal router; multi-model routing deferred because 'the audit complexity isn't worth it yet').",
+    "External-Send QC verdict shape: the guide adds a banker-invocable rush-send override (rush mode verifies addressees only; content, codename, and metadata checks deferred and logged for supervisory review). This matches neither the Handbook's binary BLOCK with 'no human override offered at this layer' nor Vision2p's green/yellow/red re-scoring with logged yellow acknowledgment — a third distinct verdict shape for the same control.",
+    "Step count / decomposition: the guide has 65 sequenced deal steps plus 21 horizontal always-on applications (86 total), versus the canon's repeated reference to Storm's '~82 steps' model. Same idea, different decomposition and count.",
+    "Expert Panel roster: the guide's static panels (Legal & Regulatory, Product & Engineering, Process Experts, Writers/Editors/Storytellers, Persuasion & Sales, Negotiation Experts, Compliance & Risk, CCO Stand-In) plus dynamic deal-specific panels (Sector/Sub-Sector, Product-Domain, Digital Twins of the counterparty board and management, Client Psychology) differ from the canon's ten launch panels (Founders §4.4), which include Finance & Valuation, Behavioral Economics & Decision Science, Data Privacy/Security/Info Barriers, and Accounting & Financial Diligence not named in the guide, and do not include digital twins.",
+    "Team-scope tension: the guide assigns 27 numbered Operating System builds to the OS engineering team (including agentic horizontals like Sector Intelligence and MD-Style Review), versus the canon Handbook's V1 contraction in which the core team builds exactly one V1 agent (Compliance Comms PA-1) with seams only for others. The guide reads as a full build map rather than a v1 scope, and marks all assignments 'a first take — to be validated jointly', but the allocations are broader than the Handbook's."
+  ],
+  "notes": [
+    "Coverage: the guide covers ALL 65 sequenced steps (Seq 1-65) with no gaps. No seq numbers are missing.",
+    "Terminology mapping: the guide calls the platform the 'Operating System (OS)' built by the 'OS engineering team' and the deal-workflow skills the 'application layer' built by RTS — corresponding to the canon's rails (Futureproofing core team) vs skills (RTS) split under different names.",
+    "Document status: working draft — 'steps may be added or removed; build responsibilities are a first take, to be validated jointly'. Companion to the Sell-Side M&A Master Process & Build Sequence, which lists every step in deal order with its build order; the 16 priority builds are marked in that companion document, not this one.",
+    "The guide references 'v9' throughout as the underlying process source it encodes (e.g. 'the checklist items come straight from v9', 'v9 adds two mandatory elements').",
+    "Regulatory wrapper: Ignatious operates through Finalis Securities LLC (Member FINRA/SIPC), the broker-dealer of record — supervision, recordkeeping, and fee collection flow through it. Everything in the guide sits inside that perimeter. Fee collection (Seq 58, 60) is explicitly routed through Finalis.",
+    "Governing rule (verbatim): 'reversible work can be automated with logs; anything irreversible, regulated, external, financial, or permission-changing requires a human approval on the record. Every class runs inside the runtime controls: per-agent budgets, step limits, loop detection, tool permissions, and a kill switch.'",
+    "No step in the guide carries execution class H (fully human); classes used are A (7 sequenced steps: Seq 4, 18, 29, 32, 35, 56, 65), A+H (majority), and H+A (Seq 6, 11, 23, 25, 28, 34, 40, 44, 48, 50, 57, 61).",
+    "OS-built steps embedded in the deal sequence (all others are RTS builds): Seq 4 Lead Registration (OS #2), Seq 6 Conflicts Checklist (OS #9), Seq 7 Codename/Deal Shell (OS #5), Seq 26 Mandate Activation Checklist (OS #19), Seq 32 Document Intake/Metadata (OS #20), Seq 43 Buyer VDR Access (OS #22). Seq 43 is explicitly 'Build Scope IN' at the OS level because it requires platform-level access control and audit infrastructure, so it is not on the Ignatious consulting-partner build list.",
+    "HORIZONTAL (ALWAYS-ON) APPLICATIONS — Part 1 of the guide defines 21 platform services available to every workflow step and every deal, not part of the deal sequence, all built at the Operating System level; the last five are newly added with provisional ordering pending joint prioritization: (1) External-Send QC (OS #1, A+H) — QC agent checks every outbound artifact for regulatory/legal/reputational compliance incl. Reg FD + FINRA 2210, codenames, addressee correctness, and hidden metadata; no external send until the responsible banker confirms; rush-send override verifies addressees only with deferred checks logged. (2) Pipeline CRM (OS #3, A) — auto-maintains the single firm-wide funnel (Live lead / Won / Lost / Hold / Terminated / Died) in HubSpot; entries scrubbed against the restricted list. (3) Work-Check (OS #4, A) — automatic second set of eyes on every primary-agent output before it reaches the banker (consistency, citations, numeric reasonableness, codename adherence, tone); advisory flags only, banker owns disposition, logged for FINRA 3110 supervisory review. (4) Sector Intelligence (OS #6, A) — continuously maintains tech-sector comps sets, precedent tables, market maps ('digiscapes'), and quadrant analyses; monthly refresh, every data point source-cited; conflict/restricted screening before pitch use. (5) Multi-Model Verification (OS #7, A+H) — 2+ alternate frontier models independently verify every consequential AI output; discrepancies diffed and severity-scored; banker resolves and owns the final output; per-deal/workspace/firm cross-check budget caps; OS partially subsidizes cross-check compute initially. (6) Expert Panel Review (OS #8, A+H) — simulated static + dynamic deal-specific expert panels red-team every consequential work product into PASS/REVISE/REWRITE; advisory only; no MNPI ever flows into digital twins, which are deal-scoped and destroyed at close. (7) Continuous Learning / Skill Optimization (OS #10, A+H) — turns completed-deal patterns, banker edits, and feedback into proposed prompt/template/weighting improvements; a partner must approve any reusable pattern; no cross-tenant training; quarterly Agent Performance Review for partner sign-off. (8) Deal Workflow Coordinator (OS #11, A) — orchestration layer on a coordinator pattern, not autonomous command; routes tasks, holds deal-state per identity triplet (Tenant:Client:Deal:User), monitors agent health/SLA, escalates blocked agents; respects identity triplet and wall status on every routing decision, no cross-deal bleed. (9) Document Retention + Permission Cross-Check (OS #12, H+A) — inventories every document with record/retention/supervisory tags; cross-checks every deletion against FINRA 4511 and SEC 17a-3/17a-4; deletion is dual-control (human approval AND regulatory check must both pass); chain-of-custody preserved. (10) License / U4 / CE Compliance Tracker (OS #13, A) — tracks banker FINRA license status, Form U4 currency, CE completion, internal certifications; alerts banker and CCO; banker-private data with CCO visibility. (11) MD-Style Review (OS #14, A+H) — applies the named MD's prior approved voice to drafts before MD review; opt-in per MD, tenant-isolated, never trains cross-MD or cross-firm, MD owns the final draft. (12) Knowledge Graph / Relationship Strength (OS #15, A) — strength-scored who-knows-whom graph from CRM/calendar/email metadata plus Pally integration; warm-path discovery; no email-content scanning by default; each banker controls visibility of their own contacts. (13) Negotiation Copilot (OS #16, H+A) — banker negotiates, agent suggests counters/justifications/anticipated responses across ELs, NDAs, LOIs, reps, escrow, earnouts; advisory only, no autonomous response to a counterparty; learns cross-firm anonymized. (14) Workflow Monitoring (OS #17, A) — opt-in Mimica/Worktrace-style instrumentation observing how bankers work; produces repetitive-pattern heat-map and agent-candidate backlog with ROI estimates; affirmative opt-in only, banker can pause/stop anytime, no individual-level HR monitoring. (15) File Storage Reorganization (OS #18, A+H) — analyzes SharePoint/Drive/iManage structure and proposes reorg options for human+AI retrieval; executes only the option a banker/partner/CCO selects; no deletions during reorg; permissions preserved; full audit trail. (16) Fee Structure Pool (OS #21, A) — pools fee structures across all OS-customer firms anonymously into percentile benchmarks by transaction type and size band; anonymization at ingestion, no firm/deal ID stored, subject to customer consent; Operating System only — not built at Ignatious; feeds the Engagement Economics agent (Seq 19). (17) Enterprise Search (OS #23, A) — permission- and barrier-aware retrieval over the firm corpus with cited sources; assembles context for other agents so no application searches from scratch; can show a document exists while withholding contents until permissioned; all queries/retrievals logged in retainable form. (18) Model Optimization (OS #24, A) — routes every task to the most cost-effective model clearing the quality bar; critique-looping on high-stakes work; token/cost tracking by user, deal, task, and agent with budget caps; approved-model list only, no client data to unapproved models. (19) Data Room Hosting (OS #25, A+H) — hosted permissioned data-room layer (Box) above SharePoint: folder taxonomy, deal/sensitivity tagging, staged buyer access, watermarking, AI-readable APIs; access changes banker-approved; buyer segregation enforced; GDPR/SOC 2 posture inherited from Box. (20) Communication Checking (OS #26, A) — Global Relay / Smarsh communications-compliance layer: captures/archives business communications, runs surveillance rules, flags exceptions to compliance/CCO; FINRA 3110 + 2210 obligations, SEC 17a-4 retention; complements External-Send QC (QC gates outbound quality; this preserves and surveils the record). (21) Staffing (OS #27, H+A) — humans make staffing decisions; agent recommends allocations from workload/skills/pipeline, flags over-allocation, wall/conflict-checks every proposed assignment; assignment history logged.",
+    "Horizontal OS build numbers span 1-27; numbers 2, 5, 9, 19, 20, 22 are the sequence-embedded OS builds listed above, so the horizontal set is #1, 3, 4, 6, 7, 8, 10-18, 21, 23-27.",
+    "RTS build numbers on sequenced steps run #1-59 (not in seq order — e.g. Relationship Pathing Seq 8 is RTS Build #1, Deal Pulse Seq 35 is RTS #10, League Table Submission Seq 55 is RTS #12).",
+    "A Glossary is provided at the end of the guide 'for the build team', defining sell-side terms plus the guide's own architecture terms: Operating System (platform layer — data, orchestration, governance, horizontal applications), Horizontal application (always-on platform application available to every workflow step), Application layer (deal-workflow skills built by RTS on top of the OS).",
+    "Format fields in io are null wherever the guide does not state a concrete format; the guide usually names systems rather than file formats.",
+    "Cross-check against the Master Process document itself was not performed (out of scope for this extraction); within the guide, Seq numbering 1-65 is complete and internally consistent, and the guide states it is keyed to the companion Master Process seq order."
+  ]
+}

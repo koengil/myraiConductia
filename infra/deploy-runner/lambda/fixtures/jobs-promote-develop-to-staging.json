@@ -1,0 +1,46 @@
+{
+  "_source": "gh api repos/Conductia/Conductia/actions/runs/<id>/jobs (GET, 2026-10-21); steps, runner names and URLs stripped",
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 115925536548,
+      "run_id": 38585288354,
+      "run_attempt": 1,
+      "name": "Pin a green develop commit",
+      "status": "completed",
+      "conclusion": "success",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000006467,
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions",
+      "workflow_name": "Promote develop to staging",
+      "head_branch": "main",
+      "head_sha": "22cf73bfc0c6727d7e10347e2dcd8d8b081c1790",
+      "created_at": "2026-10-14T14:58:31Z",
+      "started_at": "2026-10-14T14:58:34Z",
+      "completed_at": "2026-10-14T14:58:42Z"
+    },
+    {
+      "id": 115925634770,
+      "run_id": 38585288354,
+      "run_attempt": 1,
+      "name": "Fast-forward staging to develop",
+      "status": "completed",
+      "conclusion": "success",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000006468,
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions",
+      "workflow_name": "Promote develop to staging",
+      "head_branch": "main",
+      "head_sha": "22cf73bfc0c6727d7e10347e2dcd8d8b081c1790",
+      "created_at": "2026-10-14T14:58:42Z",
+      "started_at": "2026-10-14T14:58:46Z",
+      "completed_at": "2026-10-14T14:59:01Z"
+    }
+  ]
+}

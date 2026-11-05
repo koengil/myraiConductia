@@ -1,0 +1,36 @@
+name: Require fast-forward from develop
+
+on:
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  fast-forward-from-develop:
+    name: fast-forward from develop
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce develop → staging fast-forward
+        env:
+          # Via env, never interpolated into the script: a branch name is
+          # attacker-controlled input.
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          if [ "${HEAD_REF}" != "develop" ]; then
+            echo "PRs to staging must come from develop (got '${HEAD_REF}')."
+            echo "Feature work targets develop. Promote with the 'Promote develop to staging' workflow."
+            exit 1
+          fi
+          git fetch origin staging develop
+          if ! git merge-base --is-ancestor origin/staging origin/develop; then
+            echo "staging is not an ancestor of develop; cannot fast-forward."
+            exit 1
+          fi
+          echo "OK: staging can fast-forward to develop. Use the 'Promote develop to staging' workflow: it also requires develop's checks green on the exact commit."

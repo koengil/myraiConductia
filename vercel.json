@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run preflight:env -- --build && npm run build",
+  "ignoreCommand": "bash scripts/vercel-ignore.sh",
+  "crons": [
+    {
+      "path": "/api/v1/internal/skill-publications/process",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}

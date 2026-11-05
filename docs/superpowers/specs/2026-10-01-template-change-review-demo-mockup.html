@@ -1,0 +1,108 @@
+<style>
+.cx{--ink:#191919;--ink2:#55534e;--ink3:#6e6e6b;--quiet:#9c9a94;--surface:#fff;--subtle:#f1f0ec;--warm:#f5f4f1;--raised:#faf9f6;--stroke:#eceae5;--stroke2:#e0ded8;--pos:#17b26a;--pos-deep:#0b5c3b;--pos-fill:#8fe6bf;--hold-fill:#fae6a8;--hold-deep:#6e5308;--neg:#e5484d;--neg-deep:#8e2440;--neg-fill:#f8c9d1;--sync:#2e90fa;--sync-fill:#d6e8fd;--sync-deep:#14508f;
+font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);font-size:13px;line-height:1.45;background:var(--warm);padding:20px;border-radius:8px}
+.cx *{box-sizing:border-box}
+.cx .mono{font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.cx .page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:16px 0 14px}
+.cx .page-h h3{font-family:Georgia,"Times New Roman",serif;font-size:26px;font-weight:400;margin:0;letter-spacing:-.01em}
+.cx .code{font-size:11px;color:var(--ink3);margin-top:2px}
+.cx .toggle{display:inline-flex;background:var(--subtle);border-radius:8px;padding:2px}
+.cx .toggle span{padding:4px 11px;border-radius:6px;font-size:12px;font-weight:500;color:var(--ink3)}
+.cx .toggle span.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--stroke)}
+.cx .banner{display:flex;align-items:center;gap:16px;background:var(--raised);border:1px solid var(--stroke);border-radius:12px;padding:14px 16px;box-shadow:0 1px 0 rgb(25 25 25/.03)}
+.cx .banner .txt{flex:1;min-width:0}
+.cx .eyebrow{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.cx .banner p{margin:0;color:var(--ink2);font-size:13px}
+.cx .banner b{color:var(--ink);font-weight:600}
+.cx .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 16px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid transparent;white-space:nowrap;font-family:inherit}
+.cx .btn.primary{background:var(--ink);color:#fff}
+.cx .btn.outline{background:var(--surface);color:var(--ink);border-color:var(--stroke2)}
+.cx .btn.chrome{height:auto;padding:4px 12px;font-size:12px;color:var(--ink2);background:transparent;border-color:var(--stroke)}
+.cx .dlg-h .eyebrow{margin-bottom:2px}
+.cx .btn.ghost{background:transparent;color:var(--ink2)}
+.cx .btn.sm{height:28px;padding:0 12px;font-size:12px}
+.cx .st{position:relative;width:168px;flex:none}
+.cx .btn.dis{background:var(--subtle);color:var(--ink3);border-color:var(--stroke)}
+.cx .btn.ghost.dis{background:transparent;border-color:transparent}
+.cx .meta-line{display:flex;gap:10px;align-items:center;font-size:11px;color:var(--ink3);margin:0 0 10px}
+.cx .lanes{display:flex;gap:0;margin-top:16px;overflow:hidden;mask-image:linear-gradient(90deg,#000 92%,transparent)}
+.cx .lane{flex:none;min-width:0;padding:0 18px;border-left:1px solid var(--stroke)}
+.cx .lane:first-child{padding-left:0;border-left:0}
+.cx .lane header{height:62px}
+.cx .lane .n{font-family:Georgia,serif;font-size:22px;color:var(--ink3);margin-right:8px}
+.cx .lane h4{display:inline;font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0}
+.cx .lane .today{font-size:11px;color:var(--ink3);margin-top:3px}
+.cx .track{position:relative;display:flex;gap:10px}
+.cx .track:before{content:"";position:absolute;left:-18px;right:-18px;top:7px;height:1px;background:var(--stroke)}
+.cx .st{position:relative;width:176px;flex:none}
+.cx .dot{position:relative;z-index:1;display:block;width:15px;height:15px;border-radius:50%;background:var(--surface);border:2px solid var(--stroke2);margin-bottom:8px}
+.cx .dot.done{background:var(--pos);border-color:var(--pos)}
+.cx .dot.active{border-color:var(--ink);background:var(--surface);box-shadow:0 0 0 3px var(--subtle)}
+.cx .card{background:var(--surface);border:1px solid var(--stroke);border-radius:12px;padding:10px 11px;min-height:104px;display:flex;flex-direction:column;gap:6px}
+.cx .card .top{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--quiet)}
+.cx .card .t{font-size:13px;font-weight:600;line-height:1.3}
+.cx .card .d{font-size:11px;color:var(--ink3)}
+.cx .card .foot{margin-top:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cx .chip{display:inline-block;border-radius:6px;padding:2px 7px;font-size:11px;font-weight:500;line-height:1.2}
+.cx .chip.done{background:var(--pos-fill);color:var(--pos-deep)}
+.cx .chip.active{background:var(--subtle);color:var(--ink)}
+.cx .chip.todo{color:var(--ink3);padding-left:0}
+.cx .chip.tpl{background:var(--sync-fill);color:var(--sync-deep)}
+.cx .chip.pos{background:var(--pos-fill);color:var(--pos-deep)}
+.cx .chip.neg{background:var(--neg-fill);color:var(--neg-deep)}
+.cx .chip.mut{background:var(--subtle);color:var(--ink2)}
+.cx .more{align-self:center;color:var(--quiet);font-size:12px;padding-left:4px}
+.cx .scrim{position:relative;background:rgb(25 25 25/.55);border-radius:10px;padding:26px 18px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.cx .dlg{width:100%;max-width:560px;background:var(--surface);border:1px solid var(--stroke);border-radius:12px;box-shadow:0 14px 40px rgb(25 25 25/.09);overflow:hidden;color:var(--ink)}
+.cx .dlg-h{padding:16px 16px 4px;display:flex;justify-content:space-between;align-items:flex-start}
+.cx .dlg-h h3{margin:0;font-size:16px;font-weight:600}
+.cx .dlg-h .sub{font-size:12px;color:var(--ink3);margin-top:2px}
+.cx .x{color:var(--quiet);font-size:18px;line-height:1}
+.cx .dlg-b{padding:0 16px 8px;background:var(--surface)}
+.cx .sec{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
+.cx .row{border:1px solid var(--stroke);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;gap:14px;align-items:center}
+.cx .row .body{flex:1;min-width:0}
+.cx .row .rt{font-size:13px;font-weight:600}
+.cx .row .rm{font-size:11px;color:var(--ink3);margin-top:1px}
+.cx .row .rs{font-size:12px;color:var(--ink2);margin-top:5px}
+.cx .row .act{display:flex;gap:6px;flex:none}
+.cx .row.decided{background:var(--raised);padding:9px 14px}
+.cx .row.decided .rt{font-weight:500}
+.cx .link{font-size:12px;color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.cx .dlg-f{padding:8px 16px 16px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.cx .dlg-f p{margin:0;font-size:12px;color:var(--ink3);max-width:400px}
+.cx .inset{width:100%;max-width:560px;background:var(--surface);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.cx .inset .lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.cx .inset .body{flex:1;min-width:0}
+.cx .inset .rt{font-size:13px;font-weight:600}
+.cx .inset .note{font-size:11px;color:var(--ink3);margin-top:3px}
+.cx .cap{font-size:11px;color:var(--ink3);margin:0 0 6px}
+</style>
+<h2>Template changes: how it looks on the deal rail</h2>
+<p class="subtitle">Three moments of the demo. Read top to bottom.</p>
+<div class="section"><div class="mockup"><div class="mockup-header">1 · Deal rail, changes waiting</div><div class="mockup-body"><div class="cx">
+<div class="banner" role="status"><div class="txt"><div class="eyebrow mono">Template updated</div><p><b>Standard sell-side</b> moved to v4 on Sep 30 (Storm Duncan). <b>3 changes</b> wait for your decision. Your rail stays as it is until you choose.</p></div><span class="btn chrome">Review changes</span></div>
+<div class="page-h"><div><h3>Project Harbor</h3><div class="code mono">HBR-2026-014</div></div><div class="toggle"><span class="on">Full Array</span><span>Focus</span></div></div>
+<div class="lanes"><div class="lane"><header><span class="n">4</span><h4>Diligence, LOI &amp; Definitive Docs</h4><div class="today">Today: MD · Legal · Compliance</div></header><div class="track"><div class="st"><span class="dot done"></span><div class="card"><div class="top"><span class="mono">#46</span><span>Manual</span></div><div class="t">LOI / Process Letter</div><div class="d">Issue the process letter to bidders.</div><div class="foot"><span class="chip done">Done</span></div></div></div><div class="st"><span class="dot done"></span><div class="card"><div class="top"><span class="mono">#47</span><span>Agent</span></div><div class="t">Bid Comparison</div><div class="d">Compare first-round bids side by side.</div><div class="foot"><span class="chip done">Done</span></div></div></div><div class="st"><span class="dot active"></span><div class="card"><div class="top"><span class="mono">#48</span><span>Manual</span></div><div class="t">LOI Review</div><div class="d">Review LOIs against the process letter.</div><div class="foot"><span class="chip active">In progress</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#49</span><span>Manual</span></div><div class="t">Merger Agreement Distribution</div><div class="d">Distribute the draft agreement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#50</span><span>Manual</span></div><div class="t">Definitive Agreement Support</div><div class="d">Support negotiation of definitive terms.</div><div class="foot"><span class="chip todo">To do</span></div></div></div></div></div><div class="lane"><header><span class="n">5</span><h4>Signing, Closing &amp; Post-Close</h4><div class="today">Today: MD · Legal · Compliance</div></header><div class="track"><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#51</span><span>Manual</span></div><div class="t">Signing / Announcement Prep</div><div class="d">Prepare signing and announcement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#52</span><span>Agent</span></div><div class="t">Announcement</div><div class="d">Draft the announcement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#53</span><span>Agent</span></div><div class="t">LinkedIn Post</div><div class="d">Draft the post for approval.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#54</span><span>Agent</span></div><div class="t">Email Blast</div><div class="d">Draft the client email.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#55</span><span>Agent</span></div><div class="t">League Table Submission</div><div class="d">Prepare the submission.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#56</span><span>Manual</span></div><div class="t">Regulatory Approval Tracker</div><div class="d">Track approvals and conditions.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#57</span><span>Manual</span></div><div class="t">Closing Checklist</div><div class="d">Everything required to close.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><span class="more">+ 8 more</span></div></div></div>
+</div></div></div></div>
+
+<div class="section"><div class="mockup"><div class="mockup-header">2 · Review dialog</div><div class="mockup-body"><div class="cx" style="padding:0;background:none"><div class="scrim">
+<div class="dlg" role="dialog" aria-label="Review template changes">
+<div class="dlg-h"><div><div class="eyebrow mono" style="text-transform:none;letter-spacing:.02em">Company rail</div><h3>Standard sell-side · v3 → v4</h3><div class="sub">Saved Sep 30 by Storm Duncan</div></div><span class="x">×</span></div>
+<div class="dlg-b">
+<div class="sec mono">Added to the template</div>
+<div class="row"><div class="body"><div class="rt">Fairness opinion</div><div class="rm">Diligence, LOI &amp; Definitive Docs · After Definitive Agreement Support</div><div class="rs">Independent fairness opinion from a qualified adviser before board approval.</div></div><div class="act"><span class="btn primary sm">Add</span><span class="btn ghost sm">Discard</span></div></div>
+<div class="row decided"><div class="body"><span class="rt">Sanctions re-screen before signing</span></div><span class="chip pos">Added</span><span class="link">Undo</span></div>
+<div class="sec mono">Removed from the template</div>
+<div class="row"><div class="body"><div class="rt">LinkedIn Post</div><div class="rm">Signing, Closing &amp; Post-Close · On your rail today</div></div><div class="act"><span class="btn primary sm">Remove</span><span class="btn ghost sm">Keep</span></div></div>
+</div>
+<div class="dlg-f"><p>Nothing changes on your rail until you decide. Discarded changes are not offered again for this version.</p><span class="btn outline">Close</span></div>
+</div>
+<div class="inset"><div class="body"><div class="lbl mono">Read-only variant</div><div class="rt" style="margin-top:4px">Fairness opinion</div><div class="note">Only the deal team can change this rail.</div></div><div style="display:flex;gap:6px"><span class="btn primary sm dis">Add</span><span class="btn ghost sm dis">Discard</span></div></div>
+</div></div></div></div></div>
+
+<div class="section"><div class="mockup"><div class="mockup-header">3 · Rail after deciding</div><div class="mockup-body"><div class="cx">
+<div class="page-h" style="margin-top:0"><div><h3>Project Harbor</h3><div class="code mono">HBR-2026-014</div></div><div class="toggle"><span class="on">Full Array</span><span>Focus</span></div></div>
+<div class="lanes"><div class="lane"><header><span class="n">4</span><h4>Diligence, LOI &amp; Definitive Docs</h4><div class="today">Today: MD · Legal · Compliance</div></header><div class="track"><div class="st"><span class="dot done"></span><div class="card"><div class="top"><span class="mono">#46</span><span>Manual</span></div><div class="t">LOI / Process Letter</div><div class="d">Issue the process letter to bidders.</div><div class="foot"><span class="chip done">Done</span></div></div></div><div class="st"><span class="dot done"></span><div class="card"><div class="top"><span class="mono">#47</span><span>Agent</span></div><div class="t">Bid Comparison</div><div class="d">Compare first-round bids side by side.</div><div class="foot"><span class="chip done">Done</span></div></div></div><div class="st"><span class="dot active"></span><div class="card"><div class="top"><span class="mono">#48</span><span>Manual</span></div><div class="t">LOI Review</div><div class="d">Review LOIs against the process letter.</div><div class="foot"><span class="chip active">In progress</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#49</span><span>Manual</span></div><div class="t">Merger Agreement Distribution</div><div class="d">Distribute the draft agreement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#50</span><span>Manual</span></div><div class="t">Definitive Agreement Support</div><div class="d">Support negotiation of definitive terms.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#51</span><span>Manual</span></div><div class="t">Fairness opinion</div><div class="d">Independent opinion before board approval.</div><div class="foot"><span class="chip todo">To do</span><span class="chip tpl">From template v4</span></div></div></div></div></div><div class="lane"><header><span class="n">5</span><h4>Signing, Closing &amp; Post-Close</h4><div class="today">Today: MD · Legal · Compliance</div></header><div class="track"><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#52</span><span>Manual</span></div><div class="t">Sanctions re-screen before signing</div><div class="d">Re-run KYC and sanctions screening within 10 days of signing.</div><div class="foot"><span class="chip todo">To do</span><span class="chip tpl">From template v4</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#53</span><span>Manual</span></div><div class="t">Signing / Announcement Prep</div><div class="d">Prepare signing and announcement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#54</span><span>Agent</span></div><div class="t">Announcement</div><div class="d">Draft the announcement.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#55</span><span>Agent</span></div><div class="t">Email Blast</div><div class="d">Draft the client email.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#56</span><span>Agent</span></div><div class="t">League Table Submission</div><div class="d">Prepare the submission.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><div class="st"><span class="dot "></span><div class="card"><div class="top"><span class="mono">#57</span><span>Manual</span></div><div class="t">Regulatory Approval Tracker</div><div class="d">Track approvals and conditions.</div><div class="foot"><span class="chip todo">To do</span></div></div></div><span class="more">+ 9 more</span></div></div></div>
+</div></div></div></div>
+<p class="subtitle">Added steps behave as ordinary steps once accepted. Discarded and removed changes can be undone from the dialog.</p>

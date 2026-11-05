@@ -1,0 +1,80 @@
+{
+  "mailbox": "morgan.vale@bank.example",
+  "messages": [
+    {
+      "id": "AAMk-morgan-001",
+      "internetMessageId": "<falcon-001@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T09:12:00Z",
+      "from": { "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } }],
+      "ccRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Morgan, Dana,</p><p>Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "AAMk-morgan-002",
+      "internetMessageId": "<falcon-002@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "RE: Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T10:02:00Z",
+      "from": { "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "body": {
+        "contentType": "text",
+        "content": "Works for me. I will circulate the working group list by Friday.\n\nOn Tue, 3 Feb 2026 at 09:12, Storm Duncan <storm.duncan@bank.example> wrote:\n> Morgan, Dana,\n> Project Falcon kicks off next week."
+      }
+    },
+    {
+      "id": "AAMk-morgan-003",
+      "internetMessageId": "<falcon-007@bank.example>",
+      "conversationId": "conv-falcon-buyers",
+      "subject": "Project Falcon: buyer list v2",
+      "sentDateTime": "2026-02-18T12:30:00Z",
+      "from": { "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Analyst Pool", "address": "analyst.pool@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "The updated buyer list is attached: 14 strategics and 9 sponsors." }
+    },
+    {
+      "id": "AAMk-morgan-004",
+      "internetMessageId": "<cobra-001@bank.example>",
+      "conversationId": "conv-cobra-el",
+      "subject": "Project Cobra: engagement letter",
+      "sentDateTime": "2025-11-04T15:00:00Z",
+      "from": { "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Jon Reyes", "address": "jon.reyes@cobalt-systems.example" } }],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<p>Jon,</p><p>The Project Cobra engagement letter is attached for signature.</p>"
+      }
+    },
+    {
+      "id": "AAMk-morgan-005",
+      "internetMessageId": "<cobra-002@cobalt-systems.example>",
+      "conversationId": "conv-cobra-el",
+      "subject": "RE: Project Cobra: engagement letter",
+      "sentDateTime": "2025-11-06T09:20:00Z",
+      "from": { "emailAddress": { "name": "Jon Reyes", "address": "jon.reyes@cobalt-systems.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Signed copy attached." }
+    },
+    {
+      "id": "AAMk-morgan-006",
+      "internetMessageId": "<lunch-006@bank.example>",
+      "conversationId": "conv-lunch",
+      "subject": "Lunch?",
+      "sentDateTime": "2026-02-19T11:10:00Z",
+      "from": { "emailAddress": { "name": "Alex Chen", "address": "alex.chen@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Lunch at noon?" }
+    }
+  ]
+}

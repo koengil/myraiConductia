@@ -1,0 +1,40 @@
+#!/bin/bash
+# Every 2 minutes (ci-runner-idle-stop.timer): with no job running and no job
+# activity for the idle window, shut down. The instance's shutdown behaviour is
+# "stop", so it stops (EBS kept) until the wake function starts it.
+#
+# The window is the instance tag IdleMinutes (instance-metadata tags, IMDSv2),
+# read on every run so `tofu apply` changes it by retagging alone. When the tag
+# is missing or not a whole number 5..240, the default below is used.
+set -euo pipefail
+
+default_minutes=${idle_minutes}
+
+tag_minutes() {
+  local token
+  token=$(curl -sf --max-time 2 -X PUT http://169.254.169.254/latest/api/token \
+    -H "X-aws-ec2-metadata-token-ttl-seconds: 60") || return 1
+  curl -sf --max-time 2 -H "X-aws-ec2-metadata-token: $token" \
+    http://169.254.169.254/latest/meta-data/tags/instance/IdleMinutes
+}
+
+idle_minutes=$default_minutes
+if value=$(tag_minutes) && [[ $value =~ ^[0-9]{1,3}$ ]] && (( 10#$value >= 5 && 10#$value <= 240 )); then
+  idle_minutes=$(( 10#$value ))
+fi
+
+if pgrep -f Runner.Worker >/dev/null; then
+  exit 0
+fi
+
+now=$(date +%s)
+if [ -f /var/lib/ci-runner/last-activity ]; then
+  last=$(cat /var/lib/ci-runner/last-activity)
+else
+  last=$(( now - $(cut -d. -f1 /proc/uptime) ))
+fi
+
+if [ $(( now - last )) -ge $(( idle_minutes * 60 )) ]; then
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) idle-stop after $(( (now - last) / 60 ))m (window $${idle_minutes}m)" >> /var/log/ci-runner-hooks.log
+  /sbin/shutdown -h now
+fi

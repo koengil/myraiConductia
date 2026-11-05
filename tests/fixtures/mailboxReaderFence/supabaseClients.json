@@ -1,0 +1,142 @@
+[
+  {
+    "file": "src/lib/supabase/server.ts",
+    "reason": "The admin client module: the one place the app builds its service-role client (createSupabaseAdminClient) and its user-scoped clients."
+  },
+  {
+    "file": "worker/classify.ts",
+    "reason": "The discovery worker builds its own service-role client; every mailbox read it makes goes through the guarded reader (createGuardedContentSource)."
+  },
+  {
+    "file": "worker/extract.ts",
+    "reason": "The deal-zone extractor builds its own service-role client; it never imports a reader, and reads stored text only through discovery_extract_batch."
+  },
+  {
+    "file": "scripts/backfill-project-rail.ts",
+    "reason": "Operator script that backfills project rails with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/bootstrap-firm-admin.ts",
+    "reason": "Operator script that bootstraps a firm admin with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/check-db.ts",
+    "reason": "Operator script that checks connectivity and schema with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/check-onboarding-demo.ts",
+    "reason": "Operator script that verifies the onboarding demo data with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/dev-create-company-invite.ts",
+    "reason": "Operator script that creates a company invite for development with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/dev-mint-invite-credentials.ts",
+    "reason": "Operator script that mints invite credentials for development with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/enable-flags.ts",
+    "reason": "Operator script that turns feature flags on with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/extract-memo-fixture.ts",
+    "reason": "Operator script that extracts a memo fixture with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/google/write-registration.ts",
+    "reason": "Operator script that writes the Google reader registration and its sources with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/grant-mock-book.ts",
+    "reason": "Operator script that grants the mock book with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/reset-demo-invitee.ts",
+    "reason": "Operator script that resets the demo invitee with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-discovery.ts",
+    "reason": "Operator script that seeds discovery data with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-flags.ts",
+    "reason": "Operator script that seeds feature flags with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-leads.ts",
+    "reason": "Operator script that seeds leads with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-demo-book.ts",
+    "reason": "Operator script that seeds the local-only demo book with a service-role client from the environment; refuses any non-local host; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-mock-scale.ts",
+    "reason": "Operator script that seeds the scale dataset with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-onboarding-demo.ts",
+    "reason": "Operator script that seeds the onboarding demo with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/sandbox/seed-sandbox-firm.ts",
+    "reason": "Operator script (#746) that seeds pre-release sandbox firms and Halvorsen cast seats with a service-role client from the environment; allowed Supabase refs only, run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-team.ts",
+    "reason": "Operator script that seeds a team with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/seed-users.ts",
+    "reason": "Operator script that seeds role users with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/verify-audit-chain.ts",
+    "reason": "Operator script that verifies the audit hash chain with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/m365/write-registration.ts",
+    "reason": "Operator script (#243) that writes a bank tenant's Graph reader registration and its explicit content_sources list with a service-role client from the environment; run by hand, never in a request path or by an agent, and it contacts no provider."
+  },
+  {
+    "file": "scripts/m365/probe-out-of-scope.ts",
+    "reason": "Operator script (#243) that reads a bank tenant's reader registration with a service-role client from the environment, then runs the scope probe through src/lib/mailboxAccess/readers.ts (statuses only); run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/m365/probe-group-mirror.ts",
+    "reason": "Operator script (#275) that reads a bank tenant's reader registration with a service-role client from the environment, then runs the scope probe's group target through src/lib/mailboxAccess/readers.ts (statuses, counts and yes/no answers only); refused in production, run by hand on the test tenant, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/discovery-export.ts",
+    "reason": "Operator script (phase 5, the deal-discovery eval export) that reads one tenant's discovery metadata with a service-role client from the environment, selecting identifiers, dates and decisions only (never source_item_texts, a subject, a participant or a body) and writing nothing to the database; run by hand, never in a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/m365/replay-discovery.ts",
+    "reason": "Operator script (CDT-277) that replays a recorded Graph cassette into a throwaway tenant of a LOCAL Supabase with a service-role client from the environment (a non-loopback host and production are refused before the client is built); every read it makes goes through runOnce, which wraps the cassette reader in the mailbox guard. Run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/release-unbound-identities.ts",
+    "reason": "Operator script that releases a user's unbound work identities (#316) with a service-role client from the environment; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/revoke-work-identity-invites.ts",
+    "reason": "Operator rollback script that revokes pending work-identity invitations (#316) with a service-role client from the environment; dry run unless CONFIRM=1, run by hand only."
+  },
+  {
+    "file": "scripts/set-firm-identity-provider.ts",
+    "reason": "Operator script that sets a firm's work-identity provider mapping (#316) through the audited service-role RPC; run by hand, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/discovery/set-exclusion-policy.ts",
+    "reason": "Operator script (#263) that writes a new version of a tenant's mailbox exclusion policy through the audited service-role RPC discovery_exclusion_policy_set, with a service-role client from the environment; it prints the diff and writes nothing without --confirm, reads no mail, and is run by hand, never in a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/perf/set-local-flags.ts",
+    "reason": "Perf harness for #162: sets the named rail measurement flags on the throwaway cdt162-rail stack with its local service-role key; run by hand under scripts/perf/with-local-stack.sh, whose preload refuses any non-loopback Supabase URL, never in a request path or by an agent."
+  },
+  {
+    "file": "scripts/rehearsal/probes.ts",
+    "reason": "The #173 demo rehearsal's probes: a service-role client from the local w9-m365cap status for counts (ids and codes, no mail), built only after assertRehearsalStack pins 127.0.0.1:57321 and :57322; run by hand through scripts/rehearsal/rehearse.sh, never in a request path or by an agent."
+  }
+]

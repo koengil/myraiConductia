@@ -1,0 +1,13 @@
+# Fingerprints of findings that are already on develop (or in the tree), have
+# been rotated, and cannot be removed. Nothing else belongs here.
+#
+# - One entry per line, each with a comment linking its rotation issue.
+# - Tree scan (gitleaks dir) fingerprints are file:rule:line. Commit scan
+#   fingerprints are commit:file:rule:line, and only a commit on develop
+#   qualifies: its squash SHA is stable.
+# - Never ignore a finding on a pull request branch. Rotate the credential
+#   first, then rebuild the branch. A pull request is scanned with the base
+#   branch's copy of this file, so an entry added here takes effect only after
+#   it merges. See docs/04-operations/github-security-runbook.md once it lands.
+# - The reviewed fixtures that look like secrets are allowlisted in
+#   .gitleaks.toml by file, rule and exact value, not here.

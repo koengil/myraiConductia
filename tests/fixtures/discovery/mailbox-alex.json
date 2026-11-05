@@ -1,0 +1,38 @@
+{
+  "mailbox": "alex.chen@bank.example",
+  "messages": [
+    {
+      "id": "AAMk-alex-001",
+      "internetMessageId": "<offsite-001@bank.example>",
+      "conversationId": "conv-offsite",
+      "subject": "Team offsite agenda",
+      "sentDateTime": "2026-02-05T09:00:00Z",
+      "from": { "emailAddress": { "name": "Office Manager", "address": "office@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Alex Chen", "address": "alex.chen@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "The offsite agenda is attached. Coaches leave at 8:00." }
+    },
+    {
+      "id": "AAMk-alex-002",
+      "internetMessageId": "<lunch-006@bank.example>",
+      "conversationId": "conv-lunch",
+      "subject": "Lunch?",
+      "sentDateTime": "2026-02-19T11:10:00Z",
+      "from": { "emailAddress": { "name": "Alex Chen", "address": "alex.chen@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Lunch at noon?" }
+    },
+    {
+      "id": "AAMk-alex-003",
+      "internetMessageId": "<expenses-003@bank.example>",
+      "conversationId": "conv-expenses",
+      "subject": "Expense report reminder",
+      "sentDateTime": "2026-02-27T17:00:00Z",
+      "from": { "emailAddress": { "name": "Finance", "address": "finance@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Alex Chen", "address": "alex.chen@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "February expense reports are due on Friday." }
+    }
+  ]
+}

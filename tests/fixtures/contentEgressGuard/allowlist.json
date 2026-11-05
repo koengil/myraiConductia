@@ -1,0 +1,56 @@
+[
+  {
+    "file": "src/lib/ignatious/control-plane.ts",
+    "rule": "T1",
+    "match": "throw new IgnatiousRequestError(...) carries .message",
+    "reason": "Q9: Ignatious 4xx validation copy shown to the requesting user; 5xx replaced by fixed copy"
+  },
+  {
+    "file": "src/app/api/v1/deals/[dealId]/steps/[stepId]/skill-runs/stream/route.ts",
+    "rule": "R1",
+    "match": "new Response passes a provider body through ('text' bound from .text() result)",
+    "reason": "Q9: Ignatious stream relay; the body is first-party skill-service copy the requesting user's runner parses"
+  },
+  {
+    "file": "src/app/api/v1/deals/[dealId]/bench/chat/route.ts",
+    "rule": "R1",
+    "match": "new Response passes a provider body through ('text' bound from .text() result)",
+    "reason": "Q9: Ignatious bench-chat relay; SkillStepRunner parses the body for 422 input problems and pruned-version copy"
+  },
+  {
+    "file": "src/app/api/v1/companies/[companyId]/bench/chat/route.ts",
+    "rule": "R1",
+    "match": "new Response passes a provider body through ('text' bound from .text() result)",
+    "reason": "Q9: Ignatious bench-chat relay; SkillStepRunner parses the body for 422 input problems and pruned-version copy"
+  },
+  {
+    "file": "scripts/google/lib/probe.ts",
+    "rule": "U1",
+    "match": "app URL carries free text in ?q=",
+    "reason": "Operator CLI probe: the path joins the Gmail API base (not an app URL) and q is the fixed operator in:inbox, the search P06 proves the gmail.metadata token is refused"
+  },
+  {
+    "file": "src/lib/email/gmail.ts",
+    "rule": "U1",
+    "match": "URLSearchParams init carries 'prompt'",
+    "reason": "#490: Google's authorize URL (not an app URL); prompt is the fixed OAuth value 'consent', never user text, so Google always returns a refresh token"
+  },
+  {
+    "file": "src/lib/email/sender.ts",
+    "rule": "T1",
+    "match": "new OperatorCopyError(...) is not fixed copy: `${problem}. ${SENDER_REMEDY}`",
+    "reason": "problem is senderProblem's first-party copy (the variable name and the sandbox address constant, never the configured value); SENDER_REMEDY is a constant"
+  },
+  {
+    "file": "worker/extract.ts",
+    "rule": "T1",
+    "match": "new OperatorCopyError(...) is not fixed copy: `${flag} needs a value`",
+    "reason": "flag is one of the worker's own CLI flag names (--transport, --replies, --tenant), passed as literals to valueOf"
+  },
+  {
+    "file": "worker/extract.ts",
+    "rule": "T1",
+    "match": "new OperatorCopyError(...) is not fixed copy: `no recorded replies at ${named}",
+    "reason": "named is the replies path the operator passed with --replies; the demo runbook relies on this copy, and it is CLI output, not bank content"
+  }
+]

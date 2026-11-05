@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conductia — Future-Vision Prototypes</title>
+  <link rel="stylesheet" href="shared/brand-tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100dvh; font-family: var(--font-sans);
+      color: var(--ink-on-dark); background: var(--bg-cinematic);
+    }
+    .grid-tex { position: fixed; inset: 0; background: var(--texture-grid); opacity: .5; pointer-events: none; }
+    .wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: var(--space-12) var(--space-6); }
+    .eyebrow { font-size: var(--text-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+    h1 { font-family: var(--font-display); font-weight: 500; letter-spacing: -.015em; font-size: clamp(32px, 5vw, 52px); margin: var(--space-3) 0 var(--space-2); }
+    .lead { color: var(--ink-on-dark-secondary); font-size: var(--text-lg); max-width: 62ch; line-height: 1.6; }
+    .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); margin-top: var(--space-10); }
+    @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+    a.card {
+      display: block; text-decoration: none; color: inherit; padding: var(--space-6);
+      border-radius: var(--radius-card); border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); box-shadow: var(--elev-float);
+      transition: border-color .2s, transform .2s, background .2s;
+    }
+    a.card:hover { border-color: var(--accent); transform: translateY(-3px); background: rgba(255,255,255,.07); }
+    a.card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .tag { display: inline-block; font-size: var(--text-xxs); letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+           color: var(--ink-on-dark-tertiary); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius-pill); padding: 2px 10px; }
+    .card h2 { font-size: var(--text-xl); margin: var(--space-3) 0 var(--space-2); font-weight: 600; }
+    .card p { color: var(--ink-on-dark-secondary); font-size: var(--text-base); line-height: 1.6; margin: 0; }
+    .code { font-family: var(--font-mono); color: var(--accent); font-size: var(--text-sm); }
+    .foot { margin-top: var(--space-10); color: var(--ink-on-dark-tertiary); font-size: var(--text-sm); }
+    .foot a { color: var(--ink-on-dark-secondary); }
+    a.feature {
+      display: block; text-decoration: none; color: inherit; margin-top: var(--space-8);
+      padding: var(--space-7) var(--space-6); border-radius: var(--radius-card);
+      border: 1px solid var(--accent); background: linear-gradient(180deg, rgba(194,148,69,.12), rgba(255,255,255,.03));
+      box-shadow: var(--elev-float); transition: border-color .2s, transform .2s, background .2s;
+    }
+    a.feature:hover { transform: translateY(-3px); background: linear-gradient(180deg, rgba(194,148,69,.18), rgba(255,255,255,.05)); }
+    a.feature:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .feature .tag { color: var(--accent); border-color: var(--accent); }
+    .feature h2 { font-size: var(--text-2xl); margin: var(--space-3) 0 var(--space-2); font-weight: 600; }
+    .feature p { color: var(--ink-on-dark-secondary); font-size: var(--text-md); line-height: 1.6; margin: 0; max-width: 76ch; }
+    .divider { margin: var(--space-10) 0 0; color: var(--ink-on-dark-tertiary); font-size: var(--text-xs); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="grid-tex" aria-hidden="true"></div>
+  <main class="wrap">
+    <p class="eyebrow">Conductia · Future vision</p>
+    <h1>Four ways the platform could feel</h1>
+    <p class="lead">The compliance-first M&amp;A intelligence layer for managing directors.
+      Two paradigms, two aesthetics. Each prototype carries the full platform: ranked
+      acquirers and scored fit, the analytical panels, and the new deal-lifecycle and
+      governance powers. Compliance is the floor the whole way.</p>
+
+    <a class="feature" href="integrated/index.html">
+      <span class="tag">Recommended · Convergence</span>
+      <h2>Integrated — one platform, computed per actor</h2>
+      <p>The A1 platform shell carrying Storm's three validated beats as live mechanics: a three-way
+        persona switch (bank, client, buyer — the menu recomputes per actor), entities before people
+        on the deal team, and a departure that revokes access across every deal at once. The single
+        direction proposed after the 7 June call.</p>
+    </a>
+
+    <p class="divider">Or compare the four exploratory directions</p>
+
+    <div class="cards">
+      <a class="card" href="a1-command-deck/index.html">
+        <span class="tag">Platform · Refined</span>
+        <h2>A1 — Command Deck</h2>
+        <p>Next-gen navy and gold AI-native terminal. Collapsible rail, full-screen content, a floating compliance console.</p>
+      </a>
+      <a class="card" href="a2-ambient-intelligence/index.html">
+        <span class="tag">Platform · Bold</span>
+        <h2>A2 — Ambient Intelligence</h2>
+        <p>AI-copilot-forward, spatial glass canvas. Ask, compliance screens, decision cards materialize.</p>
+      </a>
+      <a class="card" href="b1-guided-journey/index.html">
+        <span class="tag">Journey · Refined</span>
+        <h2>B1 — Guided Journey</h2>
+        <p>The deal lifecycle as a guided step spine, from intake to outreach, compliance the through-line.</p>
+      </a>
+      <a class="card" href="b2-cinematic-timeline/index.html">
+        <span class="tag">Journey · Bold</span>
+        <h2>B2 — Cinematic Timeline</h2>
+        <p>The deal as a scroll-driven film. A compliance heartbeat runs down a vertical timeline.</p>
+      </a>
+    </div>
+
+    <p class="foot">Sandbox deal: <span class="code">ATLAS-2026-001 · Project Atlas</span> (Atlassian, sell-side).
+      Future-vision prototypes. See <a href="README.md">README</a> for the capability map and honest live-vs-vision framing.</p>
+  </main>
+</body>
+</html>

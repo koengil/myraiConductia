@@ -1,0 +1,341 @@
+{
+ "root": "Project Destiny \u2014 Data Room (Client Documents)",
+ "kind": "data-room",
+ "note": "The client's own documents \u2014 external source material provided for buyer evaluation. Distinct from the internal Deal Folder. PLACEHOLDER pending the real VDR index from the Ignatious team.",
+ "children": [
+  {
+   "name": "01. Corporate & Organization",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Certificate of Incorporation.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "414 B",
+     "bytes": 414,
+     "href": "/data-room-external/01.-corporate-organization/certificate-of-incorporation.txt",
+     "preview": "/data-room-external/01.-corporate-organization/certificate-of-incorporation.txt",
+     "tags": []
+    },
+    {
+     "name": "Bylaws and Amendments.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "400 B",
+     "bytes": 400,
+     "href": "/data-room-external/01.-corporate-organization/bylaws-and-amendments.txt",
+     "preview": "/data-room-external/01.-corporate-organization/bylaws-and-amendments.txt",
+     "tags": []
+    },
+    {
+     "name": "Capitalization Table.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "398 B",
+     "bytes": 398,
+     "href": "/data-room-external/01.-corporate-organization/capitalization-table.txt",
+     "preview": "/data-room-external/01.-corporate-organization/capitalization-table.txt",
+     "tags": []
+    },
+    {
+     "name": "Organizational Chart.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "398 B",
+     "bytes": 398,
+     "href": "/data-room-external/01.-corporate-organization/organizational-chart.txt",
+     "preview": "/data-room-external/01.-corporate-organization/organizational-chart.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "02. Financial Information",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Audited Financial Statements (FY22-FY24).txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "438 B",
+     "bytes": 438,
+     "href": "/data-room-external/02.-financial-information/audited-financial-statements-fy22-fy24.txt",
+     "preview": "/data-room-external/02.-financial-information/audited-financial-statements-fy22-fy24.txt",
+     "tags": []
+    },
+    {
+     "name": "Management Accounts (YTD).txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "408 B",
+     "bytes": 408,
+     "href": "/data-room-external/02.-financial-information/management-accounts-ytd.txt",
+     "preview": "/data-room-external/02.-financial-information/management-accounts-ytd.txt",
+     "tags": []
+    },
+    {
+     "name": "Annual Budget and Forecast.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "410 B",
+     "bytes": 410,
+     "href": "/data-room-external/02.-financial-information/annual-budget-and-forecast.txt",
+     "preview": "/data-room-external/02.-financial-information/annual-budget-and-forecast.txt",
+     "tags": []
+    },
+    {
+     "name": "Accounts Receivable Aging.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "408 B",
+     "bytes": 408,
+     "href": "/data-room-external/02.-financial-information/accounts-receivable-aging.txt",
+     "preview": "/data-room-external/02.-financial-information/accounts-receivable-aging.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "03. Commercial & Customers",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Top 20 Customer Contracts.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "408 B",
+     "bytes": 408,
+     "href": "/data-room-external/03.-commercial-customers/top-20-customer-contracts.txt",
+     "preview": "/data-room-external/03.-commercial-customers/top-20-customer-contracts.txt",
+     "tags": []
+    },
+    {
+     "name": "Customer Concentration Analysis.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "420 B",
+     "bytes": 420,
+     "href": "/data-room-external/03.-commercial-customers/customer-concentration-analysis.txt",
+     "preview": "/data-room-external/03.-commercial-customers/customer-concentration-analysis.txt",
+     "tags": []
+    },
+    {
+     "name": "Sales Pipeline Summary.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "402 B",
+     "bytes": 402,
+     "href": "/data-room-external/03.-commercial-customers/sales-pipeline-summary.txt",
+     "preview": "/data-room-external/03.-commercial-customers/sales-pipeline-summary.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "04. Legal & Contracts",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Material Contracts Schedule.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "412 B",
+     "bytes": 412,
+     "href": "/data-room-external/04.-legal-contracts/material-contracts-schedule.txt",
+     "preview": "/data-room-external/04.-legal-contracts/material-contracts-schedule.txt",
+     "tags": []
+    },
+    {
+     "name": "Litigation Summary.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "394 B",
+     "bytes": 394,
+     "href": "/data-room-external/04.-legal-contracts/litigation-summary.txt",
+     "preview": "/data-room-external/04.-legal-contracts/litigation-summary.txt",
+     "tags": []
+    },
+    {
+     "name": "Permits and Licenses.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "398 B",
+     "bytes": 398,
+     "href": "/data-room-external/04.-legal-contracts/permits-and-licenses.txt",
+     "preview": "/data-room-external/04.-legal-contracts/permits-and-licenses.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "05. Human Resources",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Employee Census.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "388 B",
+     "bytes": 388,
+     "href": "/data-room-external/05.-human-resources/employee-census.txt",
+     "preview": "/data-room-external/05.-human-resources/employee-census.txt",
+     "tags": []
+    },
+    {
+     "name": "Key Employee Agreements.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "404 B",
+     "bytes": 404,
+     "href": "/data-room-external/05.-human-resources/key-employee-agreements.txt",
+     "preview": "/data-room-external/05.-human-resources/key-employee-agreements.txt",
+     "tags": []
+    },
+    {
+     "name": "Benefits Summary.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "390 B",
+     "bytes": 390,
+     "href": "/data-room-external/05.-human-resources/benefits-summary.txt",
+     "preview": "/data-room-external/05.-human-resources/benefits-summary.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "06. Technology & IP",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "IP Register (Patents & Trademarks).txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "426 B",
+     "bytes": 426,
+     "href": "/data-room-external/06.-technology-ip/ip-register-patents-trademarks.txt",
+     "preview": "/data-room-external/06.-technology-ip/ip-register-patents-trademarks.txt",
+     "tags": []
+    },
+    {
+     "name": "Software and Systems Overview.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "416 B",
+     "bytes": 416,
+     "href": "/data-room-external/06.-technology-ip/software-and-systems-overview.txt",
+     "preview": "/data-room-external/06.-technology-ip/software-and-systems-overview.txt",
+     "tags": []
+    },
+    {
+     "name": "Data Security and Privacy.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "408 B",
+     "bytes": 408,
+     "href": "/data-room-external/06.-technology-ip/data-security-and-privacy.txt",
+     "preview": "/data-room-external/06.-technology-ip/data-security-and-privacy.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "07. Tax",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Tax Returns (FY22-FY24).txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "404 B",
+     "bytes": 404,
+     "href": "/data-room-external/07.-tax/tax-returns-fy22-fy24.txt",
+     "preview": "/data-room-external/07.-tax/tax-returns-fy22-fy24.txt",
+     "tags": []
+    },
+    {
+     "name": "Tax Compliance Summary.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "402 B",
+     "bytes": 402,
+     "href": "/data-room-external/07.-tax/tax-compliance-summary.txt",
+     "preview": "/data-room-external/07.-tax/tax-compliance-summary.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "08. Real Estate & Assets",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Property and Lease Schedule.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "412 B",
+     "bytes": 412,
+     "href": "/data-room-external/08.-real-estate-assets/property-and-lease-schedule.txt",
+     "preview": "/data-room-external/08.-real-estate-assets/property-and-lease-schedule.txt",
+     "tags": []
+    },
+    {
+     "name": "Fixed Asset Register.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "398 B",
+     "bytes": 398,
+     "href": "/data-room-external/08.-real-estate-assets/fixed-asset-register.txt",
+     "preview": "/data-room-external/08.-real-estate-assets/fixed-asset-register.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "09. Insurance",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Insurance Policy Schedule.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "408 B",
+     "bytes": 408,
+     "href": "/data-room-external/09.-insurance/insurance-policy-schedule.txt",
+     "preview": "/data-room-external/09.-insurance/insurance-policy-schedule.txt",
+     "tags": []
+    }
+   ]
+  },
+  {
+   "name": "10. Regulatory & Compliance",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Regulatory Filings.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "394 B",
+     "bytes": 394,
+     "href": "/data-room-external/10.-regulatory-compliance/regulatory-filings.txt",
+     "preview": "/data-room-external/10.-regulatory-compliance/regulatory-filings.txt",
+     "tags": []
+    },
+    {
+     "name": "Compliance Policies.txt",
+     "kind": "file",
+     "ext": "txt",
+     "size": "396 B",
+     "bytes": 396,
+     "href": "/data-room-external/10.-regulatory-compliance/compliance-policies.txt",
+     "preview": "/data-room-external/10.-regulatory-compliance/compliance-policies.txt",
+     "tags": []
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "files": 27,
+  "folders": 10
+ }
+}

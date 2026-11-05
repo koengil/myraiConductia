@@ -1,0 +1,1010 @@
+{
+  "mailbox": "morgan.vale@bank.example",
+  "messages": [
+    {
+      "id": "AAMk-morgan-001",
+      "internetMessageId": "<falcon-001@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T09:12:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Dana Price",
+            "address": "dana.price@heliotrope.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Morgan, Dana,</p><p>Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "AAMk-morgan-002",
+      "internetMessageId": "<falcon-002@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "RE: Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T10:02:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Dana Price",
+            "address": "dana.price@heliotrope.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Works for me. I will circulate the working group list by Friday.\n\nOn Tue, 3 Feb 2026 at 09:12, Storm Duncan <storm.duncan@bank.example> wrote:\n> Morgan, Dana,\n> Project Falcon kicks off next week."
+      }
+    },
+    {
+      "id": "AAMk-morgan-003",
+      "internetMessageId": "<falcon-007@bank.example>",
+      "conversationId": "conv-falcon-buyers",
+      "subject": "Project Falcon: buyer list v2",
+      "sentDateTime": "2026-02-18T12:30:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Analyst Pool",
+            "address": "analyst.pool@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "The updated buyer list is attached: 14 strategics and 9 sponsors."
+      }
+    },
+    {
+      "id": "AAMk-morgan-004",
+      "internetMessageId": "<cobra-001@bank.example>",
+      "conversationId": "conv-cobra-el",
+      "subject": "Project Cobra: engagement letter",
+      "sentDateTime": "2025-11-04T15:00:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Jon Reyes",
+            "address": "jon.reyes@cobalt-systems.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<p>Jon,</p><p>The Project Cobra engagement letter is attached for signature.</p>"
+      }
+    },
+    {
+      "id": "AAMk-morgan-005",
+      "internetMessageId": "<cobra-002@cobalt-systems.example>",
+      "conversationId": "conv-cobra-el",
+      "subject": "RE: Project Cobra: engagement letter",
+      "sentDateTime": "2025-11-06T09:20:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Jon Reyes",
+          "address": "jon.reyes@cobalt-systems.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Signed copy attached."
+      }
+    },
+    {
+      "id": "AAMk-morgan-006",
+      "internetMessageId": "<lunch-006@bank.example>",
+      "conversationId": "conv-lunch",
+      "subject": "Lunch?",
+      "sentDateTime": "2026-02-19T11:10:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Alex Chen",
+          "address": "alex.chen@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Lunch at noon?"
+      }
+    },
+    {
+      "id": "d729dc6c9ba4d0d6",
+      "internetMessageId": "<osprey-001@bank.example>",
+      "conversationId": "rfc822:<osprey-001@bank.example>",
+      "subject": "Project Osprey: engagement letter",
+      "sentDateTime": "2025-01-13T10:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Helen Brandt",
+            "address": "helen.brandt@larkspur-health.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Helen,\n\nThe engagement letter for Project Osprey was countersigned on 13 January 2025. We start work this week.\n\nMorgan"
+      }
+    },
+    {
+      "id": "c0208e25ef097e5a",
+      "internetMessageId": "<osprey-002@bank.example>",
+      "conversationId": "rfc822:<osprey-002@bank.example>",
+      "subject": "Project Osprey: data room",
+      "sentDateTime": "2025-02-04T14:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Storm,</p><p>The data room for Project Osprey opened on 4 February 2025. Larkspur has loaded the corporate and financial folders.</p><p>Morgan</p></body></html>"
+      }
+    },
+    {
+      "id": "c678baeb9cc55867",
+      "internetMessageId": "<osprey-003@meridian-care.example>",
+      "conversationId": "rfc822:<osprey-003@meridian-care.example>",
+      "subject": "Project Osprey: NDA",
+      "sentDateTime": "2025-03-05T09:30:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Jonas Keller",
+          "address": "jonas.keller@meridian-care.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Morgan,\n\nMeridian executed the non-disclosure agreement for Project Osprey on 5 March 2025.\n\nJonas"
+      }
+    },
+    {
+      "id": "38964fc4ec0fd93d",
+      "internetMessageId": "<osprey-004@bank.example>",
+      "conversationId": "rfc822:<osprey-004@bank.example>",
+      "subject": "Project Osprey: letter of intent",
+      "sentDateTime": "2025-04-15T16:20:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Jonas Keller",
+            "address": "jonas.keller@meridian-care.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Jonas,</p><p>The letter of intent for Project Osprey was signed on 15 April 2025. Confirmatory diligence begins next week.</p><p>Morgan</p></body></html>"
+      }
+    },
+    {
+      "id": "638c879d2fdf880c",
+      "internetMessageId": "<osprey-005@bank.example>",
+      "conversationId": "rfc822:<osprey-005@bank.example>",
+      "subject": "Project Osprey: signing",
+      "sentDateTime": "2025-05-30T12:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Helen Brandt",
+            "address": "helen.brandt@larkspur-health.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Helen,\n\nThe purchase agreement for Project Osprey was signed on 30 May 2025. Closing conditions are on track.\n\nStorm"
+      }
+    },
+    {
+      "id": "d3f9409f353bdf2d",
+      "internetMessageId": "<osprey-006@bank.example>",
+      "conversationId": "rfc822:<osprey-006@bank.example>",
+      "subject": "Project Osprey: announcement",
+      "sentDateTime": "2025-06-17T08:30:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nProject Osprey was announced to the market on 17 June 2025. Both press releases went out at seven this morning.\n\nMorgan"
+      }
+    },
+    {
+      "id": "e981beac0a1d943d",
+      "internetMessageId": "<osprey-007@bank.example>",
+      "conversationId": "rfc822:<osprey-007@bank.example>",
+      "subject": "Project Osprey: closing",
+      "sentDateTime": "2025-07-15T15:45:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Helen Brandt",
+            "address": "helen.brandt@larkspur-health.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Jonas Keller",
+            "address": "jonas.keller@meridian-care.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Helen, Jonas,</p><p>Project Osprey closed on 15 July 2025. Funds were released this morning.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "cf30bcd99b07969c",
+      "internetMessageId": "<osprey-008@larkspur-health.example>",
+      "conversationId": "rfc822:<osprey-008@larkspur-health.example>",
+      "subject": "Thank you from Larkspur",
+      "sentDateTime": "2025-07-16T09:15:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Helen Brandt",
+          "address": "helen.brandt@larkspur-health.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Storm, Morgan,\n\nThank you both for the work of the Project Osprey team. It was a smooth process from start to finish.\n\nHelen"
+      }
+    },
+    {
+      "id": "3f28e3486099a45c",
+      "internetMessageId": "<kestrel-001@bank.example>",
+      "conversationId": "rfc822:<kestrel-001@bank.example>",
+      "subject": "Project Kestrel: engagement letter for signature",
+      "sentDateTime": "2026-05-04T09:10:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Ravi Menon",
+            "address": "ravi.menon@northwind-robotics.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Ravi,</p><p>The engagement letter for Project Kestrel is ready for your signature. It covers the sell-side mandate for Northwind Robotics.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "0746ff6907997225",
+      "internetMessageId": "<kestrel-002@northwind-robotics.example>",
+      "conversationId": "rfc822:<kestrel-001@bank.example>",
+      "subject": "RE: Project Kestrel: engagement letter for signature",
+      "sentDateTime": "2026-05-06T14:30:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Ravi Menon",
+          "address": "ravi.menon@northwind-robotics.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nThe engagement letter was countersigned on 6 May 2026. Please treat Project Kestrel as live from today.\n\nRavi"
+      },
+      "internetMessageHeaders": [
+        {
+          "name": "In-Reply-To",
+          "value": "<kestrel-001@bank.example>"
+        },
+        {
+          "name": "References",
+          "value": "<kestrel-001@bank.example>"
+        }
+      ]
+    },
+    {
+      "id": "edf0032a653b98f7",
+      "internetMessageId": "<kestrel-003@bank.example>",
+      "conversationId": "rfc822:<kestrel-003@bank.example>",
+      "subject": "Project Kestrel: kickoff notes",
+      "sentDateTime": "2026-05-14T10:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Ravi Menon",
+            "address": "ravi.menon@northwind-robotics.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Priya Nair",
+            "address": "priya.nair@northwind-robotics.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Ravi, Priya,</p><p>The Project Kestrel kickoff meeting was held on 14 May 2026 with the Northwind board and the deal team. The next step is the data room.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "95ebb75e15b49a0d",
+      "internetMessageId": "<kestrel-004@bank.example>",
+      "conversationId": "rfc822:<kestrel-004@bank.example>",
+      "subject": "Project Kestrel: data room open",
+      "sentDateTime": "2026-05-28T16:45:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Priya Nair",
+            "address": "priya.nair@northwind-robotics.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nThe virtual data room for Project Kestrel opened on 28 May 2026. Northwind finance has uploaded the first folders.\n\nMorgan"
+      }
+    },
+    {
+      "id": "3647b7b8eea3a582",
+      "internetMessageId": "<noise-001@bank.example>",
+      "conversationId": "rfc822:<noise-001@bank.example>",
+      "subject": "Team offsite: save the date",
+      "sentDateTime": "2026-06-02T08:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Events Team",
+          "address": "events@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Please save the date for the team offsite on the second Thursday of October. Lunch and a facilitated session are planned."
+      }
+    },
+    {
+      "id": "4d1743aefbf21fcb",
+      "internetMessageId": "<kestrel-006@bank.example>",
+      "conversationId": "rfc822:<kestrel-006@bank.example>",
+      "subject": "Project Kestrel: CIM",
+      "sentDateTime": "2026-06-23T13:05:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nThe confidential information memorandum for Project Kestrel was drafted on 23 June 2026. Comments are due on Friday.\n\nMorgan"
+      }
+    },
+    {
+      "id": "3f3740126ab3f30c",
+      "internetMessageId": "<kestrel-007@bank.example>",
+      "conversationId": "rfc822:<kestrel-007@bank.example>",
+      "subject": "Project Kestrel: buyer outreach",
+      "sentDateTime": "2026-07-01T08:40:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Ravi Menon",
+            "address": "ravi.menon@northwind-robotics.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Morgan, Ravi,</p><p>Buyer outreach for Project Kestrel started on 1 July 2026. We contacted twelve strategic and financial buyers this morning.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "36232753a597cda9",
+      "internetMessageId": "<noise-003@newswire.example>",
+      "conversationId": "rfc822:<noise-003@newswire.example>",
+      "subject": "Weekly markets digest",
+      "sentDateTime": "2026-07-06T06:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Markets Newswire",
+          "address": "news@newswire.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Equity indices closed mixed last week while credit spreads tightened. Advisory fee pools were flat on the quarter."
+      }
+    },
+    {
+      "id": "9675a12dbc7fc0d2",
+      "internetMessageId": "<kestrel-008@aldermoor.example>",
+      "conversationId": "rfc822:<kestrel-008@aldermoor.example>",
+      "subject": "Project Kestrel: NDA",
+      "sentDateTime": "2026-07-10T15:15:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Elena Garrity",
+          "address": "elena.garrity@aldermoor.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nAldermoor executed the non-disclosure agreement for Project Kestrel on 10 July 2026. Please open the data room to our team.\n\nElena"
+      }
+    },
+    {
+      "id": "9801f2be37b5f51c",
+      "internetMessageId": "<noise-004@bank.example>",
+      "conversationId": "rfc822:<noise-004@bank.example>",
+      "subject": "Planned maintenance on Saturday",
+      "sentDateTime": "2026-07-20T12:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "IT Helpdesk",
+          "address": "it-helpdesk@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Email will be unavailable on Saturday between 22:00 and 23:30 while the servers are patched. No action is needed."
+      }
+    },
+    {
+      "id": "5e1e6fc412e1a56f",
+      "internetMessageId": "<kestrel-010@bank.example>",
+      "conversationId": "rfc822:<kestrel-010@bank.example>",
+      "subject": "Project Kestrel: management presentations",
+      "sentDateTime": "2026-07-29T17:30:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Ravi Menon",
+            "address": "ravi.menon@northwind-robotics.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Priya Nair",
+            "address": "priya.nair@northwind-robotics.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Ravi, Priya,</p><p>The management presentations for Project Kestrel were held on 29 July 2026. Two buyers attended and both asked for follow-up sessions.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "de1034f942efcd2c",
+      "internetMessageId": "<noise-005@bank.example>",
+      "conversationId": "rfc822:<noise-005@bank.example>",
+      "subject": "Parking permit renewals",
+      "sentDateTime": "2026-08-03T07:45:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Facilities",
+          "address": "facilities@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Parking permits renew at the end of the month. Reply to this note if you no longer need one.</p></body></html>"
+      }
+    },
+    {
+      "id": "17555542a9deeb24",
+      "internetMessageId": "<kestrel-011@bank.example>",
+      "conversationId": "rfc822:<kestrel-011@bank.example>",
+      "subject": "Project Kestrel: process letter",
+      "sentDateTime": "2026-08-12T09:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Elena Garrity",
+            "address": "elena.garrity@aldermoor.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Marcus Oyelaran",
+            "address": "marcus.oyelaran@castellan.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Elena, Marcus,\n\nThe process letter for Project Kestrel was sent on 12 August 2026. Final bids are due on 28 August 2026.\n\nStorm"
+      }
+    },
+    {
+      "id": "427e80f1d0f26e68",
+      "internetMessageId": "<kestrel-012@bank.example>",
+      "conversationId": "rfc822:<kestrel-012@bank.example>",
+      "subject": "Project Kestrel: bids",
+      "sentDateTime": "2026-08-28T18:10:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Morgan Vale",
+          "address": "morgan.vale@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Storm,</p><p>Final bids for Project Kestrel were received on 28 August 2026 from Aldermoor and Castellan. The Aldermoor bid is the higher of the two.</p><p>Morgan</p></body></html>"
+      }
+    },
+    {
+      "id": "b7212143df06013d",
+      "internetMessageId": "<kestrel-013@bank.example>",
+      "conversationId": "rfc822:<kestrel-013@bank.example>",
+      "subject": "Project Kestrel: letter of intent",
+      "sentDateTime": "2026-09-18T15:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Elena Garrity",
+            "address": "elena.garrity@aldermoor.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Elena,\n\nThe letter of intent for Project Kestrel was signed on 18 September 2026. We now move to confirmatory diligence.\n\nStorm"
+      }
+    },
+    {
+      "id": "1aa7cdb8c105fcd2",
+      "internetMessageId": "<kestrel-014@aldermoor.example>",
+      "conversationId": "rfc822:<kestrel-013@bank.example>",
+      "subject": "RE: Project Kestrel: letter of intent",
+      "sentDateTime": "2026-09-18T16:10:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Elena Garrity",
+          "address": "elena.garrity@aldermoor.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "body": {
+        "contentType": "text",
+        "content": "Storm,\n\nAldermoor confirms the letter of intent was signed on 18 September 2026. Our diligence team starts on Monday.\n\nElena"
+      },
+      "internetMessageHeaders": [
+        {
+          "name": "In-Reply-To",
+          "value": "<kestrel-013@bank.example>"
+        },
+        {
+          "name": "References",
+          "value": "<kestrel-013@bank.example>"
+        }
+      ]
+    },
+    {
+      "id": "920c761a8f871f87",
+      "internetMessageId": "<kestrel-016@bank.example>",
+      "conversationId": "rfc822:<kestrel-016@bank.example>",
+      "subject": "Project Kestrel: diligence plan",
+      "sentDateTime": "2026-09-22T10:20:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Storm Duncan",
+          "address": "storm.duncan@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Morgan,\n\nConfirmatory diligence for Project Kestrel runs three weeks. The workstreams are financial, legal and technology, with a status call every Monday.\n\nStorm"
+      }
+    }
+  ]
+}

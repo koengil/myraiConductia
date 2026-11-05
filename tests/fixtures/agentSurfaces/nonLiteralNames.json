@@ -1,0 +1,8 @@
+[
+  { "file": "scripts/check-db.ts", "reason": "Schema check script: tableExists(table) probes a fixed list of permission tables by name; it reads no rows." },
+  { "file": "scripts/check-onboarding-demo.ts", "reason": "Demo verification script: checkTable(table, ...) is called with a fixed list of onboarding tables, never mailbox data." },
+  { "file": "src/lib/skillRun/publicationMetadata.ts", "reason": "Generic publication-metadata reader: its table argument is one of two skill publication tables; a caller naming a mailbox table would be flagged in the caller." },
+  { "file": "src/lib/skillPublication/processorRead.ts", "reason": "Generic first-row fetch for the skill publication processor; callers pass the publication tables, and a mailbox table literal would be flagged in the caller." },
+  { "file": "src/lib/skillAuthoring/browserRoute.ts", "reason": "callRpc forwards a skill-authoring RPC name chosen by the route; it is typed string, and a mailbox RPC literal would be flagged in the calling route." },
+  { "file": "src/lib/skillAuthoring/runTurn.ts", "reason": "defaultTurnDeps forwards the skill-authoring turn's RPC name; a mailbox RPC literal would be flagged where it is written." }
+]

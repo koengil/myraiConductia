@@ -1,0 +1,24 @@
+{
+  "_source": "hand-written in the documented shape of GET /orgs/{org}/actions/runner-groups/{id}/runners; names are launcher-made (deploy-<12 hex>)",
+  "total_count": 2,
+  "runners": [
+    {
+      "id": 5001,
+      "name": "deploy-0123456789ab",
+      "os": "Linux",
+      "status": "offline",
+      "busy": false,
+      "ephemeral": true,
+      "labels": [{ "id": 1, "name": "conductia-deploy", "type": "custom" }]
+    },
+    {
+      "id": 5002,
+      "name": "deploy-ba9876543210",
+      "os": "Linux",
+      "status": "online",
+      "busy": true,
+      "ephemeral": true,
+      "labels": [{ "id": 1, "name": "conductia-deploy", "type": "custom" }]
+    }
+  ]
+}

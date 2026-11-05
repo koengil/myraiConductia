@@ -1,0 +1,121 @@
+name: Promote develop to staging
+
+# staging moves only to a develop commit whose required checks all passed on
+# that exact commit. develop merges without re-testing every open PR against
+# the latest develop (its ruleset is not strict), so the push run on develop is
+# the first test of the combined result; this is where that result gates.
+# plan pins develop and requires the develop ruleset's checks green on it;
+# fast-forward moves staging to exactly that commit. Anything missing, pending
+# or red leaves staging where it is.
+#
+# migrate applies the pinned commit's pending migrations to the staging
+# database (migrate.yml, environment db-staging) before staging moves.
+# Release procedure: docs/03-engineering/delivery-model.md.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promote-staging
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Pin a green develop commit
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    # A deploy VM's job-started hook may hold the first step up to 10 minutes
+    # while the toolchain installs (ADR-0028); the job's own work is minutes.
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: read
+    outputs:
+      sha: ${{ steps.pin.outputs.sha }}
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Pin develop and list what it adds
+        id: pin
+        run: |
+          set -euo pipefail
+          # checkout's fetch-depth: 0 already fetched every branch into
+          # origin/*. No second fetch: persist-credentials is off, so it would
+          # run unauthenticated and fail on this private repo.
+          sha="$(git rev-parse origin/develop)"
+          git merge-base --is-ancestor origin/staging "${sha}" \
+            || { echo "❌ staging is not an ancestor of develop. staging must only move by this workflow."; exit 1; }
+          changed="$(git diff --name-only --diff-filter=AMR origin/staging.."${sha}" -- supabase/migrations)"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Promoting develop @ ${sha:0:7} to staging"
+            echo
+            echo '```'
+            git log --oneline --no-decorate origin/staging.."${sha}"
+            echo '```'
+            echo
+            if [ -z "${changed}" ]; then
+              echo "No migration files added or changed since staging."
+            else
+              echo "Migration files this adds:"
+              echo
+              while IFS= read -r file; do echo "- \`${file}\`"; done <<< "${changed}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require the develop checks green on the pinned commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git checkout --quiet "${SHA}"
+          gh api --paginate "repos/${REPO}/commits/${SHA}/check-runs?per_page=100" \
+            --jq '.check_runs[] | {id, name, status, conclusion}' > "${RUNNER_TEMP}/check-runs.jsonl"
+          if ! node scripts/ci/required-checks.mjs < "${RUNNER_TEMP}/check-runs.jsonl"; then
+            echo "❌ develop @ ${SHA:0:7} is not green. Wait for CI on develop to finish, or revert the breaking merge, then re-run."
+            exit 1
+          fi
+
+  migrate:
+    name: Migrate staging
+    needs: plan
+    uses: ./.github/workflows/migrate.yml
+    with:
+      environment: db-staging
+      ref: ${{ needs.plan.outputs.sha }}
+    secrets: inherit
+
+  fast-forward:
+    name: Fast-forward staging to develop
+    needs: [plan, migrate]
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    # A deploy VM's job-started hook may hold the first step up to 10 minutes
+    # while the toolchain installs (ADR-0028); the job's own work is minutes.
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: staging
+
+      - name: Fast-forward staging to the pinned commit
+        env:
+          SHA: ${{ needs.plan.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin staging develop
+          git checkout staging
+          git merge --ff-only "${SHA}"
+          git push origin staging

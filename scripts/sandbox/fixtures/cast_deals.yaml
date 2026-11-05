@@ -1,0 +1,222 @@
+# Conductia pre-release test sandbox: cast and deals (fixture for #658, #661)
+# All names, firms and deals are fictional. No secrets, no real clients.
+version: 1
+domain: conductia-sandbox.com
+run_start: "D0"   # timelines are day offsets from the generator's run start date
+admin:
+  email: admin@conductia-sandbox.com
+  name: Roberto Di Lillo
+  role: firm_admin
+  in_cast: false   # never used as a sender/recipient persona
+
+orgs:
+  firm_a:  {name: Halvorsen Ridge Partners, short: Halvorsen Ridge, kind: advisory_firm, tenant_under_test: true, domain: halvorsen.conductia-sandbox.com}
+  firm_b:  {name: Corvane Capital, short: Corvane, kind: private_equity, tenant_under_test: false, domain: corvane.conductia-sandbox.com}
+  ext_bank: {name: Ashgrove & Pell Advisory, short: Ashgrove & Pell, kind: investment_bank, external: true, domain: ashgrove.conductia-sandbox.com}
+  ext_law:  {name: Thistlewood Marr LLP, short: Thistlewood Marr, kind: law_firm, external: true, domain: thistlewood.conductia-sandbox.com}
+
+cast:
+  - id: alex
+    email: alex.ferreira@halvorsen.conductia-sandbox.com
+    display_name: "Alex Ferreira"
+    org: firm_a
+    role: Associate
+    seniority: junior
+    tone: eager, fast, slightly over-explains; bullet lists; lots of "quick follow-up"
+    behaviours: [builds models and CIM drafts, sends late-night updates, chases data-room items]
+    mistakes: [wrong_recipient_autocomplete, reply_all_too_wide, re_sends_same_attachment]
+    visibility: {sees: [BLUEFINCH, OSPREY], walled_off: [KESTREL]}
+    signature: |
+      Alex Ferreira
+      Associate | Halvorsen Ridge Partners
+      alex.ferreira@halvorsen.conductia-sandbox.com
+  - id: morgan
+    email: morgan.hale@halvorsen.conductia-sandbox.com
+    display_name: "Morgan Hale"
+    org: firm_a
+    role: Vice President
+    seniority: mid
+    tone: crisp, directive, short lines, numbered asks with deadlines
+    behaviours: [runs day-to-day process, reviews Alex's drafts, forwards client mail to team]
+    mistakes: [forwards_full_chain_with_history, cc_walled_off_colleague]
+    visibility: {sees: [BLUEFINCH, KESTREL, OSPREY, TERN], walled_off: []}
+    signature: |
+      Morgan Hale
+      Vice President | Halvorsen Ridge Partners
+      morgan.hale@halvorsen.conductia-sandbox.com
+  - id: victoria
+    email: victoria.lang@halvorsen.conductia-sandbox.com
+    display_name: "Victoria Lang"
+    org: firm_a
+    role: Partner
+    seniority: senior
+    tone: terse, often one line from phone, signs "V."
+    behaviours: [client relationship owner, approves LOIs and fee letters, replies from mobile]
+    mistakes: [mentions_unannounced_deal_terms_casually, replies_on_wrong_thread]
+    visibility: {sees: [BLUEFINCH, KESTREL, TERN], walled_off: []}
+    signature: |
+      V.
+      Victoria Lang | Partner, Halvorsen Ridge Partners
+      Sent from mobile
+  - id: sam
+    email: sam.okafor@corvane.conductia-sandbox.com
+    display_name: "Sam Okafor (Corvane Capital)"
+    org: firm_b
+    role: Analyst
+    seniority: junior
+    tone: polite, formal, asks many clarifying questions
+    behaviours: [buyer-side diligence requests, Q&A lists, model comments]
+    mistakes: [asks_for_materials_outside_nda_scope, replies_to_internal_seller_thread]
+    visibility: {sees: [BLUEFINCH], walled_off: [KESTREL, OSPREY, TERN]}
+    signature: |
+      Sam Okafor
+      Analyst | Corvane Capital
+      sam.okafor@corvane.conductia-sandbox.com
+  - id: daniel
+    email: daniel.reyes@ashgrove.conductia-sandbox.com
+    display_name: "Daniel Reyes (Ashgrove & Pell) [EXTERNAL]"
+    org: ext_bank
+    role: Managing Director, Banker
+    seniority: senior
+    tone: salesy, warm, long emails, likes "circling back"
+    behaviours: [counterparty/financing banker, pushes timelines, forwards decks broadly]
+    mistakes: [forwards_sensitive_material_to_third_party, attaches_wrong_deal_deck]
+    visibility: {sees: [BLUEFINCH, OSPREY, TERN], walled_off: [KESTREL]}
+    signature: |
+      Daniel Reyes
+      Managing Director | Ashgrove & Pell Advisory
+      daniel.reyes@ashgrove.conductia-sandbox.com
+  - id: priya
+    email: priya.nair@thistlewood.conductia-sandbox.com
+    display_name: "Priya Nair (Thistlewood Marr) [EXTERNAL]"
+    org: ext_law
+    role: Counsel
+    seniority: senior
+    tone: precise, legalistic, redlines with numbered comments, "privileged & confidential" banners
+    behaviours: [drafts NDA/LOI/SPA, sends redlines, flags privilege]
+    mistakes: [sends_privileged_redline_to_counterparty]
+    visibility: {sees: [BLUEFINCH, KESTREL, TERN], walled_off: [OSPREY]}
+    signature: |
+      Priya Nair
+      Counsel | Thistlewood Marr LLP
+      PRIVILEGED & CONFIDENTIAL - ATTORNEY-CLIENT COMMUNICATION
+  - id: helen
+    email: helen.brooks@halvorsen.conductia-sandbox.com
+    display_name: "Helen Brooks"
+    org: firm_a
+    role: Compliance Officer
+    seniority: senior
+    tone: neutral, policy-driven, cites policy numbers (fictional)
+    behaviours: [maintains watch/restricted list, sets wall-crossings, reviews flagged mail]
+    mistakes: []   # control persona: should never generate violations
+    visibility: {sees: [BLUEFINCH, KESTREL, OSPREY, TERN], walled_off: [], oversight: true}
+    signature: |
+      Helen Brooks
+      Compliance Officer | Halvorsen Ridge Partners
+      helen.brooks@halvorsen.conductia-sandbox.com
+
+deals:
+  - code: BLUEFINCH
+    type: sell_side_ma
+    stage: diligence
+    target: Mirelle Packaging Co.
+    buyer: Corvane Capital
+    client: Mirelle Packaging Co. (seller)
+    cast:
+      alex: {side: sell, role: associate}
+      morgan: {side: sell, role: deal_lead}
+      victoria: {side: sell, role: relationship_partner}
+      priya: {side: sell, role: seller_counsel}
+      sam: {side: buy, role: buyer_analyst}
+      daniel: {side: buy, role: buyer_financing_banker}
+      helen: {side: none, role: compliance}
+    timeline:
+      - {day: 0,  event: kickoff, desc: internal kickoff call notes}
+      - {day: 2,  event: teaser, desc: teaser sent to Corvane}
+      - {day: 4,  event: nda, desc: NDA drafted by Priya, signed by Corvane}
+      - {day: 7,  event: cim, desc: CIM and model released}
+      - {day: 9,  event: data_room, desc: data room opened}
+      - {day: 14, event: ioi, desc: Corvane IOI received}
+      - {day: 16, event: diligence, desc: management Q&A rounds}
+      - {day: 21, event: loi, desc: LOI draft and markup}
+    attachments: [Bluefinch_Teaser.pdf, Bluefinch_NDA.docx, Bluefinch_CIM.pdf, Bluefinch_Model_v3.xlsx, Bluefinch_Mgmt_Pres.pptx, Corvane_IOI.pdf, Bluefinch_LOI_draft.docx]
+    triggers:
+      - {id: BF-T1, type: sensitive_content, actor: priya, desc: privileged LOI redline sent to sam (counterparty), expected: screening_flag}
+      - {id: BF-T2, type: duplicate_thread, actor: alex, desc: CIM re-sent in new thread with same attachment, expected: dedupe_merge}
+      - {id: BF-T3, type: reply_chain, actor: [sam, morgan, alex], desc: 6-hop Q&A thread, expected: single_thread}
+      - {id: BF-T4, type: wrong_side_reply, actor: sam, desc: sam replies on a forwarded internal seller thread, expected: screening_flag}
+  - code: KESTREL
+    type: buy_side_ma
+    stage: near_signing
+    target: Lumeric Instruments Ltd.
+    buyer: Ostrava Fieldworks Holdings
+    client: Ostrava Fieldworks Holdings (buyer)
+    cast:
+      morgan: {side: buy, role: deal_lead}
+      victoria: {side: buy, role: relationship_partner}
+      priya: {side: buy, role: buyer_counsel}
+      helen: {side: none, role: compliance}
+    walled_off: [alex, sam, daniel]
+    timeline:
+      - {day: 0,  event: status, desc: "deal in confirmatory diligence (started pre-run)"}
+      - {day: 1,  event: diligence, desc: legal diligence report}
+      - {day: 3,  event: spa_draft, desc: SPA first draft}
+      - {day: 6,  event: spa_markup, desc: seller markup returned}
+      - {day: 10, event: board_approval, desc: client board approval pack}
+      - {day: 13, event: final_spa, desc: agreed-form SPA}
+      - {day: 15, event: signing, desc: signing and announcement draft}
+    attachments: [Kestrel_DD_Report.pdf, Kestrel_SPA_v1.docx, Kestrel_SPA_markup.docx, Kestrel_Board_Pack.pptx, Kestrel_Announcement_DRAFT.docx]
+    triggers:
+      - {id: KE-T1, type: wrong_recipient, actor: morgan, desc: board pack cc'd to alex (walled off), expected: wall_breach_flag}
+      - {id: KE-T2, type: sensitive_content, actor: victoria, desc: MNPI-style price per share in unannounced announcement draft, expected: mnpi_flag}
+      - {id: KE-T3, type: wrong_recipient, actor: victoria, desc: reply about Kestrel posted on a Bluefinch thread that includes sam, expected: wall_breach_flag}
+      - {id: KE-T4, type: forward, actor: morgan, desc: SPA markup forwarded as attachment to priya, expected: allowed}
+  - code: OSPREY
+    type: acquisition_financing
+    stage: kickoff
+    demo_safe: true   # Demo Producer default deal (#661): no deliberate mistakes
+    target: Velthorne Logistics Group
+    buyer: Velthorne Logistics Group (borrower)
+    client: Velthorne Logistics Group
+    cast:
+      alex: {side: client, role: associate}
+      morgan: {side: client, role: deal_lead}
+      daniel: {side: lender, role: arranging_banker}
+      helen: {side: none, role: compliance}
+    walled_off: [sam, priya]
+    timeline:
+      - {day: 0,  event: kickoff, desc: mandate and kickoff agenda}
+      - {day: 2,  event: nda, desc: NDA with arranging bank}
+      - {day: 5,  event: teaser, desc: financing teaser to lenders}
+      - {day: 8,  event: info_memo, desc: lender information memorandum}
+      - {day: 12, event: term_sheet, desc: indicative term sheet}
+      - {day: 18, event: diligence, desc: lender diligence calls}
+      - {day: 24, event: commitment, desc: commitment letter draft}
+    attachments: [Osprey_Kickoff_Agenda.pdf, Osprey_NDA.docx, Osprey_Teaser.pdf, Osprey_Lender_IM.pdf, Osprey_Term_Sheet.docx, Osprey_Model.xlsx]
+    triggers:
+      - {id: OS-T1, type: reply_chain, actor: [morgan, daniel, alex], desc: clean term-sheet reply chain, expected: single_thread}
+      - {id: OS-T2, type: forward, actor: morgan, desc: inline forward of teaser to alex, expected: allowed}
+  - code: TERN
+    type: carve_out
+    stage: paused
+    target: Brackwater Coatings (division of Ondessa Materials)
+    buyer: undetermined (process paused)
+    client: Ondessa Materials plc
+    cast:
+      morgan: {side: sell, role: deal_lead}
+      victoria: {side: sell, role: relationship_partner}
+      daniel: {side: buy, role: bidder_banker}
+      priya: {side: sell, role: seller_counsel}
+      helen: {side: none, role: compliance}
+    walled_off: [alex, sam]
+    timeline:
+      - {day: 0,  event: kickoff, desc: carve-out scoping}
+      - {day: 3,  event: teaser, desc: teaser to Ashgrove & Pell}
+      - {day: 5,  event: nda, desc: NDA signed}
+      - {day: 9,  event: cim, desc: carve-out CIM}
+      - {day: 12, event: pause, desc: client pauses process}
+      - {day: 20, event: dead, desc: deal marked dead / on hold}
+    attachments: [Tern_Teaser.pdf, Tern_NDA.docx, Tern_CIM.pdf, Tern_Standalone_Costs.xlsx]
+    triggers:
+      - {id: TE-T1, type: sensitive_forward, actor: daniel, desc: daniel forwards Tern CIM to sam (not under NDA), expected: screening_flag}
+      - {id: TE-T3, type: duplicate_thread, actor: morgan, desc: pause notice sent twice, expected: dedupe_merge}

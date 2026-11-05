@@ -1,0 +1,111 @@
+{
+  "mailbox": "storm.duncan@bank.example",
+  "messages": [
+    {
+      "id": "AAMk-storm-001",
+      "internetMessageId": "<falcon-001@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T09:12:00Z",
+      "from": { "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } }],
+      "ccRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Morgan, Dana,</p><p>Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday.</p><p>Storm</p></body></html>"
+      }
+    },
+    {
+      "id": "AAMk-storm-002",
+      "internetMessageId": "<falcon-002@bank.example>",
+      "conversationId": "conv-falcon-kickoff",
+      "subject": "RE: Project Falcon: kickoff",
+      "sentDateTime": "2026-02-03T10:02:00Z",
+      "from": { "emailAddress": { "name": "Morgan Vale", "address": "morgan.vale@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "body": {
+        "contentType": "text",
+        "content": "Works for me. I will circulate the working group list by Friday.\n\nOn Tue, 3 Feb 2026 at 09:12, Storm Duncan <storm.duncan@bank.example> wrote:\n> Morgan, Dana,\n> Project Falcon kicks off next week."
+      }
+    },
+    {
+      "id": "AAMk-storm-003",
+      "internetMessageId": "<falcon-003@bank.example>",
+      "conversationId": "conv-heliotrope-next",
+      "subject": "Heliotrope next steps",
+      "sentDateTime": "2026-02-10T14:20:00Z",
+      "from": { "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Dana, attaching the Project Falcon timeline for the board. Management presentations run the week of 9 March."
+      }
+    },
+    {
+      "id": "AAMk-storm-004",
+      "internetMessageId": "<falcon-004@heliotrope.example>",
+      "conversationId": "conv-heliotrope-next",
+      "subject": "RE: Heliotrope next steps",
+      "sentDateTime": "2026-02-11T08:45:00Z",
+      "from": { "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Thanks Storm. The board is aligned on the timeline.\n\nOn Tue, 10 Feb 2026 at 14:20, Storm Duncan <storm.duncan@bank.example> wrote:\n> Dana, attaching the Project Falcon timeline for the board."
+      }
+    },
+    {
+      "id": "AAMk-storm-005",
+      "internetMessageId": "<dinner-005@heliotrope.example>",
+      "conversationId": "conv-heliotrope-next",
+      "subject": "Dinner Thursday?",
+      "sentDateTime": "2026-02-12T18:30:00Z",
+      "from": { "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "Are you free for dinner on Thursday?" }
+    },
+    {
+      "id": "AAMk-storm-006",
+      "internetMessageId": "<falcon-006@bank.example>",
+      "conversationId": "conv-falcon-vdr",
+      "subject": "Falcon data room access",
+      "sentDateTime": "2026-02-20T16:05:00Z",
+      "from": { "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Dana Price", "address": "dana.price@heliotrope.example" } }],
+      "ccRecipients": [],
+      "body": { "contentType": "text", "content": "The data room opens on Monday. The access list is attached." }
+    },
+    {
+      "id": "AAMk-storm-007",
+      "internetMessageId": "<digest-007@newswire.example>",
+      "conversationId": "conv-digest",
+      "subject": "Weekly markets digest",
+      "sentDateTime": "2026-02-14T06:00:00Z",
+      "from": { "emailAddress": { "name": "Newswire", "address": "digest@newswire.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<p>Rates held steady this week.</p><p>Our Project Management office has moved to floor 12.</p>"
+      }
+    },
+    {
+      "id": "AAMk-storm-008",
+      "internetMessageId": "<fwd-008@bank.example>",
+      "conversationId": "conv-staffing",
+      "subject": "FW: Staffing update",
+      "sentDateTime": "2026-01-15T11:00:00Z",
+      "from": { "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } },
+      "toRecipients": [{ "emailAddress": { "name": "Storm Duncan", "address": "storm.duncan@bank.example" } }],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "FYI, see below.\n\n-----Original Message-----\nFrom: Morgan Vale\nSent: Monday, January 12, 2026 8:00 AM\nTo: Storm Duncan\nSubject: Project Cobra: engagement letter\n\nThe Project Cobra engagement letter is out for signature."
+      }
+    }
+  ]
+}

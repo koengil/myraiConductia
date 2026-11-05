@@ -1,0 +1,222 @@
+name: Migrate database
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      ref:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Database to migrate
+        required: true
+        type: choice
+        options:
+          - db-dev
+          - db-staging
+          - db-production
+      ref:
+        description: Branch, tag or commit whose migrations are applied
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    name: Migrate database
+    # ADR-0027: db-dev runs on the shared self-hosted fleet. #639: staging and production run on the
+    # deploy runner group, never the shared fleet. An unset variable stays GitHub-hosted.
+    runs-on: ${{ ((inputs.environment || (github.ref_name == 'main' && 'db-production') || (github.ref_name == 'staging' && 'db-staging') || 'db-dev') == 'db-dev' && (vars.CI_RUNNER_LIGHT || 'ubuntu-latest')) || fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    timeout-minutes: 20
+    environment: ${{ inputs.environment || (github.ref_name == 'main' && 'db-production') || (github.ref_name == 'staging' && 'db-staging') || 'db-dev' }}
+    concurrency:
+      group: migrate-${{ inputs.environment || (github.ref_name == 'main' && 'db-production') || (github.ref_name == 'staging' && 'db-staging') || 'db-dev' }}
+      cancel-in-progress: false
+    steps:
+      - name: Check the target and the approver
+        env:
+          TARGET: ${{ inputs.environment || (github.ref_name == 'main' && 'db-production') || (github.ref_name == 'staging' && 'db-staging') || 'db-dev' }}
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+          MIGRATION_APPROVERS: ${{ vars.MIGRATION_APPROVERS }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MIGRATION_DATABASE_URL}" ]; then
+            echo "❌ MIGRATION_DATABASE_URL is empty for environment ${TARGET}. Set it as an environment secret there. A workflow that calls this one must also pass secrets: inherit."
+            exit 1
+          fi
+          case "${MIGRATION_DATABASE_URL}" in
+            *"'"*|*$'\n'*|*$'\r'*)
+              echo "❌ MIGRATION_DATABASE_URL on ${TARGET} contains a quote or a line break. Percent-encode it."
+              exit 1
+              ;;
+          esac
+          echo "::add-mask::${MIGRATION_DATABASE_URL}"
+          production_project_ref="fsaucpwponmzajupvsey"
+          case "${MIGRATION_DATABASE_URL}" in
+            *"${production_project_ref}"*)
+              if [ "${TARGET}" != "db-production" ]; then
+                echo "❌ MIGRATION_DATABASE_URL on ${TARGET} points at the production project. Only db-production may hold that connection string."
+                exit 1
+              fi
+              ;;
+            *)
+              if [ "${TARGET}" = "db-production" ]; then
+                echo "❌ MIGRATION_DATABASE_URL on db-production does not point at the production project (${production_project_ref})."
+                exit 1
+              fi
+              ;;
+          esac
+          approvers="$(printf '%s' "${MIGRATION_APPROVERS}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          actor="$(printf '%s' "${TRIGGERING_ACTOR}" | tr '[:upper:]' '[:lower:]')"
+          if [ -z "${approvers//,/}" ]; then
+            if [ "${TARGET}" = "db-production" ]; then
+              echo "❌ MIGRATION_APPROVERS is not set on environment db-production."
+              exit 1
+            fi
+            exit 0
+          fi
+          if [ -z "${actor}" ] || [[ ",${approvers}," != *",${actor},"* ]]; then
+            echo "❌ ${TRIGGERING_ACTOR} is not in MIGRATION_APPROVERS for ${TARGET}. An approver takes this run over with Re-run failed jobs."
+            exit 1
+          fi
+
+      - name: Checkout the commit to migrate from
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+
+      - name: Check the commit belongs to a release branch
+        env:
+          TARGET: ${{ inputs.environment || (github.ref_name == 'main' && 'db-production') || (github.ref_name == 'staging' && 'db-staging') || 'db-dev' }}
+          REF: ${{ inputs.ref || github.ref_name }}
+          CALLER: ${{ github.workflow_ref }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # db-dev takes a commit on develop, db-staging one on staging, db-production one on
+          # staging or main. Promote develop to staging migrates staging before staging moves, so
+          # a call from that workflow (github.workflow_ref names the caller) takes develop instead.
+          sha="$(git rev-parse HEAD)"
+          case "${TARGET}" in
+            db-dev) allowed="develop" ;;
+            db-staging)
+              allowed="staging"
+              if [[ "${CALLER}" == "${REPO}/.github/workflows/promote-develop-to-staging.yml@"* ]]; then
+                allowed="develop"
+              fi
+              ;;
+            db-production) allowed="staging main" ;;
+            *)
+              echo "❌ Unknown environment ${TARGET}."
+              exit 1
+              ;;
+          esac
+          # #639: each tip is read from refs/heads, so a tag named like the branch cannot stand in for it.
+          for branch in ${allowed}; do
+            if ! tip="$(gh api "repos/${REPO}/git/ref/heads/${branch}" --jq .object.sha)" || ! [[ "${tip}" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "❌ The tip of ${branch} could not be read. Re-run the job."
+              exit 1
+            fi
+            if behind="$(gh api "repos/${REPO}/compare/${sha}...${tip}" --jq .behind_by)" && [ "${behind}" = "0" ]; then
+              exit 0
+            fi
+          done
+          case "${TARGET}" in
+            db-dev)
+              echo "❌ ${REF} @ ${sha:0:7} is not on develop. db-dev is only migrated from a commit on develop: merge the PR first. To migrate by hand: gh workflow run migrate.yml --ref develop -f environment=db-dev -f ref=develop"
+              ;;
+            db-staging)
+              echo "❌ ${REF} @ ${sha:0:7} is not on ${allowed}. db-staging is only migrated from a commit on staging, or on develop by Promote develop to staging. To migrate by hand: gh workflow run migrate.yml --ref staging -f environment=db-staging -f ref=staging"
+              ;;
+            db-production)
+              echo "❌ ${sha:0:7} is on neither staging nor main. Production is only migrated from a commit on one of them. To migrate by hand: gh workflow run migrate.yml --ref main -f environment=db-production -f ref=main"
+              ;;
+          esac
+          exit 1
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.116.0
+
+      - name: Apply pending migrations
+        id: push
+        env:
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          query() {
+            psql -X -At "${MIGRATION_DATABASE_URL}" -v ON_ERROR_STOP=1 -c "$1"
+          }
+          ledger() {
+            query "select version || '_' || coalesce(name, '') from supabase_migrations.schema_migrations order by version"
+          }
+          before=""
+          exists="$(query "select to_regclass('supabase_migrations.schema_migrations') is not null")"
+          if [ "${exists}" = "t" ]; then
+            before="$(ledger)"
+          fi
+          if [ -z "${before}" ]; then
+            tables="$(query "select count(*) from pg_tables where schemaname = 'public'")"
+            if [ "${tables}" != "0" ]; then
+              echo "❌ This database has ${tables} tables in public and an empty migration ledger. Baseline the ledger first: docs/04-operations/production-bootstrap.md."
+              exit 1
+            fi
+          fi
+          report() {
+            local after applied count
+            if ! after="$(ledger 2>/dev/null)"; then
+              echo "applied=unknown" >> "$GITHUB_OUTPUT"
+              echo "### Migrations applied: unknown. The ledger could not be read after the push." >> "$GITHUB_STEP_SUMMARY"
+              return
+            fi
+            applied="$(LC_ALL=C comm -13 <(printf '%s\n' "${before}") <(printf '%s\n' "${after}") || true)"
+            count="$(printf '%s\n' "${applied}" | grep -c . || true)"
+            echo "applied=${count}" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Migrations applied: ${count}"
+              echo
+              if [ "${count}" != "0" ]; then
+                while IFS= read -r line; do echo "- \`${line}.sql\`"; done <<< "${applied}"
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          }
+          trap report EXIT
+          supabase db push --include-all --skip-vault --yes --db-url "${MIGRATION_DATABASE_URL}"
+
+      - name: Setup Node
+        if: ${{ steps.push.outputs.applied != '0' || github.event_name != 'push' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (no install scripts)
+        if: ${{ steps.push.outputs.applied != '0' || github.event_name != 'push' }}
+        run: npm ci --no-audit --ignore-scripts
+
+      - name: preflight:db against the migrated database
+        if: ${{ steps.push.outputs.applied != '0' || github.event_name != 'push' }}
+        env:
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          umask 077
+          env_file="$(mktemp "${RUNNER_TEMP}/migrate-db.XXXXXX")"
+          trap 'rm -f "${env_file}"' EXIT
+          printf "DATABASE_URL='%s'\n" "${MIGRATION_DATABASE_URL}" > "${env_file}"
+          npm run preflight:db -- "${env_file}"

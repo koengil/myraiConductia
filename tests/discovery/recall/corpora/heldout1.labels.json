@@ -1,0 +1,1463 @@
+{
+ "format": "conductia.recall-corpus/v1",
+ "labels": {
+  "<m-0001.7266e139@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0002.ddd59451@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0003.df30a0ea@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0004.b6cfe835@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0005.3759629a@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0006.875b6eff@theanchorpub.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0007.e8ec3450@kroonfin.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0008.c98406b7@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0009.3756d89d@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0010.19ee685f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0011.be6e5d4f@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0012.06028b3e@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0013.6dd9de7b@printworks.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0014.93cd7e6f@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0015.347a6ea7@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "reply"
+  },
+  "<m-0016.cb12b6cc@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0017.b3e729f2@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0018.7c86e5ae@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0019.ecde257b@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0020.3e88aa32@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0021.d335427f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0022.cd8cf7d8@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0023.802ae68b@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0024.fc3eb39d@sectorgazette.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0025.ef0e5a59@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0026.610464bf@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0027.dd343334@tessalyfoods.example>": {
+   "deal": "tessaly",
+   "form": "real_name_unapproved",
+   "variant": "external to departed"
+  },
+  "<m-0028.7c06e2e5@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0029.9cb47fd0@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0030.5fbd9cc9@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0031.1c204b5b@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0032.b1877df1@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0033.064eed74@voicelink.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0034.e9353b1c@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0035.2ea84326@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0036.0cae8376@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0037.21027ce8@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0038.3527107d@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0039.39276e39@mdsummit.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0040.cf05f3f1@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0041.1a0f4d02@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0042.751cfcb4@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0043.fe3a9921@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0044.e486be4b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0045.0414e39c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0046.fd7f51ff@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0047.b1bed0c3@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0048.188112f8@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0049.2fa18767@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0050.940c48d1@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0051.af26e128@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0052.1391fc28@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0053.d2d39c51@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0054.bfd1aaa3@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0055.2f926d7a@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0056.33320ffa@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0057.dab926f2@corbettsearch.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0058.d57dee44@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "doc-05": {
+   "deal": "kestrel",
+   "form": "real_name_document"
+  },
+  "<m-0059.9196afc0@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0060.673259c0@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0061.7a55f340@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0062.19caff38@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0063.dfd0b7a2@ashbyreeve.example>": {
+   "deal": "alder",
+   "form": "no_marker",
+   "variant": "external counsel"
+  },
+  "<m-0064.1c7ba654@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0065.d045c1f5@larkspur.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0066.e1571133@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0067.66757d30@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0068.0f68d64a@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0069.e5ea20e9@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0070.f1526a9f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0071.2f1fa7a9@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0072.dd70b68b@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0073.c0b726d9@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0074.c259ca14@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0075.c2b42f98@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0076.213a6e35@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0077.e98deecd@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0078.0a97b99b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0079.76a88a3c@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0080.8ee5c3fe@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "reply"
+  },
+  "<m-0081.668f0f4a@mailhost.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0082.21b9523f@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0083.52d5bed2@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0084.e85c9f65@marlowepr.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "doc-01": {
+   "deal": "alder",
+   "form": "real_name_document"
+  },
+  "<m-0085.aece3d01@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0086.388c6396@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_cross_source",
+   "variant": "reply"
+  },
+  "<m-0087.5b120ed1@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0088.49e07752@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0089.849b3da0@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0090.fa83cb94@sableco.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0091.ff3416d0@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0092.d61d1405@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0093.c58ccccd@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0094.bce22306@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0095.4cc786ab@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0096.0e6e81dc@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name_unentitled",
+   "variant": "x"
+  },
+  "<m-0097.bc951b69@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0098.2d457981@pipelinecrm.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0099.15452b7b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0100.b8054218@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0101.51a8db7f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0102.1788aa07@hqpartners.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0103.fd386ad0@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "forward"
+  },
+  "<m-0104.20790637@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0105.a7387a4c@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0106.39eb81cd@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "thread_cross_source",
+   "variant": "reply"
+  },
+  "<m-0107.23f20d86@swiftcouriers.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0108.0163c2e7@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "forward"
+  },
+  "<m-0109.53423a1d@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0110.c1b017f2@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0111.05900eb3@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0112.2523754f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0113.e455ec57@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0114.e3cf8493@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0115.876cf578@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0116.0eb347f2@tessalyfoods.example>": {
+   "deal": "tessaly",
+   "form": "real_name_unapproved",
+   "variant": "external to departed"
+  },
+  "<m-0117.93b8f2e0@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0118.8245e09d@hqpartners.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0119.76942b6f@corvane.example>": {
+   "deal": "alder",
+   "form": "thread_cross_source",
+   "variant": "reply"
+  },
+  "<m-0120.e20eed01@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_cross_source",
+   "variant": "reply"
+  },
+  "<m-0121.168b95f5@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0122.26084c59@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0123.4ec04618@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0124.f54f932f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0125.344c9131@mailhost.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0126.adeb8b92@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0127.4f7a192f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0128.3d28f524@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0129.45f7476c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0130.1f016769@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0131.ac7c83b9@hqpartners.example>": {
+   "deal": "sable",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0132.c0189f35@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0133.d25b74c6@marketdata.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0134.56f7572f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0135.4025294b@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0136.45040843@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0137.704b1a74@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0138.50d14398@roomwise.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0139.7f767333@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0140.2369eadc@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0141.ab3b45e5@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0142.16cbe85e@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0143.ac8c599b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0144.d28a304f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0145.0609b310@wrenfield.example>": {
+   "deal": "sable",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0146.d8f36844@hqpartners.example>": {
+   "deal": "sable",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "doc-04": {
+   "deal": "tessaly",
+   "form": "real_name_document"
+  },
+  "<m-0147.ed0156e9@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0148.96efda1a@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0149.13e378ba@lenderco.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0150.fa94ff0e@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0151.2dd464e2@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0152.863729fb@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "doc-02": {
+   "deal": "alder",
+   "form": "real_name_document"
+  },
+  "<m-0153.af6a2ff5@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0154.dd895c96@hartwellsearch.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0155.4590f7e9@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_leak",
+   "variant": "x"
+  },
+  "<m-0156.87a0c9d5@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0157.014dc6d7@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0158.1522287c@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0159.86d5360f@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0160.e7b6e3a7@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0161.7ae79f54@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0162.e03d82ab@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0163.098e3e61@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0164.77e3e80c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0165.8fd8f466@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_cross_source",
+   "variant": "body"
+  },
+  "<m-0166.74cef79c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0167.47eaceb8@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0168.a5367785@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0169.32e6bc89@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0170.1aa549d5@cutlerrowestates.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0171.3eea853d@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0172.7563acb0@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0173.f4462e63@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0174.271a99a5@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0175.b6f583d2@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0176.5d8384a1@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0177.56aa3ece@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0178.96188707@brightwaterlog.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0179.2f08bd81@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0180.bcabb1ba@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0181.e4b2bfb5@tessalyfoods.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "external reply"
+  },
+  "<m-0182.94a4b6e7@hqpartners.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0183.da48a80b@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0184.50698cf6@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0185.39ef22ce@mdsummit.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0186.72fdad03@dunmorecap.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "external"
+  },
+  "<m-0187.15f5aa3f@hendryprint.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0188.f7312425@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0189.e4aca745@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0190.58bdc715@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0191.8ce7a62c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0192.07637958@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0193.57f2b9b8@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0194.d25349a8@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name_unentitled",
+   "variant": "x"
+  },
+  "<m-0195.de78f703@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0196.fcb1f4f1@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0197.c9fd3e5f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0198.d2916a5a@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_leak",
+   "variant": "x"
+  },
+  "<m-0199.faa77baa@valdata.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0200.e3a48ff4@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_cross_source",
+   "variant": "body"
+  },
+  "<m-0201.e536aae9@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0202.d17c1e5c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0203.777f5211@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_shared_cost",
+   "variant": "d+t"
+  },
+  "<m-0204.7baf17ac@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0205.d21fcf86@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0206.50692ce5@meridiantravel.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0207.a68132dd@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0208.744e3f0e@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0209.4936cf2a@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0210.de298785@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0211.a4ce482c@baa.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0212.ecb88a12@hqpartners.example>": {
+   "deal": "sable",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0213.ed6c0d0a@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0214.ae7ff7af@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "doc-03": {
+   "deal": "tessaly",
+   "form": "real_name_document"
+  },
+  "<m-0215.7c5153d0@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0216.eaf8edcf@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0217.bc6424bc@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0218.81c19d6f@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0219.c8aab92f@harbourbank.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0220.f8f008c5@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_cross_source",
+   "variant": "reply"
+  },
+  "<m-0221.96769fd9@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0222.5b3ff0f4@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0223.e353e607@hqpartners.example>": {
+   "deal": "alder",
+   "form": "thread_reply",
+   "variant": "reply"
+  },
+  "<m-0224.22e26edf@wrenfield.example>": {
+   "deal": "sable",
+   "form": "alias_same_source",
+   "variant": "subject"
+  },
+  "<m-0225.5dc52692@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0226.d03b304d@industrialsforum.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0227.99ffd534@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name_unapproved",
+   "variant": "firm"
+  },
+  "<m-0228.70b8eff2@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0229.6b9cca5c@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "alias_cross_source",
+   "variant": "body"
+  },
+  "<m-0230.7e8ff4f8@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0231.ba7c569c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0232.b20b064d@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0233.42bb9c0f@larchbrokers.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0234.893e84c3@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name_unentitled",
+   "variant": "x"
+  },
+  "<m-0235.66546794@valuerhq.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0236.f6a5f7c1@taxwise.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0237.b5691c18@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0238.5d6c710a@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0239.f50f8471@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_leak",
+   "variant": "d+p copy"
+  },
+  "<m-0240.84b422f7@pellsutton.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "external"
+  },
+  "<m-0241.7ae6b997@meridiantravel.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0242.bfe4abb0@wifn.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0243.c9570a1c@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0244.ae482612@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0245.19a66d94@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_shared_cost",
+   "variant": "d+i"
+  },
+  "<m-0246.d3c5f3c2@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0247.c5555dac@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0248.aaed06cf@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "subject_prefix_thin",
+   "variant": "one sender one topic"
+  },
+  "<m-0249.cd12bfb3@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0250.b73b1828@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0251.9a46e3ca@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0252.b41ba443@whitlockaudit.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0253.593ea623@hqpartners.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0254.3a6d60aa@dgadvies.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0255.f2fd320c@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0256.fdd112eb@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_cross_source",
+   "variant": "body"
+  },
+  "<m-0257.114a2d32@kesslerbright.example>": {
+   "deal": "kestrel",
+   "form": "project_codename",
+   "variant": "external"
+  },
+  "<m-0258.3faae37d@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0259.29f41249@mailhost.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0260.42f5f431@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0261.50ed63df@hqpartners.example>": {
+   "deal": "alder",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0262.b10d8a23@dunmorecap.example>": {
+   "deal": "alder",
+   "form": "no_marker",
+   "variant": "external"
+  },
+  "<m-0263.80c75e57@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_leak",
+   "variant": "x"
+  },
+  "<m-0264.14090b01@hcsinvest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0265.390c7450@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0266.0eb083ed@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0267.1a0caeef@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0268.5817f52d@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "subject_prefix_thin",
+   "variant": "one sender one topic"
+  },
+  "<m-0269.58ca25ac@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0270.e9205d20@corbettsearch.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0271.a25d88c4@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0272.daf35c74@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0273.1e1249f6@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0274.2e7eec40@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0275.efa94a8e@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0276.561bfb20@hqpartners.example>": {
+   "deal": "pellam",
+   "form": "no_marker",
+   "variant": "none"
+  },
+  "<m-0277.c200281f@cutlerrowestates.example>": {
+   "deal": null,
+   "form": "noise_collision"
+  },
+  "<m-0278.ede7f949@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0279.c3bb13f5@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "subject_prefix_thin",
+   "variant": "one sender one topic"
+  },
+  "<m-0280.69b1111d@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0281.bcf7629f@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0282.af1de605@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0283.ea959065@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0284.154a3306@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_shared_cost",
+   "variant": "d+t"
+  },
+  "<m-0285.78547fe2@hqpartners.example>": {
+   "deal": "sable",
+   "form": "alias_mixed_copy_personal_cost",
+   "variant": "d+t"
+  },
+  "<m-0286.b421caa5@roomwise.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "room booking"
+  },
+  "<m-0287.e760dd8d@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "alias_cross_source",
+   "variant": "body"
+  },
+  "<m-0288.2787bdd4@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0289.d47a46a9@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0290.12da9645@hqpartners.example>": {
+   "deal": "alder",
+   "form": "no_marker",
+   "variant": "terse"
+  },
+  "<m-0291.c3b7c0de@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0292.2c22a47b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "calendar"
+  },
+  "<m-0293.d2a3d813@cffaculty.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0294.9310e85c@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "alias_same_source",
+   "variant": "body"
+  },
+  "<m-0295.697d50db@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0296.0d8f7f48@hqpartners.example>": {
+   "deal": "sable",
+   "form": "alias_mixed_copy_personal_cost",
+   "variant": "d+t"
+  },
+  "<m-0297.8dda38f2@lenderco.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0298.e270735e@hqpartners.example>": {
+   "deal": "alder",
+   "form": "project_codename",
+   "variant": "root"
+  },
+  "<m-0299.eb737133@pharmaweekly.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0300.1f40491f@hqpartners.example>": {
+   "deal": "alder",
+   "form": "no_marker",
+   "variant": "terse"
+  },
+  "<m-0301.deacacaa@dealflowweekly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0302.cf93dd30@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0303.72c10f11@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "subject_prefix_thin",
+   "variant": "one sender one topic"
+  },
+  "<m-0304.d8f595a0@hqpartners.example>": {
+   "deal": "alder",
+   "form": "real_name_unentitled",
+   "variant": "x"
+  },
+  "<m-0305.8a14e745@hqpartners.example>": {
+   "deal": "quarry",
+   "form": "alias_mixed_copy_shared_cost",
+   "variant": "d+i"
+  },
+  "<m-0306.b6a48819@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_mention"
+  },
+  "<m-0307.1f752ee6@cutlerrowestates.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0308.2809d960@hqpartners.example>": {
+   "deal": "sable",
+   "form": "alias_mixed_copy_personal_cost",
+   "variant": "d+t"
+  },
+  "<m-0309.48194b0a@ferrantelaw.example>": {
+   "deal": null,
+   "form": "noise",
+   "variant": "auto-reply"
+  },
+  "<m-0310.e2760d5b@hqpartners.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0311.64566a4c@hqpartners.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "several topics"
+  },
+  "<m-0312.c1400138@hqpartners.example>": {
+   "deal": null,
+   "form": "noise_client_coverage_term"
+  },
+  "<m-0313.743165dc@brightwaterlog.example>": {
+   "deal": "fenwick",
+   "form": "subject_prefix",
+   "variant": "external reply"
+  },
+  "<m-0314.5cb6c6d7@hqpartners.example>": {
+   "deal": "kestrel",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0315.9e89f526@spendly.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0316.ad4da2e7@hqpartners.example>": {
+   "deal": "alder",
+   "form": "no_marker",
+   "variant": "terse"
+  },
+  "<m-0317.00442d2d@hqpartners.example>": {
+   "deal": "tessaly",
+   "form": "real_name",
+   "variant": "firm"
+  },
+  "<m-0318.9595f0c7@hqpartners.example>": {
+   "deal": "sable",
+   "form": "alias_mixed_copy_personal_cost",
+   "variant": "d+t"
+  },
+  "<m-0319.190d86ce@industrialpulse.example>": {
+   "deal": null,
+   "form": "noise"
+  },
+  "<m-0320.02ee975b@capmarketsdigest.example>": {
+   "deal": null,
+   "form": "noise"
+  }
+ }
+}

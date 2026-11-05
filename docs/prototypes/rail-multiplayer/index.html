@@ -1,0 +1,1230 @@
+<title>Summit Rail Multiplayer</title>
+<meta charset="utf-8">
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--
+  Rail multiplayer and dependencies prototype for Storm and Marco.
+  Docs-only design artifact (task RF, walkthrough refinements, 2026-10-22). Not app code.
+  Every rule here is an example to react to. Handoff entries that would make it real:
+  E1 Save a step reorder, E2 Copy steps from another rail, E3 Per-deal rail edit rights and
+  "Propose a change", E4 Step dependencies, per-step dates and "started" facts,
+  E5 Live presence and pushed updates on the rail, E15 Saved views
+  (docs/03-engineering/walkthrough-handoff-2026-10-22.md).
+  State lives in this page only and resets on reload.
+-->
+<style>
+/* Layout: one deal header, a control strip, then a left-to-right board of five phase columns with stacked step cards. Workbench register: warm neutrals, ink accent, hairlines, solid pastel status fills. */
+:root {
+  --ink: #191919;
+  --ink-2: #55534e;
+  --ink-3: #6e6e6b;
+  --quiet: #9c9a94;
+  --surface: #ffffff;
+  --subtle: #f1f0ec;
+  --canvas: #f5f4f1;
+  --raised: #faf9f6;
+  --stroke: #eceae5;
+  --stroke-strong: #e0ded8;
+  --accent: #191919;
+  --on-accent: #ffffff;
+  --selected: #e9e7e2;
+  --positive: #17b26a; --positive-deep: #0b5c3b; --positive-fill: #8fe6bf;
+  --hold: #f5a524; --hold-deep: #6e5308; --hold-fill: #fae6a8; --hold-tint: #fbf3d9;
+  --negative: #e5484d; --negative-deep: #8e2440; --negative-fill: #f8c9d1;
+  --sync: #2e90fa;
+  --scrim: rgb(25 25 25 / 0.32);
+  --shadow: 0 14px 40px rgb(25 25 25 / 0.09);
+  --font-ui: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-id: Georgia, "Times New Roman", serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r-control: 8px;
+  --r-card: 12px;
+  --t-xs: 0.75rem; --t-sm: 0.8125rem; --t-md: 0.875rem; --t-lg: 1rem; --t-xl: 1.25rem; --t-id: 1.75rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #ecebe7; --ink-2: #c4c2bb; --ink-3: #a9a7a0; --quiet: #84827c;
+    --surface: #1f1e1c; --subtle: #2a2926; --canvas: #161614; --raised: #252422;
+    --stroke: #302f2c; --stroke-strong: #3d3c38; --accent: #ecebe7; --on-accent: #191919; --selected: #34332f;
+    --positive: #3ccb8a; --positive-deep: #b6f2d6; --positive-fill: #1c4a35;
+    --hold: #f5b54a; --hold-deep: #f6dc93; --hold-fill: #4a3a10; --hold-tint: #2c2614;
+    --negative: #f0686c; --negative-deep: #f9cdd4; --negative-fill: #4f1f29;
+    --sync: #5aa9ff; --scrim: rgb(0 0 0 / 0.55); --shadow: 0 14px 40px rgb(0 0 0 / 0.45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #ecebe7; --ink-2: #c4c2bb; --ink-3: #a9a7a0; --quiet: #84827c;
+  --surface: #1f1e1c; --subtle: #2a2926; --canvas: #161614; --raised: #252422;
+  --stroke: #302f2c; --stroke-strong: #3d3c38; --accent: #ecebe7; --on-accent: #191919; --selected: #34332f;
+  --positive: #3ccb8a; --positive-deep: #b6f2d6; --positive-fill: #1c4a35;
+  --hold: #f5b54a; --hold-deep: #f6dc93; --hold-fill: #4a3a10; --hold-tint: #2c2614;
+  --negative: #f0686c; --negative-deep: #f9cdd4; --negative-fill: #4f1f29;
+  --sync: #5aa9ff; --scrim: rgb(0 0 0 / 0.55); --shadow: 0 14px 40px rgb(0 0 0 / 0.45);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--t-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+.wrap {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding-block: 16px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+
+/* Prototype banner */
+.proto-banner {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  background: var(--hold-tint); border: 1px solid var(--hold-fill); color: var(--hold-deep);
+  border-radius: var(--r-card); padding: 10px 14px; font-size: var(--t-sm);
+}
+.proto-banner strong { font-weight: 600; }
+.proto-banner .reset { margin-left: auto; }
+
+/* Deal header */
+.deal-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.deal-id { font-family: var(--font-id); font-size: var(--t-id); font-weight: 400; letter-spacing: -0.01em; margin: 0; line-height: 1.15; }
+.deal-sub { color: var(--ink-2); font-size: var(--t-md); margin-top: 4px; }
+.progress-line { display: grid; gap: 6px; min-width: 260px; flex: 0 1 380px; }
+.progress-line .row { display: flex; justify-content: space-between; gap: 12px; font-size: var(--t-sm); color: var(--ink-2); }
+.progress-line .row b { color: var(--ink); font-weight: 600; }
+.bar { height: 6px; background: var(--subtle); border-radius: 999px; overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--positive); border-radius: 999px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Controls */
+.controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;
+  background: var(--surface); border: 1px solid var(--stroke); border-radius: var(--r-card); padding: 10px 12px;
+}
+.ctl-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.ctl-label { font-size: var(--t-xs); color: var(--ink-3); font-weight: 500; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 2px; background: var(--subtle); border-radius: 10px; padding: 3px; }
+.seg button, .seg label {
+  border: 0; background: transparent; border-radius: 8px; padding: 6px 11px; min-height: 32px;
+  cursor: pointer; font-size: var(--t-sm); color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px;
+}
+.seg button[aria-selected="true"], .seg label:has(input:checked) { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--stroke-strong); }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 1px; }
+.filter-note { font-size: var(--t-xs); color: var(--ink-3); }
+.spacer { flex: 1 1 auto; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 34px; padding: 6px 12px; border-radius: var(--r-control); cursor: pointer;
+  border: 1px solid var(--stroke-strong); background: var(--surface); color: var(--ink); font-size: var(--t-sm); font-weight: 500;
+}
+.btn:hover { background: var(--raised); }
+.btn.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.btn.primary:hover { opacity: 0.9; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--ink-2); }
+.btn.ghost:hover { background: var(--subtle); color: var(--ink); }
+.btn.warn { background: var(--hold-fill); color: var(--hold-deep); border-color: transparent; }
+.btn:disabled { cursor: not-allowed; opacity: 0.5; }
+.count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: var(--t-xs); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; }
+
+/* Strip: presence and rights */
+.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: var(--t-sm); color: var(--ink-2); }
+.presence-item { display: inline-flex; align-items: center; gap: 6px; }
+.live { width: 8px; height: 8px; border-radius: 50%; background: var(--sync); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sync) 22%, transparent); flex: none; }
+.who-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+/* Labels and chips */
+.ex {
+  display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+  font-size: 0.6875rem; font-weight: 500; color: var(--hold-deep); background: var(--hold-tint);
+  border: 1px dashed var(--hold); border-radius: 999px; padding: 1px 7px; line-height: 1.5;
+}
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-xs); font-weight: 600; border-radius: 6px; padding: 2px 7px; line-height: 1.4; white-space: nowrap; }
+.chip.done { background: var(--positive-fill); color: var(--positive-deep); }
+.chip.current { background: var(--accent); color: var(--on-accent); }
+.chip.todo { background: var(--subtle); color: var(--ink-2); font-weight: 500; }
+.chip.new { background: var(--subtle); color: var(--ink); border: 1px solid var(--stroke-strong); }
+.chip.hard { background: var(--negative-fill); color: var(--negative-deep); }
+.chip.soft { background: var(--hold-fill); color: var(--hold-deep); }
+.chip.date { background: var(--subtle); color: var(--ink); border: 1px solid var(--stroke-strong); }
+.av {
+  width: 22px; height: 22px; border-radius: 50%; flex: none; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--subtle); border: 1px solid var(--stroke-strong); color: var(--ink); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.02em; position: relative;
+}
+.av.none { border-style: dashed; color: var(--ink-3); background: transparent; }
+.av .live { position: absolute; right: -2px; top: -2px; width: 8px; height: 8px; box-shadow: 0 0 0 2px var(--surface); }
+
+/* Counsel / role notice */
+.notice { border: 1px solid var(--stroke-strong); background: var(--surface); border-radius: var(--r-card); padding: 10px 14px; font-size: var(--t-sm); color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* Board */
+#viewPanel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+#viewPanel:focus { outline: none; }
+.board-scroll { overflow-x: auto; border-radius: var(--r-card); }
+.board { position: relative; display: grid; grid-template-columns: repeat(5, minmax(248px, 1fr)); gap: 14px; min-width: 1300px; padding: 2px 2px 8px; }
+.board.dep { gap: 40px; min-width: 1400px; }
+.links-svg { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 2; }
+.col { display: grid; align-content: start; gap: 10px; min-width: 0; }
+.phase-card {
+  background: var(--surface); border: 1px solid var(--stroke-strong); border-radius: var(--r-card); padding: 12px 14px; display: grid; gap: 8px;
+}
+.phase-card.here { border-color: var(--ink); }
+.phase-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.phase-name { font-weight: 600; font-size: var(--t-lg); line-height: 1.25; margin: 0; text-wrap: balance; }
+.phase-full { font-size: var(--t-xs); color: var(--ink-3); }
+.phase-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: var(--t-sm); color: var(--ink-2); }
+.avatars { display: inline-flex; gap: 4px; }
+.collapse { border: 0; background: transparent; cursor: pointer; color: var(--ink-3); border-radius: 6px; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.collapse:hover { background: var(--subtle); color: var(--ink); }
+.collapse svg { transition: transform 140ms ease; }
+.collapse[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.stack { display: grid; gap: 8px; }
+.empty-col { font-size: var(--t-sm); color: var(--ink-3); padding: 10px 4px; }
+
+.card {
+  display: grid; gap: 6px; text-align: left; width: 100%; cursor: pointer; position: relative; z-index: 3;
+  background: var(--surface); border: 1px solid var(--stroke); border-radius: 10px; padding: 10px 12px;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.card:hover { border-color: var(--stroke-strong); background: var(--raised); }
+.card.is-current { border: 1.5px solid var(--ink); }
+.card.is-done .card-name { color: var(--ink-2); }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 20px; }
+.card-name { font-weight: 600; font-size: var(--t-md); line-height: 1.3; }
+.card-owner { display: flex; align-items: center; gap: 7px; font-size: var(--t-sm); color: var(--ink-2); }
+.card-activity { font-size: var(--t-xs); color: var(--ink-3); }
+.card-note { font-size: var(--t-xs); color: var(--ink-3); font-style: italic; }
+.presence-tag { display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-xs); color: var(--ink-2); }
+.rules { border-top: 1px dashed var(--stroke-strong); padding-top: 6px; display: grid; gap: 5px; }
+.rule { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: var(--t-xs); color: var(--ink-2); }
+.rule.met { color: var(--ink-3); }
+.rules .ex { justify-self: start; }
+
+/* Legend + link list */
+.panel { background: var(--surface); border: 1px solid var(--stroke); border-radius: var(--r-card); padding: 14px 16px; display: grid; gap: 12px; min-width: 0; }
+.panel h2, .panel h3 { margin: 0; font-size: var(--t-lg); font-weight: 600; }
+.panel p { margin: 0; color: var(--ink-2); font-size: var(--t-sm); max-width: 72ch; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; font-size: var(--t-sm); color: var(--ink-2); }
+.legend-item { display: inline-flex; align-items: center; gap: 8px; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: var(--t-xs); padding: 6px 10px; background: var(--subtle); }
+th:first-child { border-radius: 6px 0 0 6px; } th:last-child { border-radius: 0 6px 6px 0; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--stroke); vertical-align: top; }
+.form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > span { font-size: var(--t-xs); color: var(--ink-3); font-weight: 500; }
+select, input[type="text"], textarea {
+  background: var(--subtle); border: 1px solid transparent; border-radius: var(--r-control); padding: 7px 10px; min-height: 36px; max-width: 100%;
+}
+select:focus-visible, input[type="text"]:focus-visible, textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+textarea { width: 100%; resize: vertical; min-height: 64px; }
+
+/* Timeline */
+.tl-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--stroke); border-radius: var(--r-card); }
+.tl { position: relative; min-width: max-content; padding-bottom: 10px; }
+.tl-row { display: grid; grid-template-columns: 230px auto; align-items: center; min-height: 34px; }
+.tl-row.phase-row { min-height: 30px; background: var(--raised); border-top: 1px solid var(--stroke); }
+.tl-label { padding: 6px 12px; font-size: var(--t-sm); display: flex; align-items: center; gap: 7px; min-width: 0; position: sticky; left: 0; background: inherit; z-index: 4; }
+.tl-row:not(.phase-row) .tl-label { background: var(--surface); }
+.tl-label .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phase-row .tl-label { font-weight: 600; background: var(--raised); }
+.tl-track { position: relative; height: 34px; }
+.phase-row .tl-track { height: 30px; }
+.tl-head { display: grid; grid-template-columns: 230px auto; border-bottom: 1px solid var(--stroke); position: relative; }
+.tl-head .tl-label { font-size: var(--t-xs); color: var(--ink-3); background: var(--surface); }
+.tl-months { position: relative; height: 52px; }
+.tl-month { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--stroke); font-size: var(--t-xs); color: var(--ink-3); padding: 28px 6px 0; white-space: nowrap; }
+.tl-bar {
+  position: absolute; top: 7px; height: 20px; border-radius: 5px; font-size: 0.6875rem; font-weight: 600; display: flex; align-items: center; padding: 0 6px; white-space: nowrap; overflow: hidden;
+  background: var(--subtle); color: var(--ink-2); border: 1px solid var(--stroke-strong);
+}
+.tl-bar.done { background: var(--positive-fill); color: var(--positive-deep); border-color: transparent; }
+.tl-bar.current { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+.tl-gridline { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px solid var(--stroke); pointer-events: none; }
+.tl-marker { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; z-index: 3; }
+.tl-marker.today { border-left: 1.5px solid var(--sync); }
+.tl-marker.target { border-left: 1.5px dashed var(--ink-2); }
+.tl-marker.dropdead { border-left: 2px solid var(--negative); }
+.tl-flag { position: absolute; top: 2px; transform: translateX(-50%); font-size: 0.6875rem; font-weight: 600; white-space: nowrap; padding: 1px 6px; border-radius: 999px; background: var(--surface); border: 1px solid var(--stroke-strong); z-index: 5; }
+.tl-flag.today { color: var(--sync); border-color: var(--sync); }
+.tl-flag.dropdead { color: var(--negative-deep); background: var(--negative-fill); border-color: transparent; }
+.tl-diamond { position: absolute; top: 10px; width: 13px; height: 13px; transform: translateX(-50%) rotate(45deg); background: var(--negative); border: 2px solid var(--surface); z-index: 4; }
+.tl-gate { position: absolute; top: 6px; bottom: 6px; width: 0; border-left: 2px dotted var(--ink-2); z-index: 4; }
+.tl-key { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: var(--t-sm); color: var(--ink-2); }
+.swatch { display: inline-block; width: 18px; height: 10px; border-radius: 3px; vertical-align: middle; }
+
+/* Dialogs */
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 40; }
+.dialog {
+  position: fixed; z-index: 41; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); border: 1px solid var(--stroke-strong);
+  display: grid; grid-template-rows: auto 1fr auto; max-height: calc(100% - 32px);
+}
+.dialog.step { left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(620px, calc(100% - 32px)); border-radius: 14px; }
+.dialog.tray {
+  right: 0; top: 0; bottom: 0; width: min(440px, 100%); max-height: none; border-radius: 14px 0 0 14px;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px);
+}
+.dlg-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 18px 12px; border-bottom: 1px solid var(--stroke); }
+.dlg-head h2 { margin: 0; font-size: var(--t-xl); font-weight: 600; line-height: 1.25; text-wrap: balance; }
+.dlg-eyebrow { font-size: var(--t-xs); color: var(--ink-3); margin-bottom: 2px; }
+.dlg-body { overflow-y: auto; padding: 14px 18px; display: grid; gap: 16px; align-content: start; }
+.dlg-foot { padding: 12px 18px; border-top: 1px solid var(--stroke); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.section { display: grid; gap: 8px; }
+.section h3 { margin: 0; font-size: var(--t-md); font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: var(--t-sm); }
+.kv dt { color: var(--ink-3); } .kv dd { margin: 0; min-width: 0; }
+.callout { border-radius: 10px; padding: 10px 12px; font-size: var(--t-sm); display: grid; gap: 8px; }
+.callout.block { background: var(--negative-fill); color: var(--negative-deep); }
+.callout.warn { background: var(--hold-tint); color: var(--hold-deep); border: 1px solid var(--hold-fill); }
+.callout.info { background: var(--subtle); color: var(--ink-2); }
+.callout .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.callout .ex, .section > .ex, .choices .ex { justify-self: start; }
+.choices { display: grid; gap: 6px; }
+.choice { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--stroke); border-radius: var(--r-control); cursor: pointer; font-size: var(--t-sm); }
+.choice:has(input:checked) { border-color: var(--ink); background: var(--raised); }
+.choice:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+.choice input { accent-color: var(--ink); width: 16px; height: 16px; margin: 0; }
+.close-x { border: 0; background: transparent; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; color: var(--ink-2); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.close-x:hover { background: var(--subtle); color: var(--ink); }
+.prop { border: 1px solid var(--stroke); border-radius: var(--r-card); padding: 12px; display: grid; gap: 8px; }
+.prop-who { display: flex; align-items: center; gap: 8px; font-size: var(--t-sm); color: var(--ink-2); }
+.prop-what { font-weight: 600; font-size: var(--t-md); }
+.prop-note { font-size: var(--t-sm); color: var(--ink-2); background: var(--raised); border-radius: 8px; padding: 8px 10px; }
+.prop-status { font-size: var(--t-xs); color: var(--ink-3); }
+.tray-lede { font-size: var(--t-sm); color: var(--ink-2); background: var(--subtle); border-radius: 10px; padding: 10px 12px; }
+.muted { color: var(--ink-3); font-size: var(--t-sm); }
+
+/* Toast */
+.toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: grid; gap: 8px; width: min(520px, calc(100% - 32px)); pointer-events: none; }
+.toast { background: var(--surface); border: 1px solid var(--stroke-strong); box-shadow: var(--shadow); border-radius: 10px; padding: 10px 14px; font-size: var(--t-sm); display: flex; gap: 10px; align-items: flex-start; }
+.toast .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--positive); margin-top: 6px; flex: none; }
+
+details.rights summary { cursor: pointer; font-size: var(--t-sm); color: var(--ink-2); }
+details.rights[open] summary { margin-bottom: 8px; }
+.rights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.rights-grid > div { background: var(--raised); border: 1px solid var(--stroke); border-radius: 10px; padding: 10px 12px; font-size: var(--t-sm); display: grid; gap: 4px; }
+.rights-grid b { font-weight: 600; }
+.rights-grid ul { margin: 0; padding-left: 18px; color: var(--ink-2); }
+
+@media (max-width: 640px) {
+  .deal-id { font-size: 1.5rem; }
+  .kv { grid-template-columns: 1fr; gap: 2px; }
+  .kv dd { margin-bottom: 6px; }
+  .tl-row, .tl-head { grid-template-columns: 150px auto; }
+  .dialog.tray { border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="wrap">
+  <div class="proto-banner" role="note">
+    <span><strong>Prototype for Storm and Marco. Nothing here is real data.</strong> Every rule is an example to react to. Changes last until you reload.</span>
+    <button type="button" class="btn ghost reset" id="resetBtn">Reset prototype</button>
+  </div>
+
+  <header class="deal-head">
+    <div>
+      <h1 class="deal-id">Project Summit</h1>
+      <div class="deal-sub">Sell-side rail. A sample of 25 of the 65 steps.</div>
+    </div>
+    <div class="progress-line" id="progressLine"></div>
+  </header>
+
+  <div class="controls" role="group" aria-label="Rail controls">
+    <div class="ctl-group">
+      <span class="ctl-label" id="viewLbl">View</span>
+      <div class="seg" role="tablist" aria-labelledby="viewLbl" id="viewTabs">
+        <button type="button" role="tab" id="tab-sequential" data-view="sequential" aria-controls="viewPanel">Sequential</button>
+        <button type="button" role="tab" id="tab-dependency" data-view="dependency" aria-controls="viewPanel">Dependency</button>
+        <button type="button" role="tab" id="tab-timeline" data-view="timeline" aria-controls="viewPanel">Timeline</button>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label" id="asLbl">View as</span>
+      <div class="seg" role="radiogroup" aria-labelledby="asLbl" id="asGroup">
+        <label><input type="radio" name="as" id="as-sd" value="sd">View as Storm (deal lead)</label>
+        <label><input type="radio" name="as" id="as-ac" value="ac">View as Alex (deal team)</label>
+        <label><input type="radio" name="as" id="as-oc" value="oc">View as outside counsel</label>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label" id="filterLbl">Show</span>
+      <div class="seg" role="radiogroup" aria-labelledby="filterLbl" aria-describedby="filterNote" id="filterGroup">
+        <label><input type="radio" name="filter" id="f-all" value="all">All</label>
+        <label><input type="radio" name="filter" id="f-mine" value="mine">Mine</label>
+        <label><input type="radio" name="filter" id="f-unassigned" value="unassigned">Unassigned</label>
+        <label><input type="radio" name="filter" id="f-activity" value="activity">Has activity</label>
+      </div>
+      <span class="filter-note" id="filterNote">Only you see this view.</span>
+    </div>
+    <span class="spacer"></span>
+    <button type="button" class="btn" id="trayBtn" aria-haspopup="dialog">Proposed changes <span class="count" id="trayCount">0</span></button>
+  </div>
+
+  <div class="strip">
+    <div class="presence-item" id="presence" aria-live="off"></div>
+    <div class="who-line" id="whoLine"></div>
+  </div>
+
+  <div id="roleNotice"></div>
+
+  <details class="rights panel">
+    <summary>Who can do what in this prototype <span class="ex">Example, not decided</span></summary>
+    <div class="rights-grid">
+      <div><b>Storm Duncan, deal lead</b><ul><li>Changes the rail for everyone on the deal</li><li>Draws and removes links</li><li>Accepts or declines proposals</li><li>Marks any step done</li></ul></div>
+      <div><b>Alex Chen and Priya Shah, deal team</b><ul><li>Propose a change to the rail</li><li>Propose a link</li><li>Mark their own steps done</li><li>Record a buyer's NDA and data room access</li></ul></div>
+      <div><b>Outside counsel</b><ul><li>Sees the rail, owners and activity</li><li>Cannot change it or propose changes</li></ul></div>
+    </div>
+  </details>
+
+  <main id="viewPanel" role="tabpanel" aria-labelledby="tab-sequential" tabindex="-1"></main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="dialog step" id="stepDialog" role="dialog" aria-modal="true" aria-labelledby="stepTitle" hidden></div>
+<div class="dialog tray" id="trayDialog" role="dialog" aria-modal="true" aria-labelledby="trayTitle" hidden></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Fixture: Project Summit (not real data) ---------- */
+  var TODAY = '2026-10-22';
+  var TARGET_CLOSE = '2027-02-26';
+  var DEAL_DROP_DEAD = '2027-03-31';
+
+  var PEOPLE = {
+    sd: { id: 'sd', name: 'Storm Duncan', short: 'Storm', initials: 'SD', role: 'Deal lead' },
+    ac: { id: 'ac', name: 'Alex Chen', short: 'Alex', initials: 'AC', role: 'Deal team' },
+    ps: { id: 'ps', name: 'Priya Shah', short: 'Priya', initials: 'PS', role: 'Analyst' },
+    oc: { id: 'oc', name: 'Outside counsel', short: 'Outside counsel', initials: 'OC', role: 'Read only' }
+  };
+
+  var PHASES = [
+    { n: 1, name: 'Origination', full: 'Origination, Qualification & Mandate' },
+    { n: 2, name: 'Preparation', full: 'Preparation & Market Readiness' },
+    { n: 3, name: 'Marketing', full: 'Marketing & First-Round Bids' },
+    { n: 4, name: 'Diligence', full: 'Diligence, LOI & Definitive Docs' },
+    { n: 5, name: 'Signing', full: 'Signing, Closing & Post-Close' }
+  ];
+
+  // Real step names from src/lib/rail/railData.generated.ts; owners, activity and dates are fixtures.
+  var STEPS = [
+    { id: 's12', phase: 1, name: 'Client NDA Workflow', status: 'done', owner: 'sd', activity: 'Done by Storm Duncan · Sep 2', start: '2026-08-24', end: '2026-09-02' },
+    { id: 's17', phase: 1, name: 'Buyer Universe', status: 'done', owner: 'ps', activity: 'Done by Priya Shah · Sep 14', start: '2026-09-01', end: '2026-09-14' },
+    { id: 's20', phase: 1, name: 'Engagement Letter Strategy', status: 'done', owner: 'sd', activity: 'Done by Storm Duncan · Sep 18', start: '2026-09-08', end: '2026-09-18' },
+    { id: 's21', phase: 1, name: 'Pitchbook Drafting', status: 'done', owner: 'ac', activity: 'Done by Alex Chen · Sep 21', start: '2026-09-10', end: '2026-09-21' },
+    { id: 's25', phase: 1, name: 'Engagement Negotiation', status: 'done', owner: 'sd', activity: 'Done by Storm Duncan · Sep 30', start: '2026-09-21', end: '2026-09-30' },
+    { id: 's28', phase: 2, name: 'Kickoff / Org Meeting', status: 'done', owner: 'sd', activity: 'Done by Storm Duncan · Oct 3', start: '2026-10-01', end: '2026-10-03' },
+    { id: 's29', phase: 2, name: 'Timeline', status: 'done', owner: 'ac', activity: 'Done by Alex Chen · Oct 6', start: '2026-10-02', end: '2026-10-06' },
+    { id: 's31', phase: 2, name: 'VDR Setup', status: 'done', owner: 'ac', activity: 'Done by Alex Chen · Oct 10', start: '2026-10-05', end: '2026-10-10' },
+    { id: 's34', phase: 2, name: 'Financial Normalization', status: 'current', owner: 'ps', activity: 'Draft saved by Priya Shah · 2h', start: '2026-10-12', end: '2026-10-30' },
+    { id: 's36', phase: 2, name: 'Teaser', status: 'todo', owner: 'ac', activity: 'Draft saved by Alex Chen · 20m', start: '2026-10-19', end: '2026-11-02' },
+    { id: 's37', phase: 2, name: 'CIM / Management Presentation', status: 'todo', owner: 'ac', activity: 'Assigned by Storm Duncan · Oct 20', start: '2026-10-26', end: '2026-11-13' },
+    { id: 's38', phase: 2, name: 'FAQ&A', status: 'todo', owner: null, activity: '', start: '2026-11-02', end: '2026-11-13' },
+    { id: 's39', phase: 3, name: 'Outreach Sequencing', status: 'todo', owner: 'sd', activity: 'Assigned by Storm Duncan · Oct 20', start: '2026-11-09', end: '2026-11-20' },
+    { id: 's40', phase: 3, name: 'Buyer Synergies Model + Valuation', status: 'done', owner: 'ps', activity: 'Done by Priya Shah · Oct 18', start: '2026-10-08', end: '2026-10-18', outOfOrder: true },
+    { id: 's41', phase: 3, name: 'Buyer Log / Feedback', status: 'todo', owner: 'ac', activity: '', start: '2026-11-16', end: '2026-12-04' },
+    { id: 's42', phase: 3, name: 'Buyer NDA', status: 'todo', owner: 'ac', activity: 'NDA signed by Larch · Oct 21', start: '2026-11-02', end: '2026-12-04', perBuyer: true },
+    { id: 's43', phase: 3, name: 'Buyer VDR Access', status: 'todo', owner: 'ac', activity: 'Access given to Larch by Alex Chen · Oct 21', start: '2026-11-04', end: '2026-12-11', perBuyer: true },
+    { id: 's44', phase: 3, name: 'Management Meeting', status: 'todo', owner: 'sd', activity: '', start: '2026-11-30', end: '2026-12-11' },
+    { id: 's46', phase: 4, name: 'LOI / Process Letter', status: 'todo', owner: 'sd', activity: '', start: '2026-12-01', end: '2026-12-08' },
+    { id: 's47', phase: 4, name: 'Bid Comparison', status: 'todo', owner: 'ps', activity: '', start: '2026-12-07', end: '2026-12-11' },
+    { id: 's48', phase: 4, name: 'LOI Review', status: 'todo', owner: 'sd', activity: '', start: '2026-12-11', end: '2026-12-18' },
+    { id: 's50', phase: 4, name: 'Definitive Agreement Support', status: 'todo', owner: null, activity: '', start: '2026-12-21', end: '2027-01-29' },
+    { id: 's51', phase: 5, name: 'Signing / Announcement Prep', status: 'todo', owner: null, activity: '', start: '2027-01-25', end: '2027-02-12' },
+    { id: 's56', phase: 5, name: 'Regulatory Approval Tracker', status: 'todo', owner: null, activity: '', start: '2026-12-21', end: '2027-02-19' },
+    { id: 's57', phase: 5, name: 'Closing Checklist', status: 'todo', owner: null, activity: '', start: '2027-02-08', end: '2027-02-26' }
+  ];
+
+  // Example links only. Calibrated to common sell-side gates, never inferred from the step brief.
+  var LINKS = [
+    { from: 's25', to: 's28', kind: 'hard', why: 'The engagement is signed before the kickoff.' },
+    { from: 's34', to: 's37', kind: 'soft', why: 'The CIM uses the normalized numbers.' },
+    { from: 's36', to: 's39', kind: 'hard', why: 'Outreach starts with the approved teaser.' },
+    { from: 's31', to: 's43', kind: 'hard', why: 'The data room exists before any buyer gets in.' },
+    { from: 's42', to: 's43', kind: 'hard', perBuyer: true, why: 'Each buyer signs an NDA before that buyer gets data room access.' },
+    { from: 's41', to: 's44', kind: 'soft', why: 'First-round feedback comes before management meetings.' },
+    { from: 's48', to: 's50', kind: 'hard', why: 'Exclusivity under a signed LOI comes before confirmatory diligence.' },
+    { from: 's56', to: 's57', kind: 'hard', why: 'Regulatory approvals come before closing.' }
+  ];
+
+  var DATE_RULES = {
+    s44: { notBefore: '2026-11-16', why: 'the first-round bid date' },
+    s48: { dropDead: '2026-12-18', why: 'If LOI review is not done by then, the exclusivity offer lapses.' }
+  };
+
+  // Buyers carry code names, as they would in a live process.
+  var BUYERS = [
+    { id: 'b1', name: 'Larch', nda: true, access: true },
+    { id: 'b2', name: 'Maple', nda: true, access: false },
+    { id: 'b3', name: 'Alder', nda: false, access: false },
+    { id: 'b4', name: 'Rowan', nda: false, access: false }
+  ];
+
+  var PROPOSALS = [
+    { id: 'p1', by: 'ps', at: 'Today, 9:40 AM', status: 'pending',
+      change: { type: 'add', afterId: 's34', name: 'Quality of Earnings Review' },
+      note: 'The buyers will ask for a QoE. Better to start it while normalization is open.' },
+    { id: 'p2', by: 'ac', at: 'Yesterday, 4:15 PM', status: 'pending',
+      change: { type: 'linkKind', from: 's41', to: 's44', kind: 'hard' },
+      note: 'I would rather not book a management meeting before we have first-round feedback.' }
+  ];
+
+  /* ---------- State ---------- */
+  function clone(x) { return JSON.parse(JSON.stringify(x)); }
+  var state;
+  function freshState(keep) {
+    return {
+      view: keep ? keep.view : 'sequential',
+      as: keep ? keep.as : 'sd',
+      filter: 'all',
+      steps: clone(STEPS),
+      links: clone(LINKS),
+      buyers: clone(BUYERS),
+      proposals: clone(PROPOSALS),
+      collapsed: {},
+      presence: { ac: 's36', ps: 's34', sd: 's46' },
+      nextId: 1,
+      openStep: null,
+      confirmSoft: null,
+      trayOpen: false
+    };
+  }
+  state = freshState();
+
+  /* ---------- Helpers ---------- */
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function d(iso) { var p = iso.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function fmt(iso) { var x = d(iso); return MONTHS[x.getUTCMonth()] + ' ' + x.getUTCDate() + ', ' + x.getUTCFullYear(); }
+  function days(a, b) { return Math.round((d(b) - d(a)) / 86400000); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function $(id) { return document.getElementById(id); }
+  function step(id) { for (var i = 0; i < state.steps.length; i++) if (state.steps[i].id === id) return state.steps[i]; return null; }
+  function stepName(id) { var s = step(id); return s ? s.name : 'a removed step'; }
+  function phaseOf(n) { return PHASES[n - 1]; }
+  function me() { return PEOPLE[state.as]; }
+  function isLead() { return state.as === 'sd'; }
+  function canPropose() { return state.as === 'ac' || state.as === 'ps'; }
+  function canMarkDone(s) { return isLead() || (s.owner && s.owner === state.as); }
+  function canRecordBuyers() { return isLead() || state.as === 'ac' || state.as === 'ps'; }
+  function doneCount(list) { return list.filter(function (s) { return s.status === 'done'; }).length; }
+  function currentStep() { for (var i = 0; i < state.steps.length; i++) if (state.steps[i].status === 'current') return state.steps[i]; return null; }
+  function avatar(pid, withPresence) {
+    if (!pid) return '<span class="av none" aria-hidden="true">?</span>';
+    var p = PEOPLE[pid];
+    var live = withPresence ? '<span class="live"></span>' : '';
+    return '<span class="av" aria-hidden="true">' + p.initials + live + '</span>';
+  }
+  var EX = '<span class="ex">Example, not decided</span>';
+  var ICON_CHEV = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  var ICON_X = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+  function visibleSteps() {
+    return state.steps.filter(function (s) {
+      if (state.filter === 'mine') return s.owner === state.as;
+      if (state.filter === 'unassigned') return !s.owner;
+      if (state.filter === 'activity') return !!s.activity;
+      return true;
+    });
+  }
+  function presentOn(stepId) {
+    var out = [];
+    Object.keys(state.presence).forEach(function (pid) {
+      if (pid !== state.as && state.presence[pid] === stepId) out.push(pid);
+    });
+    return out;
+  }
+  function incoming(id) { return state.links.filter(function (l) { return l.to === id; }); }
+  function outgoing(id) { return state.links.filter(function (l) { return l.from === id; }); }
+
+  function blockers(s) {
+    var hard = [], soft = [], date = null;
+    incoming(s.id).forEach(function (l) {
+      var up = step(l.from);
+      if (!up || up.status === 'done' || l.perBuyer) return;
+      (l.kind === 'hard' ? hard : soft).push(l);
+    });
+    var dr = DATE_RULES[s.id];
+    if (dr && dr.notBefore && days(TODAY, dr.notBefore) > 0) date = dr;
+    return { hard: hard, soft: soft, date: date };
+  }
+
+  /* ---------- Changes and proposals ---------- */
+  function describe(c) {
+    if (c.type === 'move') return 'Move ' + stepName(c.stepId) + (c.dir < 0 ? ' one place earlier' : ' one place later');
+    if (c.type === 'remove') return 'Remove ' + stepName(c.stepId);
+    if (c.type === 'add') return 'Add "' + c.name + '" after ' + stepName(c.afterId);
+    if (c.type === 'link') return 'Add a ' + c.kind + ' link: ' + stepName(c.from) + ' before ' + stepName(c.to);
+    if (c.type === 'linkKind') return 'Make "' + stepName(c.from) + ' before ' + stepName(c.to) + '" a ' + c.kind + ' link';
+    if (c.type === 'unlink') return 'Remove the link: ' + stepName(c.from) + ' before ' + stepName(c.to);
+    return 'Change the rail';
+  }
+  function stillApplies(c) {
+    if (c.type === 'move' || c.type === 'remove') return !!step(c.stepId);
+    if (c.type === 'add') return !!step(c.afterId);
+    if (c.type === 'link') return !!step(c.from) && !!step(c.to) && !findLink(c.from, c.to);
+    if (c.type === 'linkKind' || c.type === 'unlink') return !!findLink(c.from, c.to);
+    return true;
+  }
+  function findLink(a, b) { for (var i = 0; i < state.links.length; i++) { var l = state.links[i]; if (l.from === a && l.to === b) return l; } return null; }
+  function applyChange(c) {
+    var list = state.steps, i;
+    if (c.type === 'move') {
+      i = list.findIndex(function (s) { return s.id === c.stepId; });
+      if (i < 0) return;
+      var s = list[i];
+      var j = i + c.dir;
+      if (j >= 0 && j < list.length && list[j].phase === s.phase) { list[i] = list[j]; list[j] = s; }
+      else if (c.dir < 0 && s.phase > 1) s.phase -= 1;
+      else if (c.dir > 0 && s.phase < 5) s.phase += 1;
+    } else if (c.type === 'remove') {
+      var wasCurrent = step(c.stepId) && step(c.stepId).status === 'current';
+      i = list.findIndex(function (s) { return s.id === c.stepId; });
+      state.steps = list.filter(function (s) { return s.id !== c.stepId; });
+      state.links = state.links.filter(function (l) { return l.from !== c.stepId && l.to !== c.stepId; });
+      if (wasCurrent) reselectCurrent(i - 1);
+    } else if (c.type === 'add') {
+      i = list.findIndex(function (s) { return s.id === c.afterId; });
+      if (i < 0) return;
+      list.splice(i + 1, 0, { id: 'n' + (state.nextId++), phase: list[i].phase, name: c.name, status: 'todo', owner: null, activity: 'Added by ' + PEOPLE[c.actor || state.as].name + ' · just now', isNew: true });
+    } else if (c.type === 'link') {
+      if (!findLink(c.from, c.to)) state.links.push({ from: c.from, to: c.to, kind: c.kind, why: c.why || 'Drawn by ' + PEOPLE[c.actor || state.as].name + '.' });
+    } else if (c.type === 'linkKind') {
+      var l = findLink(c.from, c.to); if (l) l.kind = c.kind;
+    } else if (c.type === 'unlink') {
+      state.links = state.links.filter(function (l) { return !(l.from === c.from && l.to === c.to); });
+    }
+  }
+  function reselectCurrent(fromIndex) {
+    for (var k = Math.max(0, fromIndex + 1); k < state.steps.length; k++) {
+      if (state.steps[k].status !== 'done') { state.steps[k].status = 'current'; return; }
+    }
+  }
+  function commitChange(c, note) {
+    if (isLead()) {
+      c.actor = 'sd';
+      applyChange(c);
+      toast(describe(c) + '. Changed for everyone on this deal.');
+    } else if (canPropose()) {
+      state.proposals.unshift({ id: 'p' + Date.now(), by: state.as, at: 'Just now', status: 'pending', change: c, note: note || '' });
+      toast('Sent to Storm Duncan. The rail stays as it is until he chooses.');
+    }
+  }
+  function decide(pid, accept) {
+    var p = state.proposals.find(function (x) { return x.id === pid; });
+    if (!p || p.status !== 'pending') return;
+    if (accept) {
+      if (!stillApplies(p.change)) { p.status = 'stale'; toast('This proposal no longer applies. The rail changed since it was sent.'); return; }
+      p.change.actor = p.by;
+      applyChange(p.change);
+      p.status = 'accepted';
+      toast('Accepted. ' + describe(p.change) + ' now applies to everyone on this deal.');
+    } else {
+      p.status = 'declined';
+      toast('Declined. ' + PEOPLE[p.by].name + ' sees that you declined.');
+    }
+  }
+  function markDone(s, force) {
+    var b = blockers(s);
+    if (b.hard.length || b.date) return;
+    if (b.soft.length && !force) { state.confirmSoft = s.id; return; }
+    var wasCurrent = s.status === 'current';
+    s.status = 'done';
+    s.activity = 'Done by ' + me().name + ' · just now';
+    state.confirmSoft = null;
+    if (wasCurrent) reselectCurrent(state.steps.indexOf(s));
+    toast(s.name + ' marked done by ' + me().name + '.');
+  }
+
+  /* ---------- Rendering ---------- */
+  function renderProgress() {
+    var total = state.steps.length, done = doneCount(state.steps), cur = currentStep();
+    var pct = total ? Math.round(done / total * 100) : 0;
+    var phaseName = cur ? phaseOf(cur.phase).name : 'All phases';
+    $('progressLine').innerHTML =
+      '<div class="row"><span><b>' + esc(phaseName) + '</b> · <span class="num">' + done + ' of ' + total + '</span> steps done</span><span>Target close ' + fmt(TARGET_CLOSE) + '</span></div>' +
+      '<div class="bar" role="img" aria-label="' + pct + ' percent of steps done"><span style="width:' + pct + '%"></span></div>' +
+      '<div class="row"><span>Current step: ' + (cur ? esc(cur.name) : 'none') + '</span><span class="num">' + pct + '%</span></div>';
+  }
+
+  function renderStrip() {
+    var bits = [];
+    Object.keys(state.presence).forEach(function (pid) {
+      if (pid === state.as) return;
+      var s = step(state.presence[pid]);
+      if (s) bits.push('<span class="presence-item"><span class="live" aria-hidden="true"></span>' + esc(PEOPLE[pid].short) + ' is on ' + esc(s.name) + '</span>');
+    });
+    $('presence').innerHTML = bits.join('') + ' <span class="ex">Simulated presence</span>';
+    $('whoLine').innerHTML = '<span>Storm Duncan changes this rail for everyone on the deal. Others propose changes.</span>' + EX;
+    var pending = state.proposals.filter(function (p) { return p.status === 'pending'; }).length;
+    $('trayCount').textContent = pending;
+    $('trayBtn').hidden = state.as === 'oc';
+    $('trayBtn').setAttribute('aria-label', 'Proposed changes, ' + pending + ' waiting');
+    var n = $('roleNotice');
+    if (state.as === 'oc') {
+      n.innerHTML = '<div class="notice" role="note">You are viewing as outside counsel. Counsel sees the rail, owners and activity, and cannot change it or propose changes. ' + EX + '</div>';
+    } else if (state.as === 'ac') {
+      n.innerHTML = '<div class="notice" role="note">You are viewing as Alex Chen. Changes you make to the rail go to Storm Duncan as proposals. ' + EX + '</div>';
+    } else n.innerHTML = '';
+  }
+
+  function cardRules(s) {
+    var rows = [];
+    incoming(s.id).forEach(function (l) {
+      var up = step(l.from); if (!up) return;
+      var met = up.status === 'done';
+      if (l.perBuyer) {
+        var withAccess = state.buyers.filter(function (b) { return b.access; }).length;
+        rows.push('<div class="rule"><span class="chip hard">Per buyer</span>Each buyer\'s NDA first · <span class="num">' + withAccess + ' of ' + state.buyers.length + '</span> buyers in</div>');
+      } else if (l.kind === 'hard') {
+        rows.push('<div class="rule' + (met ? ' met' : '') + '">' + (met ? '' : '<span class="chip hard">Blocks completion</span>') + (met ? 'Needed ' : 'Waiting on ') + esc(up.name) + (met ? ' · met' : '') + '</div>');
+      } else {
+        rows.push('<div class="rule' + (met ? ' met' : '') + '">' + (met ? '' : '<span class="chip soft">Warns</span>') + 'Usually after ' + esc(up.name) + (met ? ' · met' : '') + '</div>');
+      }
+    });
+    if (s.id === 's42') {
+      var signed = state.buyers.filter(function (b) { return b.nda; }).length;
+      rows.push('<div class="rule"><span class="chip hard">Per buyer</span><span class="num">' + signed + ' of ' + state.buyers.length + '</span> NDAs signed</div>');
+    }
+    var dr = DATE_RULES[s.id];
+    if (dr && dr.notBefore) rows.push('<div class="rule"><span class="chip date">Date gate</span>Not before ' + fmt(dr.notBefore) + '</div>');
+    if (dr && dr.dropDead) rows.push('<div class="rule"><span class="chip hard">Drop-dead</span>' + fmt(dr.dropDead) + '</div>');
+    if (!rows.length) return '';
+    return '<div class="rules">' + rows.join('') + EX + '</div>';
+  }
+
+  function statusChip(s) {
+    if (s.status === 'done') return '<span class="chip done">Done</span>';
+    if (s.status === 'current') return '<span class="chip current">Current step</span>';
+    if (s.isNew) return '<span class="chip new">New</span>';
+    return '<span class="chip todo">Not done</span>';
+  }
+
+  function card(s, dep) {
+    var here = presentOn(s.id);
+    var cur = currentStep();
+    var ahead = s.status === 'done' && cur && state.steps.indexOf(s) > state.steps.indexOf(cur);
+    var presence = here.map(function (pid) { return '<span class="presence-tag"><span class="live" aria-hidden="true"></span>' + esc(PEOPLE[pid].short) + ' is here</span>'; }).join(' ');
+    return '<button type="button" class="card' + (s.status === 'current' ? ' is-current' : '') + (s.status === 'done' ? ' is-done' : '') + '" data-key="card-' + s.id + '" data-step="' + s.id + '" id="card-' + s.id + '">' +
+      '<span class="card-top">' + statusChip(s) + presence + '</span>' +
+      '<span class="card-name">' + esc(s.name) + '</span>' +
+      '<span class="card-owner">' + avatar(s.owner, false) + (s.owner ? esc(PEOPLE[s.owner].name) : 'Unassigned') + '</span>' +
+      (s.activity ? '<span class="card-activity">' + esc(s.activity) + '</span>' : '') +
+      (ahead ? '<span class="card-note">Done ahead of the current step</span>' : '') +
+      (dep ? cardRules(s) : '') +
+      '</button>';
+  }
+
+  function phaseHeader(ph, all) {
+    var inPhase = all.filter(function (s) { return s.phase === ph.n; });
+    var done = doneCount(inPhase), total = inPhase.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+    var owners = [];
+    inPhase.forEach(function (s) { if (s.owner && owners.indexOf(s.owner) < 0) owners.push(s.owner); });
+    var cur = currentStep();
+    var here = cur && cur.phase === ph.n;
+    var collapsed = !!state.collapsed[ph.n];
+    var ownerNames = owners.map(function (o) { return PEOPLE[o].name; }).join(', ');
+    return '<div class="phase-card' + (here ? ' here' : '') + '">' +
+      '<div class="phase-top"><div><h2 class="phase-name">' + esc(ph.name) + '</h2><div class="phase-full">' + esc(ph.full) + '</div></div>' +
+      '<button type="button" class="collapse" data-collapse="' + ph.n + '" data-key="collapse-' + ph.n + '" aria-expanded="' + (!collapsed) + '" aria-label="' + (collapsed ? 'Show' : 'Hide') + ' steps in ' + esc(ph.name) + '">' + ICON_CHEV + '</button></div>' +
+      '<div class="bar" aria-hidden="true"><span style="width:' + pct + '%"></span></div>' +
+      '<div class="phase-meta"><span class="num">' + done + ' of ' + total + ' done · ' + pct + '%</span>' +
+      '<span class="avatars" title="' + esc(ownerNames) + '">' + owners.map(function (o) {
+        var live = Object.keys(state.presence).some(function (pid) { return pid === o && pid !== state.as && step(state.presence[pid]) && step(state.presence[pid]).phase === ph.n; });
+        return avatar(o, live);
+      }).join('') + '<span class="sr-only">People on this phase: ' + esc(ownerNames || 'nobody yet') + '</span></span></div>' +
+      (here ? '<div class="phase-full">The deal is here</div>' : '') +
+      '</div>';
+  }
+
+  function renderBoard(dep) {
+    var vis = visibleSteps();
+    var html = '';
+    if (dep) {
+      html += '<section class="panel" aria-labelledby="depTitle"><h2 id="depTitle">Dependency view</h2>' +
+        '<p>Lines show which steps wait on others. Storm draws every link himself; nothing is guessed from the step brief. A hard link stops a step being marked done. A soft link warns first. A date gate holds a step until a date. A per-buyer gate repeats for every buyer.</p>' +
+        '<div class="legend">' +
+        '<span class="legend-item"><svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="36" y2="5" stroke="var(--negative)" stroke-width="2"/></svg>Hard link, blocks completion</span>' +
+        '<span class="legend-item"><svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="36" y2="5" stroke="var(--hold)" stroke-width="2" stroke-dasharray="5 4"/></svg>Soft link, warns</span>' +
+        '<span class="legend-item"><span class="chip date">Date gate</span></span>' +
+        '<span class="legend-item"><span class="chip hard">Per buyer</span></span>' + EX + '</div></section>';
+    }
+    html += '<div class="board-scroll" tabindex="-1"><div class="board' + (dep ? ' dep' : '') + '" id="board">';
+    if (dep) html += '<svg class="links-svg" id="linksSvg" aria-hidden="true"></svg>';
+    PHASES.forEach(function (ph) {
+      var collapsed = !!state.collapsed[ph.n];
+      var mine = vis.filter(function (s) { return s.phase === ph.n; });
+      html += '<section class="col" aria-label="' + esc(ph.name) + '">' + phaseHeader(ph, state.steps);
+      if (!collapsed) {
+        html += '<div class="stack">' + (mine.length ? mine.map(function (s) { return card(s, dep); }).join('') : '<div class="empty-col">No steps match this view.</div>') + '</div>';
+      }
+      html += '</section>';
+    });
+    html += '</div></div>';
+    if (dep) html += renderLinkList();
+    return html;
+  }
+
+  function stepOptions(sel) {
+    return state.steps.map(function (s) { return '<option value="' + s.id + '"' + (s.id === sel ? ' selected' : '') + '>' + esc(s.name) + '</option>'; }).join('');
+  }
+
+  function renderLinkList() {
+    var rows = state.links.map(function (l, i) {
+      var up = step(l.from), dn = step(l.to);
+      if (!up || !dn) return '';
+      var kind = l.perBuyer ? '<span class="chip hard">Hard, per buyer</span>' : (l.kind === 'hard' ? '<span class="chip hard">Hard</span>' : '<span class="chip soft">Soft</span>');
+      var action = '';
+      if (isLead()) action = '<button type="button" class="btn ghost" data-unlink="' + i + '" data-key="unlink-' + l.from + '-' + l.to + '">Remove link</button>';
+      else if (canPropose()) action = '<button type="button" class="btn ghost" data-propose-unlink="' + i + '" data-key="punlink-' + l.from + '-' + l.to + '">Propose removing</button>';
+      return '<tr><td>' + esc(up.name) + '</td><td>' + esc(dn.name) + '</td><td>' + kind + '</td><td>' + esc(l.why) + '</td><td>' + EX + '</td><td>' + action + '</td></tr>';
+    }).join('');
+    var dateRows = Object.keys(DATE_RULES).map(function (id) {
+      var s = step(id); if (!s) return '';
+      var r = DATE_RULES[id];
+      return '<tr><td colspan="2">' + esc(s.name) + '</td><td>' + (r.notBefore ? '<span class="chip date">Not before ' + fmt(r.notBefore) + '</span>' : '<span class="chip hard">Drop-dead ' + fmt(r.dropDead) + '</span>') + '</td><td>' + esc(r.notBefore ? 'Held until ' + r.why + '.' : r.why) + '</td><td>' + EX + '</td><td></td></tr>';
+    }).join('');
+    var form = '';
+    if (isLead() || canPropose()) {
+      form = '<form class="form-row" id="linkForm">' +
+        '<label class="field"><span>Step that comes first</span><select id="lf-from">' + stepOptions('s38') + '</select></label>' +
+        '<label class="field"><span>Step that waits</span><select id="lf-to">' + stepOptions('s39') + '</select></label>' +
+        '<label class="field"><span>Kind</span><select id="lf-kind"><option value="hard">Hard, blocks completion</option><option value="soft" selected>Soft, warns</option></select></label>' +
+        '<button type="submit" class="btn primary" id="lf-submit">' + (isLead() ? 'Add link for everyone' : 'Propose this link') + '</button>' +
+        '</form><div class="muted" id="lf-msg" aria-live="polite"></div>';
+    }
+    return '<section class="panel" aria-labelledby="linksTitle"><h2 id="linksTitle">Links on this rail</h2>' +
+      '<div class="table-scroll"><table><thead><tr><th scope="col">Comes first</th><th scope="col">Waits</th><th scope="col">Kind</th><th scope="col">Why</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Action</span></th></tr></thead><tbody>' + rows + dateRows + '</tbody></table></div>' +
+      form + '</section>';
+  }
+
+  /* Timeline (Gantt-lite) */
+  var TL_START = '2026-08-17', TL_END = '2027-04-12', PX = 4.2;
+  function x(iso) { return Math.round(days(TL_START, iso) * PX); }
+  function renderTimeline() {
+    var width = x(TL_END);
+    var vis = visibleSteps();
+    var months = '';
+    var m = d('2026-09-01');
+    while (m <= d(TL_END)) {
+      var iso = m.toISOString().slice(0, 10);
+      months += '<div class="tl-month" style="left:' + x(iso) + 'px">' + MONTHS[m.getUTCMonth()] + (m.getUTCMonth() === 0 || iso === '2026-09-01' ? ' ' + m.getUTCFullYear() : '') + '</div>';
+      m = new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth() + 1, 1));
+    }
+    var grid = '';
+    m = d('2026-09-01');
+    while (m <= d(TL_END)) { grid += '<div class="tl-gridline" style="left:' + x(m.toISOString().slice(0, 10)) + 'px"></div>'; m = new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth() + 1, 1)); }
+    function markers() {
+      return '<div class="tl-marker today" style="left:' + x(TODAY) + 'px"></div>' +
+        '<div class="tl-marker target" style="left:' + x(TARGET_CLOSE) + 'px"></div>' +
+        '<div class="tl-marker dropdead" style="left:' + x(DEAL_DROP_DEAD) + 'px"></div>';
+    }
+    var rows = '';
+    PHASES.forEach(function (ph) {
+      var inPh = vis.filter(function (s) { return s.phase === ph.n; });
+      if (!inPh.length) return;
+      rows += '<div class="tl-row phase-row"><div class="tl-label">' + esc(ph.name) + '</div><div class="tl-track" style="width:' + width + 'px">' + grid + markers() + '</div></div>';
+      inPh.forEach(function (s) {
+        var bar = '';
+        if (s.start && s.end) {
+          var cls = s.status === 'done' ? 'done' : (s.status === 'current' ? 'current' : '');
+          var w = Math.max(14, x(s.end) - x(s.start));
+          var label = s.owner && w >= 28 ? PEOPLE[s.owner].initials : '';
+          bar = '<div class="tl-bar ' + cls + '" style="left:' + x(s.start) + 'px;width:' + w + 'px" title="' + esc(s.name + ', ' + fmt(s.start) + ' to ' + fmt(s.end)) + '">' + label + '</div>';
+        } else {
+          bar = '<div class="tl-bar" style="left:' + x(TODAY) + 'px;width:120px">No dates yet</div>';
+        }
+        var dr = DATE_RULES[s.id] || {};
+        var extra = '';
+        if (dr.dropDead) extra += '<div class="tl-diamond" style="left:' + x(dr.dropDead) + 'px" title="Step drop-dead ' + fmt(dr.dropDead) + '"></div>';
+        if (dr.notBefore) extra += '<div class="tl-gate" style="left:' + x(dr.notBefore) + 'px" title="Not before ' + fmt(dr.notBefore) + '"></div>';
+        var srDates = s.start ? fmt(s.start) + ' to ' + fmt(s.end) : 'no dates yet';
+        rows += '<div class="tl-row"><div class="tl-label">' + avatar(s.owner, presentOn(s.id).length > 0) + '<span class="nm">' + esc(s.name) + '</span><span class="sr-only">. ' + (s.status === 'done' ? 'Done' : s.status === 'current' ? 'Current step' : 'Not done') + ', ' + srDates + (dr.dropDead ? ', drop-dead ' + fmt(dr.dropDead) : '') + (dr.notBefore ? ', not before ' + fmt(dr.notBefore) : '') + '</span></div>' +
+          '<div class="tl-track" style="width:' + width + 'px" aria-hidden="true">' + grid + markers() + bar + extra + '</div></div>';
+      });
+    });
+    var flags = '<div class="tl-flag today" style="left:' + x(TODAY) + 'px">Today</div>' +
+      '<div class="tl-flag" style="left:' + x(TARGET_CLOSE) + 'px">Target close</div>' +
+      '<div class="tl-flag dropdead" style="left:' + x(DEAL_DROP_DEAD) + 'px">Drop-dead</div>';
+    return '<section class="panel" aria-labelledby="tlTitle"><h2 id="tlTitle">Timeline</h2>' +
+      '<p>A light Gantt view of the same steps. Parallel work shows as overlapping bars. Planned dates and the drop-dead date are examples; the app today stores only the target close.</p>' +
+      '<div class="tl-key">' +
+      '<span><span class="swatch" style="background:var(--positive-fill)"></span> Done</span>' +
+      '<span><span class="swatch" style="background:var(--accent)"></span> Current step</span>' +
+      '<span><span class="swatch" style="background:var(--subtle);border:1px solid var(--stroke-strong)"></span> Not done</span>' +
+      '<span><svg width="14" height="14" aria-hidden="true"><rect x="3" y="3" width="8" height="8" transform="rotate(45 7 7)" fill="var(--negative)"/></svg> Step drop-dead: LOI Review by ' + fmt(DATE_RULES.s48.dropDead) + '</span>' +
+      '<span><svg width="10" height="14" aria-hidden="true"><line x1="5" y1="0" x2="5" y2="14" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="2 2"/></svg> Date gate: Management Meeting not before ' + fmt(DATE_RULES.s44.notBefore) + '</span>' +
+      '</div>' +
+      '<div class="tl-key"><span>Today ' + fmt(TODAY) + '</span><span>Target close ' + fmt(TARGET_CLOSE) + '</span><span><b>Deal drop-dead ' + fmt(DEAL_DROP_DEAD) + '</b>, the outside date in the LOI</span>' + EX + '</div>' +
+      '</section>' +
+      '<div class="tl-scroll" tabindex="0" role="region" aria-label="Timeline chart, scrolls sideways"><div class="tl">' +
+      '<div class="tl-head"><div class="tl-label">Step</div><div class="tl-months" style="width:' + width + 'px">' + months + flags + '</div></div>' +
+      (rows || '<div class="empty-col" style="padding:16px">No steps match this view.</div>') +
+      '</div></div>';
+  }
+
+  function drawLinks() {
+    var svg = $('linksSvg'), board = $('board');
+    if (!svg || !board) return;
+    var br = board.getBoundingClientRect();
+    svg.setAttribute('width', board.scrollWidth);
+    svg.setAttribute('height', board.scrollHeight);
+    var out = '<defs>' +
+      '<marker id="ah-hard" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--negative)"/></marker>' +
+      '<marker id="ah-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--hold)"/></marker></defs>';
+    state.links.forEach(function (l) {
+      var a = $('card-' + l.from), b = $('card-' + l.to);
+      if (!a || !b) return;
+      var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      var color = l.kind === 'hard' ? 'var(--negative)' : 'var(--hold)';
+      var dash = l.kind === 'hard' ? '' : ' stroke-dasharray="6 5"';
+      var marker = l.kind === 'hard' ? 'url(#ah-hard)' : 'url(#ah-soft)';
+      var path;
+      if (Math.abs(ra.left - rb.left) < 4) {
+        var xr = ra.right - br.left;
+        var y1 = ra.top - br.top + ra.height / 2, y2 = rb.top - br.top + rb.height / 2;
+        var bulge = 22 + Math.min(16, Math.abs(y2 - y1) / 20);
+        path = 'M' + xr + ' ' + y1 + ' C' + (xr + bulge) + ' ' + y1 + ' ' + (xr + bulge) + ' ' + y2 + ' ' + (xr + 2) + ' ' + y2;
+      } else {
+        var x1 = ra.right - br.left, yA = ra.top - br.top + ra.height / 2;
+        var x2 = rb.left - br.left - 2, yB = rb.top - br.top + rb.height / 2;
+        var mid = (x1 + x2) / 2;
+        path = 'M' + x1 + ' ' + yA + ' C' + mid + ' ' + yA + ' ' + mid + ' ' + yB + ' ' + x2 + ' ' + yB;
+      }
+      out += '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="2"' + dash + ' marker-end="' + marker + '"/>';
+    });
+    svg.innerHTML = out;
+  }
+
+  function render() {
+    var active = document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-key');
+    document.querySelectorAll('#viewTabs [role="tab"]').forEach(function (t) {
+      var on = t.getAttribute('data-view') === state.view;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+    });
+    $('viewPanel').setAttribute('aria-labelledby', 'tab-' + state.view);
+    $('as-' + state.as).checked = true;
+    $('f-' + state.filter).checked = true;
+    renderProgress();
+    renderStrip();
+    var panel = $('viewPanel');
+    if (state.view === 'timeline') panel.innerHTML = renderTimeline();
+    else panel.innerHTML = renderBoard(state.view === 'dependency');
+    if (state.view === 'dependency') drawLinks();
+    if (state.openStep) renderStepDialog();
+    if (state.trayOpen) renderTray();
+    if (active) {
+      var el = document.querySelector('[data-key="' + active + '"]');
+      if (el) el.focus({ preventScroll: true });
+    }
+  }
+
+  /* ---------- Step dialog ---------- */
+  var lastOpener = null;
+  function openStep(id, opener) {
+    state.openStep = id; state.confirmSoft = null; lastOpener = opener || null;
+    $('scrim').hidden = false; $('stepDialog').hidden = false;
+    renderStepDialog();
+    var first = $('stepDialog').querySelector('.close-x'); if (first) first.focus();
+  }
+  function closeDialogs() {
+    var wasStep = !!state.openStep, wasTray = state.trayOpen;
+    state.openStep = null; state.trayOpen = false; state.confirmSoft = null;
+    $('scrim').hidden = true; $('stepDialog').hidden = true; $('trayDialog').hidden = true;
+    var target = lastOpener && document.querySelector('[data-key="' + lastOpener + '"]');
+    if (!target && wasTray) target = $('trayBtn');
+    if (target) target.focus();
+  }
+  function renderStepDialog() {
+    var s = step(state.openStep);
+    var dlg = $('stepDialog');
+    if (!s) { closeDialogs(); return; }
+    var ph = phaseOf(s.phase);
+    var b = blockers(s);
+    var here = presentOn(s.id);
+    var html = '<div class="dlg-head"><div><div class="dlg-eyebrow">' + esc(ph.name) + '</div><h2 id="stepTitle">' + esc(s.name) + '</h2></div>' +
+      '<button type="button" class="close-x" data-close aria-label="Close">' + ICON_X + '</button></div><div class="dlg-body">';
+    html += '<dl class="kv"><dt>Status</dt><dd>' + statusChip(s) + '</dd>' +
+      '<dt>Owner</dt><dd>' + (s.owner ? esc(PEOPLE[s.owner].name) + ', ' + esc(PEOPLE[s.owner].role.toLowerCase()) : 'Unassigned') + '</dd>' +
+      '<dt>Latest</dt><dd>' + (s.activity ? esc(s.activity) : 'No activity yet') + '</dd>' +
+      (here.length ? '<dt>Now</dt><dd>' + here.map(function (p) { return esc(PEOPLE[p].name) + ' is on this step'; }).join(', ') + ' <span class="ex">Simulated presence</span></dd>' : '') +
+      (s.start ? '<dt>Planned</dt><dd>' + fmt(s.start) + ' to ' + fmt(s.end) + ' <span class="ex">Example, not decided</span></dd>' : '') +
+      '</dl>';
+
+    // Rules
+    var inc = incoming(s.id), outg = outgoing(s.id), dr = DATE_RULES[s.id];
+    if (inc.length || outg.length || dr) {
+      html += '<div class="section"><h3>Rules on this step ' + EX + '</h3><div class="choices">';
+      inc.forEach(function (l) { var up = step(l.from); if (up) html += '<div class="rule">' + (l.kind === 'hard' ? '<span class="chip hard">' + (l.perBuyer ? 'Hard, per buyer' : 'Hard') + '</span>' : '<span class="chip soft">Soft</span>') + 'After ' + esc(up.name) + ' (' + (up.status === 'done' ? 'done' : 'not done') + '). ' + esc(l.why) + '</div>'; });
+      outg.forEach(function (l) { var dn = step(l.to); if (dn) html += '<div class="rule"><span class="chip todo">' + (l.kind === 'hard' ? 'Hard' : 'Soft') + '</span>' + esc(dn.name) + ' waits on this step.</div>'; });
+      if (dr && dr.notBefore) html += '<div class="rule"><span class="chip date">Date gate</span>Not before ' + fmt(dr.notBefore) + ', ' + esc(dr.why) + '.</div>';
+      if (dr && dr.dropDead) html += '<div class="rule"><span class="chip hard">Drop-dead ' + fmt(dr.dropDead) + '</span>' + esc(dr.why) + '</div>';
+      html += '</div></div>';
+    }
+
+    // Per-buyer gate
+    if (s.id === 's42' || s.id === 's43') {
+      html += '<div class="section"><h3>Per buyer: Buyer NDA before Buyer data room access ' + EX + '</h3>' +
+        '<p class="muted">The gate repeats for each buyer. One buyer\'s signed NDA lets that buyer in, and nobody else.</p>' +
+        '<div class="table-scroll"><table><thead><tr><th scope="col">Buyer</th><th scope="col">NDA</th><th scope="col">Data room access</th></tr></thead><tbody>';
+      state.buyers.forEach(function (bu) {
+        var ndaCell = bu.nda ? '<span class="chip done">Signed</span>' :
+          (canRecordBuyers() ? '<button type="button" class="btn" data-nda="' + bu.id + '" data-key="nda-' + bu.id + '">Record NDA signed</button>' : '<span class="chip todo">Not signed</span>');
+        var accCell;
+        if (bu.access) accCell = '<span class="chip done">Has access</span>';
+        else if (!bu.nda) accCell = '<span class="chip hard">Waiting on this buyer\'s NDA</span>';
+        else accCell = canRecordBuyers() ? '<button type="button" class="btn primary" data-access="' + bu.id + '" data-key="acc-' + bu.id + '">Give data room access</button>' : '<span class="chip todo">Ready</span>';
+        html += '<tr><td><b>' + esc(bu.name) + '</b></td><td>' + ndaCell + '</td><td>' + accCell + '</td></tr>';
+      });
+      html += '</tbody></table></div></div>';
+    }
+
+    // Mark done
+    if (s.status !== 'done' && state.as !== 'oc') {
+      html += '<div class="section"><h3>Finish this step</h3>';
+      if (!canMarkDone(s)) {
+        html += '<div class="callout info">Only the owner or Storm Duncan marks this step done. ' + EX + '</div>';
+      } else if (b.hard.length) {
+        html += '<div class="callout block"><div><b>Can\'t be marked done yet.</b> Waiting on ' + b.hard.map(function (l) { return esc(stepName(l.from)); }).join(' and ') + '. This is a hard link.</div>' + EX + '</div>';
+      } else if (b.date) {
+        html += '<div class="callout block"><div><b>Can\'t be marked done before ' + fmt(b.date.notBefore) + '.</b> That is ' + esc(b.date.why) + '.</div>' + EX + '</div>';
+      } else if (state.confirmSoft === s.id) {
+        html += '<div class="callout warn"><div>' + b.soft.map(function (l) { return esc(stepName(l.from)); }).join(' and ') + ' usually comes first and is not done. Mark this step done anyway?</div>' +
+          '<div class="actions"><button type="button" class="btn warn" data-done-force data-key="done-force">Mark done anyway</button><button type="button" class="btn ghost" data-done-cancel data-key="done-cancel">Keep it open</button></div>' + EX + '</div>';
+      } else {
+        html += '<div><button type="button" class="btn primary" data-done data-key="done">Mark ' + esc(s.name) + ' done</button></div>';
+      }
+      html += '</div>';
+    }
+
+    // Change the rail
+    if (isLead() || canPropose()) {
+      var idx = state.steps.indexOf(s);
+      var canEarlier = !(idx === 0 && s.phase === 1), canLater = !(idx === state.steps.length - 1 && s.phase === 5);
+      html += '<form class="section" id="changeForm"><h3>' + (isLead() ? 'Change the rail' : 'Propose a change') + '</h3>' +
+        '<p class="muted">' + (isLead() ? 'This changes the rail for everyone on this deal.' : 'Storm Duncan sees your proposal and chooses. The rail stays as it is until he does.') + '</p>' +
+        '<fieldset style="border:0;padding:0;margin:0" class="choices"><legend class="sr-only">Change</legend>' +
+        '<label class="choice"><input type="radio" name="chg" id="chg-earlier" value="earlier"' + (canEarlier ? '' : ' disabled') + '>Move one place earlier</label>' +
+        '<label class="choice"><input type="radio" name="chg" id="chg-later" value="later"' + (canLater ? '' : ' disabled') + '>Move one place later</label>' +
+        '<label class="choice"><input type="radio" name="chg" id="chg-add" value="add">Add a step after this one</label>' +
+        '<label class="choice"><input type="radio" name="chg" id="chg-remove" value="remove"' + (s.status === 'done' ? ' disabled' : '') + '>Remove this step' + (s.status === 'done' ? ' (done steps stay)' : '') + '</label>' +
+        '</fieldset>' +
+        '<label class="field" id="addNameWrap" hidden><span>New step name</span><input type="text" id="addName" autocomplete="off" placeholder="Quality of Earnings Review"></label>' +
+        (isLead() ? '' : '<label class="field"><span>Why (optional)</span><textarea id="chgNote" rows="2"></textarea></label>') +
+        '<div class="muted" id="chgMsg" aria-live="polite"></div>' +
+        '<div><button type="submit" class="btn primary" id="chgSubmit">' + (isLead() ? 'Apply to this deal' : 'Propose a change') + '</button></div>' +
+        '</form>';
+    }
+    html += '</div><div class="dlg-foot"><button type="button" class="btn" data-close>Close</button><span class="muted">Nothing here is saved. Engineers are wiring this.</span></div>';
+    var keepFocus = document.activeElement && dlg.contains(document.activeElement) ? document.activeElement.id || document.activeElement.getAttribute('data-key') : null;
+    var formVals = captureForm(dlg);
+    dlg.innerHTML = html;
+    restoreForm(dlg, formVals);
+    if (keepFocus) { var el = document.getElementById(keepFocus) || dlg.querySelector('[data-key="' + keepFocus + '"]'); if (el) el.focus(); }
+  }
+  function captureForm(root) {
+    var v = {}; root.querySelectorAll('input[id], textarea[id]').forEach(function (i) { v[i.id] = i.type === 'radio' ? i.checked : i.value; }); return v;
+  }
+  function restoreForm(root, v) {
+    Object.keys(v).forEach(function (id) { var i = root.querySelector('#' + id); if (!i) return; if (i.type === 'radio') i.checked = v[id]; else i.value = v[id]; });
+    var add = root.querySelector('#chg-add'), w = root.querySelector('#addNameWrap');
+    if (add && w) w.hidden = !add.checked;
+  }
+
+  /* ---------- Tray ---------- */
+  function openTray() {
+    state.trayOpen = true; lastOpener = null;
+    $('scrim').hidden = false; $('trayDialog').hidden = false;
+    renderTray();
+    var first = $('trayDialog').querySelector('.close-x'); if (first) first.focus();
+  }
+  function renderTray() {
+    var dlg = $('trayDialog');
+    var pending = state.proposals.filter(function (p) { return p.status === 'pending'; });
+    var decided = state.proposals.filter(function (p) { return p.status !== 'pending'; });
+    var lead = isLead();
+    var html = '<div class="dlg-head"><div><div class="dlg-eyebrow">Project Summit</div><h2 id="trayTitle">Proposed changes</h2></div><button type="button" class="close-x" data-close aria-label="Close">' + ICON_X + '</button></div><div class="dlg-body">';
+    html += lead ? '<div class="tray-lede"><b>Your rail stays as it is until you choose.</b> Accepting a change applies it for everyone on this deal.</div>'
+                 : '<div class="tray-lede">Storm Duncan reviews these. The rail stays as it is until he chooses.</div>';
+    html += '<div>' + EX + '</div>';
+    if (!pending.length) html += '<p class="muted">Nothing waiting.</p>';
+    pending.forEach(function (p) {
+      var ok = stillApplies(p.change);
+      html += '<article class="prop"><div class="prop-who">' + avatar(p.by) + '<span><b>' + esc(PEOPLE[p.by].name) + '</b> proposed · ' + esc(p.at) + '</span></div>' +
+        '<div class="prop-what">' + esc(describe(p.change)) + '</div>' +
+        (p.note ? '<div class="prop-note">' + esc(p.note) + '</div>' : '') +
+        (ok ? '' : '<div class="prop-status">The rail changed since this was sent. It no longer applies.</div>') +
+        (lead ? '<div class="form-row"><button type="button" class="btn primary" data-accept="' + p.id + '" data-key="accept-' + p.id + '"' + (ok ? '' : ' disabled') + '>Accept</button><button type="button" class="btn" data-decline="' + p.id + '" data-key="decline-' + p.id + '">Decline</button></div>'
+              : '<div class="prop-status">Waiting for Storm Duncan</div>') +
+        '</article>';
+    });
+    if (decided.length) {
+      html += '<h3 style="margin:4px 0 0;font-size:var(--t-md)">Decided</h3>';
+      decided.forEach(function (p) {
+        var word = p.status === 'accepted' ? 'Accepted by Storm Duncan' : p.status === 'declined' ? 'Declined by Storm Duncan' : 'No longer applies';
+        html += '<article class="prop"><div class="prop-who">' + avatar(p.by) + '<span>' + esc(PEOPLE[p.by].name) + '</span></div><div class="prop-what">' + esc(describe(p.change)) + '</div><div class="prop-status">' + word + ' · just now. Whether this goes to the compliance record is ' + 'not decided.</div></article>';
+      });
+    }
+    html += '</div><div class="dlg-foot"><button type="button" class="btn" data-close>Close</button><span class="muted">Not saved yet. Engineers are wiring this.</span></div>';
+    dlg.innerHTML = html;
+  }
+
+  /* ---------- Toasts ---------- */
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = '<span class="dot" aria-hidden="true"></span><span>' + esc(msg) + '</span>';
+    $('toasts').appendChild(t);
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 4200);
+  }
+
+  /* ---------- Events ---------- */
+  $('viewTabs').addEventListener('click', function (e) {
+    var t = e.target.closest('[data-view]'); if (!t) return;
+    setView(t.getAttribute('data-view'));
+  });
+  $('viewTabs').addEventListener('keydown', function (e) {
+    var order = ['sequential', 'dependency', 'timeline'];
+    var i = order.indexOf(state.view), n = null;
+    if (e.key === 'ArrowRight') n = order[(i + 1) % 3];
+    else if (e.key === 'ArrowLeft') n = order[(i + 2) % 3];
+    else if (e.key === 'Home') n = order[0];
+    else if (e.key === 'End') n = order[2];
+    if (n) { e.preventDefault(); setView(n); $('tab-' + n).focus(); }
+  });
+  function setView(v) {
+    state.view = v;
+    try { history.replaceState(null, '', '#' + v); } catch (err) { /* file or sandboxed frame */ }
+    render();
+  }
+  $('asGroup').addEventListener('change', function (e) { if (e.target.name === 'as') { state.as = e.target.value; if (state.filter === 'mine' && state.as === 'oc') state.filter = 'all'; render(); } });
+  $('filterGroup').addEventListener('change', function (e) { if (e.target.name === 'filter') { state.filter = e.target.value; render(); } });
+  $('trayBtn').addEventListener('click', openTray);
+  $('resetBtn').addEventListener('click', function () { state = freshState(state); render(); toast('Prototype reset to the starting example.'); });
+  $('scrim').addEventListener('click', closeDialogs);
+
+  $('viewPanel').addEventListener('click', function (e) {
+    var c = e.target.closest('[data-step]');
+    if (c) { openStep(c.getAttribute('data-step'), c.getAttribute('data-key')); return; }
+    var col = e.target.closest('[data-collapse]');
+    if (col) { var n = col.getAttribute('data-collapse'); state.collapsed[n] = !state.collapsed[n]; render(); return; }
+    var ul = e.target.closest('[data-unlink]');
+    if (ul) { var l = state.links[+ul.getAttribute('data-unlink')]; commitChange({ type: 'unlink', from: l.from, to: l.to }); render(); return; }
+    var pul = e.target.closest('[data-propose-unlink]');
+    if (pul) { var l2 = state.links[+pul.getAttribute('data-propose-unlink')]; commitChange({ type: 'unlink', from: l2.from, to: l2.to }); render(); return; }
+  });
+  $('viewPanel').addEventListener('submit', function (e) {
+    if (e.target.id !== 'linkForm') return;
+    e.preventDefault();
+    var from = $('lf-from').value, to = $('lf-to').value, kind = $('lf-kind').value;
+    var msg = $('lf-msg');
+    if (from === to) { msg.textContent = 'Choose two different steps.'; return; }
+    if (findLink(from, to)) { msg.textContent = 'That link already exists.'; return; }
+    if (findLink(to, from)) { msg.textContent = 'The opposite link already exists. A step cannot wait on a step that waits on it.'; return; }
+    commitChange({ type: 'link', from: from, to: to, kind: kind });
+    render();
+  });
+
+  $('stepDialog').addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) { closeDialogs(); return; }
+    var s = step(state.openStep); if (!s) return;
+    if (e.target.closest('[data-done]')) { markDone(s, false); render(); focusIn('stepDialog', state.confirmSoft ? 'done-force' : null); return; }
+    if (e.target.closest('[data-done-force]')) { markDone(s, true); render(); focusIn('stepDialog', null); return; }
+    if (e.target.closest('[data-done-cancel]')) { state.confirmSoft = null; render(); focusIn('stepDialog', 'done'); return; }
+    var nda = e.target.closest('[data-nda]');
+    if (nda) { var b = state.buyers.find(function (x) { return x.id === nda.getAttribute('data-nda'); }); b.nda = true; toast('NDA recorded as signed by ' + b.name + '. ' + b.name + ' can now be given data room access.'); render(); focusIn('stepDialog', 'acc-' + b.id); return; }
+    var acc = e.target.closest('[data-access]');
+    if (acc) { var b2 = state.buyers.find(function (x) { return x.id === acc.getAttribute('data-access'); }); b2.access = true; toast('Data room access given to ' + b2.name + ' by ' + me().name + '.'); render(); focusIn('stepDialog', null); return; }
+  });
+  $('stepDialog').addEventListener('change', function (e) {
+    if (e.target.name === 'chg') { var w = $('addNameWrap'); if (w) w.hidden = e.target.value !== 'add'; }
+  });
+  $('stepDialog').addEventListener('submit', function (e) {
+    if (e.target.id !== 'changeForm') return;
+    e.preventDefault();
+    var s = step(state.openStep); if (!s) return;
+    var picked = e.target.querySelector('input[name="chg"]:checked');
+    var msg = $('chgMsg');
+    if (!picked) { msg.textContent = 'Choose a change first.'; return; }
+    var note = $('chgNote') ? $('chgNote').value.trim() : '';
+    var c;
+    if (picked.value === 'earlier') c = { type: 'move', stepId: s.id, dir: -1 };
+    else if (picked.value === 'later') c = { type: 'move', stepId: s.id, dir: 1 };
+    else if (picked.value === 'remove') c = { type: 'remove', stepId: s.id };
+    else {
+      var name = $('addName').value.trim();
+      if (!name) { msg.textContent = 'Name the new step.'; $('addName').focus(); return; }
+      c = { type: 'add', afterId: s.id, name: name };
+    }
+    var removing = c.type === 'remove' && isLead();
+    commitChange(c, note);
+    if (removing) { lastOpener = null; closeDialogs(); render(); return; }
+    var openerKey = lastOpener;
+    closeDialogs();
+    render();
+    var back = openerKey && document.querySelector('[data-key="' + openerKey + '"]');
+    if (back) back.focus();
+  });
+  function focusIn(dlgId, key) {
+    var dlg = $(dlgId);
+    var el = key ? dlg.querySelector('[data-key="' + key + '"]') : null;
+    (el || dlg.querySelector('.close-x')).focus();
+  }
+
+  $('trayDialog').addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) { closeDialogs(); return; }
+    var a = e.target.closest('[data-accept]');
+    if (a) { decide(a.getAttribute('data-accept'), true); render(); focusIn('trayDialog', null); return; }
+    var dcl = e.target.closest('[data-decline]');
+    if (dcl) { decide(dcl.getAttribute('data-decline'), false); render(); focusIn('trayDialog', null); return; }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    var open = !$('stepDialog').hidden ? $('stepDialog') : (!$('trayDialog').hidden ? $('trayDialog') : null);
+    if (!open) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeDialogs(); return; }
+    if (e.key === 'Tab') {
+      var f = Array.prototype.filter.call(open.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'), function (el) { return !el.disabled && !el.closest('[hidden]') && el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { if (state.view === 'dependency') drawLinks(); }, 80); });
+
+  // Simulated presence: Alex moves between Teaser and the CIM.
+  setInterval(function () {
+    if (state.openStep || state.trayOpen) return;
+    var alexOn = state.presence.ac;
+    var next = alexOn === 's36' ? 's37' : 's36';
+    if (step(next)) { state.presence.ac = next; render(); }
+  }, 12000);
+
+  var h = (location.hash || '').replace('#', '');
+  if (h === 'sequential' || h === 'dependency' || h === 'timeline') state.view = h;
+  render();
+})();
+</script>

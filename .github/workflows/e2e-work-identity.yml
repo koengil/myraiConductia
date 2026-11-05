@@ -1,0 +1,213 @@
+name: E2E work identity (Microsoft journey)
+
+# The banker work-identity journey (issue #316) as Microsoft, on its own local
+# stack: the REAL azure provider in Supabase Auth with `url` pointed at the
+# Azure-shaped mock issuer (e2e/support/mockOidc.ts), the hook claim, the
+# member-only binding, and the recheck on refresh. Then the broker contract
+# suite (tests/integration/work-identity-broker.test.ts) against the same stack.
+#
+# Advisory, never a required check or a verify worker, like e2e_gmail. ci.yml
+# job e2e_work_identity calls it on a push to develop and on a pull request that
+# touches the work-identity paths (the `changes` job decides).
+#
+# Provider input. `azure` (default) is the real provider. `keycloak` is the
+# fallback if the real provider refuses the mock issuer: keycloak stands in for
+# azure with the same Azure-shaped claims. The caller reads the repository
+# variable WORK_IDENTITY_E2E_PROVIDER, so the fallback is selectable without a
+# code change; by hand, pick it when dispatching. The job log names the one
+# that ran: "azure provider" or "keycloak fallback".
+on:
+  workflow_call:
+    inputs:
+      provider:
+        description: 'azure (the real provider against the mock) or keycloak (fallback)'
+        type: string
+        default: azure
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: 'azure (the real provider against the mock) or keycloak (fallback)'
+        type: choice
+        options:
+          - azure
+          - keycloak
+        default: azure
+
+permissions:
+  contents: read
+
+jobs:
+  journey:
+    name: Microsoft work-identity journey
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_HEAVY || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      PROVIDER: ${{ inputs.provider || 'azure' }}
+      # The tenant the seeded firm is mapped to, and the tenant segment of the
+      # mock's authority URL. The spec's built-in test GUID, lower case.
+      TENANT: 5b0a8d5e-3c1f-4f6e-9a7d-2e4c6b8a1f30
+      MOCK_OIDC_PORT: '56430'
+
+    steps:
+      - name: Choose the provider
+        run: |
+          case "$PROVIDER" in
+            azure)    echo "Work-identity journey: azure provider (the real provider against the mock issuer)" ;;
+            keycloak) echo "Work-identity journey: keycloak fallback (keycloak stands in for azure)" ;;
+            *)
+              echo "::error::provider must be azure or keycloak, not '$PROVIDER'."
+              exit 1
+              ;;
+          esac
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          # The same pin as the integration and E2E jobs.
+          version: 2.116.0
+
+      # supabase/config.toml ships both mock providers disabled and cannot take
+      # a boolean from env(), so this edits the checkout (ephemeral) before the
+      # stack starts. The custom access token hook is already enabled there.
+      - name: Enable the mock provider in this checkout's Supabase config
+        run: scripts/ci/enable-work-identity-broker.sh "$PROVIDER"
+
+      - name: Start local Supabase and apply migrations
+        run: |
+          # As in the E2E job: no `supabase init --force` (the tracked config is
+          # what the suites depend on), Storage kept, the registry fallback
+          # restored after setup-cli, and no `db reset` after a first start.
+          unset SUPABASE_INTERNAL_IMAGE_REGISTRY
+          supabase start --exclude studio,postgres-meta,edge-runtime,realtime,logflare,vector
+        env:
+          # Read by the env() references in config.toml. Literal test values for a
+          # mock issuer that checks nothing: no secret is involved.
+          WORK_IDENTITY_MOCK_AZURE_URL: http://host.docker.internal:56430/${{ env.TENANT }}
+          WORK_IDENTITY_MOCK_AZURE_SECRET: e2e-mock-azure-secret
+          WORK_IDENTITY_MOCK_OIDC_URL: http://host.docker.internal:56430/realms/x
+          WORK_IDENTITY_MOCK_OIDC_SECRET: e2e-mock-oidc-secret
+
+      # Playwright's webServer builds the app under the hermetic environment.
+      # Restore only: the hermetic E2E job on develop saves this cache.
+      - name: Restore the hermetic Next.js build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .next/cache
+          key: next-hermetic-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            next-hermetic-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - name: Seed, run the broker contract suite, then the Microsoft journey
+        run: |
+          set -euo pipefail
+          command -v psql || { sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client; }
+          eval "$(supabase status -o env)"
+          export NEXT_PUBLIC_SUPABASE_URL="$API_URL"
+          export NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY"
+          export SUPABASE_SECRET_KEY="$SERVICE_ROLE_KEY"
+          export DATABASE_URL="$DB_URL"
+
+          # The Azure-shaped mock issuer, on 0.0.0.0 so the Auth container reaches
+          # it as host.docker.internal. The broker suite reuses it when it is up.
+          node --import tsx e2e/support/mockOidc.ts > "$RUNNER_TEMP/mock-oidc.log" 2>&1 &
+          MOCK_PID=$!
+          trap 'kill "$MOCK_PID" 2>/dev/null || true' EXIT
+          for _ in $(seq 1 30); do
+            curl -fsS "http://127.0.0.1:${MOCK_OIDC_PORT}/${TENANT}/v2.0/.well-known/openid-configuration" >/dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -fsS "http://127.0.0.1:${MOCK_OIDC_PORT}/${TENANT}/v2.0/.well-known/openid-configuration" >/dev/null \
+            || { echo "::error::The mock issuer did not start."; cat "$RUNNER_TEMP/mock-oidc.log"; exit 1; }
+
+          # Diagnostic only: can the Auth container see the mock? The image may lack
+          # wget, so a warning is a hint, not proof; an authorize error below is the proof.
+          AUTH_CONTAINER="$(docker ps --format '{{.Names}}' | grep -m1 '^supabase_auth_' || true)"
+          if [ -n "$AUTH_CONTAINER" ]; then
+            docker exec "$AUTH_CONTAINER" wget -q -O /dev/null \
+              "http://host.docker.internal:${MOCK_OIDC_PORT}/${TENANT}/v2.0/.well-known/openid-configuration" \
+              && echo "The Auth container reaches the mock issuer." \
+              || echo "::warning::Could not confirm that the Auth container reaches the mock issuer through host.docker.internal."
+          fi
+
+          node --import tsx scripts/seed-flags.ts
+          node --import tsx scripts/enable-flags.ts
+          node --import tsx scripts/seed-users.ts
+
+          # Broker contract suite (keycloak mock provider, alias row for google).
+          npm run test:integration -- tests/integration/work-identity-broker.test.ts
+
+          # Map the seeded firm to the provider under test. The MD is its director.
+          MD_EMAIL='md.intelibank@dev.com'
+          ACTOR_ID="$(psql "$DB_URL" -Atc "select id from public.users where email = '${MD_EMAIL}'")"
+          COMPANY_ID="$(psql "$DB_URL" -Atc "select company_id from public.users where email = '${MD_EMAIL}'")"
+          test -n "$ACTOR_ID" && test -n "$COMPANY_ID" || { echo "::error::The seeded MD or the bank company is missing."; exit 1; }
+          if [ "$PROVIDER" = keycloak ]; then
+            # The fallback: the app brokers azure through keycloak, so the alias row
+            # exists and the app is built with the substitution on.
+            psql "$DB_URL" -v ON_ERROR_STOP=1 -c "insert into public.work_identity_broker_aliases (provider, broker_provider) values ('azure', 'keycloak') on conflict (provider) do update set broker_provider = excluded.broker_provider"
+            export WORK_IDENTITY_TEST_BROKER_PROVIDER=keycloak
+            echo "Journey provider: keycloak fallback"
+          else
+            # The real provider: no substitution, no alias row.
+            unset WORK_IDENTITY_TEST_BROKER_PROVIDER
+            echo "Journey provider: azure provider"
+          fi
+          ACTOR_ID="$ACTOR_ID" COMPANY_ID="$COMPANY_ID" PROVIDER="azure" ORGANIZATION_ID="$TENANT" \
+            node --import tsx scripts/set-firm-identity-provider.ts
+
+          # Only the hermetic project and only this spec; the project's setup and
+          # cleanup projects run around it.
+          npx playwright test --project=hermetic e2e/journeys/work-identity-onboarding.spec.ts
+        env:
+          E2E_WORK_IDENTITY: '1'
+          E2E_WORK_IDENTITY_PROVIDER: azure
+          E2E_WORK_IDENTITY_ORG: ${{ env.TENANT }}
+          # The journey starts the Auth round trip at the mock; the same tenant segment.
+          WORK_IDENTITY_MOCK_AZURE_URL: http://host.docker.internal:56430/${{ env.TENANT }}
+          WORK_IDENTITY_MOCK_AZURE_SECRET: e2e-mock-azure-secret
+          WORK_IDENTITY_MOCK_OIDC_URL: http://host.docker.internal:56430/realms/x
+          WORK_IDENTITY_MOCK_OIDC_SECRET: e2e-mock-oidc-secret
+          NEXT_PUBLIC_APP_ENV: dev
+          SEED_PASSWORD: e2e-ci-password
+          INVITE_VERIFICATION_PEPPER: e2e-ci-pepper
+          NEXT_TELEMETRY_DISABLED: 1
+
+      # Best-effort context for a failure, never a failure of its own.
+      - name: Auth container log
+        if: failure()
+        continue-on-error: true
+        run: |
+          for name in $(docker ps -a --format '{{.Names}}' | grep '^supabase_auth_' || true); do
+            echo "::group::$name"
+            docker logs --tail 200 "$name" 2>&1 || true
+            echo '::endgroup::'
+          done
+
+      - name: Upload the report and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-work-identity-report
+          path: |
+            playwright-report/
+            e2e-results.json
+            test-results/
+          retention-days: 7

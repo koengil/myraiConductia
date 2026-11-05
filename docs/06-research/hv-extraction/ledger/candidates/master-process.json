@@ -1,0 +1,2161 @@
+{
+ "source": "master-process-v2",
+ "phases": [
+  {
+   "num": 1,
+   "name": "Origination, Qualification & Mandate",
+   "sourceRef": "master-process-v2 five-phases list"
+  },
+  {
+   "num": 2,
+   "name": "Preparation & Market Readiness",
+   "sourceRef": "master-process-v2 five-phases list"
+  },
+  {
+   "num": 3,
+   "name": "Marketing & First-Round Bids",
+   "sourceRef": "master-process-v2 five-phases list"
+  },
+  {
+   "num": 4,
+   "name": "Diligence, LOI & Definitive Docs",
+   "sourceRef": "master-process-v2 five-phases list"
+  },
+  {
+   "num": 5,
+   "name": "Signing, Closing & Post-Close",
+   "sourceRef": "master-process-v2 five-phases list"
+  }
+ ],
+ "horizontalApps": [
+  {
+   "name": "External-Send QC",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 1,
+   "what": "Final gate on every external artifact: recipients, attachments, code names, metadata, Reg FD / FINRA 2210",
+   "priorityBuild": true,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Pipeline CRM",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 3,
+   "what": "Single firm-wide funnel (live lead \u2192 won/lost/hold/terminated/died) \u2014 moved here (firm-wide, not one stage)",
+   "priorityBuild": true,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Work-Check",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 4,
+   "what": "Checks every agent output before a senior banker sees it (consistency, citations, numbers, code-name map)",
+   "priorityBuild": true,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Sector Intelligence",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 6,
+   "what": "Maintains comps, precedents, market maps, competitive quadrants; monthly refresh",
+   "priorityBuild": true,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Multi-Model Verification",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 7,
+   "what": "2+ independent models cross-check consequential outputs; discrepancies escalate",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Expert Panel Review",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 8,
+   "what": "Static + deal-specific panels red-team consequential work product",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Continuous Learning / Skill Optimization",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 10,
+   "what": "Captures deal patterns/edits; proposes prompt & template improvements",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Deal Workflow Coordinator",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 11,
+   "what": "Routes tasks, holds deal-state, monitors SLA, aggregates dashboard",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Document Retention + Permission Cross-Check",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 12,
+   "what": "Retention/permission tagging; dual-control deletions (FINRA 4511 / SEC 17a-3/4)",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "License / U4 / CE Compliance Tracker",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 13,
+   "what": "Tracks each banker's FINRA license, U4, CE; alerts the bank's (Chief Compliance Officer/CCO)",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "MD-Style Review",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 14,
+   "what": "Applies the named MD's approved voice before MD review",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Knowledge Graph / Relationship Strength",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 15,
+   "what": "Who-knows-whom graph, scored; warm-path discovery",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Negotiation Copilot",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 16,
+   "what": "Counter-positions + precedent for ELs, NDAs, LOIs, definitive terms",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Workflow Monitoring",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 17,
+   "what": "Opt-in; surfaces repetitive patterns as new agent candidates",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "File Storage Reorganization",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 18,
+   "what": "Reorganizes SharePoint/Drive with permissions preserved",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Fee Structure Pool",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 21,
+   "what": "Anonymized cross-firm fee benchmarks \u2014 platform only",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Enterprise Search",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 23,
+   "what": "Permission-aware search and Q&A across the firm's documents, emails, and deal records; every query respects deal walls and is logged",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Model Optimization",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 24,
+   "what": "Routes each task to the most cost-effective model that clears the quality bar; tracks AI spend by user, deal, and task",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Data Room Hosting",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 25,
+   "what": "Hosted, permissioned data-room layer (Box) with tagging, staged access, and AI-readable APIs, sitting above SharePoint",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Communication Checking",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 26,
+   "what": "Communications compliance layer (Global Relay / Smarsh): capture, archiving, and surveillance of business communications",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  },
+  {
+   "name": "Staffing",
+   "buildOwner": "futureproofing-os",
+   "osBuildNum": 27,
+   "what": "Assigns bankers and agents to mandates and tracks deal-team capacity across live deals",
+   "priorityBuild": false,
+   "sourceRef": "master-process-v2 Part 1"
+  }
+ ],
+ "steps": [
+  {
+   "seq": 1,
+   "phase": 1,
+   "name": "Target Universe",
+   "description": "Defines priority sectors/targets, exit triggers, buyer themes",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 13,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 1"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 2,
+   "phase": 1,
+   "name": "Exit Readiness",
+   "description": "Scores which companies are most likely to sell, and when",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 14,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 2"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 3,
+   "phase": 1,
+   "name": "Acquirer Strategy",
+   "description": "Identifies likely buyers and likely targets per buyer",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 15,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 3"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 4,
+   "phase": 1,
+   "name": "Lead Registration",
+   "description": "Registers every lead \\<24h with source, type, size, owner",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 2,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 4"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 5,
+   "phase": 1,
+   "name": "Source Intelligence",
+   "description": "Captures referrer/supporter intel: goals, criteria, competing banks",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 2,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 5"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 6,
+   "phase": 1,
+   "name": "Conflicts Checklist",
+   "description": "Conflicts / restricted-list / prior-engagement check before private info",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 9,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 6"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 7,
+   "phase": 1,
+   "name": "Codename / Deal Shell",
+   "description": "Assigns code name, deal shell, access list, confidentiality",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 5,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 7"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 8,
+   "phase": 1,
+   "name": "Relationship Pathing",
+   "description": "Maps decision-makers, board/investors, warm paths, introducers",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 1,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 8"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 9,
+   "phase": 1,
+   "name": "MD Briefing + Company Backgrounding",
+   "description": "One doc: MD brief + sourced company profile + relevant case studies",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 3,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 9"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 10,
+   "phase": 1,
+   "name": "Meeting Intelligence",
+   "description": "AI-notes consent; structured capture of first calls",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 16,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 10"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 11,
+   "phase": 1,
+   "name": "Deal Qualification",
+   "description": "Scores mandate fit (fee, likelihood, fit, conflicts) \u2192 go/no-go",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 17,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 11"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 12,
+   "phase": 1,
+   "name": "Client NDA Workflow",
+   "description": "Prepares/tracks client NDA before requesting private documents",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 5,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 12"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 13,
+   "phase": 1,
+   "name": "Initial Diligence Request List",
+   "description": "Drafts first diligence request list post-NDA, from sector templates",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 6,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 13"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 14,
+   "phase": 1,
+   "name": "Outreach Strategy",
+   "description": "Per-person approach: narrative, angle, objections, sequence",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 4,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 14"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 15,
+   "phase": 1,
+   "name": "Strategy / SWOT",
+   "description": "SWOT, strategic alternatives, why-sell-now, valuation drivers",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 20,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 15"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 16,
+   "phase": 1,
+   "name": "Stakeholder Psychology",
+   "description": "Maps each stakeholder's decision style, anxieties, objections",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 21,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 16"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 17,
+   "phase": 1,
+   "name": "Buyer Universe",
+   "description": "Strategic + sponsor universe: rationale, ability/likelihood to pay; universe drafted here, approved buyer list finalized during Phase 2 preparation",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 9,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 17"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 18,
+   "phase": 1,
+   "name": "Case Study Library",
+   "description": "Surfaces 3\u20135 most-relevant prior deals for the pitch (spans pipeline \u2192 pitch prep)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 11,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 18"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 19,
+   "phase": 1,
+   "name": "Engagement Economics",
+   "description": "Fee structure, retainer, success fee, tail vs. precedent",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 18,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 19"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 20,
+   "phase": 1,
+   "name": "Engagement Letter Strategy",
+   "description": "Drafts Engagement Letter (EL) structure and key provisions (internal strategy)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 19,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 20"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 21,
+   "phase": 1,
+   "name": "Pitchbook Drafting",
+   "description": "Pitch deck in firm template + league-table rankings + case studies",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 22,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 21"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 22,
+   "phase": 1,
+   "name": "Pitch Page QC",
+   "description": "Page-by-page QC: point, story, sources, numbers, formatting",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 7,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 22"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 23,
+   "phase": 1,
+   "name": "Pitch Rehearsal",
+   "description": "Roles, page owners, likely objections, Q&A, dry-run",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 23,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 23"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 24,
+   "phase": 1,
+   "name": "Pitch Follow-Up",
+   "description": "Debrief, stakeholder follow-ups, promised deliverables",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 24,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 24"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 25,
+   "phase": 1,
+   "name": "Engagement Negotiation",
+   "description": "Sends/negotiates EL, redlines, tracks signature",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 25,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 25"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 26,
+   "phase": 2,
+   "name": "Mandate Activation Checklist",
+   "description": "Converts prospect \u2192 mandate: conflicts, EL, W9, team, permissions",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 19,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 26"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 27,
+   "phase": 2,
+   "name": "Win/Loss Debrief",
+   "description": "Mandatory debrief on every pitch outcome (won or lost)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 26,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 27"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 28,
+   "phase": 2,
+   "name": "Kickoff / Org Meeting",
+   "description": "Org meeting \u2192 initial WGL, milestones, roles, cadence",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 27,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 28"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 29,
+   "phase": 2,
+   "name": "Timeline",
+   "description": "Builds + tracks the transaction timeline vs. baseline",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 28,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 29"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 30,
+   "phase": 2,
+   "name": "WGL",
+   "description": "Working Group List, buyer-segregated visibility",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 29,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 30"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 31,
+   "phase": 2,
+   "name": "VDR Setup",
+   "description": "Data-room architecture, permissions, clean-team folders",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 30,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 31"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 32,
+   "phase": 2,
+   "name": "Document Intake / Metadata",
+   "description": "Folder/naming/metadata hygiene, draft/final tagging",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 20,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 32"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 33,
+   "phase": 2,
+   "name": "Data Room Diligence",
+   "description": "Reviews data room for gaps, risks, MNPI (material non-public information), red flags",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 31,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 33"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 34,
+   "phase": 2,
+   "name": "Financial Normalization",
+   "description": "Normalizes financials, ARR bridge, EBITDA, add-backs",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 32,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 34"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 35,
+   "phase": 2,
+   "name": "Deal Pulse Checklist",
+   "description": "Daily/weekly pulse: overdue items, priorities, blockers, risk-to-signing; produces the recurring weekly client update",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 10,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 35"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 36,
+   "phase": 2,
+   "name": "Teaser",
+   "description": "Anonymized teaser / blind profile",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 33,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 36"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 37,
+   "phase": 2,
+   "name": "CIM / Management Presentation",
+   "description": "Confidential Information Memorandum (CIM) / management presentation from approved data",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 34,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 37"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 38,
+   "phase": 2,
+   "name": "FAQ&A",
+   "description": "Anticipated buyer FAQ&A, continuously updated",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 8,
+   "osBuildNum": null,
+   "priorityBuild": true,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 38"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 39,
+   "phase": 3,
+   "name": "Outreach Sequencing",
+   "description": "Segments buyers into waves; owners, scripts, cadence",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 35,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 39"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 40,
+   "phase": 3,
+   "name": "Buyer Synergies Model + Valuation",
+   "description": "Per-buyer synergies + accretion/dilution + ability/willingness to pay",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 36,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 40"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 41,
+   "phase": 3,
+   "name": "Buyer Log / Feedback",
+   "description": "Logs every buyer touch + pass reasons into CRM; feedback loop",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 37,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 41"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 42,
+   "phase": 3,
+   "name": "Buyer NDA",
+   "description": "Tracks buyer NDA status, redlines, VDR-access readiness",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 38,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 42"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 43,
+   "phase": 3,
+   "name": "Buyer VDR Access",
+   "description": "Staged VDR access, watermarking, logs \u2014 platform only",
+   "layer": "horizontal",
+   "buildOwner": "futureproofing-os",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": null,
+   "osBuildNum": 22,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 43"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 44,
+   "phase": 3,
+   "name": "Management Meeting",
+   "description": "Buyer-specific decks, coaching, post-meeting summaries",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 39,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 44"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 45,
+   "phase": 3,
+   "name": "Buyer Q&A",
+   "description": "Manages buyer questions, sourced answers, FAQ updates",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 40,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 45"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 46,
+   "phase": 4,
+   "name": "LOI / Process Letter",
+   "description": "Process letters / LOI forms, bid instructions, deadlines",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 41,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 46"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 47,
+   "phase": 4,
+   "name": "Bid Comparison",
+   "description": "Compares IOIs (first-round offers)/bids on price, structure, certainty, fit",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 42,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 47"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 48,
+   "phase": 4,
+   "name": "LOI Review",
+   "description": "LOI/exclusivity issues, negotiation points, decision memo",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 43,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 48"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 49,
+   "phase": 4,
+   "name": "Merger Agreement Distribution",
+   "description": "Distributes form agreement; tracks comments/issues",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 44,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 49"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 50,
+   "phase": 4,
+   "name": "Definitive Agreement Support",
+   "description": "Confirmatory diligence, disclosure schedules, closing conditions; includes board approval of the transaction (pre-signing)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 45,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 50"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 51,
+   "phase": 5,
+   "name": "Signing / Announcement Prep",
+   "description": "Signing checklist, announcement + press/tombstone drafts",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 46,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 51"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 52,
+   "phase": 5,
+   "name": "Announcement",
+   "description": "Coordinates release timing, materials, approvals",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 47,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 52"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 53,
+   "phase": 5,
+   "name": "LinkedIn Post",
+   "description": "Pre-staged deal post, released at announcement timestamp",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 48,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 53"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 54,
+   "phase": 5,
+   "name": "Email Blast",
+   "description": "Pre-staged announcement email to firm/relationships/prospects",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 49,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 54"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 55,
+   "phase": 5,
+   "name": "League Table Submission",
+   "description": "Submits the deal to every league-table/aggregator on announcement; monitors post-close correction cycles",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 12,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 55"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 56,
+   "phase": 5,
+   "name": "Regulatory Approval Tracker",
+   "description": "Tracks HSR/antitrust, consents, deadlines (runs signing \u2192 closing)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 50,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 56"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 57,
+   "phase": 5,
+   "name": "Closing Checklist",
+   "description": "Closing deliverables, funds flow, wires, signatures (anti-fraud checks)",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 51,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 57"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 58,
+   "phase": 5,
+   "name": "Fee Realization / Invoice",
+   "description": "Calculates fee, generates invoice, attaches EL, drafts client email",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 52,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 58"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 59,
+   "phase": 5,
+   "name": "Closing Compliance Checklist / Binder",
+   "description": "Compiles the closing binder + compliance evidence package",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 53,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 59"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 60,
+   "phase": 5,
+   "name": "Post-Close Fee Monitor",
+   "description": "Tracks earnouts, escrow releases, milestone/contingent fees",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 54,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 60"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 61,
+   "phase": 5,
+   "name": "Relationship Follow-Up (closing dinner)",
+   "description": "Closing dinner, thank-yous, references, referral asks",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 55,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 61"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 62,
+   "phase": 5,
+   "name": "Transaction Marketing / Asset Library",
+   "description": "Tombstone, website, reusable materials harvesting",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 56,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 62"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 63,
+   "phase": 5,
+   "name": "Earned / Paid Publication",
+   "description": "Earned-media/byline within 48h of announcement",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 57,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 63"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 64,
+   "phase": 5,
+   "name": "Deal Learning / Post-Mortem",
+   "description": "Debrief \u2192 updates skills, buyer scores, playbooks",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 58,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 64"
+   ],
+   "confidence": "high"
+  },
+  {
+   "seq": 65,
+   "phase": 5,
+   "name": "Tail Rights & Termination Monitor",
+   "description": "Tracks tail period, fee triggers, termination; updates funnel",
+   "layer": "vertical",
+   "buildOwner": "rts",
+   "executor": null,
+   "executionClass": "unknown",
+   "rtsBuildNum": 59,
+   "osBuildNum": null,
+   "priorityBuild": false,
+   "io": {
+    "inputs": [],
+    "transformation": "",
+    "outputs": [],
+    "constraints": []
+   },
+   "tools": [],
+   "roles": [],
+   "approval": null,
+   "compliance": [],
+   "skippable": null,
+   "editableAfterComplete": null,
+   "versionedOutputs": [],
+   "sourceRefs": [
+    "master-process-v2 Part 2 Seq 65"
+   ],
+   "confidence": "high"
+  }
+ ],
+ "conflicts": [
+  "'~82 steps' (call notes / Storm framing) vs Master Process v2 'Seq 1-65' chronological steps + 21 horizontal apps = 86 build items total; doc self-describes as working draft, steps may be added or removed",
+  "Layer note: sequenced steps built by Operating System team (e.g. Seq 4,6,7,26,32,43) are 'hybrid' per call-notes reframe (vertical position, horizontal builder); parser marks them layer=horizontal by build-owner \u2014 synthesis must reclassify as hybrid"
+ ],
+ "notes": [
+  "Parsed deterministically from markdown tables; priorities from docx shading recovery (hv-master-process-v2-priorities.md)",
+  "Execution classes live in the Execution Guide (companion doc), enriched separately",
+  "16 priority builds: 4 apps + 12 steps, verified count == 16"
+ ]
+}

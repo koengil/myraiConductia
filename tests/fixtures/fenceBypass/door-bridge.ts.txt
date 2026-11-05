@@ -1,0 +1,10 @@
+// A fixture, not source: tests/mailbox-access-pins.test.ts scans this text as if it were scripts/m365/bridge.ts.
+// The folder is an allowed importer of the readers.ts doors, and this module hands one on, so any module in the
+// app could import the bridge and reach the unguarded reader. The extension keeps tsc, lint and the repo walk
+// away from it.
+import { googleOperatorKit, graphContentSourceOver as open, loadFixtureCorpus, probeReaderScope } from '../../src/lib/mailboxAccess/readers';
+
+export { open };
+export { loadFixtureCorpus as corpus };
+export const probe = probeReaderScope;
+export const google = googleOperatorKit;

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="72" viewBox="0 0 340 72" fill="none">
+  <path d="M 52 20 A 22 22 0 1 0 52 52" stroke="#191919" stroke-width="9" stroke-linecap="round"></path>
+  <circle cx="53.5" cy="36" r="5.5" fill="#5E5CE6"></circle>
+  <text x="78" y="47" font-family="Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="30" font-weight="650" letter-spacing="-0.6" fill="#191919">Conductia</text>
+</svg>

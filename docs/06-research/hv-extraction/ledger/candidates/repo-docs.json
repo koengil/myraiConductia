@@ -1,0 +1,171 @@
+{
+  "source": "repo-docs",
+  "claims": [
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "The sell-side lifecycle is a seven-phase rail: Phase 0 Mandate & origination, 1 Preparation, 2 Marketing & outreach, 3 First-round bids, 4 Diligence & second round, 5 Negotiation & signing, 6 Closing & post-close.",
+      "status": "conflicts",
+      "vsCanon": "Canonical model is five phases (Origination Qualification & Mandate / Preparation & Market Readiness / Marketing & First-Round Bids / Diligence LOI & Definitive Docs / Signing Closing & Post-Close); the doc adds a Phase 0 and splits marketing from first-round bids and negotiation/signing from closing.",
+      "sourceRef": "deal-lifecycle-rails.md § The rail (Phase 0-6 headings)"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "The working step count is ~82 skills/apps (per Vision 2-pager v1.1), with Storm quoted as 'we currently have 92' of ~100 steps.",
+      "status": "superseded",
+      "vsCanon": "Canonical is now Seq 1-65 steps plus 21 horizontal always-on apps; the 82/92 figures predate the July v2 enumeration.",
+      "sourceRef": "deal-lifecycle-rails.md § The mental model (Storm's analogy)"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Each step carries one of three actor values (RailActor in PR #62): human, agent, or both, where 'both' = agent drafts + human signs off.",
+      "status": "conflicts",
+      "vsCanon": "Canonical execution classes are four: A / A+H / H+A / H — the doc's single 'both' value collapses the A+H (agent-leads) vs H+A (human-leads) distinction.",
+      "sourceRef": "deal-lifecycle-rails.md § Human vs agent — the allocation rule"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "A non-sequential always-on layer runs across the rail: four deal-scoped capabilities (ask-the-deal, pre-send QC, comms capture, weekly update) plus two portfolio-scoped (morning digest, staffing/deal-intensity view).",
+      "status": "superseded",
+      "vsCanon": "Agrees on the concept of a horizontal always-on layer but enumerates only 6 capabilities vs the canonical 21 horizontal always-on apps.",
+      "sourceRef": "deal-lifecycle-rails.md § Always-on capabilities (the non-sequential layer)"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Phase 0 (Mandate & origination) comprises six steps: win the mandate (pitch), KYC/conflicts/FINRA/MNPI screen, create deal + mint code name, stand up the deal team, connect email/calendar/files/CRM, assign responsibilities + limits.",
+      "status": "conflicts",
+      "vsCanon": "Canonical gate 0 is exactly 4 pre-deal actions (code name, team/permissions, notify compliance/mgmt, lifecycle entry point); the doc covers code name + team but lacks notify-compliance/mgmt and lifecycle-entry-point, and adds pitch/connectors/responsibility-assignment which are not gate-0 actions.",
+      "sourceRef": "deal-lifecycle-rails.md § Phase 0 — Mandate & origination"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "The MVP is Layer 0 — a guided sequential checklist walking a human open-to-close (deal team standup, connectors, assign responsibilities) — with Layer 1 (allocation) and Layer 2 (autonomy) deliberately deferred.",
+      "status": "agrees",
+      "vsCanon": "Consistent with the canonical gradual-automation posture (rails fixed, per-step mode migrates from human toward agent as trust builds).",
+      "sourceRef": "deal-lifecycle-rails.md § Three layers — do not build them all at once"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Human-vs-agent allocation is decided by stakes, implemented in the orchestrator: low-stakes internal steps run agent-solo with zero gates; high-stakes/external steps pause for human plan-confirm and sign-off before anything leaves the firm.",
+      "status": "agrees",
+      "vsCanon": "Matches the canonical invariant (agents draft/propose; humans gate external/irreversible actions) and the reversible-vs-irreversible risk-tier rule.",
+      "sourceRef": "deal-lifecycle-rails.md § Human vs agent — the allocation rule"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Per-step build-status ground truth: each rail step is tagged ✅ real on develop / 🟡 schema-only / 🔴 not built, mapped to concrete repo mechanisms (compliance/screen.ts, POST /api/v1/deals, documents.min_phase, workflows/teaser.ts, audit_log #49, legal hold #60, dealRail.ts PR #62).",
+      "status": "unique",
+      "vsCanon": "Not covered by canon or the new sources — the only step-by-step map of the canonical process onto what actually exists in code.",
+      "sourceRef": "deal-lifecycle-rails.md § The rail (status legend + Today columns) + § Source grounding"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Connectors are the precondition for most agent steps; recommendation is files/data-room first (compliance envelope ~80% built: classification, min_phase, MNPI screen, audit, legal hold), email second (heaviest envelope: privilege, personal data, MNPI at inbox scale).",
+      "status": "unique",
+      "vsCanon": "Canon records connectors as deferred/'too early'; this doc adds the value-vs-risk-vs-envelope analysis and a concrete files-first sequencing recommendation absent from the newer sources.",
+      "sourceRef": "deal-lifecycle-rails.md § Connectors — recommended first step"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Semantic phase labels are not yet defined in code — the repo gates documents by numeric phase (documents.min_phase, deal status intake→active→paused→closed) and the phase names are a proposed product layer awaiting a decision.",
+      "status": "unique",
+      "vsCanon": "A live open question the canonical facts now answer (five phases): flags exactly where code must be re-labeled to the canonical phase cut.",
+      "sourceRef": "deal-lifecycle-rails.md § The rail (intro paragraph) + § Open questions #1"
+    },
+    {
+      "doc": "docs/02-product/deal-lifecycle-rails.md",
+      "claim": "Draft the CIM / management presentation is a rail step in the 'want to close' bucket (future workflow; 'Rogo's highest-leverage skill').",
+      "status": "conflicts",
+      "vsCanon": "Canon explicitly defers CIM authoring and management-presentation drafting (Founders §4.5; Vision2p 'HOW IT'S USED' — starting with judgment-heavy authoring is 'insanely stupid'); the doc treats it as a roadmap gap to close.",
+      "sourceRef": "deal-lifecycle-rails.md § Phase 1 — Preparation (last row)"
+    },
+    {
+      "doc": "docs/02-product/skills-catalog.md",
+      "claim": "The sandbox ships with exactly five skills (financial-performance, acquirer-fit, culture-signal, deal-readiness free; synergy-engine Pro-locked), each a draggable unit rendering a panel and visibly routing through compliance.",
+      "status": "superseded",
+      "vsCanon": "Sandbox-demo catalogue, self-declared provisional pending 06-research; canonical 'skill' is now one of the Seq 1-65 step-apps (plus 21 horizontal apps), not a draggable panel unit — the two taxonomies are disjoint.",
+      "sourceRef": "skills-catalog.md § Skill table + header note"
+    },
+    {
+      "doc": "docs/02-product/skills-catalog.md",
+      "claim": "Skill ids, premium flags, and panel values are a hard code contract with src/lib/api/types.ts and src/lib/api/fixtures.ts; ids must not be renamed without updating both.",
+      "status": "unique",
+      "vsCanon": "Pure engineering contract for the shipped sandbox front-end; no equivalent in canon or the new sources, and load-bearing for anyone touching the sandbox.",
+      "sourceRef": "skills-catalog.md § Notes"
+    },
+    {
+      "doc": "docs/02-product/rogo-skills-gap-map.md",
+      "claim": "Rogo's 2026-06-29 capability surface (from confidential Ignatious materials): persistent Enhanced Projects workspaces up to 10k files, house-style 'the Ignatious way' skills, buyer lists/screening, 3-statement models, live recurring scheduled digests, on-brand outputs, document playbook.",
+      "status": "agrees",
+      "vsCanon": "Matches and extends canon's Rogo-1p reading (document-Q&A workspace roadmapping Conductia's territory); adds the management-presentation skill walkthrough not in the one-pager.",
+      "sourceRef": "rogo-skills-gap-map.md § What Rogo now offers"
+    },
+    {
+      "doc": "docs/02-product/rogo-skills-gap-map.md",
+      "claim": "Deliberately-skip bucket: 3-statement model building ('we are a decision surface, not a modeling tool'), transcript-to-minutes/generic productivity, generic NDA/LOI contract turns.",
+      "status": "agrees",
+      "vsCanon": "Aligned with canon's protected v1 exclusions and deferred-applications rationale (no financial-model building; final numbers from a deterministic model of record, not an LLM).",
+      "sourceRef": "rogo-skills-gap-map.md § Deliberately skip"
+    },
+    {
+      "doc": "docs/02-product/rogo-skills-gap-map.md",
+      "claim": "Want-to-close bucket includes extending DraftAgent beyond the teaser to CIM/buyer-deck drafting and a house-style firm-template skill, once a real data room exists.",
+      "status": "conflicts",
+      "vsCanon": "In tension with canon's explicit deferral of CIM authoring (Founders §4.5; RTS-notes; Vision2p) — the doc itself flags buckets as 'a starting proposal, not a decided roadmap' pending the Storm session.",
+      "sourceRef": "rogo-skills-gap-map.md § Want to close + § Honest caveats"
+    },
+    {
+      "doc": "docs/02-product/rogo-skills-gap-map.md",
+      "claim": "Already-ahead bucket: pre-send compliance gate (COMPLIANCE_SCREEN + ComplianceSupervisor, 'they tell you after, we stop it before'), physically append-only audit trail (#58), and governed autonomy via the stakes split (AWAIT_PLAN_CONFIRM / AWAIT_SIGNOFF).",
+      "status": "agrees",
+      "vsCanon": "Matches canon's moat location (Pre-Send QC screen, approval/gate engine, append-only AuditEvent as highest-moat owned components; Rogo has no compliance layer).",
+      "sourceRef": "rogo-skills-gap-map.md § Already ahead"
+    },
+    {
+      "doc": "docs/02-product/experience-spine.md",
+      "claim": "The product is a navigable platform with four destinations (Mandate /, Acquirers, Deep-dive workspace, Team 'compliance theatre', Skills catalogue) under persistent chrome (AppHeader/AppNav, CommandBar, single ComplianceRibbon).",
+      "status": "superseded",
+      "vsCanon": "Describes the shipped sandbox shell (ADR-0004 era, pre-dating the routing reframe and the workflow pivot); the canonical project navigation model is now the rail with Focus vs Full Array views, not four fixed destinations.",
+      "sourceRef": "experience-spine.md § The chrome + § The four destinations"
+    },
+    {
+      "doc": "docs/02-product/experience-spine.md",
+      "claim": "The CommandBar runs a compliance boot (KYC → FINRA → MNPI cascade) before any retrieval, and every team message routes through the compliance layer before sending, with risky messages blocked with the rule reason.",
+      "status": "agrees",
+      "vsCanon": "Consistent with canonical compliance-first posture (every action screened before release; deterministic gates); the specific KYC→FINRA→MNPI cascade is the repo's concrete implementation of gate-0-style screening.",
+      "sourceRef": "experience-spine.md § The chrome (CommandBar) + § /team — Compliance theatre"
+    },
+    {
+      "doc": "docs/02-product/experience-spine.md",
+      "claim": "Skill access is the tier signal and upgrading (the synergy-engine paywall on drop) is the explicit revenue line.",
+      "status": "conflicts",
+      "vsCanon": "Sandbox monetization demo that contradicts canonical pricing: two-layer hybrid with no seats/tiers (platform access fee + deal-linked component, priced against labor value / NLVC, never per-skill upgrades).",
+      "sourceRef": "experience-spine.md § /skills — Catalogue + § /acquirers/[id]"
+    },
+    {
+      "doc": "docs/02-product/experience-spine.md",
+      "claim": "A prior 7-step linear demo spine (ColdOpen → Intent → Landscape → DeepDive → ComplianceTheatre → PitchCta) was retired in Phase F (commit fbf10a0, 2026-05-20); the platform replaced the spine and explicit navigation replaced auto-advance.",
+      "status": "unique",
+      "vsCanon": "Historical record of a retired experience model with ledger pointers; nothing in canon or the new sources documents this evolution.",
+      "sourceRef": "experience-spine.md § Historical note"
+    }
+  ],
+  "conflicts": [
+    "Phase granularity/names: deal-lifecycle-rails.md (§ The rail) reads seven phases 0-6 (Mandate & origination / Preparation / Marketing & outreach / First-round bids / Diligence & second round / Negotiation & signing / Closing & post-close) vs the canonical five phases (Origination Qualification & Mandate / Preparation & Market Readiness / Marketing & First-Round Bids / Diligence LOI & Definitive Docs / Signing Closing & Post-Close) — the doc splits marketing from first-round bids and negotiation/signing from closing, and hoists origination into a separate Phase 0.",
+    "Step count: deal-lifecycle-rails.md (§ mental model) works to ~82 steps (Vision 2-pager) with Storm quoted at '92' of ~100 vs the canonical Seq 1-65 steps + 21 horizontal always-on apps.",
+    "Execution classes: RailActor in deal-lifecycle-rails.md / PR #62 has three values (human / agent / both) vs the canonical four classes A / A+H / H+A / H — 'both' cannot represent whether the agent or the human leads.",
+    "Always-on layer size: deal-lifecycle-rails.md (§ Always-on capabilities) enumerates six always-on capabilities (ask-the-deal, pre-send QC, comms capture, weekly update, morning digest, staffing view) vs the canonical 21 horizontal always-on apps.",
+    "Gate-0 composition: deal-lifecycle-rails.md Phase 0 has six steps including win-the-mandate pitch, connectors, and assign-responsibilities vs the canonical gate 0 of exactly four pre-deal actions (code name, team/permissions, notify compliance/mgmt, lifecycle entry point) — notify-compliance/mgmt and lifecycle-entry-point appear in no repo doc.",
+    "CIM/management-presentation drafting: deal-lifecycle-rails.md (Phase 1 row) and rogo-skills-gap-map.md (§ Want to close) place CIM/mgmt-presentation drafting on the roadmap as a gap to close vs canon's explicit deferral of CIM authoring and management-presentation drafting (Founders §4.5; Vision2p 'HOW IT'S USED').",
+    "Skills taxonomy: skills-catalog.md defines a skill as one of exactly five draggable sandbox panel units (four free, one Pro) vs the canonical skill = one step-app of the Seq 1-65 (plus 21 horizontal apps) run by a human, agent, or pair.",
+    "Monetization surface: experience-spine.md presents the per-skill Pro paywall as 'the explicit revenue line' vs canonical pricing (two-layer hybrid: tiered platform access fee + deal-linked component, no seats, priced against labor value / NLVC).",
+    "Navigation model: experience-spine.md asserts (present tense) a four-destination platform IA reached from a persistent rail vs the canonical Focus vs Full Array project views (whole-rail view vs single-step view) from Rob's build and the v2 sources."
+  ],
+  "notes": [
+    "deal-lifecycle-rails.md is the only artifact mapping the canonical process onto repo reality: per-step ✅/🟡/🔴 build-status against concrete code (compliance/screen.ts, /api/v1/deals, documents.min_phase, workflows/teaser.ts, audit_log #49, legal hold #60, dealRail.ts + DealRail.tsx PR #62). The new docx sources define the process; only this doc says what of it exists. Preserve, then relabel to the canonical 5 phases / Seq 1-65.",
+    "deal-lifecycle-rails.md's connectors analysis (files/data-room first, email second, with the five-part compliance envelope: scope, screen-on-ingest, gate, audit, retain) is a sequencing recommendation with no equivalent in the newer sources.",
+    "deal-lifecycle-rails.md's three-layer build model (Layer 0 checklist → Layer 1 allocation → Layer 2 autonomy) and the stakes-based allocation rule already implemented in the orchestrator operationalize the canonical gradual-automation posture in engineering terms.",
+    "rogo-skills-gap-map.md carries competitive intelligence from confidential 2026-06-29 Rogo-for-Ignatious materials (management-presentation skill walkthrough; Enhanced Projects at 10k-file scale; live scheduled digests) beyond what the Rogo one-pager in canon contains, plus a build/skip/already-ahead triage.",
+    "skills-catalog.md and experience-spine.md are sandbox-build contracts (skill-id ↔ fixtures.ts hard contract; single ComplianceRibbon mount; KYC→FINRA→MNPI compliance boot; the retired 7-step spine's historical record) — needed by anyone touching the shipped front-end, even after the product model supersedes them.",
+    "Coverage gap (not a conflict): none of the four docs mention skip-with-approval, edit-after-complete with versioned outputs, or the 21-horizontal-app enumeration by name — these canonical mechanics arrive only with the July v2 sources and have no repo-doc counterpart yet."
+  ]
+}

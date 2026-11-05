@@ -1,0 +1,150 @@
+{"sentence": "We shared the initial stock purchase agreement turn with Ludlow on 10/14.", "sentAt": "2026-08-28T09:57:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "Ludlow Partners countersigned the letter of intent this morning.", "sentAt": "2026-09-04T12:08:00Z", "expected": "loi_signed"}
+{"sentence": "Brindlemoor countersigned the NDA on 18 Sep, so we can start sharing the financials.", "sentAt": "2026-09-11T15:19:00Z", "expected": "client_nda_signed"}
+{"sentence": "As the IOIs were received on 9 Oct, we will brief the board on rankings tomorrow.", "sentAt": "2026-09-18T08:30:00Z", "expected": "bids_received"}
+{"sentence": "FYI exclusivity ended 1 Oct", "sentAt": "2026-09-25T11:41:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "Signed EL attached for Project Saltmarsh.", "sentAt": "2026-10-02T14:52:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "Pitch meeting with Carraway Tools took place on 12/08 and went well.", "sentAt": "2026-10-09T17:03:00Z", "expected": "pitch_delivered"}
+{"sentence": "We granted Corvane 30 days of exclusivity from 18 Oct.", "sentAt": "2026-10-16T10:14:00Z", "expected": "exclusivity_granted"}
+{"sentence": "Teaser draft v1 circulated to the working group on 27 Aug.", "sentAt": "2026-08-03T13:25:00Z", "expected": "teaser_drafted"}
+{"sentence": "The seller's disclosure schedules have been delivered to buyer counsel.", "sentAt": "2026-08-10T16:36:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "The CA with Ludlow Partners has been executed.", "sentAt": "2026-08-17T09:47:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "The process letter went out to all bidders on 25 Sep.", "sentAt": "2026-08-24T12:58:00Z", "expected": "process_letter_sent"}
+{"sentence": "Round reopened: Ludlow and Meridian were invited back on Monday.", "sentAt": "2026-08-31T15:09:00Z", "expected": "round_reopened"}
+{"sentence": "Exclusivity has been granted to Kestrel through 2 Dec.", "sentAt": "2026-09-07T08:20:00Z", "expected": "exclusivity_granted"}
+{"sentence": "Data room is now open and populated with tier one documents.", "sentAt": "2026-09-14T11:31:00Z", "expected": "vdr_opened"}
+{"sentence": "Now that the VDR has been opened to Phase 1 bidders, please route all questions through the Q&A tab.", "sentAt": "2026-09-21T14:42:00Z", "expected": "vdr_opened"}
+{"sentence": "The management presentation for Corvane took place on 16 Oct.", "sentAt": "2026-09-28T17:53:00Z", "expected": "management_presentation_held"}
+{"sentence": "Our CEO presented to Meridian's investment committee last Thursday.", "sentAt": "2026-10-05T10:04:00Z", "expected": "management_presentation_held"}
+{"sentence": "VDR live as of this morning.", "sentAt": "2026-10-12T13:15:00Z", "expected": "vdr_opened"}
+{"sentence": "Received non-binding indications from nine parties, ranging from 8.5x to 11x.", "sentAt": "2026-10-19T16:26:00Z", "expected": "bids_received"}
+{"sentence": "Our lawyers sent over the SPA draft this morning.", "sentAt": "2026-08-06T09:37:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "Exclusivity agreement signed with Ludlow Partners yesterday.", "sentAt": "2026-08-13T12:48:00Z", "expected": "exclusivity_granted"}
+{"sentence": "A near-final CIM was delivered to Mr. Okafor on September 29, 2026.", "sentAt": "2026-08-20T15:59:00Z", "expected": "cim_drafted"}
+{"sentence": "We signed with Corvane last night; closing is subject to HSR.", "sentAt": "2026-08-27T08:10:00Z", "expected": "signed"}
+{"sentence": "Exclusivity with Corvane expired on 14 Oct without an extension.", "sentAt": "2026-09-03T11:21:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "Counsel lodged the Form CO last Thursday.", "sentAt": "2026-09-10T14:32:00Z", "expected": "regulatory_filing"}
+{"sentence": "The teaser has been drafted; Ana will turn comments by Friday.", "sentAt": "2026-09-17T17:43:00Z", "expected": "teaser_drafted"}
+{"sentence": "The first draft SPA was circulated to the buyer's counsel on 19 Oct.", "sentAt": "2026-09-24T10:54:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "The LOI with Corvane was signed on 17 Oct.", "sentAt": "2026-10-01T13:05:00Z", "expected": "loi_signed"}
+{"sentence": "Process called off; the client will remain independent.", "sentAt": "2026-10-08T16:16:00Z", "expected": "process_terminated"}
+{"sentence": "We now have 11 NDAs in place, the latest being Ostrander Industries on Friday.", "sentAt": "2026-10-15T09:27:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "Teaser draft done.", "sentAt": "2026-08-02T12:38:00Z", "expected": "teaser_drafted"}
+{"sentence": "The second round has been reopened to include Thistledown.", "sentAt": "2026-08-09T15:49:00Z", "expected": "round_reopened"}
+{"sentence": "The client CA with Halvorsen Marine was fully executed yesterday.", "sentAt": "2026-08-16T08:00:00Z", "expected": "client_nda_signed"}
+{"sentence": "VDR access has been provided to Ludlow Partners and their counsel.", "sentAt": "2026-08-23T11:11:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "SPA v1 distributed to all parties.", "sentAt": "2026-08-30T14:22:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "The transaction was announced this morning via joint press release.", "sentAt": "2026-09-06T17:33:00Z", "expected": "announced"}
+{"sentence": "The CFIUS filing has been made.", "sentAt": "2026-09-13T10:44:00Z", "expected": "regulatory_filing"}
+{"sentence": "Meridian's deal team was given data room credentials this morning.", "sentAt": "2026-09-20T13:55:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "After a long weekend the parties signed the merger agreement on September 27, 2026.", "sentAt": "2026-09-27T16:06:00Z", "expected": "signed"}
+{"sentence": "Fully executed copy of the Project Larkspur confidentiality agreement attached, signed by both sides on September 18, 2026.", "sentAt": "2026-10-04T09:17:00Z", "expected": "client_nda_signed"}
+{"sentence": "Outreach has begun; Corvane and Ludlow Partners have already acknowledged.", "sentAt": "2026-10-11T12:28:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "First draft of the teaser is complete and attached.", "sentAt": "2026-10-18T15:39:00Z", "expected": "teaser_drafted"}
+{"sentence": "Deal publicly announced Tuesday before the market opened.", "sentAt": "2026-08-05T08:50:00Z", "expected": "announced"}
+{"sentence": "We filed the merger notification with the competition authority yesterday.", "sentAt": "2026-08-12T11:01:00Z", "expected": "regulatory_filing"}
+{"sentence": "Exclusivity in place as of Monday.", "sentAt": "2026-08-19T14:12:00Z", "expected": "exclusivity_granted"}
+{"sentence": "Phase one of the data room was launched last Monday after the legal review.", "sentAt": "2026-08-26T17:23:00Z", "expected": "vdr_opened"}
+{"sentence": "Press release out: Corvane to acquire Halvorsen Marine.", "sentAt": "2026-09-02T10:34:00Z", "expected": "announced"}
+{"sentence": "Exclusivity has run out; Ludlow did not sign the extension.", "sentAt": "2026-09-09T13:45:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "The IOIs came in overnight, with Meridian at the top end.", "sentAt": "2026-09-16T16:56:00Z", "expected": "bids_received"}
+{"sentence": "Since the teaser went out to buyers on Monday, we have fielded eleven inbound calls.", "sentAt": "2026-09-23T09:07:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "Buyer outreach commenced on 6 Oct.", "sentAt": "2026-09-30T12:18:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "Three binding offers landed on 16 Oct.", "sentAt": "2026-10-07T15:29:00Z", "expected": "bids_received"}
+{"sentence": "Kickoff done, workstream owners confirmed.", "sentAt": "2026-10-14T08:40:00Z", "expected": "kickoff_held"}
+{"sentence": "Buyer NDA back from Kestrel Group, signed.", "sentAt": "2026-08-01T11:51:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "Antitrust filing submitted in Germany on 10/08.", "sentAt": "2026-08-08T14:02:00Z", "expected": "regulatory_filing"}
+{"sentence": "The board approved and gave Meridian a 45-day exclusivity period.", "sentAt": "2026-08-15T17:13:00Z", "expected": "exclusivity_granted"}
+{"sentence": "Attached is the first cut of the one-page teaser for Fenmoor Controls.", "sentAt": "2026-08-22T10:24:00Z", "expected": "teaser_drafted"}
+{"sentence": "Corvane Capital signed the NDA on 8 Oct.", "sentAt": "2026-08-29T13:35:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "Good news, Tolliver Group returned the signed NDA this morning.", "sentAt": "2026-09-05T16:46:00Z", "expected": "client_nda_signed"}
+{"sentence": "We launched outreach to 28 strategics and 14 sponsors on Monday.", "sentAt": "2026-09-12T09:57:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "Wexcombe's board suspended the auction last week.", "sentAt": "2026-09-19T12:08:00Z", "expected": "process_paused"}
+{"sentence": "NDA signed and filed.", "sentAt": "2026-09-26T15:19:00Z", "expected": "client_nda_signed"}
+{"sentence": "LOI executed at 10.2x EBITDA.", "sentAt": "2026-10-03T08:30:00Z", "expected": "loi_signed"}
+{"sentence": "Management met Kestrel Group for the MP on Tuesday and the Q&A ran two hours.", "sentAt": "2026-10-10T11:41:00Z", "expected": "management_presentation_held"}
+{"sentence": "We held the Project Teal kick-off meeting on Tuesday 8 Sep with management and counsel.", "sentAt": "2026-10-17T14:52:00Z", "expected": "kickoff_held"}
+{"sentence": "Following the price chip, we re-opened the auction to the wider buyer list.", "sentAt": "2026-08-04T17:03:00Z", "expected": "round_reopened"}
+{"sentence": "The internal kickoff for Linden Packaging took place yesterday at 10am.", "sentAt": "2026-08-11T10:14:00Z", "expected": "kickoff_held"}
+{"sentence": "We announced the sale of Brindlemoor to Corvane on 21 Oct.", "sentAt": "2026-08-18T13:25:00Z", "expected": "announced"}
+{"sentence": "The Ostrander management session was delivered on 10/09.", "sentAt": "2026-08-25T16:36:00Z", "expected": "management_presentation_held"}
+{"sentence": "Ludlow and the sellers executed the share purchase agreement today.", "sentAt": "2026-09-01T09:47:00Z", "expected": "signed"}
+{"sentence": "The sellers withdrew from the sale and we closed out the mandate.", "sentAt": "2026-09-08T12:58:00Z", "expected": "process_terminated"}
+{"sentence": "The CIM draft was finished on 1 Oct and sits with management for review.", "sentAt": "2026-09-15T15:09:00Z", "expected": "cim_drafted"}
+{"sentence": "Transaction has closed; congratulations to the team.", "sentAt": "2026-09-22T08:20:00Z", "expected": "closed"}
+{"sentence": "Teasers went out to the buyer universe this morning.", "sentAt": "2026-09-29T11:31:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "Fully executed LOI attached, dated October 15, 2026.", "sentAt": "2026-10-06T14:42:00Z", "expected": "loi_signed"}
+{"sentence": "We sent the bid procedures letter this morning.", "sentAt": "2026-10-13T17:53:00Z", "expected": "process_letter_sent"}
+{"sentence": "We reopened the process after Corvane's exit, with new bids due 30 Oct.", "sentAt": "2026-10-20T10:04:00Z", "expected": "round_reopened"}
+{"sentence": "The announcement went live at 7am ET.", "sentAt": "2026-08-07T13:15:00Z", "expected": "announced"}
+{"sentence": "We walked the Dunmere shareholders through our pitch deck on Monday.", "sentAt": "2026-08-14T16:26:00Z", "expected": "pitch_delivered"}
+{"sentence": "Further to our call, the pitch was delivered to Quillon's founders on 11 Aug.", "sentAt": "2026-08-21T09:37:00Z", "expected": "pitch_delivered"}
+{"sentence": "The board terminated the sale process on 14 Oct.", "sentAt": "2026-08-28T12:48:00Z", "expected": "process_terminated"}
+{"sentence": "Given that the NDA was executed on 3 Sep and the EL the week before, we are comfortable that Kestrel can move to the next step.", "sentAt": "2026-09-04T15:59:00Z", "expected": "client_nda_signed"}
+{"sentence": "Heads-up, process paused again.", "sentAt": "2026-09-11T08:10:00Z", "expected": "process_paused"}
+{"sentence": "We started calling the first wave of buyers yesterday.", "sentAt": "2026-09-18T11:21:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "Ostrander's advisors now have dataroom access, logins sent yesterday.", "sentAt": "2026-09-25T14:32:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "We swapped draft disclosure schedules with Corvane's lawyers on 20 Oct.", "sentAt": "2026-10-02T17:43:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "We opened up the Phase 2 data room to the three shortlisted bidders on October 14, 2026.", "sentAt": "2026-10-09T10:54:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "The Dunmere CIM draft has been circulated to the client team.", "sentAt": "2026-10-16T13:05:00Z", "expected": "cim_drafted"}
+{"sentence": "The process was cancelled yesterday after the final bidder walked.", "sentAt": "2026-08-03T16:16:00Z", "expected": "process_terminated"}
+{"sentence": "Process letter distributed to the 12 parties that signed NDAs.", "sentAt": "2026-08-10T09:27:00Z", "expected": "process_letter_sent"}
+{"sentence": "We put the sale process on hold on 5 Oct.", "sentAt": "2026-08-17T12:38:00Z", "expected": "process_paused"}
+{"sentence": "Management presentations are complete for all four finalists.", "sentAt": "2026-08-24T15:49:00Z", "expected": "management_presentation_held"}
+{"sentence": "We opened the virtual data room to the deal team on September 21, 2026.", "sentAt": "2026-08-31T08:00:00Z", "expected": "vdr_opened"}
+{"sentence": "The exclusivity period lapsed on Friday and we are free to talk to others.", "sentAt": "2026-09-07T11:11:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "Pitch delivered Thursday; the founders were receptive to the dual-track idea.", "sentAt": "2026-09-14T14:22:00Z", "expected": "pitch_delivered"}
+{"sentence": "We received seven IOIs by the 9 Oct deadline.", "sentAt": "2026-09-21T17:33:00Z", "expected": "bids_received"}
+{"sentence": "The pitch book went in front of Wexcombe's CEO and CFO yesterday afternoon.", "sentAt": "2026-09-28T10:44:00Z", "expected": "pitch_delivered"}
+{"sentence": "Client signed the Meridian LOI last night after the board call.", "sentAt": "2026-10-05T13:55:00Z", "expected": "loi_signed"}
+{"sentence": "Process letter out.", "sentAt": "2026-10-12T16:06:00Z", "expected": "process_letter_sent"}
+{"sentence": "Subject: Larkspur - mgmt presentation held 2 Oct", "sentAt": "2026-10-19T09:17:00Z", "expected": "management_presentation_held"}
+{"sentence": "Wave one of the marketing process kicked off on 10/05, with 22 parties contacted.", "sentAt": "2026-08-06T12:28:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "With the SPA having been signed on Tuesday, the focus turns to HSR and closing conditions.", "sentAt": "2026-08-13T15:39:00Z", "expected": "signed"}
+{"sentence": "Kestrel's exclusivity window ended 30 Sep.", "sentAt": "2026-08-20T08:50:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "Signing took place on 19 Oct at 11pm.", "sentAt": "2026-08-27T11:01:00Z", "expected": "signed"}
+{"sentence": "The deal closed on 30 Sep and funds were wired.", "sentAt": "2026-09-03T14:12:00Z", "expected": "closed"}
+{"sentence": "Engagement letter executed by both parties, we are officially mandated.", "sentAt": "2026-09-10T17:23:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "Process paused until the Q3 numbers are final.", "sentAt": "2026-09-17T10:34:00Z", "expected": "process_paused"}
+{"sentence": "We have restarted the bid round and issued a supplemental process letter.", "sentAt": "2026-09-24T13:45:00Z", "expected": "round_reopened"}
+{"sentence": "Disclosure schedules were exchanged between counsel on Friday.", "sentAt": "2026-10-01T16:56:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "HSR filing was submitted on 12 Oct.", "sentAt": "2026-10-08T09:07:00Z", "expected": "regulatory_filing"}
+{"sentence": "CIM drafted, 74 pages, pending legal sign-off.", "sentAt": "2026-10-15T12:18:00Z", "expected": "cim_drafted"}
+{"sentence": "We closed the Dunmere sale yesterday.", "sentAt": "2026-08-02T15:29:00Z", "expected": "closed"}
+{"sentence": "Closing completed, proceeds received.", "sentAt": "2026-08-09T08:40:00Z", "expected": "closed"}
+{"sentence": "Process letters were issued yesterday with first-round bids due 9 Oct.", "sentAt": "2026-08-16T11:51:00Z", "expected": "process_letter_sent"}
+{"sentence": "RE: Project Larkspur - LOI signed", "sentAt": "2026-08-23T14:02:00Z", "expected": "loi_signed"}
+{"sentence": "Thistledown returned a countersigned confidentiality agreement last Wednesday.", "sentAt": "2026-08-30T17:13:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "Draft CIM v2 attached, incorporating Tuesday's comments.", "sentAt": "2026-09-06T10:24:00Z", "expected": "cim_drafted"}
+{"sentence": "The marketing effort was placed on ice yesterday.", "sentAt": "2026-09-13T13:35:00Z", "expected": "process_paused"}
+{"sentence": "The SPA was signed on 21 Oct in New York.", "sentAt": "2026-09-20T16:46:00Z", "expected": "signed"}
+{"sentence": "We circulated the process letter and draft SPA to the shortlist on September 30, 2026.", "sentAt": "2026-09-27T09:57:00Z", "expected": "process_letter_sent"}
+{"sentence": "The confidentiality agreement between Quillon Foods and our firm was executed last Tuesday.", "sentAt": "2026-10-04T12:08:00Z", "expected": "client_nda_signed"}
+{"sentence": "The Saltmarsh dataroom has been opened, index attached.", "sentAt": "2026-10-11T15:19:00Z", "expected": "vdr_opened"}
+{"sentence": "We presented the sell-side pitch to the Orrin Pharma board on 9 Sep.", "sentAt": "2026-10-18T08:30:00Z", "expected": "pitch_delivered"}
+{"sentence": "NDA executed with Meridian Holdings this afternoon, so CIM access can follow.", "sentAt": "2026-08-05T11:41:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "Final bids were submitted by Corvane and Ludlow on Friday.", "sentAt": "2026-08-12T14:52:00Z", "expected": "bids_received"}
+{"sentence": "Bids are in: five first-round offers came through before noon.", "sentAt": "2026-08-19T17:03:00Z", "expected": "bids_received"}
+{"sentence": "The client has paused the process pending the audit result.", "sentAt": "2026-08-26T10:14:00Z", "expected": "process_paused"}
+{"sentence": "Access to the VDR enabled for Kestrel Group on Tuesday.", "sentAt": "2026-09-02T13:25:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "We have drafted the blind teaser for Project Teal and it is with the client for comment.", "sentAt": "2026-09-09T16:36:00Z", "expected": "teaser_drafted"}
+{"sentence": "We are now formally engaged, the EL having been countersigned by Mr. Vance's counsel on 3 Sep.", "sentAt": "2026-09-16T09:47:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "Both sides exchanged disclosure schedules last night.", "sentAt": "2026-09-23T12:58:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "We had the all-hands kickoff session with Bexley's management last Wednesday.", "sentAt": "2026-09-30T15:09:00Z", "expected": "kickoff_held"}
+{"sentence": "MP with Ludlow Partners was held yesterday in London.", "sentAt": "2026-10-07T08:20:00Z", "expected": "management_presentation_held"}
+{"sentence": "Mandate confirmed: engagement letter fully executed on September 2, 2026.", "sentAt": "2026-10-14T11:31:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "Schedules exchanged, mark-ups due Tuesday.", "sentAt": "2026-08-01T14:42:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "Definitive agreement executed, deal is signed.", "sentAt": "2026-08-08T17:53:00Z", "expected": "signed"}
+{"sentence": "Following the kick-off held on 15 Sep, the timetable has been circulated.", "sentAt": "2026-08-15T10:04:00Z", "expected": "kickoff_held"}
+{"sentence": "Thanks all for the late nights, the pitch to Marlow Logistics was delivered on 4 Sep.", "sentAt": "2026-08-22T13:15:00Z", "expected": "pitch_delivered"}
+{"sentence": "We granted Corvane Capital access to the data room on 12 Oct.", "sentAt": "2026-08-29T16:26:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "The Orrin Pharma acquisition completed on October 1, 2026.", "sentAt": "2026-09-05T09:37:00Z", "expected": "closed"}
+{"sentence": "Hawthorne Aerospace signed our engagement letter last Friday.", "sentAt": "2026-09-12T12:48:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "We signed the non-binding offer letter with Kestrel on Wednesday.", "sentAt": "2026-09-19T15:59:00Z", "expected": "loi_signed"}
+{"sentence": "The VDR for Project Larkspur went live on 24 Sep.", "sentAt": "2026-09-26T08:10:00Z", "expected": "vdr_opened"}
+{"sentence": "We have formally ended the Project Teal process.", "sentAt": "2026-10-03T11:21:00Z", "expected": "process_terminated"}
+{"sentence": "Kickoff call with the Ashgrove team happened this morning.", "sentAt": "2026-10-10T14:32:00Z", "expected": "kickoff_held"}
+{"sentence": "The EL with Pinecrest Dental was signed on 22 Aug.", "sentAt": "2026-10-17T17:43:00Z", "expected": "engagement_letter_signed"}
+{"sentence": "Draft purchase agreement went to Corvane's team yesterday.", "sentAt": "2026-08-04T10:54:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "We completed the first full draft of the confidential information memorandum this week.", "sentAt": "2026-08-11T13:05:00Z", "expected": "cim_drafted"}
+{"sentence": "Their exclusivity lapsed last night at midnight.", "sentAt": "2026-08-18T16:16:00Z", "expected": "exclusivity_lapsed"}

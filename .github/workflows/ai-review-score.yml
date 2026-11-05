@@ -1,0 +1,27 @@
+name: AI review score
+
+# Weekly precision, misses and latency per lens, from the last 7 days of ai-review artifacts.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  score:
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Score last 7 days
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npx --yes tsx@4.23.15 scripts/ai-review/score-run.ts --repo ${{ github.repository }} --days 7

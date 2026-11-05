@@ -1,0 +1,35 @@
+import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+describe.skipIf(!DATABASE_URL)('company access management migration', () => {
+  it('enforces resolver, grant envelope, versions, audit rollback, and lifecycle', () => {
+    const result = spawnSync(
+      'psql',
+      [
+        DATABASE_URL!,
+        '-v',
+        'ON_ERROR_STOP=1',
+        '-f',
+        resolve('supabase/tests/company_access_management.sql'),
+      ],
+      { encoding: 'utf8' },
+    );
+
+    expect(result.status, result.stderr || result.stdout).toBe(0);
+    expect(result.stdout + result.stderr).toContain(
+      'PASS: company access management resolver and lifecycle',
+    );
+    expect(result.stdout + result.stderr).toContain(
+      'PASS: company access audit rollback',
+    );
+    expect(result.stdout + result.stderr).toContain(
+      'PASS: company access mutation privileges',
+    );
+    expect(result.stdout + result.stderr).toContain(
+      'PASS: company access cross-user probes fail closed',
+    );
+  });
+});

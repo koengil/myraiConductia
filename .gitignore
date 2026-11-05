@@ -1,0 +1,99 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Environment
+.env
+.env*.local
+.env.development
+.env.production
+
+# Credentials, secrets and certificate references: the single configuration
+# point (#259, design R16). Only the README is tracked.
+.secrets/*
+!.secrets/README.md
+
+# Vercel
+.vercel
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+e2e/auth/.state/
+e2e-results.json
+# Rail cold-load harness output (#162): raw timings and NetLogs, never committed.
+scripts/perf/out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.kilo/
+.vscode/*
+!.vscode/extensions.json
+settings.local.json
+
+# LibreOffice / Office lock + interrupted-operation temp files
+.~lock.*#
+.!*!*
+
+# Deal-discovery eval scorecards and exports (evals/deal-discovery). They name
+# the answer key's deals and the tenant's items, so they never enter the repo.
+evals/out/
+# The answer key and the seeder's ground truth live outside the repo; the
+# converter and the scorer refuse in-repo paths. These catch a stray copy.
+answer-key*.json
+ground-truth*.json
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# NPM
+.npm-cache
+
+# OpenTofu (infra/discovery-worker, #344). The owner's tfvars name the account
+# and the alert addresses, and state stays in the account's bucket (bootstrap's
+# local state with the owner's records): none of it enters the repo. The
+# provider lock files are tracked.
+infra/**/.terraform/
+infra/**/*.tfstate
+infra/**/*.tfstate.*
+infra/**/*.tfvars
+infra/**/*.tfplan
+infra/**/crash.log
+infra/**/.build/
+
+
+# Key material never enters the repo (mirrors .dockerignore)
+*.pem
+# *.key also matches Keynote decks: add one with `git add -f` or a narrow
+# `!path/to/deck.key` exception.
+*.key
+*.pfx
+*.p12
+
+# Claude desktop app scratch folder
+Claude outputs/
+
+# Riptide artifacts (cloud-synced)
+.humanlayer/tasks/
+
+# Deal documents: confidential, kept out of this repository.
+public/data-room/
+public/data-room-previews/

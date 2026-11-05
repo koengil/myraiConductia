@@ -1,0 +1,37 @@
+name: Require fast-forward from staging
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  fast-forward-from-staging:
+    name: fast-forward from staging
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce staging → main fast-forward
+        env:
+          # Via env, never interpolated into the script: a branch name is
+          # attacker-controlled input.
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          if [ "${HEAD_REF}" != "staging" ]; then
+            echo "PRs to main must come from staging (got '${HEAD_REF}')."
+            echo "Promote with the 'Promote staging to main' workflow or, break-glass only: git merge --ff-only origin/staging"
+            exit 1
+          fi
+          git fetch origin main staging
+          if ! git merge-base --is-ancestor origin/main origin/staging; then
+            echo "main is not an ancestor of staging; cannot fast-forward."
+            echo "main has commits that are not on staging. Land those on develop and promote them first."
+            exit 1
+          fi
+          echo "OK: origin/main is an ancestor of origin/staging. Promote with --ff-only, not squash/rebase/merge-commit."

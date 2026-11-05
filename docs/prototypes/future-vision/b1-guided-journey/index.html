@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conductia — Guided Journey · Project Atlas</title>
+  <link rel="stylesheet" href="../shared/brand-tokens.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { corePlugins: { preflight: true } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: 1.55;
+      color: var(--ink-on-dark);
+      background: var(--canvas-bg);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    /* Cinematic navy canvas */
+    .canvas {
+      background: var(--bg-cinematic);
+      min-height: 100vh;
+      position: relative;
+    }
+    .canvas::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: var(--texture-grid);
+      pointer-events: none;
+      opacity: .6;
+    }
+    /* ── type ramp helpers ─────────────────────────────────── */
+    .t-xxs { font-size: var(--text-xxs); }
+    .t-xs  { font-size: var(--text-xs); }
+    .t-sm  { font-size: var(--text-sm); }
+    .t-base{ font-size: var(--text-base); }
+    .t-md  { font-size: var(--text-md); }
+    .t-lg  { font-size: var(--text-lg); }
+    .t-xl  { font-size: var(--text-xl); }
+    .t-2xl { font-size: var(--text-2xl); }
+    .mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .ink-on-dark { color: var(--ink-on-dark); }
+    .ink-on-dark-2 { color: var(--ink-on-dark-secondary); }
+    .ink-on-dark-3 { color: var(--ink-on-dark-tertiary); }
+
+    .head { font-weight: 600; letter-spacing: -.01em; line-height: 1.18; }
+    .eyebrow { font-size: var(--text-xxs); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+
+    /* ── chrome ────────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: blur(14px);
+      background: rgba(10,18,40,.78);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .wordmark { font-family: var(--font-sans); font-weight: 700; letter-spacing: -.02em; }
+    .wordmark b { color: var(--accent); font-weight: 700; }
+
+    /* compliance ribbon — the through-line */
+    .ribbon {
+      background: linear-gradient(90deg, rgba(45,126,84,.16), rgba(45,126,84,.04));
+      border: 1px solid rgba(45,126,84,.32);
+      border-radius: var(--radius-pill);
+    }
+
+    /* avatar */
+    .avatar {
+      width: 32px; height: 32px; border-radius: 9999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #1a1205; font-weight: 700; font-size: var(--text-xs);
+      display: grid; place-items: center; flex: none;
+    }
+
+    /* ── step spine ────────────────────────────────────────── */
+    .spine { scrollbar-width: thin; }
+    .spine::-webkit-scrollbar { height: 6px; width: 6px; }
+    .spine::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 9999px; }
+    .step {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; text-align: left;
+      padding: 9px 11px; border-radius: var(--radius-button);
+      cursor: pointer; transition: background .18s ease, color .18s ease;
+      color: var(--ink-on-dark-tertiary); border: 1px solid transparent;
+    }
+    .step:hover { background: rgba(255,255,255,.05); color: var(--ink-on-dark-secondary); }
+    .step.active { background: rgba(194,148,69,.12); border-color: rgba(194,148,69,.34); color: var(--ink-on-dark); }
+    .step.done { color: var(--ink-on-dark-secondary); }
+    .step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .step-node {
+      width: 24px; height: 24px; border-radius: 9999px; flex: none;
+      display: grid; place-items: center; font-size: var(--text-xs); font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.18); color: var(--ink-on-dark-tertiary);
+      font-family: var(--font-mono);
+    }
+    .step.active .step-node { background: var(--accent); border-color: var(--accent); color: #1a1205; }
+    .step.done .step-node { background: rgba(45,126,84,.22); border-color: rgba(45,126,84,.55); color: #7fd6a6; }
+
+    /* ── cards / surfaces ──────────────────────────────────── */
+    .card {
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius-card);
+    }
+    .card-light {
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: var(--radius-card);
+      box-shadow: var(--elev-2);
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      border-radius: var(--radius-pill); padding: 3px 10px;
+      font-size: var(--text-xxs); font-weight: 600; letter-spacing: .04em;
+    }
+    .pill-vision { background: rgba(176,122,26,.16); color: #e0b25a; border: 1px solid rgba(176,122,26,.4); }
+    .pill-live   { background: rgba(45,126,84,.16); color: #7fd6a6; border: 1px solid rgba(45,126,84,.4); }
+    .pill-api    { background: rgba(255,255,255,.06); color: var(--ink-on-dark-secondary); border: 1px solid rgba(255,255,255,.12); font-family: var(--font-mono); letter-spacing: 0; }
+
+    /* verdict chips */
+    .v-clear   { background: rgba(45,126,84,.16); color: #7fd6a6; border: 1px solid rgba(45,126,84,.4); }
+    .v-hold    { background: rgba(176,122,26,.16); color: #e0b25a; border: 1px solid rgba(176,122,26,.4); }
+    .v-blocked { background: rgba(209,75,48,.16); color: #f0967f; border: 1px solid rgba(209,75,48,.45); }
+
+    /* ── buttons ───────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px; padding: 0 20px; border-radius: var(--radius-button);
+      font-size: var(--text-base); font-weight: 600; cursor: pointer;
+      transition: transform .15s ease, background .18s ease, opacity .18s ease, border-color .18s ease;
+      border: 1px solid transparent; line-height: 1;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-primary { background: var(--accent); color: #1a1205; }
+    .btn-primary:hover { background: #d4a755; }
+    .btn-ghost { background: rgba(255,255,255,.05); color: var(--ink-on-dark); border-color: rgba(255,255,255,.14); }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); }
+    .btn-ghost:disabled { opacity: .35; cursor: not-allowed; }
+
+    .input {
+      width: 100%; background: rgba(255,255,255,.04); color: var(--ink-on-dark);
+      border: 1px solid rgba(255,255,255,.16); border-radius: var(--radius-input);
+      padding: 14px 16px; font-size: var(--text-lg); font-family: var(--font-sans);
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .input::placeholder { color: var(--ink-on-dark-tertiary); }
+    .input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,.06); }
+
+    /* cascade dots */
+    .casc-dot { width: 26px; height: 26px; border-radius: 9999px; display: grid; place-items: center; flex: none;
+      border: 1.5px solid rgba(255,255,255,.18); color: var(--ink-on-dark-tertiary); transition: all .3s ease; }
+    .casc-dot.ok { background: rgba(45,126,84,.22); border-color: rgba(45,126,84,.6); color: #7fd6a6; }
+
+    /* fade in for beat content */
+    .beat { animation: beatIn .32s cubic-bezier(.2,.7,.3,1); }
+    @keyframes beatIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    /* score dial */
+    .dial-track { stroke: rgba(255,255,255,.1); }
+    .dial-fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1); }
+
+    /* football field bars */
+    .ff-bar { height: 10px; border-radius: 9999px; }
+
+    /* table */
+    .matrix td, .matrix th { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .cmark-strong { color: #7fd6a6; }
+    .cmark-watch  { color: #e0b25a; }
+    .cmark-risk   { color: #f0967f; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .beat { animation: none; }
+      .dial-fill { transition: none; }
+      * { scroll-behavior: auto; }
+    }
+
+    /* responsive: collapse spine to horizontal scroller on small screens */
+    @media (max-width: 1023px) {
+      .spine-rail { display: none; }
+      .spine-mobile { display: flex; }
+    }
+    @media (min-width: 1024px) {
+      .spine-mobile { display: none; }
+    }
+    a, button { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <!-- ───────────────────────── TOP BAR (persistent chrome) ───────────────────────── -->
+    <header class="topbar">
+      <div class="max-w-[1480px] mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 sm:gap-5">
+        <!-- wordmark -->
+        <div class="flex items-center gap-2.5 flex-none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="var(--accent)" stroke-width="1.6"/>
+            <path d="M7 15.5 L11 8.5 L13 12.5 L17 8.5" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="wordmark t-md ink-on-dark">Intelli<b>bank</b></span>
+        </div>
+
+        <!-- mandate code (mono) -->
+        <div class="hidden md:flex items-center gap-2 pl-4 ml-1 border-l border-white/10">
+          <span class="mono t-xs ink-on-dark-3">ATLAS-2026-001</span>
+          <span class="ink-on-dark-3">·</span>
+          <span class="t-xs ink-on-dark-2" id="topbar-stage">Project Atlas</span>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <!-- COMPLIANCE RIBBON — visible on every beat -->
+        <div class="ribbon flex items-center gap-2.5 px-3.5 py-1.5" role="status" aria-live="polite" data-compliance-status>
+          <span class="ib-pulse-dot" aria-hidden="true"></span>
+          <span class="t-xs font-semibold" style="color:#7fd6a6;">Compliance live</span>
+          <span class="hidden sm:inline t-xxs ink-on-dark-3 mono">KYC · FINRA · MNPI</span>
+        </div>
+
+        <!-- identity -->
+        <div class="flex items-center gap-2.5 flex-none pl-1">
+          <div class="hidden sm:block text-right leading-tight">
+            <div class="t-xs font-semibold ink-on-dark">Storm Duncan</div>
+            <div class="t-xxs ink-on-dark-3">Managing Director</div>
+          </div>
+          <div class="avatar" aria-label="Storm Duncan">SD</div>
+        </div>
+      </div>
+
+      <!-- MOBILE step spine (horizontal) -->
+      <nav class="spine-mobile spine overflow-x-auto px-4 pb-2.5 gap-1.5" aria-label="Deal journey steps" id="spine-mobile"></nav>
+    </header>
+
+    <!-- ───────────────────────── BODY: spine + beat ───────────────────────── -->
+    <div class="max-w-[1480px] mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8">
+
+      <!-- LEFT: step spine -->
+      <aside class="spine-rail">
+        <div class="sticky top-[88px]">
+          <div class="eyebrow ink-on-dark-3 px-2 mb-3">Deal journey</div>
+          <nav class="flex flex-col gap-1" aria-label="Deal journey steps" id="spine-rail"></nav>
+          <div class="mt-5 px-2.5 pt-4 border-t border-white/10">
+            <div class="t-xxs ink-on-dark-3 leading-relaxed">
+              The compliance-first M&amp;A intelligence layer for managing directors.
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT: one beat at a time -->
+      <main id="beat-host" class="min-w-0"></main>
+    </div>
+
+    <!-- ───────────────────────── FOOTER ───────────────────────── -->
+    <footer class="max-w-[1480px] mx-auto px-4 sm:px-6 py-6 mt-2 border-t border-white/8 flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+      <span class="pill pill-vision">Future-vision prototype</span>
+      <span class="t-xxs ink-on-dark-3">
+        Decisions, not data dumps. Every intent and message screened before it executes. Numbers are deterministic fixtures.
+      </span>
+    </footer>
+  </div>
+
+  <!-- ───────────────────────── DATA ───────────────────────── -->
+  <script src="../shared/fixtures.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    const IB = window.IB;
+    let current = 0;
+    let visited = new Set([0]);
+
+    /* ── tiny SVG icon library (inline, never emoji) ── */
+    const I = {
+      check: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      arrowR: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      arrowL: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      shield: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      lock: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 11V8a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.7"/></svg>',
+      eye: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg>',
+      doc: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      users: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19a5.5 5.5 0 0111 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.2a3 3 0 010 5.6M17 19a5.5 5.5 0 00-2-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      send: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l16-7-7 16-2-7-7-2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      bell: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 20a2 2 0 004 0" stroke="currentColor" stroke-width="1.6"/></svg>',
+      branch: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="2.4" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2.4" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="8" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M6 8.4v7.2M8.2 7.2C12 7.6 15.6 7.8 15.6 9.6V10" stroke="currentColor" stroke-width="1.6"/></svg>',
+      brief: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.6"/></svg>',
+      spark: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      x: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    };
+    const beatIcon = { intake: I.shield, conflicts: I.branch, notice: I.bell, team: I.users, ndas: I.lock, dataroom: I.doc, brief: I.brief, outreach: I.send, pitch: I.spark };
+
+    const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    /* ── header for each beat ── */
+    function beatHeader(j, badge) {
+      return `
+        <div class="flex items-start justify-between gap-4 mb-1">
+          <div class="eyebrow ink-on-dark-3">Step ${j.beat} of ${IB.journey.length} · ${esc(j.title)}</div>
+          ${badge || ''}
+        </div>`;
+    }
+    const liveBadge = `<span class="pill pill-live">${I.check} Live now</span>`;
+    const visionBadge = `<span class="pill pill-vision">Vision / next</span>`;
+    const apiPill = (s) => s ? `<span class="pill pill-api">${esc(s)}</span>` : '';
+
+    /* ───────────────────────── BEAT RENDERERS ───────────────────────── */
+
+    function intake(j) {
+      const c = IB.complianceCascade;
+      return `
+        <section class="beat">
+          ${beatHeader(j, liveBadge)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">Name the company. The compliance clock starts.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} ${apiPill(j.api)}</p>
+
+          <div class="card p-5 sm:p-6 mt-6 max-w-2xl">
+            <label class="eyebrow ink-on-dark-3 block mb-2" for="intake-input">Sell-side target</label>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input id="intake-input" class="input flex-1 editorial-name" value="Atlassian" aria-label="Target company" />
+              <button class="btn btn-primary flex-none" id="intake-screen">${I.shield} Screen &amp; mint deal</button>
+            </div>
+
+            <div class="mt-6" id="intake-cascade">
+              <div class="eyebrow ink-on-dark-3 mb-3">Compliance cascade</div>
+              <div class="flex flex-col gap-2.5">
+                ${c.map((s,i) => `
+                  <div class="flex items-center gap-3" data-casc="${i}">
+                    <span class="casc-dot" id="casc-${i}"><span class="mono t-xxs">${i+1}</span></span>
+                    <div class="min-w-0">
+                      <span class="t-base font-semibold ink-on-dark">${esc(s.label)}</span>
+                      <span class="t-sm ink-on-dark-3"> · ${esc(s.desc)}</span>
+                    </div>
+                    <span class="t-xs ml-auto v-clear pill" id="casc-verdict-${i}" style="visibility:hidden;">${I.check} Clear</span>
+                  </div>`).join('')}
+              </div>
+            </div>
+
+            <div id="intake-result" class="mt-6 p-4 rounded-xl border" style="border-color:rgba(45,126,84,.4); background:rgba(45,126,84,.1); display:none;">
+              <div class="flex items-center gap-2">
+                <span style="color:#7fd6a6;">${I.check}</span>
+                <span class="t-base font-semibold ink-on-dark">Deal minted</span>
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-3">
+                <span class="mono t-lg" style="color:var(--accent);">ATLAS-2026-001</span>
+                <span class="t-sm ink-on-dark-2">Project Atlas · status active · POST /deals returned 201</span>
+              </div>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function conflicts(j) {
+      const others = IB.deals.filter(d => d.code !== 'ATLAS-2026-001');
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${visionBadge}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">No competing engagement. Clear to proceed.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} Conflict checks run against every active mandate the bank holds.</p>
+
+          <div class="grid sm:grid-cols-[1fr_280px] gap-4 mt-6">
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Cross-checked mandates</div>
+              <div class="flex flex-col gap-2.5">
+                <div class="flex items-center gap-3 p-3 rounded-xl" style="background:rgba(194,148,69,.1); border:1px solid rgba(194,148,69,.3);">
+                  <span class="mono t-xs" style="color:var(--accent);">ATLAS-2026-001</span>
+                  <span class="t-sm ink-on-dark">Atlassian</span>
+                  <span class="t-xxs ink-on-dark-3 ml-auto">This mandate</span>
+                </div>
+                ${others.map(d => `
+                  <div class="flex items-center gap-3 p-3 rounded-xl" style="background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
+                    <span class="mono t-xs ink-on-dark-3">${esc(d.code)}</span>
+                    <span class="t-sm ink-on-dark-2">${esc(d.codename)} · ${esc(d.target)}</span>
+                    <span class="t-xxs v-clear pill ml-auto">${I.check} No overlap</span>
+                  </div>`).join('')}
+              </div>
+            </div>
+
+            <div class="card-light p-5 flex flex-col items-center justify-center text-center">
+              <div class="w-12 h-12 rounded-full grid place-items-center mb-3" style="background:rgba(45,126,84,.14); color:var(--positive);">${I.shield}</div>
+              <div class="t-lg head" style="color:var(--ink);">Verdict: Clear</div>
+              <div class="t-sm mt-1" style="color:var(--ink-secondary);">No competing buyer or seller engagement found across 3 active mandates.</div>
+              <div class="mt-3 pill pill-api">2 mandates cross-checked</div>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function notice(j) {
+      const cco = IB.dealTeam.find(m => m.role === 'cco');
+      const rows = IB.auditLog.slice(0,4);
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${liveBadge}${apiPill(j.api)}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">CCO notified. Regulatory basis on the record.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} Nothing on this deal happens off the audit trail.</p>
+
+          <div class="grid sm:grid-cols-[300px_1fr] gap-4 mt-6">
+            <div class="card-light p-5">
+              <div class="flex items-center gap-3">
+                <div class="avatar" style="background:linear-gradient(135deg,#4F5B70,#0E1B3A); color:#fff;">${esc(cco.initials)}</div>
+                <div class="leading-tight">
+                  <div class="t-base font-semibold" style="color:var(--ink);">${esc(cco.name)}</div>
+                  <div class="t-xs" style="color:var(--ink-secondary);">Chief Compliance Officer</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center gap-2 t-sm" style="color:var(--positive);">${I.bell}<span class="font-semibold">Auto-notified at 09:14</span></div>
+              <div class="mt-2 t-sm" style="color:var(--ink-secondary);">Oversight access granted: all deals, full audit. The CCO sees the deal the moment it is minted.</div>
+            </div>
+
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Audit trail · immutable</div>
+              <table class="w-full matrix t-sm">
+                <tbody>
+                  ${rows.map(r => `
+                    <tr>
+                      <td class="mono ink-on-dark-3" style="width:54px;">${esc(r.ts)}</td>
+                      <td class="ink-on-dark font-semibold" style="width:140px;">${esc(r.actor)}</td>
+                      <td class="ink-on-dark-2">${esc(r.detail)}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function team(j) {
+      const roleBySlug = Object.fromEntries(IB.roles.map(r => [r.slug, r]));
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${liveBadge}${apiPill(j.api)}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">Invite by role. Access walls go up automatically.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} Only the Managing Director can add members. Each role inherits exactly what it should see.</p>
+
+          <div class="grid lg:grid-cols-[1fr_300px] gap-4 mt-6">
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="eyebrow ink-on-dark-3">Deal team · Project Atlas</div>
+                <button class="btn btn-primary" style="min-height:38px; padding:0 14px; font-size:var(--text-sm);" id="md-invite">${I.users} Invite member</button>
+              </div>
+              <div class="flex flex-col gap-2">
+                ${IB.dealTeam.map(m => {
+                  const r = roleBySlug[m.role];
+                  return `
+                  <div class="flex items-center gap-3 p-3 rounded-xl" style="background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
+                    <div class="avatar" style="background:${r.external?'linear-gradient(135deg,#7A4F10,#4a300a)':'linear-gradient(135deg,#4F5B70,#1c2a4a)'}; color:#fff;">${esc(m.initials)}</div>
+                    <div class="min-w-0">
+                      <div class="t-base font-semibold ink-on-dark flex items-center gap-2">${esc(m.name)}
+                        ${r.external?`<span class="pill" style="background:rgba(176,122,26,.16);color:#e0b25a;border:1px solid rgba(176,122,26,.4);">External</span>`:''}</div>
+                      <div class="t-xs ink-on-dark-3">${esc(r.label)} · sees: ${esc(m.sees)}</div>
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>
+
+            <div class="card-light p-5">
+              <div class="eyebrow mb-3" style="color:var(--ink-secondary);">Permission matrix · who sees what</div>
+              <div class="flex flex-col gap-3">
+                ${IB.roles.slice(0,5).map(r => `
+                  <div>
+                    <div class="t-sm font-semibold flex items-center gap-2" style="color:var(--ink);">${esc(r.label)}
+                      ${r.external?`<span class="pill" style="background:#F4F5F8;color:var(--hold);border:1px solid var(--stroke);">ext</span>`:''}</div>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      ${r.permissions.map(p => `<span class="mono t-xxs" style="background:#ECEEF2;color:var(--ink-secondary);padding:2px 6px;border-radius:6px;">${esc(p)}</span>`).join('')}
+                    </div>
+                  </div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function ndas(j) {
+      const parties = [
+        { who: 'Atlassian (seller)', status: 'Executed', clear: true },
+        { who: 'Anthropic (buyer)', status: 'Executed', clear: true },
+        { who: 'Microsoft (buyer)', status: 'Out for signature', clear: false },
+        { who: 'Adobe (buyer)', status: 'Awaiting countersignature', clear: false },
+      ];
+      return `
+        <section class="beat">
+          ${beatHeader(j, visionBadge)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">Mutual NDAs, executed and tracked in one place.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} Legal Counsel manages execution. Status drives data-room access automatically.</p>
+
+          <div class="card p-5 mt-6 max-w-2xl">
+            <div class="eyebrow ink-on-dark-3 mb-3">NDA register</div>
+            <div class="flex flex-col gap-2">
+              ${parties.map(p => `
+                <div class="flex items-center gap-3 p-3 rounded-xl" style="background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
+                  <span style="color:${p.clear?'#7fd6a6':'var(--ink-on-dark-tertiary)'};">${p.clear?I.check:I.lock}</span>
+                  <span class="t-base ink-on-dark font-semibold">${esc(p.who)}</span>
+                  <span class="t-xs ml-auto ${p.clear?'v-clear':'v-hold'} pill">${esc(p.status)}</span>
+                </div>`).join('')}
+            </div>
+            <div class="mt-4 t-xs ink-on-dark-3 flex items-center gap-2">${I.lock} Automated NDA execution is a Phase 2 capability. Shown here as the intended flow.</div>
+          </div>
+        </section>`;
+    }
+
+    function dataroom(j) {
+      const cls = { 1:{c:'#7fd6a6',bg:'rgba(45,126,84,.16)'}, 2:{c:'#9fc2e8',bg:'rgba(80,130,190,.18)'}, 3:{c:'#e0b25a',bg:'rgba(176,122,26,.16)'}, 4:{c:'#f0967f',bg:'rgba(209,75,48,.16)'} };
+      const buyerPhase = 1;
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${liveBadge}${apiPill(j.api)}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">Staged access. Buyers see only their phase.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} The buyer is gated at phase ${buyerPhase}. Documents above their phase stay locked. Every open is logged.</p>
+
+          <div class="card p-0 mt-6 overflow-hidden">
+            <div class="grid grid-cols-[1fr_auto_auto] gap-3 px-5 py-3 t-xxs eyebrow ink-on-dark-3" style="border-bottom:1px solid rgba(255,255,255,.08);">
+              <span>Document</span><span>Classification</span><span class="text-right">Buyer (phase ${buyerPhase})</span>
+            </div>
+            ${IB.documents.map((d,i) => {
+              const gated = d.minPhase > buyerPhase;
+              const co = cls[d.classification];
+              return `
+              <div class="grid grid-cols-[1fr_auto_auto] gap-3 items-center px-5 py-3" style="border-bottom:1px solid rgba(255,255,255,.06);">
+                <button class="flex items-center gap-2.5 text-left min-w-0 group" data-doc="${i}" ${gated?'disabled style="opacity:.55;cursor:not-allowed;"':''} aria-label="Open ${esc(d.name)}">
+                  <span class="ink-on-dark-3">${gated?I.lock:I.doc}</span>
+                  <span class="t-sm ink-on-dark truncate">${esc(d.name)}</span>
+                </button>
+                <span class="pill" style="background:${co.bg};color:${co.c};border:1px solid ${co.c}40;">C${d.classification} · ${esc(d.label)}</span>
+                <span class="text-right t-xs ${gated?'v-blocked':'v-clear'} pill" style="white-space:nowrap;">${gated?I.lock+' Locked':I.eye+' Visible'}</span>
+              </div>`;
+            }).join('')}
+          </div>
+
+          <div id="doc-audit" class="card-light p-4 mt-4 max-w-2xl" style="display:none;">
+            <div class="flex items-center gap-2 t-sm" style="color:var(--positive);">${I.eye}<span class="font-semibold">View logged to audit trail</span></div>
+            <div class="t-sm mt-1 mono" style="color:var(--ink-secondary);" id="doc-audit-line"></div>
+          </div>
+        </section>`;
+    }
+
+    function brief(j) {
+      const top = IB.acquirers[0];
+      const dash = 339.292; // 2*pi*54
+      const off = dash * (1 - top.composite/100);
+      // football field bars
+      const ff = IB.valuation.rows.filter(r => r.start != null);
+      const cm = IB.cultureMatrix;
+      const fr = IB.founderRead;
+      const proSkill = IB.skills.find(s => s.premium);
+      const cmTone = { strong:'cmark-strong', watch:'cmark-watch', risk:'cmark-risk' };
+
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${liveBadge}${apiPill(j.api)}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-3xl">The decision: five buyers, ranked and scored.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-3xl editorial-question">${esc(IB.seller.openQuestion)}</p>
+
+          <!-- ranked + dial -->
+          <div class="grid lg:grid-cols-[1fr_260px] gap-4 mt-6">
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Ranked acquirers · composite = 55% financial / 45% culture</div>
+              <div class="flex flex-col gap-2">
+                ${IB.acquirers.map((a,i) => `
+                  <div class="flex items-center gap-3 p-3 rounded-xl" style="background:${i===0?'rgba(194,148,69,.1)':'rgba(255,255,255,.03)'}; border:1px solid ${i===0?'rgba(194,148,69,.34)':'rgba(255,255,255,.08)'};">
+                    <span class="mono t-xs ink-on-dark-3" style="width:18px;">${i+1}</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="t-base font-semibold ink-on-dark flex items-center gap-2">${esc(a.name)}
+                        ${a.aiNative?`<span class="pill" style="background:rgba(194,148,69,.16);color:var(--accent);border:1px solid rgba(194,148,69,.4);">AI-native</span>`:''}</div>
+                      <div class="t-xs ink-on-dark-3 truncate">${esc(a.rationale)}</div>
+                    </div>
+                    <div class="text-right flex-none">
+                      <div class="mono t-lg" style="color:${i===0?'var(--accent)':'var(--ink-on-dark)'};">${a.composite}</div>
+                      <div class="t-xxs ink-on-dark-3 mono">F${a.financial} · C${a.culture}</div>
+                    </div>
+                  </div>`).join('')}
+              </div>
+            </div>
+
+            <div class="card-light p-5 flex flex-col items-center text-center">
+              <div class="eyebrow mb-2" style="color:var(--ink-secondary);">Top fit</div>
+              <svg width="140" height="140" viewBox="0 0 120 120" aria-label="Composite score ${top.composite}">
+                <circle class="dial-track" cx="60" cy="60" r="54" fill="none" stroke-width="10"/>
+                <circle class="dial-fill" id="dial" cx="60" cy="60" r="54" fill="none" stroke-width="10"
+                  stroke-dasharray="${dash}" stroke-dashoffset="${dash}" transform="rotate(-90 60 60)"/>
+                <text x="60" y="58" text-anchor="middle" class="mono" style="font-size:30px;font-weight:600;fill:var(--ink);">${top.composite}</text>
+                <text x="60" y="76" text-anchor="middle" style="font-size:10px;fill:var(--ink-secondary);letter-spacing:1px;">COMPOSITE</text>
+              </svg>
+              <div class="t-base font-semibold mt-1" style="color:var(--ink);">${esc(top.name)}</div>
+              <div class="t-xs mt-1" style="color:var(--ink-secondary);">${esc(top.tagline)}</div>
+            </div>
+          </div>
+
+          <!-- 4 analytical panels -->
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <!-- valuation football field -->
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Valuation football field</div>
+              ${ff.map(r => `
+                <div class="mb-3">
+                  <div class="flex justify-between t-xs ink-on-dark-2 mb-1"><span>${esc(r.name)}</span><span class="mono">${esc(r.value)}</span></div>
+                  <div class="ff-bar" style="background:rgba(255,255,255,.07); position:relative;">
+                    <div class="ff-bar" style="position:absolute; left:${(r.start*100).toFixed(0)}%; width:${((r.end-r.start)*100).toFixed(0)}%; background:${r.tone==='accent'?'var(--accent)':'rgba(159,194,232,.55)'};"></div>
+                  </div>
+                </div>`).join('')}
+              <div class="t-xxs ink-on-dark-3 mt-2">DCF, comps and precedents pending data. Framework shown, not invented.</div>
+            </div>
+
+            <!-- culture matrix -->
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Culture matrix · 4 Bain fault lines</div>
+              <table class="w-full matrix t-xs">
+                <thead><tr><th class="text-left ink-on-dark-3" style="font-weight:600;">Fault line</th><th class="cmark-strong" style="font-weight:600;">Anthropic</th><th class="cmark-watch" style="font-weight:600;">Salesforce</th></tr></thead>
+                <tbody>
+                  ${cm.faultlines.map((f,i) => `
+                    <tr>
+                      <td class="ink-on-dark-2">${esc(f)}</td>
+                      <td class="${cmTone[cm.byAcquirer.anthropic[i].c]} font-semibold">${esc(cm.byAcquirer.anthropic[i].v)}</td>
+                      <td class="${cmTone[cm.byAcquirer.salesforce[i].c]} font-semibold">${esc(cm.byAcquirer.salesforce[i].v)}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- synergy stress test -->
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="eyebrow ink-on-dark-3">Synergy stress test</div>
+                <span class="pill" style="background:rgba(194,148,69,.16);color:var(--accent);border:1px solid rgba(194,148,69,.4);">${I.lock} Pro skill</span>
+              </div>
+              ${IB.synergyStressTest.rows.map(r => `
+                <div class="flex items-baseline justify-between gap-3 mb-2">
+                  <span class="t-sm ink-on-dark">${esc(r.label)}</span>
+                  <span class="mono t-sm" style="color:var(--accent);">${esc(r.baseRate)}</span>
+                </div>`).join('')}
+              <div class="t-xxs ink-on-dark-3 mt-2 leading-relaxed">${esc(IB.synergyStressTest.riskNote)}</div>
+            </div>
+
+            <!-- founder read -->
+            <div class="card p-5">
+              <div class="eyebrow ink-on-dark-3 mb-3">Founder read · ${esc(fr.founderName)}</div>
+              ${fr.scenarios.map(s => `
+                <div class="mb-3 pb-3" style="border-bottom:1px solid rgba(255,255,255,.06);">
+                  <div class="flex items-center gap-2">
+                    <span class="t-sm font-semibold ink-on-dark">${esc(s.title)}</span>
+                    <span class="t-xxs pill" style="background:rgba(255,255,255,.06);color:var(--ink-on-dark-secondary);">${esc(s.likelihood)}</span>
+                  </div>
+                  <div class="t-xs ink-on-dark-3 mt-1">${esc(s.desc)}</div>
+                </div>`).join('')}
+            </div>
+          </div>
+
+          <!-- skills tiering footnote -->
+          <div class="card-light p-4 mt-4 flex flex-wrap items-center gap-3">
+            <span class="eyebrow" style="color:var(--ink-secondary);">Skills</span>
+            ${IB.skills.map(s => `<span class="pill" style="background:${s.premium?'#FBF4E6':'#ECEEF2'};color:${s.premium?'var(--accent-dark)':'var(--ink-secondary)'};border:1px solid ${s.premium?'rgba(194,148,69,.4)':'var(--stroke)'};">${s.premium?I.lock:''}${esc(s.name)}${s.premium?' · Pro':''}</span>`).join('')}
+          </div>
+        </section>`;
+    }
+
+    function outreach(j) {
+      const ex = IB.screeningExamples;
+      const vmap = { clear:{cls:'v-clear',ic:I.check,lbl:'Clear'}, hold:{cls:'v-hold',ic:I.lock,lbl:'Hold'}, blocked:{cls:'v-blocked',ic:I.x,lbl:'Blocked'} };
+      return `
+        <section class="beat">
+          ${beatHeader(j, `${liveBadge}${apiPill('compliance')}`)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">Every message screened before it leaves the room.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} Clear messages pass. MNPI stops with a reason and a compliant rewrite.</p>
+
+          <div class="flex flex-col gap-3 mt-6 max-w-3xl">
+            ${ex.map((e,i) => {
+              const v = vmap[e.verdict];
+              return `
+              <div class="card p-4">
+                <div class="flex items-start gap-3">
+                  <span class="${v.cls} pill flex-none mt-0.5">${v.ic} ${v.lbl}</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="t-base ink-on-dark">"${esc(e.body)}"</div>
+                    ${e.reason?`<div class="t-sm mt-2" style="color:#f0967f;">${esc(e.reason)}</div>`:''}
+                    ${e.rewrite?`<div class="mt-2 p-2.5 rounded-lg t-sm" style="background:rgba(45,126,84,.1);border:1px solid rgba(45,126,84,.3);color:#bfe8d2;">Suggested rewrite: "${esc(e.rewrite)}"</div>`:''}
+                  </div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          <p class="t-xs ink-on-dark-3 mt-4 flex items-center gap-2 max-w-2xl">${I.shield} Verdicts are deterministic mock screening on this prototype. The screen is real; the model behind it is the build target.</p>
+        </section>`;
+    }
+
+    function pitch(j) {
+      return `
+        <section class="beat">
+          ${beatHeader(j, visionBadge)}
+          <h1 class="head t-2xl ink-on-dark mt-2 max-w-2xl">AI-assisted teaser, compliance pre-cleared.</h1>
+          <p class="t-md ink-on-dark-2 mt-3 max-w-2xl">${esc(j.line)} The teaser drafts itself from the deal brief, then passes the cascade before it can be shared.</p>
+
+          <div class="card p-5 sm:p-6 mt-6 max-w-2xl">
+            <div class="flex items-center gap-2 mb-3">
+              <span style="color:var(--accent);">${I.spark}</span>
+              <span class="eyebrow ink-on-dark-3">Drafted teaser · Project Atlas</span>
+              <span class="pill v-clear ml-auto">${I.check} Pre-cleared</span>
+            </div>
+            <p class="t-md ink-on-dark leading-relaxed">
+              A <span class="editorial-name">${esc(IB.seller.name)}</span> sell-side opportunity. ${esc(IB.seller.tagline)}
+              ${IB.fmtUsd(IB.seller.financials.revenueUsd)} revenue at ${IB.seller.financials.revenueGrowthPct}% growth,
+              ${IB.seller.financials.ebitdaMarginPct}% EBITDA margin. Lead strategic fit: Anthropic, composite 87.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="pill pill-api">teaser.draft()</span>
+              <span class="pill pill-api">cascade.screen()</span>
+              <span class="pill pill-vision">Vision / next</span>
+            </div>
+          </div>
+
+          <div class="card-light p-5 mt-4 max-w-2xl flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full grid place-items-center flex-none" style="background:rgba(45,126,84,.14);color:var(--positive);">${I.check}</div>
+            <div>
+              <div class="t-base font-semibold" style="color:var(--ink);">Journey complete</div>
+              <div class="t-sm" style="color:var(--ink-secondary);">Intake to pitch, compliance the through-line. Decisions surfaced, not data dumped.</div>
+            </div>
+            <button class="btn btn-primary ml-auto flex-none" id="restart">Restart journey</button>
+          </div>
+        </section>`;
+    }
+
+    const renderers = { intake, conflicts, notice, team, ndas, dataroom, brief, outreach, pitch };
+
+    /* ───────────────────────── NAV + SPINE ───────────────────────── */
+
+    function renderSpine() {
+      const mk = (el, mobile) => {
+        el.innerHTML = IB.journey.map((j, i) => {
+          const state = i === current ? 'active' : (visited.has(i) && i < current ? 'done' : '');
+          const node = (visited.has(i) && i < current) ? I.check : (j.beat);
+          if (mobile) {
+            return `<button class="step ${state}" data-go="${i}" style="width:auto;flex:none;padding:7px 11px;" aria-current="${i===current?'step':'false'}">
+              <span class="step-node" style="width:20px;height:20px;font-size:10px;">${node}</span>
+              <span class="t-xs whitespace-nowrap">${esc(j.title)}</span></button>`;
+          }
+          return `<button class="step ${state}" data-go="${i}" aria-current="${i===current?'step':'false'}">
+            <span class="step-node">${node}</span>
+            <span class="min-w-0"><span class="t-sm font-semibold block leading-tight">${esc(j.title)}</span></span>
+          </button>`;
+        }).join('');
+        el.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+      };
+      mk(document.getElementById('spine-rail'), false);
+      mk(document.getElementById('spine-mobile'), true);
+      // keep active mobile step in view
+      const am = document.querySelector('#spine-mobile .step.active');
+      if (am) am.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    }
+
+    function go(i) {
+      if (i < 0 || i >= IB.journey.length) return;
+      current = i;
+      visited.add(i);
+      const j = IB.journey[i];
+      const host = document.getElementById('beat-host');
+      host.innerHTML = renderers[j.key](j) + navBar();
+      document.getElementById('topbar-stage').textContent = j.title;
+      renderSpine();
+      wireBeat(j);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const h = host.querySelector('h1'); if (h) { h.setAttribute('tabindex','-1'); h.focus(); }
+    }
+
+    function navBar() {
+      const last = current === IB.journey.length - 1;
+      const first = current === 0;
+      return `
+        <div class="flex items-center justify-between gap-3 mt-8 pt-5 border-t border-white/10">
+          <button class="btn btn-ghost" id="nav-back" ${first?'disabled':''}>${I.arrowL} Back</button>
+          <div class="t-xs ink-on-dark-3 mono">${current+1} / ${IB.journey.length}</div>
+          ${last
+            ? `<button class="btn btn-ghost" id="restart2">Restart</button>`
+            : `<button class="btn btn-primary" id="nav-next">Next ${I.arrowR}</button>`}
+        </div>`;
+    }
+
+    /* per-beat interactivity */
+    function wireBeat(j) {
+      document.getElementById('nav-back')?.addEventListener('click', () => go(current-1));
+      document.getElementById('nav-next')?.addEventListener('click', () => go(current+1));
+      document.getElementById('restart')?.addEventListener('click', () => go(0));
+      document.getElementById('restart2')?.addEventListener('click', () => go(0));
+
+      if (j.key === 'intake') {
+        const btn = document.getElementById('intake-screen');
+        btn?.addEventListener('click', () => {
+          btn.disabled = true; btn.style.opacity = '.6';
+          IB.complianceCascade.forEach((_, i) => {
+            setTimeout(() => {
+              document.getElementById('casc-'+i)?.classList.add('ok');
+              document.getElementById('casc-'+i).innerHTML = I.check;
+              const v = document.getElementById('casc-verdict-'+i); if (v) v.style.visibility = 'visible';
+            }, 350 * (i+1));
+          });
+          setTimeout(() => {
+            const r = document.getElementById('intake-result'); if (r) r.style.display = 'block';
+            btn.disabled = false; btn.style.opacity = '1';
+          }, 350 * (IB.complianceCascade.length + 1));
+        });
+      }
+
+      if (j.key === 'team') {
+        document.getElementById('md-invite')?.addEventListener('click', (e) => {
+          const b = e.currentTarget;
+          b.innerHTML = I.check + ' Invite sent · POST 201';
+          b.style.background = 'var(--positive)'; b.style.color = '#fff';
+          setTimeout(() => { b.innerHTML = I.users + ' Invite member'; b.style.background = ''; b.style.color = ''; }, 1800);
+        });
+      }
+
+      if (j.key === 'dataroom') {
+        document.querySelectorAll('[data-doc]:not([disabled])').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const d = IB.documents[+btn.dataset.doc];
+            const box = document.getElementById('doc-audit');
+            const line = document.getElementById('doc-audit-line');
+            if (box && line) {
+              const now = new Date();
+              const ts = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+              line.textContent = `${ts} · Storm Duncan · view · ${d.name}`;
+              box.style.display = 'block';
+            }
+          });
+        });
+      }
+
+      if (j.key === 'brief') {
+        const dial = document.getElementById('dial');
+        if (dial) {
+          const dash = 339.292, off = dash * (1 - IB.acquirers[0].composite/100);
+          requestAnimationFrame(() => requestAnimationFrame(() => { dial.style.strokeDashoffset = off; }));
+        }
+      }
+    }
+
+    /* keyboard nav */
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') go(current+1);
+      if (e.key === 'ArrowLeft') go(current-1);
+    });
+
+    // make h1 focusable for a11y on nav
+    const styleFix = document.createElement('style');
+    styleFix.textContent = 'h1:focus{outline:none;}';
+    document.head.appendChild(styleFix);
+    document.addEventListener('DOMContentLoaded', () => {});
+
+    go(0);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "_source": "hand-written in the documented shape of POST /orgs/{org}/actions/runners/generate-jitconfig (201); the config is a fake base64 value",
+  "runner": {
+    "id": 5003,
+    "name": "deploy-00112233aabb",
+    "os": "unknown",
+    "status": "offline",
+    "busy": false,
+    "ephemeral": true,
+    "labels": [{ "id": 1, "name": "conductia-deploy", "type": "custom" }]
+  },
+  "encoded_jit_config": "ZmFrZS1qaXQtY29uZmlnLWZvci10ZXN0cw=="
+}

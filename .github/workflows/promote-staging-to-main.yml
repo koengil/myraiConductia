@@ -1,0 +1,211 @@
+name: Promote staging to main
+
+# main moves only after production's schema holds this build's migrations.
+# plan pins the staging commit and prints what the release contains: commits,
+# migration files and the version to tag. live_smoke runs the MD spine from that
+# commit against staging's live services; a red smoke stops the run before
+# production is touched. migrate applies the pending files to
+# production from that commit and runs preflight:db; it goes ahead only for a
+# person listed in MIGRATION_APPROVERS on environment db-production.
+# fast-forward moves main to exactly that commit; release tags it and
+# publishes the notes. A failed or refused migration leaves main where it is.
+# staging only ever holds develop commits whose required checks passed on that
+# exact commit (Promote develop to staging), so main inherits the same bar.
+# Release procedure: docs/03-engineering/delivery-model.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump for this release
+        required: true
+        type: choice
+        default: minor
+        options:
+          - minor
+          - patch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promote-main
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Pin the staging commit to promote
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    # A deploy VM's job-started hook may hold the first step up to 10 minutes
+    # while the toolchain installs (ADR-0028); the job's own work is minutes.
+    timeout-minutes: 15
+    outputs:
+      sha: ${{ steps.pin.outputs.sha }}
+      previous: ${{ steps.pin.outputs.previous }}
+      migrations: ${{ steps.pin.outputs.migrations }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout staging
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Pin staging and list what it adds
+        id: pin
+        run: |
+          set -euo pipefail
+          # checkout's fetch-depth: 0 already fetched every branch into
+          # origin/*. No second fetch: persist-credentials is off, so it would
+          # run unauthenticated and fail on this private repo.
+          sha="$(git rev-parse origin/staging)"
+          main_sha="$(git rev-parse origin/main)"
+          git merge-base --is-ancestor origin/main "${sha}" \
+            || { echo "❌ main is not an ancestor of staging. Land main's extra commits on develop and promote them through staging first."; exit 1; }
+          git merge-base --is-ancestor "${sha}" origin/develop \
+            || { echo "❌ staging is not an ancestor of develop. staging must only move by Promote develop to staging."; exit 1; }
+          previous="$(git tag --merged origin/main --list 'v*' | grep -E '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' | sort -V | tail -1 || true)"
+          test -n "${previous}" \
+            || { echo "❌ No vX.Y.Z tag is reachable from main. Tag the release main holds before promoting."; exit 1; }
+          changed="$(git diff --name-only --diff-filter=AMR origin/main.."${sha}" -- supabase/migrations)"
+          delimiter="migrations-${sha}"
+          {
+            echo "sha=${sha}"
+            echo "main_sha=${main_sha}"
+            echo "previous=${previous}"
+            echo "migrations<<${delimiter}"
+            echo "${changed}"
+            echo "${delimiter}"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### Promoting staging @ ${sha:0:7}"
+            echo
+            echo "Commits this adds to main, since ${previous}:"
+            echo
+            git log --no-decorate --format='- %s' origin/main.."${sha}"
+            echo
+            if [ -z "${changed}" ]; then
+              echo "No migration files added or changed since main."
+            else
+              echo "Migration files this adds since main. The ledger decides what is applied, and the Migrate database summary lists what ran:"
+              echo
+              while IFS= read -r file; do echo "- \`${file}\`"; done <<< "${changed}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refuse an empty promotion
+        env:
+          SHA: ${{ steps.pin.outputs.sha }}
+          MAIN_SHA: ${{ steps.pin.outputs.main_sha }}
+        run: |
+          set -euo pipefail
+          if [ "${SHA}" = "${MAIN_SHA}" ]; then
+            echo "❌ staging and main are the same commit. There is nothing to promote."
+            exit 1
+          fi
+
+      - name: Compute the next version
+        id: version
+        env:
+          PREVIOUS: ${{ steps.pin.outputs.previous }}
+          BUMP: ${{ inputs.bump }}
+        run: |
+          set -euo pipefail
+          if ! [[ "${PREVIOUS}" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "❌ The previous tag '${PREVIOUS}' is not vX.Y.Z."
+            exit 1
+          fi
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+          patch="${BASH_REMATCH[3]}"
+          case "${BUMP}" in
+            minor) version="v${major}.$((minor + 1)).0" ;;
+            patch) version="v${major}.${minor}.$((patch + 1))" ;;
+            *)
+              echo "❌ Unknown bump '${BUMP}'. Use minor or patch."
+              exit 1
+              ;;
+          esac
+          if git rev-parse --quiet --verify "refs/tags/${version}" >/dev/null; then
+            echo "❌ ${version} already exists. Check the tags before promoting again."
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "This promotion will be tagged **${version}** (previous: ${PREVIOUS})." >> "$GITHUB_STEP_SUMMARY"
+
+  live_smoke:
+    name: Live smoke on staging
+    needs: plan
+    uses: ./.github/workflows/e2e-live-smoke.yml
+    with:
+      ref: ${{ needs.plan.outputs.sha }}
+    secrets: inherit
+
+  migrate:
+    name: Migrate production
+    needs: [plan, live_smoke]
+    uses: ./.github/workflows/migrate.yml
+    with:
+      environment: db-production
+      ref: ${{ needs.plan.outputs.sha }}
+    secrets: inherit
+
+  fast-forward:
+    name: Fast-forward main to staging
+    needs: [plan, migrate]
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    # A deploy VM's job-started hook may hold the first step up to 10 minutes
+    # while the toolchain installs (ADR-0028); the job's own work is minutes.
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Fast-forward main to the pinned commit
+        env:
+          SHA: ${{ needs.plan.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main staging
+          git checkout main
+          git merge --ff-only "${SHA}"
+          git push origin main
+
+  release:
+    name: Tag and publish the release
+    needs: [plan, fast-forward]
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    # A deploy VM's job-started hook may hold the first step up to 10 minutes
+    # while the toolchain installs (ADR-0028); the job's own work is minutes.
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Tag the promoted commit and publish its notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ needs.plan.outputs.sha }}
+          VERSION: ${{ needs.plan.outputs.version }}
+          PREVIOUS: ${{ needs.plan.outputs.previous }}
+          MIGRATIONS: ${{ needs.plan.outputs.migrations }}
+        run: |
+          set -euo pipefail
+          notes="$(
+            echo "## Migrations in this release"
+            echo
+            if [ -z "${MIGRATIONS}" ]; then
+              echo "None."
+            else
+              while IFS= read -r file; do echo "- \`${file}\`"; done <<< "${MIGRATIONS}"
+            fi
+          )"
+          gh release create "${VERSION}" --repo "${REPO}" --target "${SHA}" --title "${VERSION}" \
+            --notes "${notes}" --generate-notes --notes-start-tag "${PREVIOUS}"

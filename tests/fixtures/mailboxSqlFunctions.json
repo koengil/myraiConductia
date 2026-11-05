@@ -1,0 +1,490 @@
+[
+  {
+    "name": "app_can_read_model_proposal",
+    "reason": "Read helper of the demo-only model proposal dismissal (G-02a #173; security definer, revoked from signed-in roles): the discovery_model_proposals select policy's terms as G-01 left them, as a function (app_reads_proposal_source for the row's run, plus app_can_see_candidate for a c: key), called by discovery_dismiss_model_proposal as its owner and by the parity test as service_role; returns a boolean, never mail."
+  },
+  {
+    "name": "app_can_see_candidate",
+    "reason": "RLS helper (security definer, caller-bound): the candidate policies call it, and it applies the allowlist and the Q1 = B carve-out; it returns booleans, never mail."
+  },
+  {
+    "name": "app_can_see_item",
+    "reason": "RLS helper (security definer, caller-bound): the source_items policy and mailbox_items_visible_to call it; it applies the allowlist and the Q1 = B carve-out."
+  },
+  {
+    "name": "app_item_cco_allowed_source",
+    "reason": "RLS helper (#581): app_item_has_allowed_source, or provenance in a team inbox that allowed_team_mailboxes admits; called only from the control room's branches of app_can_see_item and app_can_see_candidate (metadata, never text), revoked from signed-in roles, and returns a boolean."
+  },
+  {
+    "name": "app_item_from_sources",
+    "reason": "RLS helper (#670; security definer, revoked from signed-in roles): whether an item has provenance, within its tenant, in one of the given content sources; called only from app_owned_item_ids and discovery_item_metadata with the caller's own app_owned_source_ids, so no caller chooses the sources; returns a boolean."
+  },
+  {
+    "name": "app_item_has_allowed_source",
+    "reason": "RLS helper: true when an item has a source whose mailbox is on allowed_mailboxes; called only from app_can_see_item and app_can_see_candidate, revoked from signed-in roles, and returns a boolean."
+  },
+  {
+    "name": "app_owned_item_ids",
+    "reason": "RLS helper (#670; security definer, caller-bound, no argument): the caller's own items on the candidates they see, distinct (app_owns_item over the caller's owned sources), asked once per statement by the evidence_links policy; returns ids the caller already reads, never mail."
+  },
+  {
+    "name": "app_owned_source_ids",
+    "reason": "RLS helper (#670; security definer, revoked from signed-in roles): the content sources whose items auth.uid() owns, app_owns_item's three branches as conditions on the source (allowlisted personal mailbox, registered site of a firm admin, allowlisted team inbox the caller reads); returns source ids, never mail."
+  },
+  {
+    "name": "app_owns_item",
+    "reason": "RLS helper: an item's provenance owner test, called from app_can_see_item and the text policy; returns a boolean and applies the allowlist."
+  },
+  {
+    "name": "app_owns_mailbox_source",
+    "reason": "RLS helper of the demo-only discovery_model_proposals (#460): the mailbox source's owner in its tenant while the mailbox is allowlisted, the join app_owns_item makes; answers only about the caller."
+  },
+  {
+    "name": "app_reads_proposal_source",
+    "reason": "RLS helper of discovery_model_proposals' select policy (G-01 #173; security definer, caller-bound): a personal source's owner (app_owns_mailbox_source), or, for a team source, a user app_reads_team_mailbox admits when a pass row exists for the run; answers only about the caller and returns a boolean, never mail."
+  },
+  {
+    "name": "app_reads_team_mailbox",
+    "reason": "RLS helper (G-01 #173; security definer, caller-bound): whether the caller reads one team inbox, an open member of a firm company's non-admin seat or the CCO of the inbox's own firm company, while allowed_team_mailboxes admits the inbox; shared by the proposals policy and the next task's team reads; returns a boolean, never mail."
+  },
+  {
+    "name": "app_visible_candidate_ids",
+    "reason": "RLS helper (#581, audit item 5; security definer, caller-bound): the candidates the caller sees, app_can_see_candidate over the caller's own tenant's candidates, asked once per statement by the evidence_links policy; returns ids, never mail."
+  },
+  {
+    "name": "content_sources_team_fixed",
+    "reason": "Trigger function (definer, revoked from every API role) on content_sources: keeps a team source ownerless, on its registration, and on its address while the registration is open; it reads the registry only and returns the row."
+  },
+  {
+    "name": "discovery_accept_model_proposal",
+    "reason": "Signed-in RPC bound to auth.uid() (G-02b #173): the source owner asks to accept a deal key's model-only proposals under the tenant's discovery lock, with the tenant bank's deal-create authority; only live rows the caller reads (app_can_read_model_proposal) on a personal source the caller owns that no dismissal covers, else P0002. Stores one request row per source (hashes and message keys, no text) and an audit row of ids, a step id and counts, never the key or a name, and returns an operation id and a count."
+  },
+  {
+    "name": "discovery_add_team_mailbox_member",
+    "reason": "Signed-in RPC bound to auth.uid() (#581): the firm's own admin adds an active, internal, seated, non-admin colleague to a team inbox (anything else answers 42501 or 22023), under the tenant's discovery lock, audited by ids; writes a membership row, whose reader sees the inbox's candidates and items through the RLS helpers, and reads no mail."
+  },
+  {
+    "name": "discovery_allowlist_health",
+    "reason": "Signed-in RPC for the firm's admin and CCO only (seat and is_external checks in the body); returns provider drift counts and no mailbox content."
+  },
+  {
+    "name": "discovery_assessment_inputs",
+    "reason": "Service-role read of milestone events for the stage engine (#262 R15): each candidate's live links narrowed by app_item_has_allowed_source, so a withdrawn, seat-lost or archived mailbox's events never reach an assessment; revoked from signed-in roles, returns ids, types, dates and confidence (never text or a span), and called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_audience_assessment_inputs",
+    "reason": "Service-role read of milestone events for the stage engine (#262 R15; audiences and the current-events rule #173 G-07): each candidate's live links, each item's events limited to those discovery_current_event_ids names current for the row's audience, as shared rows (team_mailbox_id null) only through app_item_has_allowed_source, so a withdrawn, seat-lost or archived mailbox's events never reach a shared assessment, plus one row per allowed team inbox of the item in the tenant, tagged with that inbox, for that inbox's audience alone; revoked from signed-in roles, returns ids, types, dates, confidence, the audience and the basis (never text or a span), and called only by src/lib/discovery/extract/store.ts, which falls back to discovery_assessment_inputs (the shared-only form, kept for workers that predate it) while its migration has not landed."
+  },
+  {
+    "name": "discovery_authorize_correction",
+    "reason": "Service-role prelude of the four correction RPCs (definer, not granted to signed-in roles): takes the tenant lock, then the row lock, then checks the caller's tenant, candidate visibility through app_can_see_candidate and deal-create authority; returns ids and a state, never mail."
+  },
+  {
+    "name": "discovery_begin_proposal_source",
+    "reason": "Service-role definer that opens the audited pass a team source must hold before any model call (G-01 #173): checks both halves of the team_proposals switch (the reviewed firm list and the approval row) and the inbox's place on allowed_team_mailboxes, writes one pass row and the started audit row (ids only), closes a lapsed pass of another run as unclosed; reads no mail text, returns a scope and a lease time, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_candidate_origins",
+    "reason": "Signed-in RPC bound to auth.uid() (G-02b #173): for each requested candidate the caller sees (app_can_see_candidate) or whose promoted deal they sit on or oversee, answers the word model_proposal or rules from the candidate's cluster-key prefix and those of the candidates merged into it, bounded and cycle-safe; returns the asked id and the enum, never a cluster key, a merged-in id or mail."
+  },
+  {
+    "name": "discovery_claim_model_proposal_accepts",
+    "reason": "Service-role definer (G-02b #173): the source's own SYNC job claims the pending (or lease-expired) accept requests of that source under the tenant's discovery lock, with its job id as the claim token and a lease; a fourth attempt fails the request and purges its stored text. Reads and writes request rows (hashes and message keys, no text); the purge it can trigger is the finish definer's."
+  },
+  {
+    "name": "discovery_close_lapsed_proposal_passes",
+    "reason": "Service-role definer the worker calls once per propose run (G-01 #173, review F5): closes each open team pass of the tenant whose lease has lapsed as unclosed and audits it as finished (ids and integer counts only), asking no approval so a pass left by a crash is closed even after a revoke or a refused inbox; skips a source another call holds, reads no mail text, returns a count, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_collect_orphans",
+    "reason": "Purge collector (#461, service_role only, definer): deletes the tenant's stored messages no mailbox holds and the candidates left with no evidence, skipping legal hold; where it deletes a surviving candidate's latest assessment of an audience it writes a tombstone, its stage_assessed audit row (ids and the trigger) and a purge recompute request (#173 G-07); returns a run id and counts, never mail."
+  },
+  {
+    "name": "discovery_collect_orphans_all",
+    "reason": "The worker's purge backstop (#461, service_role only, definer): runs discovery_collect_orphans per tenant with orphans, deletes the index rows a purge marked whose deletion is owed (never one kept at tenant end), and audits counts; returns counts, never mail."
+  },
+  {
+    "name": "discovery_connect_team_mailbox",
+    "reason": "Firm admin's connect of a team inbox (#581; definer, acts on auth.uid(), executable by authenticated, never by anon or PUBLIC): writes the registry and the ownerless source, audits ids only, and returns the registration with no mail."
+  },
+  {
+    "name": "discovery_correction_authority",
+    "reason": "Signed-in read-only RPC bound to auth.uid(): answers null or the reason the caller may not correct a candidate (not_visible, no_authority, candidate_state) through app_can_see_candidate and app_can_create_deals; returns a code, never mail."
+  },
+  {
+    "name": "discovery_current_event_ids",
+    "reason": "Service-role rule (#173 G-07, 20261023130400; definer, revoked from signed-in roles): an item's current milestone events for one audience: the latest ok model call for the item's current content decides, even with no event; otherwise rule events only where discovery_rule_firm_ok holds (false until G-07 slice 3b); called only inside discovery_assessment_inputs and discovery_item_current_events; reads model_calls and milestone_events by item, returns event ids and a basis, never text or a span."
+  },
+  {
+    "name": "discovery_deal_origin",
+    "reason": "Signed-in RPC bound to auth.uid() (G-02b #173): for a deal the caller sits on or oversees in their own tenant, answers the word model_proposal or rules from the cluster-key prefixes of the candidates promoted to it and merged into them, bounded and cycle-safe, else null; returns the enum only, never a cluster key, a candidate id or mail."
+  },
+  {
+    "name": "discovery_detect_batch",
+    "reason": "Service-role read of stored mail text for the rule detector (#173 G-07 slice 3b, 20261023130600): live-linked messages with an audience whose firm approved milestone_rules (discovery_rule_firm_ok per audience, through allowed_mailboxes, allowed_sites and allowed_team_mailboxes), not yet settled for their content hash and rules version; revoked from signed-in roles; called only by src/lib/discovery/detect/store.ts, whose text never leaves the worker (the detector is pure and sends nothing)."
+  },
+  {
+    "name": "discovery_dismiss_model_proposal",
+    "reason": "Signed-in RPC bound to auth.uid() (G-02a #173): the source owner dismisses a deal key's model proposals under the tenant's discovery lock; only live rows the caller reads (app_can_read_model_proposal) on a personal source the caller owns, else P0002. Writes dismissal rows and an audit row of ids and counts, never the key or a name, and returns a count."
+  },
+  {
+    "name": "discovery_dismiss_suggestion",
+    "reason": "Signed-in RPC bound to auth.uid() (the deal's MD only, 42501 otherwise): records the dismissal of the rail's evidence marker with a reason in the append-only log, naming an assessment of that deal; touches no mail and returns an id."
+  },
+  {
+    "name": "discovery_end_proposal_source",
+    "reason": "Service-role definer that closes the open pass of one run on a source with an outcome and integer counts and audits it as finished (G-01 #173); asks no approval so a revoked or refused source can still be closed, does nothing when no pass is open, reads no mail text, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_expire_model_proposal_accepts",
+    "reason": "Service-role definer (G-02b #173): the tick fails the unclaimed pending accept requests, and the in-flight ones (running, storing, stored) with a lapsed lease, whose source is no longer an active mailbox or which are too old; p_tenant null covers every tenant that has such rows, each under its own tenant lock, and nothing to expire returns 0 without a lock. A pending request holds no write-ahead keys and is audited here by ids and counts; an in-flight one takes a fresh claim token under the tenant lock and ends through the finish definer, which purges what the request newly stored and audits it. It reads and deletes no mail text itself."
+  },
+  {
+    "name": "discovery_extract_batch",
+    "reason": "Service-role read of stored text for the deal-zone extractor (E1): narrowed by app_item_has_allowed_source and to firm or confirmed links on unrejected candidates, and, with a budget id (#261), to that budget's cohort; revoked from signed-in roles, and called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_extract_budget_open",
+    "reason": "Service-role bound of a live extraction run (#261): opens the tenant's budget with its cohort of item ids and ceiling costs (from discovery_extract_pending, ids and byte lengths), or returns the open one; returns a uuid or null, never text; revoked from signed-in roles; called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_extract_budget_state",
+    "reason": "Service-role read of the open budget's state (#261): the stop line, the dollars spent and a count of unpriced usage, from ai_usage and the gateway rows of model_calls (ids and numbers only); returns no text; revoked from signed-in roles; called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_extract_pending",
+    "reason": "Service-role pre-run estimate (#261): ids and byte lengths (octet_length, never detoasted) of the items discovery_extract_batch would select; returns no text; revoked from signed-in roles; called only by discovery_extract_stats."
+  },
+  {
+    "name": "discovery_extract_reserve",
+    "reason": "Service-role reservation of one gateway call (#261, B2): under the open budget's row lock, checks the cohort, calls in flight, discovery_extract_budget_state and the stop line, then sets inflight_since on one cohort row; returns a code, never text; revoked from signed-in roles; called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_extract_settle",
+    "reason": "Service-role clear of one cohort row's reservation (#261) once the call is on record; raises when no row matches; returns nothing; revoked from signed-in roles; called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_extract_stats",
+    "reason": "Service-role pre-run estimate (#261): counts and byte-length distributions of the items discovery_extract_batch would select, as numbers only; returns no text; revoked from signed-in roles; called only by src/lib/discovery/extract/store.ts."
+  },
+  {
+    "name": "discovery_finish_model_proposal_accept",
+    "reason": "Service-role definer (G-02b #173): the one terminal step of an accept request, token-checked under the tenant's discovery lock. Links this source's messages of the snapshot (stored by the request or already held) to the candidate, re-keys the matching proposal rows, records the correction, and purges the source's own provenance and ledger rows of every write-ahead message that was not linked, with no evidence exemption (the write-ahead keys are only what the request newly stored; the item and its text are left to discovery_collect_orphans). Audits as the discovery worker with ids, an outcome word and counts, never a key or a name."
+  },
+  {
+    "name": "discovery_google_mailbox_status",
+    "reason": "Signed-in RPC bound to auth.uid(): reports the caller's own Google mailbox source after opt-in (address, ingest group and domain, paused, whether the guard refuses it for the group) and that source's first-sync status (health state, first-read and last-sync times, whether Google refused delegation, #341) to the profile card; reads no mail."
+  },
+  {
+    "name": "discovery_ingestion_health",
+    "reason": "Signed-in RPC (#243) for the firm's own admin and CCO only (#262, C5: active, internal and seated in a firm a Graph or Google registration names; a tenant naming no firm gets the empty no-registration shape, 42501 otherwise); returns each source's address, provider, sync state, checkpoint age, why the guard would refuse it, and ledger counts, each provider registration with its delegation status, and group drift as counts only (#259); no mailbox content and no member address."
+  },
+  {
+    "name": "discovery_item_approved_teams",
+    "reason": "Service-role helper of the rule detector (#173 G-07 slice 3b): an item's team inboxes whose firm approved milestone_rules, through source_item_sources, content_sources and discovery_rule_firm_ok; returns ids only; revoked from signed-in roles; called only by discovery_detect_batch and discovery_record_detection."
+  },
+  {
+    "name": "discovery_item_current_events",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (#173 G-07, 20261023130400): for the given items app_can_see_item admits for the caller (nothing without a signed-in caller), the event ids discovery_current_event_ids names for the item's shared audience or an allowed team inbox of it, with a basis; called by src/lib/discovery/api.ts to keep the timeline and evidence to current events; never text, a span or a subject."
+  },
+  {
+    "name": "discovery_item_metadata",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (20261017100000, the source_items column wall): answers only the rows app_can_see_item admits, with subject and participants only where app_owns_item holds (null otherwise) and the sender's domain; never text or attachments."
+  },
+  {
+    "name": "discovery_item_owner_seated",
+    "reason": "Service-role predicate: true when the owner of an item's mailbox, or a reader of its team inbox (#581), is seated on a deal (Q21), so a promoted deal gains only items its members own or read; called by the upsert and the merge, returns a boolean, never mail."
+  },
+  {
+    "name": "discovery_item_team_access",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (#173 G-07, 20261023130500): for the given items app_can_see_item admits for the caller (nothing without a signed-in caller), whether the caller reads the item only through a team inbox they are an open member of (app_owned_source_ids' team sources) and through no mailbox or site of their own; called by src/lib/discovery/api.ts to label team mail; returns ids and a boolean, never text, a subject or an address."
+  },
+  {
+    "name": "discovery_ledger_record_policy_skips",
+    "reason": "Service-role-only writer of the exclusion policy's ledger skips (#263): inserts policy_excluded, policy_thread_excluded and policy_unevaluable rows into routing_ledger and refreshes only an earlier never-fetched policy skip, never a row that records a read or a fetch (routed, unrouted, id_collision, policy_excluded_after_fetch); stores a hash, rule id, version and thread id, never content; inserts the page's thread taints (source, thread id, rule id, version, item id) insert-only in the same transaction (audit C3)."
+  },
+  {
+    "name": "discovery_mark_model_proposal_accept_stored",
+    "reason": "Service-role definer (G-02b #173): token-checked state change of an accept request from storing to stored once the persist returned; reads and writes the request row only, no mail."
+  },
+  {
+    "name": "discovery_mark_model_proposal_accept_storing",
+    "reason": "Service-role definer (G-02b #173): token-checked write-ahead of an accept request: records the message keys about to be persisted (each must be a live key of the snapshot, and not already held by the source) before any text is written, so a crash can be purged, and returns the keys it recorded (null on a token or state mismatch). Reads this source's holder rows, writes the request row only; the keys are hashes, no mail."
+  },
+  {
+    "name": "discovery_merge_candidates",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): moves a candidate's evidence links to a survivor and records the merge in the append-only log; moves ids between candidates and returns no mail."
+  },
+  {
+    "name": "discovery_message_index_link",
+    "reason": "Service-role link refresh of the message index (#461, definer): sets each index row's candidate and deal ids from the current evidence links; called by the worker after persistCandidates and by the purge functions before they delete; returns a count, never mail."
+  },
+  {
+    "name": "discovery_message_index_record",
+    "reason": "Service-role writer of the message index (#461, definer): one call per page from persistItems after the ledger write; upserts one row per sighting (provider id, the sha256 of the Message-ID (never the raw id), sent date, content digest, rule-kind tags, versions), never content; refuses a source that is not the tenant's live mailbox (source_archived); returns a count."
+  },
+  {
+    "name": "discovery_model_proposal_accept_live_keys",
+    "reason": "Service-role definer (G-02b #173): token-checked read of the message keys, item hashes and dates of an accept request's snapshot whose proposal row still has the accepted deal key and hash; a storing request is held to its write-ahead keys. Hashes and dates only, no text."
+  },
+  {
+    "name": "discovery_model_proposals_archive_candidate",
+    "reason": "Trigger on deal_candidates (demo-only #460): when a candidate is deleted, rejected or merged, sets archived_at on the discovery_model_proposals rows that name it by key; reads no mail, returns nothing to a caller, executable by no client role."
+  },
+  {
+    "name": "discovery_own_mailbox_items",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (20261021141000, the Deal email thread's own-mailbox filter): answers which of the given items came from a mailbox the caller owns (owner_user_id = auth.uid(), allowlisted, never a team source) and that mailbox's address; never text, subject or participants."
+  },
+  {
+    "name": "discovery_promote_candidate",
+    "reason": "Service-role definer that promotes a proposed deal through the unchanged Gate 0 core (E5): granted to service_role alone, called only by POST /api/v1/deals/from-discovery with the verified session user as p_actor_id, and refuses an actor who cannot see the candidate (app_can_see_candidate for p_actor_id) or cannot create deals; writes ids to the audit log and returns the deal, never mail."
+  },
+  {
+    "name": "discovery_proposal_known_deals",
+    "reason": "Service-role read for the demo-only propose run (#460, per source since G-01 #173): the candidates discovery_proposal_may_name admits for one mailbox source and the deals the model named in that same source's own mail, while the source is readable; returns refs, names and ids for the source's prompt, never mail text, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_proposal_may_name",
+    "reason": "Service-role barrier test of the propose step (G-01 #173): whether an unrejected, firm-routed or confirmed link ties a candidate to an item read from one source, while that source is readable (a team inbox in allowed_team_mailboxes, or a personal mailbox its owner holds on allowed_mailboxes); never asks who else can see the candidate; returns a boolean, never mail, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_purge_identifiers",
+    "reason": "Identifier delete of the purge (#461, definer, no EXECUTE grant to any role): called only by discovery_purge_mailbox and discovery_purge_tenant; deletes one mailbox source of the tenant, whose provenance, ledger and taints cascade, and, when the retention policy deletes the index, that source's message index rows (a row linked to a deal under legal hold stays, marked for the backstop); returns counts, never mail."
+  },
+  {
+    "name": "discovery_purge_mailbox",
+    "reason": "Per-consent purge (#461, definer, no EXECUTE grant to any role): called only by the mailbox_consents_purge trigger when a consent ends; deletes the banker's mailbox source and collects orphans, or, when the tenant's retention policy keeps content on disconnect, archives the source and audits that; returns counts, never mail."
+  },
+  {
+    "name": "discovery_purge_tenant",
+    "reason": "Tenant purge at pilot end (#461, definer, no EXECUTE grant to any role, the service role included): run by the operator script scripts/discovery/purge-tenant.ts; deletes every mailbox source through discovery_purge_identifiers and the mail-derived rows; returns counts, site counts, the legal-hold residue (ids and counts) and the tenant's message index for the bank's confirmation report (Message-ID hashes, provider ids, dates, tags and versions), never a subject, body or address; its audit row holds ids and counts only."
+  },
+  {
+    "name": "discovery_reassign_link",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): moves one evidence link from a proposed deal to another and records the reassign in the append-only log, with the seated-owner filter (Q21) when the target is promoted; moves ids between candidates and returns no mail."
+  },
+  {
+    "name": "discovery_record_allowlist_drift",
+    "reason": "Service-role writer of mailbox_allowlist_drift, called by the worker's mirror pass; no signed-in caller and it returns a boolean, never mail. A team inbox's address is recorded and audited as team:<registration id> (#581)."
+  },
+  {
+    "name": "discovery_record_assessment",
+    "reason": "Service-role writer of stage_assessments from the deterministic stage engine; takes the tenant lock, is tenant-matched to the candidate, refuses a team inbox that is not allowed in the tenant, inserts on change only per audience and audits once with ids and codes, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_record_detection",
+    "reason": "Service-role writer of the rule detector's ledger and rule events (#173 G-07 slice 3b): tenant-matched to the item, refuses with 42501 capability_not_approved unless an audience of the item is still approved, writes types, dates, offsets and confidence (never text) and one audit row with ids, a count and the version; revoked from signed-in roles; called only by src/lib/discovery/detect/store.ts."
+  },
+  {
+    "name": "discovery_record_extraction",
+    "reason": "Service-role writer of model_calls and milestone_events after the extractor's call; tenant-matched to the item, audited in the same transaction with ids and counts only, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_record_model_proposal",
+    "reason": "Service-role writer of the demo-only discovery_model_proposals (#460) after the propose run's call; tenant-matched to the source and candidate, the source one somebody reads (an owner or a team inbox) and, for a team inbox, only while the firm company's team_proposals approval is live and the row's run holds an open pass (42501 team_not_approved), the candidate one that source's own mail backs (discovery_proposal_may_name) (share-locked; a row naming a candidate deleted, rejected or merged since the run read it is written already archived), carries hashes, domains and the answer, never mail text, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_record_team_detection_pass",
+    "reason": "Service-role audit writer of one rule-detector run over one team inbox (#173 G-07 slice 3b): checks the inbox against allowed_team_mailboxes in the tenant (22023), writes ids and integer counts only; revoked from signed-in roles; called only by src/lib/discovery/detect/store.ts."
+  },
+  {
+    "name": "discovery_record_team_mailbox_check",
+    "reason": "Service-role writer of the team_mailboxes check columns (#581) after the worker's Google Directory check of the address; validates its arguments, drops the answer of a closed registration, audits a change of status with ids and fixed codes only, and on entering refused or a new refused reason notifies the inbox's own firm admins and CCO with the address and the reason code (#173), never callable by a signed-in user or a tool and reads no mail."
+  },
+  {
+    "name": "discovery_refresh_candidate_visibility",
+    "reason": "Service-role writer of candidate_visibility from the worker and the team membership trigger; covered by the guarded worker read and by the RLS helpers on the read side."
+  },
+  {
+    "name": "discovery_reject_candidate",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): marks a proposed candidate rejected with a reason in the append-only log; touches no mail and returns an id."
+  },
+  {
+    "name": "discovery_remove_team_mailbox",
+    "reason": "Signed-in RPC bound to auth.uid() (#581): the firm's own admin closes a team inbox registration that never verified and whose source holds no provenance (anything else answers 42501 or 55000), archives its source and audits ids only, after closing the registration's open members under the tenant's discovery lock; reads provenance rows as a count, never mail."
+  },
+  {
+    "name": "discovery_remove_team_mailbox_member",
+    "reason": "Signed-in RPC bound to auth.uid() (#581): the firm's own admin closes a person's membership of a team inbox (anything else answers 42501), under the tenant's discovery lock, audited by ids; touches no deal membership and reads no mail."
+  },
+  {
+    "name": "discovery_rename_candidate",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): renames and pins a candidate, recording the change in the append-only log; touches no mail and returns an id."
+  },
+  {
+    "name": "discovery_renew_model_proposal_accept",
+    "reason": "Service-role definer (G-02b #173): token-checked extension of an accept request's lease at a page boundary of the job's read; writes the request row only, no mail."
+  },
+  {
+    "name": "discovery_renew_proposal_source",
+    "reason": "Service-role definer, once per page of a team pass (G-01 #173): repeats begin's three checks, requires the open pass of the calling run, extends its 30-minute lease and stores its integer counts; reads no mail text, returns a scope and a lease time, never callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_restart_mailbox_source",
+    "reason": "Signed-in RPC bound to auth.uid(): the source's own firm admin restarts a halted mailbox source (anything else answers 42501), clearing its cursor and error, audited (a team source by registration id, never its address, #581); reads no mail."
+  },
+  {
+    "name": "discovery_restore_model_proposal_dismissals",
+    "reason": "Operator restore (G-02a #173; service_role only, definer): marks dismissals restored at the request of the owner of every listed source (22023 otherwise), never deletes, and audits as the service with ids and the requester only; returns a count, never mail."
+  },
+  {
+    "name": "discovery_rule_firm_ok",
+    "reason": "Service-role rule (#173 G-07, restated in 20261023130600 over app_tenant_capability_on): whether an approved firm lets rule events count for one audience of an item, the shared one through its allowed personal mailboxes (the owner's seat company) and sites (their firm company), a team inbox through allowed_team_mailboxes and its firm company; returns a boolean; revoked from signed-in roles; called only by the current-events rule and the detector's definers."
+  },
+  {
+    "name": "discovery_set_mailbox_source_status",
+    "reason": "Signed-in RPC bound to auth.uid(): the source's own firm admin pauses or resumes a live Google mailbox source (an archived source answers 42501), audited (a team source by registration id, never its address, #581); never deletes provenance and reads no mail."
+  },
+  {
+    "name": "discovery_set_mailbox_source_window",
+    "reason": "Signed-in RPC bound to auth.uid() (#353, restated by #581): the source's own firm admin sets a Gmail source's first-read window before its first read (anything else answers 42501), audited (a team source by registration id, never its address); reads no mail."
+  },
+  {
+    "name": "discovery_set_station",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): stores the MD's station override on a candidate with a reason in the append-only log; touches no mail and returns an id."
+  },
+  {
+    "name": "discovery_site_registrations",
+    "reason": "Signed-in RPC for the firm's admin and CCO only (role, seat and is_external checks in the body); lists registered site addresses and no site content."
+  },
+  {
+    "name": "discovery_split_candidate",
+    "reason": "Signed-in RPC bound to auth.uid() (tenant, visibility and deal-create authority checked in the body): moves chosen evidence links from a proposed deal onto a new pinned proposed deal and records the split in the append-only log; moves ids between candidates and returns no mail."
+  },
+  {
+    "name": "discovery_team_audit_ref",
+    "reason": "Service-role helper (#581) of the drift writer: names an address that is or was a team inbox as team:<registration id> for the audit trail, unless a person's source holds it now; reads the registry and content_sources only, returns text, never mail."
+  },
+  {
+    "name": "discovery_team_mailbox_audit",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (#173 G-03): the firm's own admin and CCO read the audit rows of their firm company's team inboxes (registrations of that company, their content sources, and Google group drift when that company holds the registration); answers 42501 to anyone else and returns ids, fixed codes, counts and user names, never mail, never an address in a row."
+  },
+  {
+    "name": "discovery_team_mailbox_check_due",
+    "reason": "Service-role read of whether the Google Directory check of a team source's address is due (#581), on the database clock: returns the registration id, its address and the pinned Directory id for the worker to verify, never mail; not callable by a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_team_mailboxes",
+    "reason": "Signed-in read-only RPC bound to auth.uid() (#581): the firm's own admin lists the firm's open team inbox registrations with their check state, source state, whether Remove is open, their members and the colleagues who could be added; answers 42501 to anyone else and returns addresses, names, emails and ids, never mail."
+  },
+  {
+    "name": "discovery_team_pass_close_lapsed",
+    "reason": "Internal close shared by begin and the lapsed-pass sweep (G-01 #173; plain function, no EXECUTE for any role, called only by the two definers as their owner): closes one open pass as unclosed with its last counts and writes the finished audit row (ids and integer counts only); reads no mail text."
+  },
+  {
+    "name": "discovery_team_pass_gate",
+    "reason": "Internal check shared by begin and renew (G-01 #173; plain function, no EXECUTE for any role, called only by the two definers as their owner): whether a source is a personal mailbox its owner still holds on allowed_mailboxes or a team inbox that the reviewed firm list, the approval row and allowed_team_mailboxes all admit; returns a scope, an inbox id and a firm company id, never mail."
+  },
+  {
+    "name": "discovery_tenant_site_counts",
+    "reason": "Count helper of discovery_purge_tenant (#461, not a definer, no EXECUTE grant to any role): counts the tenant's SharePoint site rows the purge must not change; returns counts only."
+  },
+  {
+    "name": "discovery_unify_mailbox_sources",
+    "reason": "Signed-in RPC for a firm admin of the caller's own tenant only (role and tenant checks in the body, 42501 or not found otherwise): merges an archived mailbox source's provenance rows into the live source of its address, which must be owned by an allowlisted user; moves links and returns counts, never mail."
+  },
+  {
+    "name": "discovery_upsert_candidates",
+    "reason": "Service-role writer of candidates and links from the worker, after the guarded read; takes the per-tenant discovery lock first, learns pinned, merged, confirmed and promoted candidates, and never reaches a signed-in user or a tool."
+  },
+  {
+    "name": "discovery_withdraw_group_removed",
+    "reason": "Group-removal withdrawal (#461, service_role only, definer): withdraws open consents whose address a successful provider-group check has seen missing past the grace, and holds a tenant where too many are due at once; returns counts, never mail."
+  },
+  {
+    "name": "evidence_links_tenant_match",
+    "reason": "Trigger on evidence_links: refuses a link whose item and candidate are in different tenants, for every writer; reads no mail, returns nothing to a caller."
+  },
+  {
+    "name": "mailbox_consent_grant",
+    "reason": "Signed-in RPC bound to auth.uid(): the caller's own opt-in only (mailbox_seated_invites and mailbox_consents); reads no mail."
+  },
+  {
+    "name": "mailbox_consent_status",
+    "reason": "Signed-in RPC bound to auth.uid(): reports the caller's own eligibility and consent to the profile card; reads no mail."
+  },
+  {
+    "name": "mailbox_consent_withdraw",
+    "reason": "Signed-in RPC bound to auth.uid(): withdraws the caller's own open consents; reads no mail."
+  },
+  {
+    "name": "mailbox_consents_append_only",
+    "reason": "Trigger on mailbox_consents: only withdrawn_at may change, and only once; reads no mail."
+  },
+  {
+    "name": "mailbox_consents_audit",
+    "reason": "Trigger on mailbox_consents: the single audit writer for consents; writes content-free audit rows and reads no mail."
+  },
+  {
+    "name": "mailbox_consents_close_on_invite_delete",
+    "reason": "Trigger on invites: withdraws the open consent of an invite that is being deleted, so the audit row exists before the cascade; reads no mail."
+  },
+  {
+    "name": "mailbox_consents_close_on_seat_loss",
+    "reason": "Trigger on users: withdraws the owner's consents when the seat is lost; reads no mail."
+  },
+  {
+    "name": "mailbox_consents_purge",
+    "reason": "Trigger function on mailbox_consents (#461, definer, no EXECUTE grant to any role): takes the purge's locks before a consent ends and runs discovery_purge_mailbox after; returns nothing to a caller."
+  },
+  {
+    "name": "mailbox_guard_check",
+    "reason": "The SQL side of the one guard (assertMailboxAllowed): service role only, audits every refusal without content (a team source's refusal names its registration id, never its address, #581)."
+  },
+  {
+    "name": "mailbox_guard_verdict",
+    "reason": "Service-role decision shared by mailbox_guard_check and mailbox_reading_reason, and asked read-only by src/lib/mailboxAccess/guard.ts (mailboxGuardVerdict, #275) before a live Microsoft mailbox's binding requests: returns the first reason an address may not be read, or null, from the source, the allowlist and the seat, or, for a team inbox (#581), from its registration, its Directory confirmation, the purpose of the read and, for a read that acts for a person, whether they are one of its readers; writes nothing, audits nothing and returns a label, never mail."
+  },
+  {
+    "name": "mailbox_items_visible_to",
+    "reason": "Service-role filter over app_can_see_item for tool reads; called only by src/lib/mailboxAccess/accessors.ts, on behalf of a verified acting user."
+  },
+  {
+    "name": "mailbox_reading_reason",
+    "reason": "Service-role helper called only by mailbox_consent_grant and mailbox_consent_status: returns the first reason the caller's own mailbox is not being read, or null, by asking mailbox_guard_verdict as the member (plus the member-facing domain and not_on_a_deal); returns a label and reads no mail."
+  },
+  {
+    "name": "registered_sites_validate",
+    "reason": "Trigger on registered_sites: every writer, the service role included, must name a real firm admin of a same-tenant bank, and rows are append-only; reads no mail."
+  },
+  {
+    "name": "send_census_refresh",
+    "reason": "Counts routing_ledger sent rows per covered mailbox source and ISO week into send_census_weekly (#425); ids and counts only, service role only."
+  },
+  {
+    "name": "site_guard_check",
+    "reason": "The SQL side of the site guard (assertSourceAllowed): service role only, sibling of mailbox_guard_check, audits every refusal without content."
+  },
+  {
+    "name": "site_register",
+    "reason": "Signed-in RPC bound to auth.uid(): an active, internal firm admin registers a SharePoint site address for the firm; audited, reads no mail or site content."
+  },
+  {
+    "name": "site_unregister",
+    "reason": "Signed-in RPC bound to auth.uid(): a firm admin closes their own firm's site registration; audited, reads no mail or site content."
+  },
+  {
+    "name": "source_item_sources_refuse_archived",
+    "reason": "Trigger on source_item_sources: refuses a provenance link for an archived source (source_archived), reading only that source's archived_at; reads no mail."
+  },
+  {
+    "name": "source_item_sources_tenant_match",
+    "reason": "Trigger on source_item_sources: refuses a provenance row whose item and content source are in different tenants, for every writer; reads no mail, returns nothing to a caller."
+  },
+  {
+    "name": "stage_assessments_copy_deal_id",
+    "reason": "Trigger on stage_assessments: copies the candidate's promoted deal onto each new assessment, for every writer; reads no mail, returns nothing to a caller."
+  },
+  {
+    "name": "team_mailbox_members_audit",
+    "reason": "Trigger on team_mailbox_members (#581, definer, revoked from every API role): the single audit writer for membership, for every writer; writes content-free audit rows (ids and a fixed reason) and reads no mail."
+  },
+  {
+    "name": "team_mailbox_members_close_on_seat_loss",
+    "reason": "Trigger on users (#581, definer, revoked from every API role): closes a person's open team inbox memberships with seat_lost when they lose their seat, under the tenant's discovery lock; reads and writes membership rows only, no mail."
+  },
+  {
+    "name": "team_mailbox_members_refresh_visibility",
+    "reason": "Trigger on team_mailbox_members (#581, definer, revoked from every API role): after a member is added or a membership closes, takes the tenant's discovery lock and refreshes the visibility rows of the candidates the inbox evidences; reads provenance and evidence ids, writes candidate_visibility, no mail."
+  }
+]

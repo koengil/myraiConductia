@@ -1,0 +1,18 @@
+-- supabase/migrations/20261018120000_graph_reader_scope_group.sql
+-- The Exchange scope group a Microsoft reader registration is limited to (#275, design R3).
+--
+--   scope_group_id  The Entra object id (Exchange ExternalDirectoryObjectId) of the mail-enabled
+--                   security group whose direct members the RBAC for Applications management scope
+--                   admits to 'Application Mail.Read' (scripts/m365/register-reader.ps1). It is
+--                   Microsoft's sibling of google_reader_registrations.allowlist_group: the Exchange
+--                   group mirror lists this group's members on every pass and compares them with
+--                   allowed_mailboxes. register-reader.ps1 emits it as scopeGroupId, and
+--                   scripts/m365/write-registration.ts validates it as a GUID and writes it.
+--
+-- Null means no group is recorded, and the mirror then fails closed (mirror_unavailable): no
+-- Microsoft mailbox is read. Every existing registration starts at null, so nothing is read for it
+-- until an operator records its group. Nothing reads the column in this migration.
+--
+-- A column only: the table's grants (service_role only, 20260925120000_discovery_core.sql) and its
+-- readers (pinned by tests/constants-schema-sync.test.ts) are unchanged. No content.
+alter table graph_reader_registrations add column if not exists scope_group_id uuid;

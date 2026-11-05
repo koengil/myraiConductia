@@ -1,0 +1,113 @@
+slack conversation notes:
+
+Jess Mah  [9:34 AM]
+I’m making a standalone page of the changelog for you all right now
+
+[9:34 AM]
+but looks like this
+
+Screenshot 2026-07-07 at 9.34.51 AM.png 
+
+
+[9:35 AM]
+seems like more than half of the updates are related to their powerpoint/excel plugin… and they are copying a lot of the stuff you find in claude/chatGPT
+
+Jess Mah  [9:36 AM]
+I’m working with Seth from the Ignatious team on asking many questions to their sales people. Please let me know if you have any you would like to add.
+
+My questions are around FINRA compliance, the token pricing, their “Felix” model and if it’s built off an open source model and which one… and also I notice they lack 2FA which is pretty nuts to me. I was able to access using Seth’s account and there is no prompt begging me to do 2FA!!! I went to the profile/settings page and couldn’t find a way to turn it on either.
+
+Jess Mah  [9:37 AM]
+HTML 
+
+Whats New in Rogo.html
+HTML
+
+Jess Mah  [9:46 AM]
+their tables page is interesting… not sure how useful this is going to be from Storm’s perspective. It’s a bit like Clay. You can use AI to auto fill out the answers
+
+Screenshot 2026-07-07 at 9.46.18 AM.png 
+
+[9:47 AM]
+Screenshot 2026-07-07 at 9.47.05 AM.png 
+
+[9:47 AM]
+Screenshot 2026-07-07 at 9.47.39 AM.png 
+
+[9:48 AM]
+they only have about 50 skills. And it’s very clear what the instructions for each skill are.
+
+[9:49 AM]
+looks like no Fable 5.
+
+Screenshot 2026-07-07 at 9.48.48 AM.png 
+
+
+[9:49 AM]
+here are the sources they have pre-loaded
+
+Screenshot 2026-07-07 at 9.49.19 AM.png 
+
+
+[9:50 AM]
+worth us asking how critical it is that we get data from pitchbook or capital IQ that we can load in out of the gate… and any other sources that are proprietary
+
+[9:50 AM]
+I think that is a big pitch from Rogo on why it’s better to use them versus Claude/ChatGPT
+
+[9:53 AM]
+sharing feature at least has some built in protections
+
+Screenshot 2026-07-07 at 9.52.47 AM.png 
+
+[9:53 AM]
+I was able to make Rogo plan a fictitious family vacation for me. I asked it to run a thorough analysis on Disney World LOL (edited) 
+
+Screenshot 2026-07-07 at 9.53.11 AM.png 
+
+
+[9:54 AM]
+this is hilarious
+
+[9:56 AM]
+and now I am paranoid so I asked if my boss can see I am using rogo to plan my vacations…
+
+Screenshot 2026-07-07 at 9.55.53 AM.png 
+
+[9:58 AM]
+no way to see how many tokens I am burning and how much I’m spending as a user. That seems shitty.
+
+Screenshot 2026-07-07 at 9.58.08 AM.png 
+
+
+[9:59 AM]
+And it seems like “Felix” is their own proprietary router of sorts.
+
+Screenshot 2026-07-07 at 9.58.46 AM.png 
+
+
+[9:59 AM]
+not based off a Chinese open source model
+
+Martin  [10:06 AM]
+Can you please prompt: "How is my data handled when I query, retention, training, where it's processed?"
+
+Jess Mah  [12:04 PM]
+Here’s what I can tell you from Rogo’s documented practices, organized by your four questions. Where the documentation stops short of a firm, diligence-grade answer, I’ll flag it rather than guess.
+Training — the clearest point
+Rogo does not train its models on your content. Per Rogo’s documentation, your prompts, files, and outputs are never used to train any Rogo or third-party model. This is stated as a core policy, and it’s meant to let you use real deal materials, live client situations, and proprietary data.
+How query data is handled
+	•	Connectors are read-only and use OAuth. For integrations (SharePoint, Salesforce, FactSet, Google, etc.), you authenticate through the provider’s own login — your credentials are never stored by Rogo, and Rogo can only access what your account is already permissioned to see. Nothing is created, edited, deleted, or sent through these connectors.
+	•	SharePoint/OneDrive is retrieved at query time, not indexed. Rogo queries Microsoft’s Graph API on demand and does not index or store those files — data is pulled for the session and not retained beyond it.
+	•	Excel plugin minimizes what’s transmitted. Your workbook is never uploaded wholesale; only the specific cell values Rogo reads for your prompt are transmitted. It stores a workbook ID and file name (so you can resume sessions), plus conversation history.
+Retention
+	•	Conversation history is stored on Rogo’s servers, associated with your account (your messages, and in the plugin any cell data read during a session), so you can revisit past work.
+	•	You can delete chats via the three-dots menu next to a chat name → “Delete Chat.” Note bulk history deletion isn’t currently available.
+	•	Firms can have organization-level file retention policies, which your admin configures. The exact retention periods and whether/how your firm has set them are not something I can see or confirm — that’s tenant- and contract-specific.
+Where it’s processed
+The platform runs as a multi-model orchestration layer over frontier models from Anthropic, OpenAI, and Google (all US-based labs). The specific data-center regions/geography where processing occurs is not detailed in the documentation I can access, so I won’t assert a location.
+For anything diligence-grade, go to the source
+For formal answers on retention windows, data residency/processing location, sub-processors, encryption, and certifications (the kind of detail a security review or compliance team needs), use:
+	•	trust.rogo.ai — Rogo’s trust and security policies
+	•	Your Rogo account team / engagement manager, or support@rogo.ai
+I’d treat the above as an accurate summary of Rogo’s stated practices, but confirm specifics with those sources before relying on them for a compliance sign-off.

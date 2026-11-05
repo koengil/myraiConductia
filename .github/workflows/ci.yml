@@ -1,0 +1,1170 @@
+name: CI
+
+on:
+  pull_request:
+    # ready_for_review re-runs CI: integration and E2E skip their suites on a
+    # draft, and a skip is green, so without it a draft's skip would satisfy
+    # the required checks.
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches:
+      - develop
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Classify changed files
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      docs_only: ${{ steps.changes.outputs.docs_only }}
+      infra: ${{ steps.infra.outputs.run }}
+      work_identity: ${{ steps.work_identity.outputs.run }}
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Classify the complete event diff
+        id: changes
+        run: node scripts/ci/docs-only.mjs
+
+      # infra_validate runs only when the module, its scripts and tests, its
+      # runbook, the worker's job-log lines its alarms filter on, or this
+      # workflow changed (a runbook-only change is docs-only for the jobs
+      # below, so its lint runs there). An uncertain change range runs it.
+      - name: Decide whether the infra module or its runbook changed
+        id: infra
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          run=true
+          if git cat-file -e "${BASE}^{commit}" 2>/dev/null && git cat-file -e "${HEAD}^{commit}" 2>/dev/null; then
+            if [ "$EVENT" = pull_request ]; then BASE=$(git merge-base "$BASE" "$HEAD") || BASE=''; fi
+            if [ -n "$BASE" ] && git diff --quiet "$BASE" "$HEAD" -- \
+                infra scripts/infra tests/infra worker/Dockerfile worker/jobLog.ts \
+                docs/04-operations/discovery-worker-aws-runbook.md .github/workflows/ci.yml; then
+              run=false
+            fi
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          echo "infra-validate run=$run"
+
+      # e2e_work_identity runs on a pull request only when it touches the
+      # work-identity sign-in path: the callback, join and two-factor pages,
+      # the middleware and API boundary, the auth helpers, the hook migration,
+      # the auth config, the journey and its mock, the broker suite, and the
+      # job's own workflow and scripts. (A push to develop always runs it.)
+      # An uncertain change range runs it. The path list lives in the script,
+      # which keeps this slim job's block free of stack names.
+      - name: Decide whether the work-identity sign-in path changed
+        id: work_identity
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: bash scripts/ci/work-identity-changed.sh
+
+  # "Lint, typecheck, test, build" used to be one serial job; Vitest alone
+  # outgrew its 15 minutes on slow runners. The work now runs in the
+  # workers below, in parallel, and `verify` is the required check that
+  # aggregates them. Workers skip at job level unless change detection
+  # SUCCEEDED with a source change; `verify` decides what a skip means. A
+  # worker has no gate step, so its steps never use `steps.gate` (that would
+  # skip them on every run); the job-level if is their gate. Job
+  # ids stay \w-only: scripts/ci/gates.test.mjs splits jobs on /\n  \w+:\n/.
+  lint:
+    name: Lint, types, build and small suites
+    needs: changes
+    if: ${{ needs.changes.result == 'success' && needs.changes.outputs.docs_only == 'false' }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # check:migrations lists other open PRs' files to catch a shared prefix,
+      # and reads this PR's body for the Hosted counts: line.
+      pull-requests: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: CI classification and gate regression tests
+        run: node --test scripts/ci/*.test.mjs
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Migration prefixes, order, released files, CHECK lists and lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+          # The PR's base (develop, or a stacked slice's parent): its newest
+          # migration is what a migration this PR adds must sort after.
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            git fetch --no-tags --depth=1 origin "+refs/heads/$GITHUB_BASE_REF:refs/remotes/origin/$GITHUB_BASE_REF" || true
+          fi
+          npm run check:migrations
+
+      - name: TypeScript
+        run: npx tsc --noEmit
+
+      # The deal-discovery eval harness is its own package (design Q15): its
+      # own lockfile, compiler and node:test suite. Its tests write a synthetic
+      # answer key to a temp dir; no real key is ever in the repo or in CI.
+      - name: Eval harness (evals/deal-discovery)
+        run: |
+          npm --prefix evals/deal-discovery ci --no-audit
+          npm --prefix evals/deal-discovery test
+
+      # Pull requests restore the newest cache develop saved; only a push to
+      # develop writes one, so pull request runs never crowd the repository's
+      # cache quota. The E2E job keeps its own key: its build inlines
+      # different NEXT_PUBLIC_* values.
+      - name: Restore the Next.js build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .next/cache
+          key: next-build-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            next-build-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - name: Next.js production build
+        run: npm run build
+        env:
+          # Avoid telemetry noise in CI logs
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Save the Next.js build cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/cache/save@v4
+        with:
+          path: .next/cache
+          key: next-build-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+
+  unit:
+    # Vitest splits files evenly by count, not duration. Add a shard when any
+    # shard passes ~8 minutes on a slow runner: extend the list AND the /N
+    # below together (gates.test.mjs pins them). --maxWorkers matches the
+    # runner's two vCPUs: Vitest's default of CPUs - 1 runs one file at a time.
+    name: Vitest (shard ${{ matrix.shard }}/1)
+    needs: changes
+    if: ${{ needs.changes.result == 'success' && needs.changes.outputs.docs_only == 'false' }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Vitest
+        run: npm test -- --shard=${{ matrix.shard }}/1 --maxWorkers=2
+
+  e2e_gmail:
+    # The Gmail-replay demo journey (.github/workflows/e2e-gmail.yml). Advisory
+    # and opt-in (owner decision 2026-10-08): on a pull request it runs only
+    # when the PR carries the `e2e-gmail` label and is not a draft (adding the
+    # label starts it from that workflow; marking a labelled draft ready starts
+    # it here); it also runs on every push to develop, and nightly.
+    # Not one of verify's workers, so it never blocks a merge. Rob or Storm may
+    # promote it to a required check.
+    name: E2E discovery demo (Gmail replay)
+    needs: changes
+    if: ${{ needs.changes.result == 'success' && needs.changes.outputs.docs_only == 'false' && ((github.event_name == 'push' && github.ref == 'refs/heads/develop') || (contains(github.event.pull_request.labels.*.name, 'e2e-gmail') && !github.event.pull_request.draft)) }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/e2e-gmail.yml
+
+  e2e_work_identity:
+    # The Microsoft work-identity journey (.github/workflows/e2e-work-identity.yml):
+    # the real azure provider against an Azure-shaped mock issuer, plus the
+    # broker contract suite, on its own local stack. Advisory (starts like
+    # e2e_gmail) and never one of verify's workers, so it blocks no merge.
+    # It runs on every push to develop, docs-only ones included, and on a pull
+    # request that touches the work-identity sign-in path and is not docs-only
+    # (the `changes` job decides both). Fallback: set the repository variable WORK_IDENTITY_E2E_PROVIDER to
+    # keycloak (the real provider refusing the mock); unset runs the azure provider.
+    name: E2E work identity (Microsoft)
+    needs: changes
+    if: ${{ needs.changes.result == 'success' && ((github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'pull_request' && needs.changes.outputs.docs_only == 'false' && needs.changes.outputs.work_identity == 'true')) }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/e2e-work-identity.yml
+    with:
+      provider: ${{ vars.WORK_IDENTITY_E2E_PROVIDER || 'azure' }}
+
+  verify:
+    # The required check. It does no work itself: green only when detection
+    # proved a docs-only change, or when every worker above concluded
+    # success. Failed, cancelled or missing detection, and any failed,
+    # cancelled or SKIPPED worker, is red. The job and both steps use
+    # always(), so the required check is never left skipped (which a ruleset
+    # treats as passing): a source-change run whose workers were cancelled
+    # reports red. A run cancelled after every worker passed stays green.
+    name: Lint, typecheck, test, build
+    needs: [changes, lint, unit]
+    if: ${{ always() }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 5
+    permissions: {}
+
+    steps:
+      # Keep the required check present even when heavy work is unnecessary.
+      # Failed/cancelled detection must never become a successful skipped job.
+      - name: Validate change detection
+        id: gate
+        if: ${{ always() }}
+        env:
+          DETECTION_RESULT: ${{ needs.changes.result }}
+          DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+        run: |
+          case "$DETECTION_RESULT:$DOCS_ONLY" in
+            success:true)
+              echo 'run=false' >> "$GITHUB_OUTPUT"
+              echo 'Documentation-only change; expensive checks skipped.'
+              ;;
+            success:false)
+              echo 'run=true' >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo '::error::Change detection did not succeed with a valid result.'
+              exit 1
+              ;;
+          esac
+
+      - name: Require every worker to succeed
+        id: verdict
+        if: ${{ always() && steps.gate.outputs.run == 'true' }}
+        env:
+          LINT_RESULT: ${{ needs.lint.result }}
+          UNIT_RESULT: ${{ needs.unit.result }}
+        run: |
+          failed=0
+          for check in "lint:${LINT_RESULT:-}" "unit:${UNIT_RESULT:-}"; do
+            if [ "${check#*:}" = success ]; then
+              echo "${check%%:*}: success"
+            else
+              echo "::error::${check%%:*} concluded '${check#*:}'; this required check needs success."
+              failed=1
+            fi
+          done
+          exit "$failed"
+
+  integration:
+    # Phase 1 integration test (#27): real route handlers + real Postgres.
+    # A hermetic local Supabase stack is booted, migrations applied, and the
+    # A→B→C story (create deal → grant → document view → audit; outsider
+    # denied) runs against it. Destroyed whole afterwards.
+    name: Phase 1 integration test (local Supabase)
+    needs: changes
+    if: ${{ always() }}
+    runs-on: ${{ vars.CI_RUNNER_HEAVY || 'ubuntu-latest' }}
+    timeout-minutes: 20
+
+    steps:
+      # Keep the required check present even when heavy work is unnecessary.
+      # Failed/cancelled detection must never become a successful skipped job.
+      - name: Validate change detection
+        id: gate
+        env:
+          DETECTION_RESULT: ${{ needs.changes.result }}
+          DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+        run: |
+          case "$DETECTION_RESULT:$DOCS_ONLY" in
+            success:true)
+              echo 'run=false' >> "$GITHUB_OUTPUT"
+              echo 'Documentation-only change; expensive checks skipped.'
+              ;;
+            success:false)
+              if [ "${PR_DRAFT:-}" = true ]; then
+                echo 'run=false' >> "$GITHUB_OUTPUT"
+                echo 'Draft pull request; the integration suite runs when it is marked ready for review.'
+              else
+                echo 'run=true' >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+            *)
+              echo '::error::Change detection did not succeed with a valid result.'
+              exit 1
+              ;;
+          esac
+
+      - name: Checkout
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: npm ci --no-audit
+
+      - name: Setup Supabase CLI
+        if: steps.gate.outputs.run == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          # Pinned — `latest` resolves via the GitHub releases API and flakes
+          # under rate limit (seen on PR #174 CI, Aug 16). Track the CLI that
+          # wrote the tracked supabase/config.toml: an older CLI can reject a
+          # key a newer one emits.
+          version: 2.116.0
+
+      - name: Start local Supabase and apply migrations
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          # No `supabase init --force`: supabase/config.toml is tracked, and
+          # regenerating it from the CLI template would silently drop the
+          # settings the suites depend on -- site_url and the redirect
+          # allowlist that the invitation link is matched against, and the
+          # TOTP enrolment MFA_ENFORCEMENT=invite_only requires.
+          # Validated with migrations, snapshot/SQL checks and both suites.
+          # Storage stays: the hermetic local provider uses Supabase Storage.
+          # setup-cli forces GHCR, disabling the CLI's ECR/GHCR/Hub fallback.
+          # A first start on a fresh runner applies every migration; a
+          # `db reset` after it rebuilt the identical database a second time.
+          unset SUPABASE_INTERNAL_IMAGE_REGISTRY
+          supabase start --exclude studio,postgres-meta,edge-runtime,realtime,logflare,vector
+
+      - name: Schema snapshot is current
+        if: steps.gate.outputs.run == 'true'
+        # supabase/schema-snapshot.txt is what the promotion's preflight
+        # requires production to hold. Rebuild it from the database the
+        # migrations just built; a migration that changes the schema without
+        # the regenerated file turns this red.
+        run: |
+          set -euo pipefail
+          eval "$(supabase status -o env)"
+          test -n "${DB_URL:-}" || { echo "❌ supabase status reported no DB_URL."; exit 1; }
+          umask 077
+          env_file="$(mktemp "${RUNNER_TEMP}/local-db.XXXXXX")"
+          trap 'rm -f "${env_file}"' EXIT
+          printf "DATABASE_URL='%s'\n" "${DB_URL}" > "${env_file}"
+          npm run schema:snapshot -- "${env_file}"
+          if [ -n "$(git status --porcelain -- supabase/schema-snapshot.txt)" ]; then
+            git --no-pager diff -- supabase/schema-snapshot.txt
+            echo "❌ supabase/schema-snapshot.txt is out of date. Run npm run schema:snapshot against the local stack and commit the file with the migration."
+            exit 1
+          fi
+
+      - name: DB probes (tests/db)
+        if: steps.gate.outputs.run == 'true'
+        # The SQL probes under supabase/tests/ are wrapped by tests/db/*.test.ts,
+        # which skip unless RUN_DB_TESTS=1 is set. This step sets it against the
+        # stack started above, including the deal-scoped RLS parity probe (#78).
+        # It runs before the integration suite: each probe rolls back, so it
+        # leaves nothing behind, while the suite leaves rows a probe can trip on
+        # (invite_safeguards scans audit_log for its placeholder digests). Only
+        # the wrappers that pass on this stack are listed. The skill-authoring,
+        # skill-authoring-draft-contract and skill-publication probes build
+        # their own schema on a bare Postgres and refuse a Supabase stack.
+        # Add a wrapper here when it passes against a freshly started stack.
+        # mailbox-allowlist carries the concurrency probe that the psql run of
+        # mailbox_allowlist.sql below cannot (#262), invite-authority-
+        # concurrency does the same for the invite authority lock (#296), and
+        # reader-pass-concurrency for the reader pass writer's tenant lock
+        # (#370), which needs two committed transactions: it runs last, and its
+        # rows are valid chains under fresh random tenants. team-mailbox-lock-
+        # order (#581) commits the same way: a member add against the worker's
+        # candidate upsert, in both orders, under fresh tenants.
+        # tests/ci-db-tests.test.ts pins these files on this list.
+        # The files run one at a time. The concurrency probes are timing based,
+        # and two probes must take DDL locks inside their transaction: the RLS
+        # probe's lint self-test creates real policies, and mailbox_allowlist
+        # re-applies its migration (r4-6). On this stack a CREATE POLICY takes
+        # ACCESS EXCLUSIVE on every auth, storage and realtime table, so beside
+        # a probe that writes auth.users the files deadlock (#262).
+        run: |
+          command -v psql || { sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client; }
+          eval "$(supabase status -o env)"
+          RUN_DB_TESTS=1 DATABASE_URL="$DB_URL" npx vitest run --no-file-parallelism \
+            tests/db/rls-deal-scoped-policies.test.ts \
+            tests/db/audit-log-immutability.test.ts \
+            tests/db/client-company-access-management.test.ts \
+            tests/db/client-company-default-roles.test.ts \
+            tests/db/company-access-management.test.ts \
+            tests/db/invite-safeguards.test.ts \
+            tests/db/legal-hold.test.ts \
+            tests/db/project-rail.test.ts \
+            tests/db/mailbox-allowlist.test.ts \
+            tests/db/discovery-rls.test.ts \
+            tests/db/discovery-purge.test.ts \
+            tests/db/discovery-tenant-purge.test.ts \
+            tests/db/work-identity-onboarding.test.ts \
+            tests/db/invite-authority-parity.test.ts \
+            tests/db/invite-authority-concurrency.test.ts \
+            tests/db/template-change-review.test.ts \
+            tests/db/team-mailbox-lock-order.test.ts \
+            tests/db/reader-pass-concurrency.test.ts \
+            tests/db/send-census-concurrency.test.ts
+
+      - name: Run the integration suite
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          eval "$(supabase status -o env)"
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/outbound_recipient_boundary.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_recipient_affiliations.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rail_template_creation.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rail_templates.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rail_catalog_publish.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rail_catalog_save.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_audit_chain.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_reader_pass.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/send_census.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_rls.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_milestones.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_model_proposals.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_corrections.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_promotion.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_model_proposal_dismissals.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_model_proposal_accepts.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_purge.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_tenant_purge.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/mailbox_allowlist.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/team_mailboxes.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/team_mailbox_audit.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/invite_tenant_crossing.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/invite_authority_parity.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/invite_authority_backfill.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_move_cursor.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_health.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_google.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_exclusion_policy.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/discovery_queue_role.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/definer_grants.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/ai_budget_alerts.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/firm_compliance_settings.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/public_rls_coverage.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_helper_guard.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_step_save.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/create_deal_gate0.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_steps.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_gate0_lifecycle.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/deal_step_skill_runs.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/notifications.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/setup_walkthroughs.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/wall_breach.sql
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/mailbox_connections_google.sql
+          NEXT_PUBLIC_SUPABASE_URL="$API_URL" \
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" \
+          SUPABASE_SECRET_KEY="$SERVICE_ROLE_KEY" \
+          DATABASE_URL="$DB_URL" \
+          npm run test:integration
+
+  e2e:
+    # Browser E2E, hermetic tier. Zero third-party credentials by construction:
+    # Box falls back to LocalStorage (STORAGE_PROVIDER=local), email rides the
+    # noop transport, the AI Gateway screening and Ignatious are unconfigured and
+    # their degraded paths are asserted. A third-party outage cannot fail this
+    # job, which is why it is allowed to gate a merge (design D4).
+    #
+    # One job per TIER, never per journey (design D5): adding a journey means
+    # adding a spec file. When the suite outgrows the timeout, scale it with
+    # `--shard=${{ matrix.shard }}/N`.
+    name: E2E (hermetic)
+    needs: changes
+    if: ${{ always() }}
+    runs-on: ${{ vars.CI_RUNNER_HEAVY || 'ubuntu-latest' }}
+    timeout-minutes: 25
+    # Declared at the job, not the workflow: only this job comments, and the
+    # comment is the whole point -- a failing browser test should say what
+    # broke in the PR, not only inside a downloadable zip.
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      # Keep the required check present even when heavy work is unnecessary.
+      # Failed/cancelled detection must never become a successful skipped job.
+      - name: Validate change detection
+        id: gate
+        if: ${{ always() }}
+        env:
+          DETECTION_RESULT: ${{ needs.changes.result }}
+          DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+        run: |
+          case "$DETECTION_RESULT:$DOCS_ONLY" in
+            success:true)
+              echo 'run=false' >> "$GITHUB_OUTPUT"
+              echo 'Documentation-only change; expensive checks skipped.'
+              ;;
+            success:false)
+              if [ "${PR_DRAFT:-}" = true ]; then
+                echo 'run=false' >> "$GITHUB_OUTPUT"
+                echo 'Draft pull request; E2E runs when it is marked ready for review.'
+              else
+                echo 'run=true' >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+            *)
+              echo '::error::Change detection did not succeed with a valid result.'
+              exit 1
+              ;;
+          esac
+
+      - name: Checkout
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: npm ci --no-audit
+
+      # The demo corpus and the stub model replies this job seeds and extracts
+      # from must match their generators; fail before Supabase starts.
+      - name: Demo corpus outputs are current
+        if: steps.gate.outputs.run == 'true'
+        run: node --import tsx scripts/discovery/build-demo-corpus.ts --check
+
+      - name: Stub model replies are current
+        if: steps.gate.outputs.run == 'true'
+        run: node --import tsx tests/helpers/stubReplies.ts --check && node --import tsx tests/helpers/proposeStubReplies.ts --check
+
+      - name: Install Chromium
+        if: steps.gate.outputs.run == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup Supabase CLI
+        if: steps.gate.outputs.run == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          # Pinned for the same reason as the integration job, and to the
+          # same version as it: the CLI that wrote supabase/config.toml.
+          version: 2.116.0
+
+      - name: Start local Supabase and apply migrations
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          # No `supabase init --force`: supabase/config.toml is tracked, and
+          # regenerating it from the CLI template would silently drop the
+          # settings the suites depend on -- site_url and the redirect
+          # allowlist that the invitation link is matched against, and the
+          # TOTP enrolment MFA_ENFORCEMENT=invite_only requires.
+          # Validated with migrations, snapshot/SQL checks and both suites.
+          # Storage stays: the hermetic local provider uses Supabase Storage.
+          # setup-cli forces GHCR, disabling the CLI's ECR/GHCR/Hub fallback.
+          # A first start on a fresh runner applies every migration; a
+          # `db reset` after it rebuilt the identical database a second time.
+          unset SUPABASE_INTERNAL_IMAGE_REGISTRY
+          supabase start --exclude studio,postgres-meta,edge-runtime,realtime,logflare,vector
+
+      # Playwright's webServer builds the app under the hermetic environment.
+      # Same restore/save rule as the lint job's cache, under its own key.
+      - name: Restore the hermetic Next.js build cache
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .next/cache
+          key: next-hermetic-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            next-hermetic-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - name: Seed the tenant and run the hermetic suite
+        id: suite
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          eval "$(supabase status -o env)"
+          export NEXT_PUBLIC_SUPABASE_URL="$API_URL"
+          export NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY"
+          export SUPABASE_SECRET_KEY="$SERVICE_ROLE_KEY"
+          node --import tsx scripts/seed-flags.ts
+          node --import tsx scripts/enable-flags.ts
+          node --import tsx scripts/seed-users.ts
+          node --import tsx scripts/seed-discovery.ts --corpus demo
+          # The owner's recording (T2) when it is committed; the stub built from
+          # the test double until then. The journey annotates the beats that
+          # assert an extracted station as pending while only the stub exists.
+          REPLIES=tests/fixtures/discovery/demo/model-replies/extract.v1.json
+          [ -f "$REPLIES" ] || REPLIES=tests/fixtures/discovery/demo/model-replies/extract.v1.stub.json
+          node --import tsx worker/extract.ts --once --strict --replies "$REPLIES"
+          npm run test:e2e
+        env:
+          NEXT_PUBLIC_APP_ENV: dev
+          SEED_PASSWORD: e2e-ci-password
+          INVITE_VERIFICATION_PEPPER: e2e-ci-pepper
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Save the hermetic Next.js build cache
+        if: steps.gate.outputs.run == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/cache/save@v4
+        with:
+          path: .next/cache
+          key: next-hermetic-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+
+      # Both steps below are best-effort reporting ABOUT a failure; neither may
+      # introduce a failure of its own, so both are continue-on-error. The job
+      # outcome is decided by the suite, nothing else.
+      - name: Summarize the failure on the run page
+        if: failure() && steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        run: node scripts/e2e-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment the failure on the pull request
+        # Only on PRs: the push-to-main run has no pull request to comment on.
+        if: failure() && steps.gate.outputs.run == 'true' && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # A hidden marker makes the comment sticky: a re-run edits the
+          # existing comment instead of stacking a new one on every push.
+          MARKER='<!-- e2e-hermetic -->'
+          {
+            echo "$MARKER"
+            node scripts/e2e-summary.mjs
+            echo ''
+            echo "The video, screenshot, and trace are in the \`e2e-hermetic-report\` artifact on [the run]($RUN_URL). GitHub cannot play them inline, so:"
+            echo ''
+            echo '```'
+            echo "gh run download ${{ github.run_id }} -n e2e-hermetic-report -D ci-report"
+            echo 'npx playwright show-report ci-report/playwright-report'
+            echo '# videos: ci-report/test-results/<spec>/video.webm'
+            echo '```'
+          } > /tmp/e2e-comment.md
+          EXISTING=$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
+            --jq "[.[] | select(.body | contains(\"$MARKER\"))] | .[0].id")
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$EXISTING" \
+              -F body=@/tmp/e2e-comment.md
+          else
+            gh pr comment "$PR" --body-file /tmp/e2e-comment.md
+          fi
+
+      - name: Upload the report and traces
+        if: failure() && steps.gate.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-hermetic-report
+          path: |
+            playwright-report/
+            e2e-results.json
+            test-results/
+          retention-days: 7
+
+      # Last, so it never masks the failure reports above. The gate runs under
+      # always(), and these steps carry an implicit success(), so a run
+      # cancelled on a source change would otherwise skip every test step and
+      # leave the job green or skipped: both pass the required check. This
+      # step turns that case red. A suite that already passed stays green
+      # (steps.suite.outcome), a docs-only run (run=false) stays green, and
+      # the develop alert ignores cancelled runs (!cancelled()).
+      - name: Fail when the run was cancelled before the suite finished
+        if: ${{ cancelled() && steps.gate.outputs.run == 'true' && steps.suite.outcome != 'success' }}
+        run: |
+          echo '::error::The run was cancelled before the E2E suite finished; this required check reports red, not a pass.'
+          exit 1
+
+  infra_validate:
+    # The discovery worker's OpenTofu module (#344): fmt, init without a
+    # backend, validate and `tofu test` against a mock AWS provider, then the
+    # static contract test and the runbook lint. Offline: no AWS credential
+    # exists in this job and nothing plans against an account. The changes job
+    # decides whether it runs, so an unchanged module allocates no runner; a
+    # failed detection runs it. Not a required check. The id is underscored:
+    # scripts/ci/gates.test.mjs splits jobs on \w+ ids.
+    name: Infra validate (OpenTofu, offline)
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.infra != 'false' }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          # The same version scripts/infra/validate.sh pins for its docker fallback.
+          tofu_version: 1.13.1
+          tofu_wrapper: false
+
+      - name: tofu fmt, validate and test (mock provider)
+        run: scripts/infra/validate.sh
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Contract test and runbook lint
+        run: npx vitest run tests/infra
+
+  alert:
+    # develop merges without re-running CI against every other open PR (the
+    # ruleset is not strict), so this push run is the first test of the
+    # combined result. When it fails, say so loudly and name the merge: the
+    # team rule is to revert the breaking merge within the hour. Never a
+    # required check, never a gate. Cancelled runs are not failures -- a
+    # later merge cancels an older run on purpose, and that run tests both.
+    # !cancelled() keeps it that way: verify runs under always(), so a
+    # cancelled run turns verify red, and failure() alone would then alert.
+    name: Alert when develop is red
+    needs: [verify, integration, e2e, security, secrets]
+    if: ${{ failure() && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Open or update the develop-is-red issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
+          MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          TITLE="develop is red"
+          # Squash merges put the PR number in the subject: "title (#123)".
+          SUBJECT="${MESSAGE%%$'\n'*}"
+          BODY="CI failed on \`develop\` after a merge.
+
+          - Commit: ${SHA:0:7}: ${SUBJECT}
+          - Run: ${RUN_URL}
+
+          Revert the breaking merge first, then investigate (see Post-merge CI
+          in docs/03-engineering/delivery-model.md). Close this issue once
+          develop is green again."
+          EXISTING=$(gh issue list --repo "$REPO" --state open --search "\"$TITLE\" in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "$REPO" --body "$BODY"
+          else
+            # Reuse is keyed on the stable title, not a label the repo may lack.
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY"
+          fi
+
+  # Required check: no leaked credential in the pull request's commits or in
+  # the merged tree. Fleet hosts keep their disks between jobs, so the scanner
+  # is downloaded on every run into a fresh temp dir, checked against the
+  # digest below and called by absolute path, never found on PATH. On a pull
+  # request the config and ignore file are the base commit's, and every scan
+  # ignores inline gitleaks:allow comments, so a PR cannot allowlist its own
+  # finding through either. (A PR can still edit this workflow: CODEOWNERS
+  # review on .github/workflows/ is the owner's ruleset step.) The self-test
+  # proves the default rules still fire and that each allowlisted path still
+  # catches a new credential. Every scan redacts, so no value reaches the log.
+  # A finding means the credential is already on GitHub: rotate it first (the
+  # security runbook).
+  # scripts/ci/gates.test.mjs and secret-scan.test.mjs pin all of this.
+  secrets:
+    name: Secret scan
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install the pinned scanner into a fresh temp dir (checksum-verified)
+        id: tool
+        run: |
+          set -euo pipefail
+          GITLEAKS_VERSION=8.30.1
+          GITLEAKS_SHA256=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+          if [ "$(uname -m)" != x86_64 ]; then
+            echo "::error::The pinned scanner digest is for linux x86_64; this runner is $(uname -m)."
+            exit 1
+          fi
+          dir=$(mktemp -d "$RUNNER_TEMP/gitleaks.XXXXXX")
+          file="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSL --retry 3 -o "$dir/$file" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/$file"
+          echo "$GITLEAKS_SHA256  $dir/$file" | sha256sum -c -
+          tar -xzf "$dir/$file" -C "$dir" gitleaks
+          test -x "$dir/gitleaks"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          echo "bin=$dir/gitleaks" >> "$GITHUB_OUTPUT"
+
+      # The base commit's copy on a pull request. The one exception is a base
+      # with no .gitleaks.toml at all (the PR that introduces it): there is no
+      # base config to read, so the checked-out copy is used.
+      - name: Resolve the config (the base commit's copy on a pull request)
+        id: cfg
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          TOOL_DIR: ${{ steps.tool.outputs.dir }}
+        run: |
+          set -euo pipefail
+          config="$TOOL_DIR/gitleaks.toml"
+          ignore="$TOOL_DIR/ignore"
+          mkdir -p "$ignore"
+          if [ "$EVENT" = pull_request ] && git cat-file -e "${BASE_SHA}:.gitleaks.toml" 2>/dev/null; then
+            git show "${BASE_SHA}:.gitleaks.toml" > "$config"
+            if git cat-file -e "${BASE_SHA}:.gitleaksignore" 2>/dev/null; then
+              git show "${BASE_SHA}:.gitleaksignore" > "$ignore/.gitleaksignore"
+            else
+              : > "$ignore/.gitleaksignore"
+            fi
+            # The scanner also reads ./.gitleaksignore from the tree it scans;
+            # this job's checkout gets the base's copy too, so a PR cannot
+            # ignore its own finding that way either.
+            cp "$ignore/.gitleaksignore" .gitleaksignore
+          else
+            if [ "$EVENT" = pull_request ]; then
+              echo "::notice::The base commit has no .gitleaks.toml; using the checked-out copy."
+            fi
+            cp .gitleaks.toml "$config"
+            if [ -f .gitleaksignore ]; then
+              cp .gitleaksignore "$ignore/.gitleaksignore"
+            else
+              : > "$ignore/.gitleaksignore"
+            fi
+          fi
+          echo "config=$config" >> "$GITHUB_OUTPUT"
+          echo "ignore=$ignore" >> "$GITHUB_OUTPUT"
+
+      - name: Self-test, seeded canaries must be detected
+        env:
+          GITLEAKS: ${{ steps.tool.outputs.bin }}
+          CONFIG: ${{ steps.cfg.outputs.config }}
+          TOOL_DIR: ${{ steps.tool.outputs.dir }}
+        run: |
+          set -euo pipefail
+          # Runtime-random values only: nothing here is committed, so no scan of the
+          # repository can ever see them.
+          # A random draw can fall under a rule's own filters (generic-api-key drops a value
+          # with no digit or one containing a stopword such as "vpn", about 1 draw in 150),
+          # so redraw until all three rules catch the credential at a path no allowlist names.
+          # The check below then proves the allowlisted paths hide nothing the rules catch.
+          printf '{{range .}}{{.RuleID}} {{.File}}\n{{end}}' > "$TOOL_DIR/probe.tmpl"
+          mkdir -p "$TOOL_DIR/probe"
+          credential=
+          for draw in 1 2 3 4 5 6 7 8 9 10; do
+            pool=$(head -c 8192 /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9')
+            if [ "${#pool}" -lt 400 ]; then
+              echo "::error::Could not build the self-test canaries."
+              exit 1
+            fi
+            body=$(
+              printf 'api_key = "%s"\n' "${pool:40:32}"
+              printf 'const probe = "ey%s.ey%s.%s"\n' "${pool:80:24}" "${pool:110:24}" "${pool:140:24}"
+              printf "curl -H 'Authorization: Bearer %s' https://example.invalid\n" "${pool:170:40}"
+            )
+            printf '%s\n' "$body" > "$TOOL_DIR/probe/neutral.txt"
+            : > "$TOOL_DIR/probe.txt"
+            "$GITLEAKS" dir "$TOOL_DIR/probe" --config "$CONFIG" --ignore-gitleaks-allow --redact --no-banner --exit-code 0 \
+              --report-format template --report-template "$TOOL_DIR/probe.tmpl" --report-path "$TOOL_DIR/probe.txt" || true
+            if grep -q '^generic-api-key ' "$TOOL_DIR/probe.txt" && grep -q '^jwt ' "$TOOL_DIR/probe.txt" \
+              && grep -q '^curl-auth-header ' "$TOOL_DIR/probe.txt"; then
+              credential=$body
+              break
+            fi
+          done
+          if [ -z "$credential" ]; then
+            echo "::error::No drawn credential was caught by all three rules at a neutral path."
+            exit 1
+          fi
+          canary="$TOOL_DIR/canary"
+          mkdir -p "$canary"
+          # 1. The default rules fire, and an inline gitleaks:allow marker does not hide a finding.
+          printf '%s // gitleaks:allow\n' "ghp_${pool:0:36}" > "$canary/canary.txt"
+          # 2. Every allowlisted path still catches a new credential: the allowlists
+          #    name exact reviewed values, never a whole file or rule.
+          mapfile -t allowlisted < <(grep -v '^[[:space:]]*#' "$CONFIG" | grep -oE "'''\(\^\|/\)[^']+\\\$'''" | sed -E "s/^'''\(\^\|\/\)//; s/\\\$'''\$//; s/\\\\\././g")
+          if [ "${#allowlisted[@]}" -eq 0 ]; then
+            echo "::error::No allowlisted path was read from the config."
+            exit 1
+          fi
+          for path in "${allowlisted[@]}"; do
+            mkdir -p "$canary/$(dirname "$path")"
+            printf '%s\n' "$credential" > "$canary/$path"
+          done
+          printf '{{range .}}{{.RuleID}} {{.File}}\n{{end}}' > "$TOOL_DIR/found.tmpl"
+          code=0
+          "$GITLEAKS" dir "$canary" --config "$CONFIG" --ignore-gitleaks-allow --redact --no-banner --exit-code 1 \
+            --report-format template --report-template "$TOOL_DIR/found.tmpl" --report-path "$TOOL_DIR/found.txt" || code=$?
+          if [ "$code" -ne 1 ]; then
+            echo "::error::The scanner did not report the seeded canaries (exit $code)."
+            exit 1
+          fi
+          missing=0
+          expect() {
+            if ! grep -Fxq "$1 $2" "$TOOL_DIR/found.txt"; then
+              echo "::error::Rule $1 missed the seeded canary in ${2#"$canary"/}."
+              missing=1
+            fi
+          }
+          expect github-pat "$canary/canary.txt"
+          for path in "${allowlisted[@]}"; do
+            for rule in generic-api-key jwt curl-auth-header; do expect "$rule" "$canary/$path"; done
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+          echo "Self-test passed: the default rules fire, gitleaks:allow is ignored, and ${#allowlisted[@]} allowlisted paths still catch a new credential."
+
+      - name: Scan the commit range (blocking)
+        env:
+          GITLEAKS: ${{ steps.tool.outputs.bin }}
+          CONFIG: ${{ steps.cfg.outputs.config }}
+          IGNORE: ${{ steps.cfg.outputs.ignore }}
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          set -euo pipefail
+          zero=0000000000000000000000000000000000000000
+          if [ "$EVENT" = pull_request ]; then
+            range_head=$PR_HEAD
+            if ! git cat-file -e "${PR_BASE}^{commit}" 2>/dev/null || ! git cat-file -e "${range_head}^{commit}" 2>/dev/null; then
+              echo "::error::The pull request's base or head commit is not in the clone, so its commit range cannot be scanned."
+              exit 1
+            fi
+            if ! range_base=$(git merge-base "$PR_BASE" "$range_head"); then
+              echo "::error::No merge base between the pull request's base and head, so its commit range cannot be scanned."
+              exit 1
+            fi
+          else
+            range_head=$AFTER
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "$zero" ]; then
+              echo "::notice::A new branch has no earlier commit to scan from; the tree scan below still runs."
+              exit 0
+            fi
+            if ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null || ! git cat-file -e "${range_head}^{commit}" 2>/dev/null; then
+              echo "::error::The push's before or after commit is not in the clone, so its commit range cannot be scanned."
+              exit 1
+            fi
+            range_base=$BEFORE
+          fi
+          "$GITLEAKS" git --log-opts="$range_base..$range_head" --config "$CONFIG" --gitleaks-ignore-path "$IGNORE" --ignore-gitleaks-allow --redact --no-banner --exit-code 1
+
+      - name: Scan the merge tree (blocking)
+        env:
+          GITLEAKS: ${{ steps.tool.outputs.bin }}
+          CONFIG: ${{ steps.cfg.outputs.config }}
+          IGNORE: ${{ steps.cfg.outputs.ignore }}
+        run: |
+          set -euo pipefail
+          "$GITLEAKS" dir . --config "$CONFIG" --gitleaks-ignore-path "$IGNORE" --ignore-gitleaks-allow --redact --no-banner --exit-code 1
+
+      # Persistent runners keep RUNNER_TEMP between jobs: the binary and the
+      # canaries go whether the scans passed or not.
+      - name: Remove the scanner and its canaries
+        if: always()
+        run: |
+          rm -rf -- "$RUNNER_TEMP"/gitleaks.*
+
+  # Advisory static analysis (Semgrep CE, #473); not a required check. The
+  # engine installs from a hash-locked requirements file into a fresh venv and
+  # is called by absolute path. Only the free registry rulesets listed below
+  # run: no login, no metrics, never `auto` or `p/default`. On a pull request
+  # it is red only for ERROR findings the PR adds (the baseline is the merge
+  # commit's first parent, the base tip); on a push to develop it scans the
+  # whole tree and keeps the JSON for 90 days as the durable record, and only a
+  # scanner failure is red. A report is trusted only after summarize.py reads
+  # it. A finding is fixed or suppressed with `nosemgrep: <rule-id> -- <reason>`.
+  # Skipped on a docs-only change. scripts/ci/gates.test.mjs and
+  # semgrep-summary.test.mjs pin all of this.
+  sast:
+    name: Static analysis
+    needs: changes
+    if: ${{ needs.changes.result == 'success' && needs.changes.outputs.docs_only == 'false' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/develop') }}
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      SEMGREP_SEND_METRICS: 'off'
+
+    steps:
+      # The merge commit on a pull request; HEAD^1 below is its base tip, so the
+      # full history and a clean working tree are required.
+      - name: Checkout complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # actions/setup-python is new to this repo. The hash lock targets Python
+      # 3.12 on x86_64 Linux.
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the hash-locked scanner into a fresh venv
+        id: tool
+        run: |
+          set -euo pipefail
+          if [ "$(uname -m)" != x86_64 ]; then
+            echo "::error::The hash lock is for linux x86_64; this runner is $(uname -m)."
+            exit 1
+          fi
+          venv=$(mktemp -d "$RUNNER_TEMP/semgrep.XXXXXX")
+          python -m venv "$venv"
+          # Wheels only: no source distribution is built, and its setup code run,
+          # on a persistent runner.
+          "$venv/bin/pip" install --no-cache-dir --only-binary=:all: --require-hashes -r .github/semgrep/requirements.txt
+          test -x "$venv/bin/semgrep"
+          echo "bin=$venv/bin/semgrep" >> "$GITHUB_OUTPUT"
+          echo "python=$venv/bin/python" >> "$GITHUB_OUTPUT"
+
+      - name: Scan for findings the pull request adds
+        if: github.event_name == 'pull_request'
+        env:
+          SEMGREP: ${{ steps.tool.outputs.bin }}
+          PYTHON: ${{ steps.tool.outputs.python }}
+        run: |
+          set -euo pipefail
+          # A merge commit has two parents; without HEAD^2 the checkout is not the
+          # merge ref, and HEAD^1 would be the wrong baseline.
+          if ! git rev-parse --verify --quiet 'HEAD^2' > /dev/null; then
+            echo "::error::The checkout is not the pull request's merge commit, so HEAD^1 is not its base."
+            exit 1
+          fi
+          report="$RUNNER_TEMP/semgrep-pr.json"
+          rulesets=(--config p/javascript --config p/typescript --config p/react --config p/nodejs --config p/owasp-top-ten)
+          code=0
+          "$SEMGREP" scan "${rulesets[@]}" --baseline-commit HEAD^1 --metrics=off \
+            --jobs 1 --max-memory 3000 --timeout 30 --severity ERROR --error \
+            --json-output "$report" || code=$?
+          # 0 is clean and 1 is new ERROR findings; anything higher is the scanner failing.
+          if [ "$code" -gt 1 ]; then
+            echo "::error::Semgrep failed (exit $code), so this pull request was not scanned."
+            exit "$code"
+          fi
+          summary="$RUNNER_TEMP/semgrep-pr.md"
+          if ! "$PYTHON" .github/semgrep/summarize.py pr "$report" > "$summary"; then
+            echo "::error::Semgrep exited $code but wrote no valid report, so this pull request was not scanned."
+            exit 1
+          fi
+          cat "$summary" >> "$GITHUB_STEP_SUMMARY"
+          exit "$code"
+
+      # Findings are advisory here (no --error), so any non-zero exit or a
+      # missing or invalid report is the scanner failing, and that is red.
+      - name: Scan the whole tree and record the result (findings never fail the job)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        env:
+          SEMGREP: ${{ steps.tool.outputs.bin }}
+          PYTHON: ${{ steps.tool.outputs.python }}
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/semgrep.json"
+          rulesets=(--config p/javascript --config p/typescript --config p/react --config p/nodejs --config p/owasp-top-ten)
+          code=0
+          "$SEMGREP" scan "${rulesets[@]}" --metrics=off --jobs 1 --max-memory 3000 --timeout 30 \
+            --json -o "$report" || code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "::error::Semgrep failed (exit $code); findings never fail this scan, so this is the scanner, not the code."
+            exit "$code"
+          fi
+          summary="$RUNNER_TEMP/semgrep.md"
+          if ! "$PYTHON" .github/semgrep/summarize.py full "$report" > "$summary"; then
+            echo "::error::Semgrep wrote no valid report, so develop was not scanned."
+            exit 1
+          fi
+          cat "$summary" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the full-scan report for 90 days
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-develop-${{ github.sha }}
+          path: ${{ runner.temp }}/semgrep.json
+          retention-days: 90
+          if-no-files-found: error
+
+  security:
+    name: Dependency vulnerability audit
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-slim' }}
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # Blocking gate: anything shipped to production must be free of known
+      # moderate/high/critical CVEs. Compliance sector — this is a hard merge
+      # gate (enforce by marking this job a required status check on main).
+      - name: Audit production dependencies (blocking)
+        run: npm audit --package-lock-only --omit=dev --audit-level=moderate
+
+      # The eval harness ships nothing to production and has no runtime
+      # dependency today; this keeps it that way if one is ever added.
+      - name: Audit the eval harness's dependencies (blocking)
+        run: npm audit --prefix evals/deal-discovery --package-lock-only --omit=dev --audit-level=moderate
+
+      # Visibility-only: full tree including dev/build tooling. Reported in the
+      # logs but does not block, so an unfixable transitive dev vuln cannot
+      # wedge every PR. Promote to blocking once the tree is clean.
+      - name: Audit full dependency tree (report only)
+        if: always()
+        continue-on-error: true
+        run: npm audit --package-lock-only --audit-level=moderate

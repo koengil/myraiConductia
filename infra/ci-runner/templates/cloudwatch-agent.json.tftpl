@@ -1,0 +1,22 @@
+{
+  "agent": { "run_as_user": "root" },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          { "file_path": "/var/log/cloud-init-output.log", "log_group_name": "${log_group}", "log_stream_name": "{instance_id}/cloud-init" },
+          { "file_path": "/opt/actions-runner/_diag/*.log", "log_group_name": "${log_group}", "log_stream_name": "{instance_id}/runner-diag" },
+          { "file_path": "/var/log/ci-runner-hooks.log", "log_group_name": "${log_group}", "log_stream_name": "{instance_id}/hooks" }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "namespace": "Conductia/CiRunner",
+    "append_dimensions": { "InstanceId": "$${aws:InstanceId}" },
+    "metrics_collected": {
+      "mem": { "measurement": ["mem_used_percent"], "metrics_collection_interval": 60 },
+      "disk": { "measurement": ["used_percent"], "resources": ["/"], "metrics_collection_interval": 60 }
+    }
+  }
+}

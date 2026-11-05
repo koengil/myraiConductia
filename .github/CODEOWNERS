@@ -1,0 +1,44 @@
+# Auto-request review on pull requests (GitHub Code Owners).
+# Members: Conductia — https://github.com/Conductia
+#
+# Requires repo setting: automatically request review from code owners (recommended).
+
+* @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+
+# Mailbox and SharePoint guard (#262). These paths hold the guard, the reader
+# capability and the fences that stop code from bypassing them. A pull request
+# that changes any of them needs a code-owner review, because the static fences
+# cannot stop a deliberate evasion (see D68 in docs/07-decisions/decision-log.md).
+# The last matching pattern wins, so each line repeats the owner list.
+# tests/mailbox-access-pins.test.ts fails if one of these lines is removed.
+/src/lib/mailboxAccess/                           @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/src/lib/graph/reader/                            @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/src/lib/google/reader/                           @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/src/lib/discovery/source/                        @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/eslint.config.mjs                                @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/agent-surfaces.test.ts                     @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/mailbox-reader-fence.test.ts               @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/eslint-fences.test.ts                      @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/mailbox-access-pins.test.ts                @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/helpers/fenceAst.ts                        @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/src/instrumentation.ts                           @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/mailbox-access/boot-claim.test.ts          @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/helpers/importGraph.ts                     @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/helpers/fenceResolve.ts                     @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/mailbox-access/import-graph.test.ts         @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/fixtures/agentSurfaces/                    @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/fixtures/fenceBypass/                      @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/fixtures/serverEntries/                    @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/tests/fixtures/mailboxReaderFence/               @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/.github/CODEOWNERS                               @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+
+# Supply-chain scanner config and workflows (#473). A review request, not
+# enforcement: code-owner review is not required on the develop ruleset. The
+# enforcing control is that a pull request is secret-scanned with the base
+# branch's config. The owner list repeats the full list until a narrower one is
+# named (see the security runbook). Each path is also in .github/ai-review/fence.json.
+/.gitleaks.toml                                   @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/.gitleaksignore                                  @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/.github/workflows/                               @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/.github/dependabot.yml                           @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc
+/.github/semgrep/                                 @lance-fp @martin-fp @robdll @mgumiero9 @charleswvs @guillermo-alc

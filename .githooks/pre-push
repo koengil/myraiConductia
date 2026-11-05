@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+#
+# Opt-in fast checks before a push: ESLint and Vitest on the changed files,
+# and the TypeScript typecheck.
+#
+# Pushes from AI coding sessions were landing red on CI, and about a tenth of
+# our CI minutes went on re-runs straight after a red run. This catches the
+# cheap failures locally first. CI stays the authority: a green run here is a
+# convenience, never evidence that a change is correct.
+#
+# OFF unless you opt in, so nobody else is affected:
+#   git config conductia.prePush true     (or CONDUCTIA_PREPUSH=1 for one push)
+# Skip with CONDUCTIA_PREPUSH=0, SKIP_PREPUSH=1, or: git push --no-verify
+#
+# The checks read the WORKING TREE, so push from a clean checkout of the
+# commits being pushed. No E2E, integration, Supabase or next build here.
+
+set -uo pipefail
+
+case "${CONDUCTIA_PREPUSH:-}" in
+1 | true) enabled=true ;;
+0 | false) exit 0 ;;
+*) enabled="$(git config --type=bool --get conductia.prePush 2>/dev/null || echo false)" ;;
+esac
+[ "${SKIP_PREPUSH:-}" = 1 ] && exit 0
+[ "$enabled" = true ] || exit 0
+
+cd "$(git rev-parse --show-toplevel)" || exit 0
+if [ ! -d node_modules ]; then
+	echo "pre-push: no node_modules, skipping the fast checks (run npm ci)."
+	exit 0
+fi
+
+zero=0000000000000000000000000000000000000000
+start=$SECONDS
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+# Docs-only uses CI's own classifier (scripts/ci/docs-only.mjs), fed a synthetic
+# pull_request event so it computes the merge-base and applies the same paths.
+docs_only_range() {
+	printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}' "$1" "$2" >"$tmp/event.json"
+	: >"$tmp/out"
+	GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$tmp/event.json" GITHUB_OUTPUT="$tmp/out" \
+		node scripts/ci/docs-only.mjs >/dev/null 2>&1 && grep -qx 'docs_only=true' "$tmp/out"
+}
+
+run_all=false
+docs_only=true
+saw_ref=false
+: >"$tmp/files"
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+	[ "$local_sha" = "$zero" ] && continue # deleting a remote ref
+	saw_ref=true
+	base="$(git merge-base origin/develop "$local_sha" 2>/dev/null)"
+	if [ -z "$base" ] && [ "$remote_sha" != "$zero" ] && git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+		base="$remote_sha"
+	fi
+	if [ -z "$base" ]; then
+		run_all=true
+		docs_only=false
+		continue
+	fi
+	docs_only_range "$base" "$local_sha" || docs_only=false
+	git diff --name-only --diff-filter=ACMR -z "$base" "$local_sha" -- >>"$tmp/files"
+done
+
+$saw_ref || exit 0
+if $docs_only; then
+	echo "pre-push: documentation-only change, skipping the fast checks."
+	exit 0
+fi
+
+mapfile -d '' changed < <(sort -zu "$tmp/files")
+code=() # lintable and testable sources
+typecheck=$run_all
+for f in "${changed[@]}"; do
+	[ -f "$f" ] || continue
+	case "$f" in
+	*.ts | *.tsx | *.mts | *.cts | *.js | *.jsx | *.mjs | *.cjs)
+		code+=("$f")
+		typecheck=true
+		;;
+	tsconfig*.json | package.json | package-lock.json) typecheck=true ;;
+	esac
+done
+
+fail() {
+	echo "pre-push: $1 failed after $((SECONDS - start))s. Fix it, or bypass with git push --no-verify (CI still runs everything)." >&2
+	exit 1
+}
+
+steps=()
+step_time() { steps+=("$1 $((SECONDS - $2))s"); }
+
+# Same flags as CI's `npm run lint` (plain eslint), limited to the changed files.
+if $run_all; then
+	t=$SECONDS
+	npx eslint || fail "ESLint"
+	step_time eslint "$t"
+elif [ "${#code[@]}" -gt 0 ]; then
+	t=$SECONDS
+	npx eslint --no-warn-ignored "${code[@]}" || fail "ESLint"
+	step_time eslint "$t"
+fi
+
+if $typecheck; then
+	t=$SECONDS
+	if [ -x "$HOME/bin/heavy" ]; then
+		"$HOME/bin/heavy" --kind node-typecheck -- npx tsc --noEmit || fail "TypeScript (tsc --noEmit)"
+	else
+		npx tsc --noEmit || fail "TypeScript (tsc --noEmit)"
+	fi
+	step_time tsc "$t"
+fi
+
+# vitest.config.ts is the config CI's unit job uses (npm test).
+if [ "${#code[@]}" -gt 0 ]; then
+	t=$SECONDS
+	npx vitest related --run --passWithNoTests "${code[@]}" || fail "Vitest (related)"
+	step_time vitest "$t"
+fi
+
+echo "pre-push: fast checks passed in $((SECONDS - start))s (${steps[*]:-nothing to check}). CI remains the authority."
+exit 0

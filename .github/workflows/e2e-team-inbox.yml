@@ -1,0 +1,106 @@
+name: E2E team inbox (Gmail replay)
+
+# The admin-managed team inbox journey (#581 phase 12): the firm admin connects
+# deals@, the worker checks and reads it through the mailbox guard, Storm is let
+# in, sees and promotes what it found, and is removed. Offline: the real Gmail
+# reader over the committed demo twin, the Directory check answered from the
+# replay folder, no credential and no network.
+#
+# Its own workflow and its own local stack, for two reasons: the journey mutates
+# discovery state (it promotes Project Kestrel, as the discovery demo does), and
+# its stack is seeded for the Gmail replay with Morgan's mailbox alone, so Storm
+# has no personal copy of the mail and sees it only as a member. Advisory and
+# opt-in like the Gmail-replay journey (e2e-gmail.yml): it runs on a push to
+# develop, for a pull request that carries the `e2e-team-inbox` label and is not
+# a draft, and by hand. It is never a required check, and ci.yml does not call it.
+#
+# The video of every run is uploaded, passing or not: the owner watches it to
+# confirm it tells the story (playwright.config.ts: hermetic-team-inbox-demo).
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, synchronize, ready_for_review]
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+
+concurrency:
+  group: e2e-team-inbox-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  journey:
+    name: Team inbox journey
+    if: ${{ github.event_name != 'pull_request' || (contains(github.event.pull_request.labels.*.name, 'e2e-team-inbox') && !github.event.pull_request.draft) }}
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_HEAVY || 'ubuntu-latest' }}
+    timeout-minutes: 25
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Demo corpus outputs are current
+        run: node --import tsx scripts/discovery/build-demo-corpus.ts --check
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          # The same pin as the integration and E2E jobs.
+          version: 2.116.0
+
+      - name: Start local Supabase and apply migrations
+        run: |
+          # As in the E2E job: no `supabase init --force`, Storage kept, the
+          # registry fallback restored after setup-cli, and no `db reset`
+          # after a first start that already applied every migration.
+          unset SUPABASE_INTERNAL_IMAGE_REGISTRY
+          supabase start --exclude studio,postgres-meta,edge-runtime,realtime,logflare,vector
+
+      - name: Seed Morgan's mailbox alone and run the team inbox journey
+        run: |
+          eval "$(supabase status -o env)"
+          export NEXT_PUBLIC_SUPABASE_URL="$API_URL"
+          export NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY"
+          export SUPABASE_SECRET_KEY="$SERVICE_ROLE_KEY"
+          node --import tsx scripts/seed-flags.ts
+          node --import tsx scripts/enable-flags.ts
+          node --import tsx scripts/seed-users.ts
+          # Storm and Alex get no personal source: the journey connects deals@ through the admin card.
+          node --import tsx scripts/seed-discovery.ts --google-replay --corpus demo --phase seeded --personas morgan
+          npm run test:e2e:team-inbox
+        env:
+          NEXT_PUBLIC_APP_ENV: dev
+          SEED_PASSWORD: e2e-ci-password
+          INVITE_VERIFICATION_PEPPER: e2e-ci-pepper
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Upload the report, the trace and the video
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-team-inbox-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

@@ -1,0 +1,79 @@
+/*
+ * Conductia future-vision prototypes — shared brand tokens.
+ * Lifted from src/app/globals.css (ADR-0006 navy+gold, frozen 16-token palette)
+ * + the type trio (Fraunces / Inter / Geist Mono). These are the NON-NEGOTIABLE
+ * brand layer; each prototype's ui-ux-pro-max design system sits on top as the
+ * aesthetic treatment, but navy+gold and the compliance instrument always survive.
+ *
+ * Fonts via Google Fonts CDN (prototype-only; the app self-hosts via next/font).
+ */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Ink (navy) */
+  --ink: #0E1B3A;
+  --ink-secondary: #4F5B70;
+  --ink-tertiary: #8B95AC;
+
+  /* Surfaces (light) */
+  --surface: #FFFFFF;
+  --surface-subtle: #ECEEF2;
+  --surface-warm: #F4F5F8;
+
+  /* Canvas (deep navy, cinematic) */
+  --surface-dark: #0E1B3A;
+  --canvas-bg: #0A1228;
+  --stroke: #DDE0E7;
+
+  /* Accent (gold) */
+  --accent: #C29445;
+  --accent-dark: #9A7530;
+
+  /* Compliance semantics */
+  --positive: #2D7E54;      /* clear */
+  --positive-deep: #1B4D33; /* heartbeat */
+  --hold: #B07A1A;          /* review */
+  --hold-deep: #7A4F10;
+  --negative: #D14B30;      /* blocked */
+
+  /* On-dark ink */
+  --ink-on-dark: #EAEEF6;
+  --ink-on-dark-secondary: #AEB8CC;
+  --ink-on-dark-tertiary: #7E89A3;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, serif;   /* reserved: ~2 editorial moments */
+  --font-sans: 'Inter', system-ui, sans-serif;  /* default UI + display weight 600 */
+  --font-mono: 'Geist Mono', ui-monospace, monospace; /* rule IDs, tabular figures */
+
+  /* Type ramp (IB-terminal density, 13px body) */
+  --text-xxs: 10px; --text-xs: 11px; --text-sm: 12px; --text-base: 13px;
+  --text-md: 14px;  --text-lg: 16px; --text-xl: 20px; --text-2xl: 28px;
+
+  /* Spacing (4px grid) */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-7: 28px; --space-8: 32px;
+  --space-10: 40px; --space-11: 44px; --space-12: 48px;
+
+  /* Radius (rounded / floating, 2026-05-24) */
+  --radius-input: 10px; --radius-button: 10px; --radius-card: 16px; --radius-pill: 9999px;
+
+  /* Elevation */
+  --elev-1: 0 1px 2px rgba(14,27,58,.06), 0 1px 3px rgba(14,27,58,.08);
+  --elev-2: 0 4px 12px rgba(14,27,58,.10), 0 2px 4px rgba(14,27,58,.06);
+  --elev-float: 0 24px 60px rgba(5,10,25,.45), 0 8px 24px rgba(5,10,25,.35);
+
+  /* Cinematic */
+  --bg-cinematic: radial-gradient(120% 120% at 50% 0%, #14254d 0%, #0A1228 55%, #070d1c 100%);
+  --texture-grid: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 40px),
+                  repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 40px);
+}
+
+/* Two reserved Fraunces editorial moments (do not overuse). */
+.editorial-name { font-family: var(--font-display); font-weight: 500; letter-spacing: -.01em; }
+.editorial-question { font-family: var(--font-display); font-style: italic; font-weight: 400; }
+
+/* Compliance heartbeat (respects reduced motion). */
+@keyframes ib-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(45,126,84,.45); } 50% { box-shadow: 0 0 0 6px rgba(45,126,84,0); } }
+.ib-pulse-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--positive); animation: ib-pulse 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .ib-pulse-dot { animation: none; } }

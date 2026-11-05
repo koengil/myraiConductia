@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23191919'/%3E%3Ctext x='12' y='17' font-size='13' font-weight='700' font-family='Helvetica' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<title>Conductia Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--canvas:#F5F4F1;--surface:#fff;--field:#F1F0EC;--field2:#E9E7E2;--sunken:#EBE9E4;
+--line:#ECEAE5;--line2:#E0DED8;--ink:#191919;--ink2:#55534E;--ink3:#6E6E6B;--ink4:#9C9A94;
+--ai:#5E5CE6;--ok:#17B26A;--okD:#0B5C3B;--okF:#8FE6BF;--warn:#F5A524;--warnD:#6E5308;--warnF:#FAE6A8;--warnT:#FBF3D9;
+--bad:#E5484D;--badD:#8E2440;--badF:#F8C9D1;--sync:#2E90FA;
+--ui:Inter,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;--serif:Georgia,'Times New Roman',serif;--mono:ui-monospace,"SFMono-Regular",monospace;
+--e2:0 14px 40px rgb(25 25 25/.09);
+}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font:400 13.5px/20px var(--ui);color:var(--ink);background:var(--canvas);overflow:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:#E9E4D6}
+*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-thumb{background:#D6D3CC;border:3px solid transparent;background-clip:content-box;border-radius:8px}*::-webkit-scrollbar-track{background:transparent}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none;padding:0}button:disabled{cursor:not-allowed;opacity:.45}
+:focus-visible{outline:2px solid #B9B4A8;outline-offset:1px}
+.mono{font-family:var(--mono)}.serif{font-family:var(--serif)}
+.app{display:grid;grid-template-rows:56px minmax(0,1fr);height:100dvh}
+.top{display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--canvas);border-bottom:1px solid var(--line)}
+.brandc{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;font:700 13px var(--ui);flex:none}
+.dealsw{display:inline-flex;align-items:center;gap:7px;font:500 13px var(--ui);white-space:nowrap}
+.dealsw .code{font:500 10px var(--mono);color:var(--ink4)}
+.navr{display:inline-flex;gap:2px;min-width:0;overflow:hidden}
+.navr button{height:32px;display:inline-flex;align-items:center;padding:0 11px;border-radius:8px;color:var(--ink3);font:500 13px var(--ui);white-space:nowrap;transition:background 120ms}
+.navr button:hover{background:var(--field)}
+.navr button.on{background:var(--field2);color:var(--ink)}
+.navr .ct{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:999px;background:var(--warnF);color:var(--warnD);font:600 10px var(--ui);margin-left:6px;padding:0 4px}
+.srch{display:inline-flex;align-items:center;gap:7px;height:32px;border:1px solid var(--line2);border-radius:8px;background:#fff;padding:0 10px;font:400 12px var(--ui);color:var(--ink4);white-space:nowrap;flex:none}
+.srch kbd{font:500 9.5px var(--mono);background:var(--field);border-radius:4px;padding:1px 5px;color:var(--ink4)}
+.instr{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px;border-radius:999px;flex:none;font:500 12px var(--ui)}
+.instr.clear{border:1px solid var(--line2);background:#fff}
+.instr .d{width:7px;height:7px;border-radius:999px;background:var(--ok)}
+.instr .sub{font:400 11px var(--ui);color:var(--ink4);border-left:1px solid var(--line);padding-left:8px}
+.avatar{width:28px;height:28px;border-radius:999px;background:#163561;color:#fff;display:grid;place-items:center;font:600 9.5px var(--ui);flex:none}
+.scroll{min-width:0;overflow:auto;scrollbar-gutter:stable}
+@keyframes pagein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.page{min-height:100%;padding:26px 32px 64px;animation:pagein 200ms ease;max-width:1160px;margin:0 auto}
+.ph{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+.ph h1{font-size:20px;line-height:26px;letter-spacing:-.015em;margin:0 0 3px;font-weight:600}
+.ph p{margin:0;color:var(--ink3);font-size:13px}
+.ph .acts{margin-left:auto;display:flex;gap:8px;flex:none}
+.btn{height:34px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line2);border-radius:8px;background:#fff;padding:0 13px;font-size:12.5px;font-weight:500;white-space:nowrap;transition:background 120ms}
+.btn:hover{background:var(--field)}
+.btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}.btn.pri:hover{background:#2f2f2f}
+.btn.ghost{border-color:transparent;color:var(--ink3)}.btn.ghost:hover{background:var(--field);color:var(--ink)}
+.btn.sm{height:28px;padding:0 10px;font-size:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;min-width:0;overflow:hidden}
+.cardh{min-height:46px;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+.cardh h2{font-size:13.5px;margin:0;font-weight:600}
+.cardh .meta{margin-left:auto;color:var(--ink4);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:9px 12px;padding:11px 16px;border-bottom:1px solid var(--line);text-align:left;width:100%;transition:background 100ms}
+.row:last-child{border-bottom:0}
+button.row:hover,.row.click:hover{background:#FAF9F6}
+.row .grow{flex:1 1 230px;min-width:0}
+.row .acts2{display:flex;gap:8px;margin-left:auto;flex:none;align-items:center}
+.rt{font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rs{display:block;font-size:11.5px;font-weight:400;color:var(--ink4);margin-top:2px}
+.m2{font:500 10.5px/15px var(--mono);color:var(--ink4)}
+.vc{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:6px;font:500 11.5px var(--ui);white-space:nowrap;max-width:100%}
+.vc.ok{background:var(--okF);color:var(--okD)}.vc.warn{background:var(--warnF);color:var(--warnD)}.vc.bad{background:var(--badF);color:var(--badD)}.vc.mut{background:var(--field);color:var(--ink2)}.vc.ai{background:#EDECFB;color:#4a3c99}
+.dp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font:400 11.5px var(--ui);color:var(--ink2);white-space:nowrap}
+.dp .d{width:6px;height:6px;border-radius:999px;flex:none}
+.sig{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--ui)}
+.sig .d{width:7px;height:7px;border-radius:999px}
+.pill{height:28px;display:inline-flex;align-items:center;padding:0 12px;border-radius:999px;font:500 12px var(--ui);color:var(--ink3);transition:background 120ms}
+.pill:hover{color:var(--ink)}
+.pill.on{background:var(--field2);color:var(--ink)}
+.notice{display:flex;gap:9px;padding:10px 12px;border-radius:8px;font:400 12px/1.6 var(--ui);color:var(--ink2)}
+.notice.warn{background:var(--warnT)}
+.notice.ai{background:#F3F2FC}
+.notice b{color:var(--ink)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+th{height:32px;padding:0 14px;text-align:left;background:#fff;color:var(--ink3);font-size:12px;font-weight:400;position:sticky;top:0;z-index:1;border-bottom:1px solid var(--line);white-space:nowrap}
+td{height:48px;padding:0 14px;border-bottom:1px solid #F1F0EC;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:background 100ms}
+tbody tr:hover td{background:#FAF9F6}
+tr[data-act]{cursor:pointer}
+tr.on td{background:#F5F3EC}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
+.cite{display:inline-grid;place-items:center;min-width:17px;height:16px;padding:0 4px;border-radius:4px;background:var(--field);color:var(--ink2);font:600 9.5px var(--mono);vertical-align:2px;cursor:pointer;margin-left:1px;transition:background 120ms}
+.cite:hover{background:var(--field2)}
+.drawer{position:fixed;right:14px;top:70px;bottom:14px;width:380px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--e2);display:grid;grid-template-rows:50px minmax(0,1fr);overflow:hidden;z-index:20;animation:pagein 160ms ease}
+.drw-h{display:flex;align-items:center;gap:9px;padding:0 16px;border-bottom:1px solid var(--line)}
+.drw-b{overflow:auto;padding:16px}
+.src{border-top:1px solid #F1F0EC;background:#FBFAF6;padding:12px 14px;font:400 12.5px/1.7 var(--serif);color:#2a3440}
+.src mark{background:#FFF0A8;border-radius:2px;padding:1px 0}
+.kv{display:grid;grid-template-columns:104px 1fr;gap:8px;font-size:12px;padding:7px 0;border-bottom:1px solid #F1F0EC}
+.kv span:first-child{color:var(--ink4)}
+.overlay{position:fixed;inset:0;background:rgb(25 23 18/.32);display:grid;place-items:start center;padding-top:11vh;z-index:30}
+.overlay[hidden]{display:none}
+@keyframes din{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dlg{width:min(560px,calc(100vw - 32px));max-height:76dvh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--e2);animation:din 160ms ease}
+.dlg-h{display:flex;align-items:center;padding:16px 20px 0}
+.dlg-h h2{font-size:16px;margin:0;font-weight:600}
+.dlg-b{padding:14px 20px 20px}
+.xbtn{width:28px;height:28px;margin-left:auto;display:grid;place-items:center;border-radius:7px;color:var(--ink4)}
+.xbtn:hover{background:var(--field);color:var(--ink)}
+.fg{margin-bottom:12px}
+.fg label{display:block;font:500 12.5px var(--ui);margin-bottom:6px}
+.fg input,.fg textarea{width:100%;border:0;border-radius:8px;background:var(--field);padding:9px 12px;font:400 13px var(--ui)}
+.fg textarea{min-height:70px;resize:vertical;line-height:1.55}
+.fg input:focus,.fg textarea:focus{outline:2px solid #D6D3CC}
+.fg .help{font:400 11.5px var(--ui);color:var(--ink4);margin-top:5px}
+.toasts{position:fixed;left:50%;top:66px;transform:translateX(-50%);display:grid;gap:8px;z-index:50}
+@keyframes tin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.toast{width:350px;padding:11px 14px;background:#fff;border:1px solid var(--line2);border-radius:10px;box-shadow:0 6px 20px rgb(25 25 25/.1);font:400 12.5px/1.5 var(--ui);animation:tin 150ms ease;display:flex;gap:9px;align-items:flex-start}
+.toast .d{width:7px;height:7px;border-radius:999px;margin-top:5px;flex:none}
+.toast b{font-weight:600}
+.composer{max-width:560px;margin:0 auto;background:#fff;border-radius:18px;box-shadow:var(--e2);padding:16px 16px 14px;text-align:left}
+.composer textarea{width:100%;border:0;outline:0;resize:none;min-height:56px;font:400 13.5px/1.5 var(--ui);padding:2px 4px}
+.composer textarea::placeholder{color:var(--ink4)}
+.cmdrow{width:100%;height:42px;border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 10px;text-align:left;font:400 13px var(--ui);transition:background 100ms}
+.cmdrow:hover,.cmdrow:focus{background:var(--field)}
+.cmdrow kbd{margin-left:auto;font:500 9.5px var(--mono);background:var(--field);border-radius:4px;padding:1px 5px;color:var(--ink4)}
+@media(max-width:1200px){.navr{overflow-x:auto;scrollbar-width:none}.navr::-webkit-scrollbar{display:none}.navr button{padding:0 9px;font-size:12px}.instr .sub{display:none}.srch span.t,.srch kbd{display:none}.dealsw .code{display:none}}
+@media(max-width:860px){.top{gap:9px;padding:0 12px}.instr{display:none}.drawer{width:min(380px,calc(100vw - 20px))}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="overlay" class="overlay" hidden></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script>
+(()=>{
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=x=>String(x??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nowT=()=>new Date().toLocaleTimeString('en-US',{hour12:false});
+const KEY='conductia.workbench.v1';
+const ICONS={
+ search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+ file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+ quote:'<path d="M17 6.1H3M21 12.1H3M15.1 18H3"/>',
+ db:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+ wand:'<path d="m15 4 5 5M9 15l-5 5M14.5 9.5 6 18M18 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',
+ chev:'<path d="m9 18 6-6-6-6"/>',
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ folder:'<path d="M4 8a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>',
+ grid:'<rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/>',
+ book:'<path d="M6 4h9l3 3v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M8 9h6M8 12.5h6M8 16h4"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>'
+};
+const ic=(n,s=14,c='currentColor')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none">${ICONS[n]||''}</svg>`;
+const seed=()=>({
+ signedIn:false,
+ stations:[
+  {id:1,name:'Conflict & perimeter check',ph:1,st:'done',mode:'Casey',receipt:{v:'clear',line:'screened clear · 12s',checks:'FINRA ✓ MNPI ✓ KYC ✓'}},
+  {id:2,name:'Engagement letter draft',ph:1,st:'done',mode:'You',receipt:{v:'clear',line:'screened clear · 8s',checks:'fee language standard · no MNPI'}},
+  {id:3,name:'Mandate KYC refresh',ph:1,st:'hold',mode:'Casey',receipt:{v:'hold',line:'hold · 21s',checks:'1 beneficial owner pending · entity current'}},
+  {id:4,name:'Working group list',ph:1,st:'skip',mode:'You',skipBy:'R. Katz'},
+  {id:5,name:'Draft teaser for counsel review',ph:2,st:'active',mode:'You',desc:'Casey drafted from the mandate record; counsel signed off yesterday. Your redline is the last gate before the teaser is client-ready. Pre-send screening runs on every revision.'},
+  {id:6,name:'Assemble buyer long list',ph:2,st:'todo',mode:'Casey'},
+  {id:7,name:'Valuation framework',ph:2,st:'todo',mode:'You'},
+  {id:8,name:'Data room provisioning',ph:2,st:'todo',mode:'Casey'},
+  {id:9,name:'Management presentation outline',ph:2,st:'todo',mode:'You'},
+  {id:10,name:'Buyer outreach sequencing',ph:2,st:'todo',mode:'Casey'}
+ ],
+ decisions:[
+  {id:'d1',t:'Buyer outreach, wave 1',s:'Marketing · screened clear · overdue 1d',chip:'Approved draft',cv:'ok',act:'Approve 6 sends',casey:true,done:false},
+  {id:'d2',t:'Teaser v3',s:'Preparation · counsel signed off · your redline is the gate',chip:'In review',cv:'mut',act:'Review 4 changes',casey:true,done:false},
+  {id:'d3',t:'Process letter, Phase II',s:'Held by pre-send screening · supervisor release required',chip:'Held',cv:'warn',act:'Open held message',casey:false,done:false,goto:'mail'}
+ ],
+ mail:[
+  {id:'h1',f:'held',from:'you → buyer-a@…',subj:'Process letter — Phase II invitation',meta:'held 12m',rule:'"Guaranteed" is a restricted performance term (rule L1-COMM-014). Releasing sends it unchanged and records your override; rejecting returns it to drafts with your note.',body:'Further to the indications received, we are pleased to invite you into Phase II of the process. Access to the data room will be staged upon countersignature. We are confident the timeline is [guaranteed] to complete before quarter end.',released:false},
+  {id:'h2',f:'held',from:'you → all-buyers@…',subj:'Teaser distribution — wave 1',meta:'held 1h',rule:'Bulk external send routes to the CCO queue before release.',body:'Wave-1 teaser distribution to the approved long list. 6 recipients, staggered send.',released:false},
+  {id:'b1',f:'blocked',from:'you → buyer-c@…',subj:'Valuation guidance note',meta:'blocked Fri',rule:'MNPI phrase detected ("board has approved"). Edit the flagged phrase and resend; blocked messages never partially send.',body:'Following our discussion on valuation, the [board has approved] moving to the next stage with guidance in the range discussed.',released:false},
+  {id:'i1',f:'inbox',from:'elena.vasquez@…',subj:'Re: Management presentation timing',meta:'9:41 AM',rule:'',body:'Elena confirms Thursday 2pm for the management presentation dry run. Attendee list attached.',released:false},
+  {id:'s1',f:'sent',from:'you → elena.vasquez@…',subj:'Weekly client update',meta:'Mon · screened clear 9s',rule:'',body:'Sent after screening.',released:false}
+ ],
+ buyers:[
+  {id:'A',name:'Buyer A',kind:'Strategic · T1',fit:'87.0',sig:'Strong',sv:'ok',thesis:'Repeat enterprise-software buyer; margin-expansion playbook maps directly onto the target\u2019s profile. Capacity confirmed across both buyer documents.',cap:'$19.8B',ev:'Sourced ×3',evv:'ok',draft:'"Following our conversation at the September conference…"',ds:'In review',approved:false},
+  {id:'B',name:'Buyer B',kind:'Strategic · T1',fit:'74.2',sig:'Situational',sv:'warn',thesis:'Distribution synergy is the case; depends on the divestiture closing this quarter. Sources disagree on capacity — shown side by side, never resolved silently.',cap:'$12.4B?',ev:'Conflict · 2 src',evv:'warn',draft:'"Your platform announcement in August suggests…"',ds:'Agent draft',approved:false},
+  {id:'C',name:'Buyer C',kind:'Sponsor',fit:'',sig:'Scoring · 56%',sv:'ai',thesis:'Platform thesis run in progress; partial result held until the compliance verdict lands.',cap:'$21.1B',ev:'Pending',evv:'mut',draft:'Queued behind scoring',ds:'',approved:false},
+  {id:'D',name:'Buyer D',kind:'Strategic · T2',fit:'81.5',sig:'Strong',sv:'ok',thesis:'Your override raised the adjacency weight; Casey\u2019s baseline 76.2 is kept in history beside your value.',cap:'$8.6B',ev:'Sourced ×2',evv:'ok',draft:'"We have followed your expansion into managed services…"',ds:'In review',approved:false,over:true}
+ ],
+ docs:[
+  {id:'f1',folder:'03. Marketing materials',name:'Project Destiny Teaser — November 2025.pptx',cat:'Marketing',catc:'#2E90FA',cls:'Confidential',clsv:'mut',life:'Client-ready',lv:'ok',size:'4.2 MB',act:'sent wave 1 · Mon'},
+  {id:'f2',folder:'03. Marketing materials',name:'Destiny Management Presentation — 08.28.25.pptx',cat:'Marketing',catc:'#2E90FA',cls:'MNPI',clsv:'bad',life:'Approved',lv:'ok',size:'11.8 MB',act:'Buyer A viewed ×2'},
+  {id:'f3',folder:'04. Buyers',name:'European Buyers Overview — 8.29.25.pptx',cat:'Buyers',catc:'#E5484D',cls:'Confidential',clsv:'mut',life:'Approved',lv:'ok',size:'6.1 MB',act:'cited in Ask · today'},
+  {id:'f4',folder:'04. Buyers',name:'Project Destiny Bid Summary 10.04.25 v5.pptx',cat:'Buyers',catc:'#E5484D',cls:'MNPI',clsv:'bad',life:'In review',lv:'mut',size:'2.1 MB',act:'conflict flagged'},
+  {id:'f5',folder:'05. Data room',name:'Phase II Data Room Index_vF.xlsx',cat:'Index',catc:'#F5A524',cls:'Confidential',clsv:'mut',life:'Approved',lv:'ok',size:'88 KB',act:'downloaded yesterday'}
+ ],
+ history:[
+  {icon:'quote',t:'Which buyers should we prioritize, and why?',when:'today'},
+  {icon:'file',t:'Diligence gaps before Phase II',when:'2 days ago'},
+  {icon:'grid',t:'Buyer fit scoring — weights review',when:'1 week ago'},
+  {icon:'file',t:'Draft talking points for the client update call',when:'2 weeks ago'}
+ ],
+ events:[
+  {t:'09:41:12',k:'Mail',kc:'#2E90FA',d:'Held message entered supervisory queue · rule L1-COMM-014',m:'lexicon v12'},
+  {t:'09:38:04',k:'Step',kc:'#17B26A',d:'Rail advance — station 05 opened (Draft teaser)',m:'rail v2.4'},
+  {t:'09:36:51',k:'Step',kc:'#17B26A',d:'Long list scored · Casey run 3:51 · verdict clear · Buyer D override kept beside baseline',m:'fit v3 · run #2207'},
+  {t:'09:21:47',k:'File',kc:'#F5A524',d:'Buyer A viewed Destiny Management Presentation (2nd view) · NDA active',m:'MNPI class'},
+  {t:'08:55:30',k:'Platform',kc:'#2E90FA',d:'CCO notified · held message (Process letter — Phase II)',m:'rule L1-COMM-014'}
+ ]
+});
+let S;
+try{const x=JSON.parse(localStorage.getItem(KEY));S=(x&&x.v===1)?x.s:seed()}catch(e){S=seed()}
+let UI={route:'home',station:5,buyer:'A',mailF:'held',mailSel:'h1',docSel:'f2',cite:null,modal:null,agent:null,auditF:'All',mfa:false};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({v:1,s:S}))}catch(e){}};
+const audit=(k,kc,d,m)=>{S.events.unshift({t:nowT(),k,kc,d,m});save()};
+const toast=(msg,v='ok')=>{const c={ok:'var(--ok)',warn:'var(--warn)',bad:'var(--bad)'}[v];const el=document.createElement('div');el.className='toast';el.innerHTML=`<span class="d" style="background:${c}"></span><span>${msg}</span>`;$('#toasts').append(el);setTimeout(()=>el.remove(),3600)};
+const SOURCES={
+ 1:{name:'European Buyers Overview — 8.29.25',loc:'04. Buyers · p.12',kind:'PPTX · deal room',date:'as of 08.29',ex:'…dry powder of <mark>$19.8B against a stated enterprise-software mandate</mark>, with two completed platform acquisitions in the segment since 2023…'},
+ 2:{name:'Project Destiny Bid Summary 10.04 v5',loc:'04. Buyers · p.4',kind:'PPTX · deal room',date:'as of 10.04',ex:'…Buyer B capacity estimated at <mark>$12.4B</mark>; the prior overview cited $14.1B — <mark>sources conflict</mark> and are shown side by side…'},
+ 3:{name:'Fit model v3 — run #2207',loc:'run log · Casey',kind:'Calculated',date:'today 09:36',ex:'Composite fit = strategic overlap (.45) + capacity (.30) + adjacency (.25). <mark>Your fit-weight override (08.21) applied</mark>; baseline kept in history.'}
+};
+const stDot=s=>s==='done'?'background:var(--ok)':s==='active'?'background:var(--ai);box-shadow:0 0 0 3px #EDECFB':s==='hold'?'background:var(--warn)':s==='skip'?'border:1.5px dashed #C9C5BC;background:#fff':'border:1.5px solid #D6D3CC;background:#fff';
+/* ---------- shell ---------- */
+function shell(content){
+ const mailCt=S.mail.filter(m=>(m.f==='held'||m.f==='blocked')&&!m.released).length;
+ const todayCt=S.decisions.filter(d=>!d.done).length;
+ const NAV=[['home','Home'],['today','Today',todayCt],['rail','Rail'],['ask','Ask'],['buyers','Buyers'],['mail','Mail',mailCt],['room','Data Room'],['team','Team'],['audit','Audit']];
+ return `<div class="app">
+ <header class="top">
+  <span class="brandc">C</span>
+  <button class="dealsw" data-act="modal" data-id="switch"><span class="serif" style="font-size:14px">⚭</span>Project Summit<span class="code">DL-2026-0114</span><span style="color:var(--ink4);font-size:9px">▾</span></button>
+  <nav class="navr">${NAV.map(n=>`<button class="${UI.route===n[0]?'on':''}" data-act="go" data-to="${n[0]}"><span class="lbl">${n[1]}</span>${n[2]?`<span class="ct">${n[2]}</span>`:''}</button>`).join('')}</nav>
+  <span style="margin-left:auto;display:inline-flex;gap:9px;align-items:center">
+   <button class="srch" data-act="modal" data-id="cmd">${ic('search',13)}<span class="t">Search</span><kbd>⌘K</kbd></button>
+   <span class="instr clear" data-compliance-status title="FINRA, MNPI, and KYC monitoring — clear"><span class="d"></span>Compliant<span class="sub">FINRA · MNPI · KYC</span></span>
+   <span class="avatar" title="J. Morrison · Managing Director">JM</span>
+  </span>
+ </header>
+ <div class="scroll" id="main">${content}</div>
+</div>`}
+/* ---------- home (deal workspace) ---------- */
+function vHome(){
+ return `<div class="page" style="max-width:820px">
+ <div style="text-align:center;margin-top:34px">
+  <div class="serif" style="font-size:24px">⚭ Project Summit</div>
+  <div style="font:400 12px var(--ui);color:var(--ink4);margin-top:4px">Sell-side · phase 2 of 5 · perimeter enforced · code names outside the team</div>
+  <div class="composer" style="margin-top:22px">
+   <textarea id="ask-in" placeholder="Ask anything in Project Summit"></textarea>
+   <div style="display:flex;align-items:center;margin-top:8px">
+    <span style="display:grid;place-items:center;width:28px;height:28px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);cursor:pointer" title="Attach">${ic('plus',13)}</span>
+    <span class="dp" style="margin-left:8px;border:0;background:var(--field)">${ic('folder',11)} Deal scope</span>
+    <span style="margin-left:auto;display:inline-flex;align-items:center;gap:10px">
+     <span style="font:500 12px var(--ui);color:var(--ink3);display:inline-flex;align-items:center;gap:5px">${ic('grid',12)}Casey</span>
+     <button style="display:grid;place-items:center;width:32px;height:32px;border-radius:999px;background:var(--ai);color:#fff" data-act="ask-send" aria-label="Ask">${ic('up',13)}</button>
+    </span>
+   </div>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">
+   <button class="btn sm" data-act="suggest" data-q="Which buyers should we prioritize, and why?">${ic('grid',12)} Prioritize the buyer list</button>
+   <button class="btn sm" data-act="suggest" data-q="Summarize the diligence gaps before Phase II">${ic('file',12)} Diligence gaps</button>
+   <button class="btn sm" data-act="suggest" data-q="Draft the weekly client update">${ic('quote',12)} Draft client update</button>
+  </div>
+ </div>
+ <div style="display:flex;gap:4px;justify-content:center;margin:30px 0 12px">
+  <span class="pill on">My history</span><button class="pill" data-act="go" data-to="room">Files</button><button class="pill" data-act="go" data-to="rail">Rail</button>
+  <span style="margin-left:14px;align-self:center;font:400 11px var(--ui);color:var(--ink4)">🔒 Your history is private</span>
+ </div>
+ <div class="card">
+  <div style="display:flex;padding:9px 16px;border-bottom:1px solid var(--line);font:400 12px var(--ui);color:var(--ink3)"><span style="flex:1">Name</span><span style="width:100px;text-align:right">Date created</span></div>
+  ${S.history.map(x=>`<button class="row" data-act="go" data-to="ask"><span style="flex:1;display:inline-flex;align-items:center;gap:9px;font:400 13px var(--ui)">${ic(x.icon,13,'#9C9A94')}${esc(x.t)}</span><span style="width:100px;text-align:right;font:400 12px var(--ui);color:var(--ink4)">${x.when}</span></button>`).join('')}
+ </div>
+ <div style="display:flex;gap:4px;margin-top:16px;justify-content:center">
+  <span style="flex:none;display:flex;gap:4px;width:280px">
+   <span style="flex:1;height:5px;border-radius:3px;background:var(--okF)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--ink)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span>
+  </span>
+ </div>
+ <div style="text-align:center;font:400 11px var(--ui);color:var(--ink4);margin-top:6px">Mandate · <b style="color:var(--ink2)">Preparation</b> · Marketing · Diligence · Close &nbsp;—&nbsp; <button style="font:500 11.5px var(--ui);color:var(--ink2);text-decoration:underline" data-act="go" data-to="today">${S.decisions.filter(d=>!d.done).length} decisions need you →</button></div>
+ </div>`}
+/* ---------- today ---------- */
+function vToday(){
+ const open=S.decisions.filter(d=>!d.done),done=S.decisions.filter(d=>d.done);
+ return `<div class="page">
+ <div class="ph"><div><h1>Good morning, J.</h1><p>${open.length?open.length+' decision'+(open.length>1?'s':'')+' need your judgment. Everything else is drafted, running, or screened.':'Queue clear. Everything is drafted, running, or screened.'}</p></div>
+ <div class="acts"><button class="btn" data-act="go" data-to="audit">Open register</button><button class="btn pri" data-act="go" data-to="rail">Go to the rail</button></div></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+  <span class="dp"><span class="d" style="background:var(--ok)"></span>Since Friday: teaser cleared counsel</span>
+  <span class="dp"><span class="d" style="background:var(--sync)"></span>Buyer A viewed the MP twice</span>
+  <span class="dp"><span class="d" style="background:var(--warn)"></span>1 message held for release</span>
+  <span class="dp"><span class="d" style="background:var(--warn)"></span>KYC: 1 owner pending</span>
+ </div>
+ <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);gap:14px;align-items:start" class="cols2">
+ <div style="display:grid;gap:14px">
+  <div class="card"><div class="cardh"><h2>Needs your judgment</h2><span class="meta">${open.length} open · sorted by consequence</span></div>
+  ${open.map(d=>`<div class="row"><div class="grow"><div class="rt">${esc(d.t)}<span class="vc ${d.cv}">${d.chip}</span>${d.casey?'<span class="vc ai">Casey</span>':''}</div><span class="rs">${esc(d.s)}</span></div>
+   <span class="acts2"><button class="btn pri sm" data-act="decide" data-id="${d.id}">${esc(d.act)}</button><button class="btn sm ghost" data-act="cite" data-id="1">Evidence</button></span></div>`).join('')}
+  ${done.map(d=>`<div class="row" style="opacity:.6"><div class="grow"><div class="rt">${esc(d.t)}<span class="vc ok">Done</span></div><span class="rs">completed this session · receipt in the register</span></div></div>`).join('')}
+  ${open.length+done.length===0?'<div class="row"><span class="rs">Nothing needs you.</span></div>':''}
+  </div>
+  <div class="card"><div class="cardh"><h2>Due today</h2><span class="meta">drafted or routed · review in one sitting</span></div>
+   ${[['Weekly client update','drafted overnight by Casey'],['Buyer Q&A — 3 new questions','answers sourced from the data room'],['Management meeting deck','due 4pm']].map(x=>`<button class="row" data-act="go" data-to="rail"><div class="grow"><div class="rt" style="font-weight:500">${x[0]}</div><span class="rs">${x[1]}</span></div>${ic('chev',13,'#9C9A94')}</button>`).join('')}
+  </div>
+ </div>
+ <div style="display:grid;gap:14px">
+  <div class="card"><div class="cardh"><h2>Running</h2><span class="meta">lands before noon</span></div>
+   <div class="row"><div class="grow"><div class="rt" style="font-weight:500">Financial normalization</div><span class="rs" style="margin-bottom:7px">stage 3 of 4 · ETA 20 min</span><div style="height:4px;border-radius:2px;background:var(--sunken);overflow:hidden"><span style="display:block;width:68%;height:100%;background:var(--ai)"></span></div></div></div>
+   <div class="row"><div class="grow"><div class="rt" style="font-weight:500">Data room gap review</div><span class="rs" style="margin-bottom:7px">stage 1 of 3 · ~1h</span><div style="height:4px;border-radius:2px;background:var(--sunken);overflow:hidden"><span style="display:block;width:22%;height:100%;background:var(--ai)"></span></div></div></div>
+  </div>
+  <div class="card"><div class="cardh"><h2>Rail position</h2><span class="meta">phase 2 of 5</span></div>
+   <div style="padding:14px 16px">
+    <div style="display:flex;gap:4px;margin-bottom:10px"><span style="flex:1;height:5px;border-radius:3px;background:var(--okF)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--ink)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken)"></span></div>
+    <div style="font:600 12.5px var(--ui)">Preparation — ${S.stations.filter(x=>x.ph===2&&x.st==='done').length} of 6 done</div>
+    <span class="rs">Next gate: teaser approval unlocks the buyer long list.</span>
+    <button class="btn sm" style="margin-top:10px" data-act="go" data-to="rail">Open station 05</button>
+   </div>
+  </div>
+ </div>
+ </div>
+ <style>@media(max-width:1240px){.cols2{grid-template-columns:1fr!important}}</style>
+ </div>`}
+/* ---------- rail ---------- */
+function vRail(){
+ const st=S.stations.find(x=>x.id===UI.station)||S.stations[4];
+ const ag=UI.agent;
+ return `<div class="page">
+ <div class="ph"><div><h1>Deal Rail — Preparation</h1><p>${S.stations.filter(x=>x.st==='done').length} done · 1 hold · station 05 is yours · every run leaves a receipt</p></div>
+ <div class="acts"><button class="btn" data-act="go" data-to="audit">Receipts in register</button></div></div>
+ <div style="display:grid;grid-template-columns:280px minmax(0,1fr);gap:14px;align-items:start" class="cols2">
+  <div class="card">
+   ${S.stations.map(x=>`<button class="row" style="padding:9px 14px;${x.id===UI.station?'background:#F5F3EC':''}" data-act="station" data-id="${x.id}"><span style="width:9px;height:9px;border-radius:999px;flex:none;box-sizing:border-box;${stDot(x.st)}"></span><span style="flex:1;font:${x.id===UI.station?'500':'400'} 12.5px var(--ui);color:${x.st==='todo'||x.st==='skip'?'var(--ink3)':'var(--ink)'}">${String(x.id).padStart(2,'0')} · ${esc(x.name)}</span></button>`).join('')}
+  </div>
+  <div style="display:grid;gap:12px">
+   <div class="card">
+    <div style="padding:16px 18px">
+     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="m2">STATION ${String(st.id).padStart(2,'0')} OF 10</span><span class="vc ${st.st==='active'?'ai':st.st==='done'?'ok':st.st==='hold'?'warn':'mut'}">${({done:'Done',active:'Your next decision',todo:'Queued',skip:'Skipped',hold:'Hold'})[st.st]}</span><span style="margin-left:auto" class="vc mut">${st.mode==='Casey'?'Casey':'You'}</span></div>
+     <div style="font:600 16px/1.3 var(--ui);margin-top:8px">${esc(st.name)}</div>
+     ${st.desc?`<div style="font:400 12.5px/1.6 var(--ui);color:var(--ink2);margin-top:5px;max-width:540px">${esc(st.desc)}</div>`:''}
+     ${st.st==='active'?`<div style="display:flex;gap:8px;margin-top:14px">${ag?'':'<button class="btn pri" data-act="run-step">Run step</button>'}<button class="btn" data-act="modal" data-id="contract">Open contract</button><button class="btn ghost" data-act="modal" data-id="skip">Skip with approval</button></div>`:''}
+     ${st.st==='todo'?`<div class="notice warn" style="margin-top:12px"><span>Queued behind the phase gate. Unlocks when the teaser is approved.</span></div>`:''}
+     ${st.skipBy?`<div class="notice warn" style="margin-top:12px"><span><b>Skipped with approval</b> — completed outside the rail by ${st.skipBy}. The skip is recorded in the register.</span></div>`:''}
+    </div>
+    ${ag?`<div style="border-top:1px solid var(--line);padding:14px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="m2">CASEY RUN · ${ag.done?'REVIEW REQUIRED':'STAGE '+(ag.stage+1)+' OF 4'}</span>${ag.done?'':'<button class="btn sm" data-act="stop-run">Stop</button>'}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px">
+      ${['Read mandate record','Draft teaser v4','Screen draft (L1 + MNPI)','Route for your redline'].map((s,i)=>`<div style="border-radius:8px;padding:9px 10px;background:${i<ag.stage||ag.done?'#F0FAF4':i===ag.stage?'#F3F2FC':'var(--field)'}">
+        <div style="display:flex;gap:6px;align-items:center;font:500 11px var(--ui);color:${i<ag.stage||ag.done?'var(--okD)':i===ag.stage?'#4a3c99':'var(--ink4)'}">${i<ag.stage||ag.done?'✓ ':i===ag.stage?'● ':''}${s}</div></div>`).join('')}
+      </div>
+      ${ag.done?`<div style="display:flex;gap:8px;margin-top:12px"><button class="btn pri" data-act="modal" data-id="approve">Review 4 changes</button><button class="btn" data-act="cite" data-id="3">Why this result?</button></div>`:''}
+     </div>`:''}
+   </div>
+   ${st.receipt?`<div class="card"><div style="padding:13px 18px">
+     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="m2">RUN RECEIPT</span><span class="vc ${st.receipt.v==='clear'?'ok':'warn'}">${st.receipt.v==='clear'?'Clear':'Hold'}</span><span class="m2" style="margin-left:auto">logged to register</span></div>
+     <div class="m2" style="margin-top:7px;color:var(--ink2)">${st.receipt.line} · ${st.receipt.checks} · <button style="font:500 11px var(--ui);color:var(--ink2);text-decoration:underline" data-act="cite" data-id="3">why this result?</button></div>
+     ${st.receipt.v==='hold'?`<div style="display:flex;gap:8px;margin-top:10px"><button class="btn pri sm" data-act="retry-kyc">Retry 1 owner</button><button class="btn sm" data-act="escalate">Escalate to compliance</button></div>`:''}
+    </div></div>`:''}
+  </div>
+ </div>
+ <style>@media(max-width:1100px){.cols2{grid-template-columns:1fr!important}}</style>
+ </div>`}
+/* ---------- ask ---------- */
+function vAsk(){
+ return `<div class="page">
+ <div class="ph"><div><h1>Buyer prioritization</h1><p>Deal scope · screened before it reaches you · every material claim carries its source</p></div>
+ <div class="acts"><button class="btn" data-act="go" data-to="home">Past questions</button></div></div>
+ <div style="display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start" class="cols2">
+  <div class="card">
+   <div style="padding:20px 22px">
+    <div style="display:flex;justify-content:flex-end"><span style="background:var(--field2);border-radius:14px 14px 4px 14px;padding:8px 13px;font:400 13px var(--ui)">How do the three finalists compare on the numbers?</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:16px"><span class="vc ai">Casey</span><span class="m2">screened · clear · 24s · <button style="font:500 10.5px var(--ui);color:var(--ink2);text-decoration:underline" data-act="cite" data-id="3">why this result?</button></span></div>
+    <div style="font:400 13.5px/1.65 var(--ui);margin-top:10px;max-width:560px">Revenue reached <b>$4.51B</b><button class="cite" data-act="cite" data-id="1">1</button>, up from <b>$4.01B</b><button class="cite" data-act="cite" data-id="2">2</button> a year earlier. Against that base, the finalists separate on capacity, not appetite:</div>
+    <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:12px;max-width:560px">
+     <div style="display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--line)"><span style="font:600 12px var(--ui)">Finalist capacity vs fit</span><span class="m2">units $B · as of 10.04</span></div>
+     <table><thead><tr><th>Party</th><th class="n">Dry powder</th><th class="n">Fit</th><th class="n">Signal</th></tr></thead><tbody>
+     <tr><td style="font-weight:600">Buyer A</td><td class="n mono">19.8<button class="cite" data-act="cite" data-id="1">1</button></td><td class="n mono">87.0</td><td class="n"><span class="vc ok">Lead</span></td></tr>
+     <tr><td style="font-weight:600">Buyer B</td><td class="n mono" style="color:var(--warnD)">12.4?<button class="cite" data-act="cite" data-id="2">2</button></td><td class="n mono">74.2</td><td class="n"><span class="vc warn">Conflict</span></td></tr>
+     <tr><td style="font-weight:600">Buyer C</td><td class="n mono">21.1<button class="cite" data-act="cite" data-id="2">2</button></td><td class="n mono">69.5</td><td class="n"><span class="vc mut">Sequence</span></td></tr>
+     </tbody></table>
+    </div>
+    <div style="margin-top:14px;max-width:560px">
+     ${[['ok','Supported — capacity, Buyer A','$19.8B dry powder against a stated enterprise-software mandate.','1'],['warn','Conflicting sources — capacity, Buyer B','$12.4B (Bid Summary) vs $14.1B (Overview). Shown side by side, never resolved silently.','2'],['ai','Calculated — fit ranking','Fit model v3; your weight override applied and disclosed.','3']].map(c=>`<div style="display:flex;gap:9px;padding:10px 0;border-bottom:1px solid #F1F0EC"><span style="width:7px;height:7px;border-radius:999px;margin-top:5px;flex:none;background:${c[0]==='ok'?'var(--ok)':c[0]==='warn'?'var(--warn)':'var(--ai)'}"></span><div><b style="font-size:12.5px">${c[1]}</b><div style="font:400 12px var(--ui);color:var(--ink3)">${c[2]} <button class="cite" data-act="cite" data-id="${c[3]}">${c[3]}</button></div></div></div>`).join('')}
+    </div>
+   </div>
+   <div style="border-top:1px solid var(--line);padding:12px 16px">
+    <div style="display:flex;align-items:flex-end;gap:8px;border:1px solid var(--line2);border-radius:12px;padding:9px 10px">
+     <textarea id="ask-in" placeholder="Ask a follow-up…" style="flex:1;border:0;outline:0;resize:none;min-height:38px;font:400 13px var(--ui)"></textarea>
+     <span class="dp" style="border:0;background:var(--field);align-self:center">${ic('folder',11)} Deal scope</span>
+     <button style="display:grid;place-items:center;width:32px;height:32px;border-radius:999px;background:var(--ai);color:#fff" data-act="ask-send" aria-label="Send">${ic('up',13)}</button>
+    </div>
+    <div style="font:400 11px var(--ui);color:var(--ink4);margin-top:6px">Screened before send and before display · code names only · logged to the register</div>
+   </div>
+  </div>
+  <div class="card">
+   <div class="cardh"><h2>Evidence</h2><span class="meta">2 sourced · 1 calculated</span></div>
+   ${[1,2,3].map(k=>{const s=SOURCES[k];return `<button class="row" data-act="cite" data-id="${k}"><div class="grow"><div class="rt" style="font-size:12px;font-weight:500">[${k}] ${esc(s.name)}</div><span class="rs">${s.kind} · ${s.loc} · ${s.date}</span></div>${ic('chev',13,'#9C9A94')}</button>`}).join('')}
+   <div style="padding:12px 16px;border-top:1px solid var(--line)"><div style="display:flex;align-items:center;gap:9px"><span style="flex:1;height:5px;border-radius:3px;background:var(--sunken);overflow:hidden"><span style="display:block;width:67%;height:100%;background:var(--ok)"></span></span><span class="m2">2 of 3 sourced</span></div></div>
+  </div>
+ </div>
+ <style>@media(max-width:1100px){.cols2{grid-template-columns:1fr!important}}</style>
+ </div>`}
+/* ---------- buyers ---------- */
+function vBuyers(){
+ const b=S.buyers.find(x=>x.id===UI.buyer);
+ const inRev=S.buyers.filter(x=>!x.approved&&x.ds==='In review').length;
+ return `<div class="page" style="max-width:1240px">
+ <div class="ph"><div><h1>Buyer universe</h1><p>42 names · fit model v3 · rows are acquirers, columns are Casey's jobs · every cell traces to source</p></div>
+ <div class="acts"><button class="btn" data-act="rerun">Re-run column</button><button class="btn pri" data-act="approve-drafts">Approve ${inRev} drafts</button></div></div>
+ <div class="card">
+  <table style="min-width:840px"><thead><tr><th style="width:34px"><span style="display:inline-block;width:12px;height:12px;border:1px solid #D6D3CC;border-radius:3px;background:#fff"></span></th><th>Company</th><th style="width:32%"><span class="sig"><span class="d" style="background:var(--ok)"></span>Buyer fit</span></th><th class="n">Capacity</th><th>Evidence</th><th><span class="sig"><span class="d" style="background:var(--sync)"></span>Outreach draft</span></th><th style="width:100px"></th></tr></thead><tbody>
+  ${S.buyers.map((x,i)=>`<tr class="${x.id===UI.buyer?'on':''}" data-act="buyer" data-id="${x.id}">
+   <td class="m2">${i+1}</td>
+   <td><span style="font-weight:600">${x.name}</span><span class="rs">${x.kind}${x.over?' · overridden ✎':''}</span></td>
+   <td><span class="sig" style="color:${x.sv==='ok'?'var(--okD)':x.sv==='warn'?'var(--warnD)':'#4a3c99'}"><span class="d" style="background:${x.sv==='ok'?'var(--ok)':x.sv==='warn'?'var(--warn)':'var(--ai)'}"></span>${x.sig}${x.fit?' · '+x.fit:''}</span><div style="font:400 11.5px/1.5 var(--ui);color:var(--ink3);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:340px">Thesis: ${esc(x.thesis)}</div></td>
+   <td class="n mono" style="${x.evv==='warn'?'color:var(--warnD)':''}">${x.cap}</td>
+   <td><span class="vc ${x.evv}">${x.ev}</span></td>
+   <td style="font:400 12px var(--ui);color:var(--ink3)">${x.ds?`<span class="vc ${x.ds==='In review'?'mut':'ai'}" style="margin-right:6px">${x.ds}</span>`:''}${x.approved?'<span class="vc ok">Approved</span>':''}</td>
+   <td class="n">${x.ds==='In review'&&!x.approved?`<button class="btn pri sm" data-act="approve-buyer" data-id="${x.id}">Approve</button>`:x.ev.startsWith('Conflict')?`<button class="btn sm" data-act="cite" data-id="2">Resolve</button>`:''}</td></tr>`).join('')}
+  </tbody></table>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--line);flex-wrap:wrap;gap:8px">
+   <span style="font:400 12px var(--ui);color:var(--ink3)">1 conflict · 1 override kept beside Casey's baseline · 38 more rows</span>
+   <span class="m2">every cell traces to source · run #2207 logged</span></div>
+ </div>
+ ${b?`<div class="card" style="margin-top:14px"><div class="cardh"><h2>${b.name} — fit thesis</h2><span class="sig" style="color:${b.sv==='ok'?'var(--okD)':b.sv==='warn'?'var(--warnD)':'#4a3c99'}"><span class="d" style="background:${b.sv==='ok'?'var(--ok)':b.sv==='warn'?'var(--warn)':'var(--ai)'}"></span>${b.sig}${b.fit?' · '+b.fit:''}</span><span class="meta">${b.kind}</span></div>
+  <div style="padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px" class="cols2">
+   <div><div style="font:400 12.5px/1.6 var(--ui);color:var(--ink2)">${esc(b.thesis)}</div>
+   <div style="margin-top:10px;font:400 12.5px var(--ui)"><b>Draft outreach:</b> <span style="color:var(--ink3)">${esc(b.draft)}</span></div></div>
+   <div><div class="kv"><span>Capacity</span><b class="mono" style="font-size:12px">${b.cap}</b></div><div class="kv"><span>Evidence</span><span class="vc ${b.evv}">${b.ev}</span></div><div class="kv"><span>Baseline</span><span style="font-size:12px">${b.over?'76.2 kept in history':'Casey run #2207'}</span></div>
+   <button class="btn sm" style="margin-top:10px" data-act="cite" data-id="${b.id==='B'?'2':'1'}">Open source</button></div>
+  </div></div>`:''}
+ </div>`}
+/* ---------- mail ---------- */
+function vMail(){
+ const F=[['held','Held',S.mail.filter(m=>m.f==='held'&&!m.released).length],['blocked','Blocked',S.mail.filter(m=>m.f==='blocked'&&!m.released).length],['inbox','Inbox',1],['sent','Sent',0],['drafts','Drafts',0]];
+ const list=S.mail.filter(m=>m.f===UI.mailF||(UI.mailF==='sent'&&m.released&&m.f==='held'));
+ const m=S.mail.find(x=>x.id===UI.mailSel&&(x.f===UI.mailF||UI.mailF==='sent'))||list[0];
+ return `<div class="page" style="max-width:1240px">
+ <div class="ph"><div><h1>Mail — screening pipeline</h1><p>Every outbound message is screened before it sends. Held and blocked are the work; routine traffic stays out of your way.</p></div>
+ <div class="acts"><button class="btn pri" data-act="modal" data-id="compose">New message</button></div></div>
+ <div style="display:flex;gap:4px;margin-bottom:14px">${F.map(f=>`<button class="pill ${UI.mailF===f[0]?'on':''}" data-act="mailf" data-id="${f[0]}">${f[1]}${f[2]?` · ${f[2]}`:''}</button>`).join('')}</div>
+ <div style="display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;align-items:start" class="cols2">
+  <div class="card">${list.length?list.map(x=>`<button class="row" style="${m&&x.id===m.id?'background:#F5F3EC':''}" data-act="mailsel" data-id="${x.id}">
+   <div class="grow"><div class="rt" style="font-size:12.5px">${esc(x.subj)}</div>
+   <span class="rs">${esc(x.from)} · ${x.meta}${x.released?' · released':''}</span></div>
+   ${x.released?'<span class="vc ok">Released</span>':x.f==='held'?'<span class="vc warn">Held</span>':x.f==='blocked'?'<span class="vc bad">Blocked</span>':''}</button>`).join(''):'<div class="row"><span class="rs">Nothing here.</span></div>'}</div>
+  ${m?`<div class="card">
+   <div style="padding:16px 20px;border-bottom:1px solid var(--line)">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:600 15px var(--ui);flex:1;min-width:200px">${esc(m.subj)}</span><span style="display:flex;gap:6px">${m.released?'<span class="vc ok">Released</span>':m.f==='held'?`<span class="vc warn">${m.meta}</span>`:m.f==='blocked'?'<span class="vc bad">Blocked</span>':''}<span class="vc mut">Confidential</span></span></div>
+    <div class="m2" style="margin-top:3px">${esc(m.from)} · external recipient · screened by L1 lexicon</div></div>
+   <div style="padding:16px 20px">
+    <div style="font:400 13px/1.7 var(--ui);max-width:540px">${esc(m.body).replace(/\[(.+?)\]/g,'<span style="background:var(--warnF);border-radius:4px;padding:0 4px;color:var(--warnD);font-weight:500" title="flagged by screening">$1</span>')}</div>
+    ${m.rule&&!m.released?`<div class="notice warn" style="margin-top:14px;max-width:540px"><span><b>Why this was ${m.f}.</b> ${esc(m.rule)}</span></div>`:''}
+    ${m.released?`<div class="notice ai" style="margin-top:14px;max-width:540px"><span><b>Released by you this session.</b> The override and rationale are in the register.</span></div>`:''}
+    <div style="display:flex;gap:8px;margin-top:14px">
+     ${m.f==='held'&&!m.released?`<button class="btn pri" data-act="modal" data-id="release">Release and send</button><button class="btn" data-act="reject-mail">Reject with note</button><button class="btn ghost" data-act="edit-resend">Edit first</button>`:''}
+     ${m.f==='blocked'&&!m.released?`<button class="btn pri" data-act="edit-resend">Edit and resend</button>`:''}
+     ${m.f==='inbox'?`<button class="btn pri">Reply</button>`:''}
+    </div>
+    ${m.f==='held'&&!m.released?`<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:10px" class="m2">register preview · writes on release: <span style="color:var(--ink2)">MAIL released by J. Morrison (MD) · L1 override · rationale attached · lexicon v12</span></div>`:''}
+   </div>
+  </div>`:''}
+ </div>
+ <style>@media(max-width:1100px){.cols2{grid-template-columns:1fr!important}}</style>
+ </div>`}
+/* ---------- data room ---------- */
+function vRoom(){
+ const d=S.docs.find(x=>x.id===UI.docSel)||S.docs[0];
+ const folders=[...new Set(S.docs.map(x=>x.folder))];
+ return `<div class="page" style="max-width:1240px">
+ <div class="ph"><div><h1>Data room</h1><p>Client documents · staged buyer access · every open, view, and download writes to the register</p></div>
+ <div class="acts"><button class="btn" data-act="modal" data-id="upload">Upload</button><button class="btn pri" data-act="modal" data-id="invite">Manage access</button></div></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+  <span class="dp"><span class="d" style="background:var(--ok)"></span>Deal team · full access</span>
+  <span class="dp"><span class="d" style="background:var(--warn)"></span>Seller · this room only</span>
+  <span class="dp"><span class="d" style="background:var(--bad)"></span>Buyers · phase-gated · NDA</span>
+  <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font:400 12px var(--ui);color:var(--ink3)"><span style="width:7px;height:7px;border-radius:999px;background:var(--sync)"></span>Last synced 1 min ago</span>
+ </div>
+ <div class="card">
+ <table style="min-width:860px"><thead><tr><th>Name</th><th>Category</th><th>Classification</th><th>Lifecycle</th><th class="n">Size</th><th class="n">Last activity</th></tr></thead><tbody>
+ ${folders.map(f=>`<tr><td colspan="6" style="height:34px;background:#FAF9F6;font:500 12px var(--ui);color:var(--ink3)">${ic('folder',12,'#9C9A94')} ${f}</td></tr>`+S.docs.filter(x=>x.folder===f).map(x=>`<tr class="${x.id===UI.docSel?'on':''}" data-act="doc" data-id="${x.id}">
+  <td><span style="display:inline-flex;align-items:center;gap:9px;font:400 13px var(--ui)"><span style="color:var(--bad)">▤</span> ${esc(x.name)}</span></td>
+  <td><span class="dp"><span class="d" style="background:${x.catc}"></span>${x.cat}</span></td>
+  <td><span class="vc ${x.clsv}">${x.cls}</span></td>
+  <td><span class="vc ${x.lv}">${x.life}</span></td>
+  <td class="n mono" style="font-size:11.5px">${x.size}</td><td class="n" style="font-size:11.5px;color:var(--ink4)">${x.act}</td></tr>`).join('')).join('')}
+ </tbody></table>
+ <div style="display:flex;gap:16px;align-items:center;padding:14px 16px;border-top:1px solid var(--line);flex-wrap:wrap">
+  <div style="width:120px;height:74px;flex:none;border-radius:8px;background:repeating-linear-gradient(45deg,#F1F0EC,#F1F0EC 10px,#E9E7E2 10px,#E9E7E2 20px);display:grid;place-items:center" class="m2">preview</div>
+  <div style="flex:1;min-width:240px"><div style="font:600 13px var(--ui)">${esc(d.name)}</div>
+   <div class="m2" style="margin-top:2px">${d.cls} · ${d.size} · ${d.folder}${d.cls==='MNPI'?' · buyer view requires NDA gate':''}</div>
+   <div style="display:flex;gap:8px;margin-top:9px;flex-wrap:wrap"><button class="btn pri sm" data-act="doc-open">Open preview</button><button class="btn sm" data-act="doc-dl">Download original</button><span class="m2" style="align-self:center">both write to the register</span></div>
+  </div></div>
+ </div></div>`}
+/* ---------- team ---------- */
+function vTeam(){
+ const col=(t,people)=>`<div><div style="font:400 12px var(--ui);color:var(--ink4);margin-bottom:8px">${t}</div>${people.map(p=>`<div class="card" style="padding:11px 13px;margin-bottom:7px"><div style="font:600 12.5px var(--ui)">${p[0]}</div><div style="font:400 11.5px var(--ui);color:var(--ink4)">${p[1]}</div>${p[2]?`<span class="dp" style="margin-top:7px;height:22px;font-size:10.5px"><span class="d" style="background:${p[3]}"></span>${p[2]}</span>`:''}</div>`).join('')}</div>`;
+ return `<div class="page">
+ <div class="ph"><div><h1>Team</h1><p>One column per side. External parties see only what their boundary allows — never the Deal Folder, Mail, or the Buyers lens.</p></div>
+ <div class="acts"><button class="btn pri" data-act="modal" data-id="invite">Invite</button></div></div>
+ <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" class="cols4">
+ ${col('This bank · 3',[['J. Morrison','Managing Director','',''],['Priya Nair','VP, M&A','',''],['Tom Okafor','Associate','','']])}
+ ${col('Client · 2',[['Elena Vasquez','CEO','Seller room only','var(--warn)'],['Marcus Webb','CFO','Invited · pending','var(--sync)']])}
+ ${col('Buyers · 2',[['Buyer A — corp dev','SVP Corporate Development','Phase-gated · NDA','var(--bad)'],['Buyer B — deal team','Principal','Phase-gated · NDA','var(--bad)']])}
+ ${col('Advisors · 1',[['Sarah Lindqvist','Partner · outside counsel','Legal room','var(--warn)']])}
+ </div>
+ <div class="notice warn" style="margin-top:14px;max-width:700px"><span><b>Boundary legend.</b> Client and buyers reach only their staged rooms. Buyer access is phase-gated behind the NDA. Every cross-boundary view is logged.</span></div>
+ <style>@media(max-width:1100px){.cols4{grid-template-columns:repeat(2,1fr)!important}}</style>
+ </div>`}
+/* ---------- audit ---------- */
+function vAudit(){
+ const F=['All','Step','Mail','File','Platform'];
+ const ev=S.events.filter(e=>UI.auditF==='All'||e.k===UI.auditF);
+ return `<div class="page" style="max-width:1240px">
+ <div class="ph"><div><h1>Audit register</h1><p>Append-only · need-to-know · every row carries actor, version, snapshot, and the preserved before/after</p></div>
+ <div class="acts"><button class="btn pri" data-act="export-audit">Export decision package</button></div></div>
+ <div style="display:flex;gap:4px;margin-bottom:14px">${F.map(f=>`<button class="pill ${UI.auditF===f?'on':''}" data-act="auditf" data-id="${f}">${f}</button>`).join('')}</div>
+ <div class="card">
+  <div style="padding:9px 16px;border-bottom:1px solid var(--line);font:400 11.5px var(--ui);color:var(--ink4)">Monday, August 24</div>
+  ${ev.map(e=>`<div class="row" style="padding:10px 16px"><span class="m2" style="width:60px;flex:none">${e.t}</span><span class="dp" style="width:86px;justify-content:center;flex:none"><span class="d" style="background:${e.kc}"></span>${e.k}</span><span style="flex:1 1 300px;min-width:0;font:400 12.5px var(--ui)">${esc(e.d)}</span><span class="m2" style="flex:none">${esc(e.m||'')}</span></div>`).join('')}
+  <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--line)" class="m2"><span>every row: actor · model/workflow version · source snapshot · before/after · recovery path</span><span>${S.events.length} events · SEC 17a-4 reconstructable</span></div>
+ </div></div>`}
+/* ---------- auth ---------- */
+function vAuth(){
+ return `<div style="height:100dvh;display:grid;place-items:center;background:var(--canvas)">
+ <div style="width:min(360px,calc(100vw - 32px))">
+  <div class="card" style="padding:26px">
+   <div style="display:flex;align-items:center;gap:9px"><span class="brandc">C</span><span style="font:600 14px var(--ui)">Conductia</span></div>
+   ${UI.mfa?`
+   <div style="font:600 18px var(--ui);margin:18px 0 4px">Verify your identity</div>
+   <div style="font:400 12.5px var(--ui);color:var(--ink3);margin-bottom:16px">Enter the six-digit code from your authenticator.</div>
+   <div class="fg"><label>Verification code</label><input id="code" inputmode="numeric" value="482 913" class="mono" style="letter-spacing:.25em;text-align:center;font-size:16px"></div>
+   <button class="btn pri" style="width:100%;height:38px" data-act="mfa">Verify and continue</button>`
+   :`
+   <div style="font:600 18px var(--ui);margin:18px 0 4px">Welcome back</div>
+   <div style="font:400 12.5px var(--ui);color:var(--ink3);margin-bottom:16px">Use your firm identity to continue.</div>
+   <div class="fg"><label>Work email</label><input id="email" type="email" value="j.morrison@firm.example"></div>
+   <div class="fg"><label>Password</label><input type="password" value="••••••••••"></div>
+   <button class="btn pri" style="width:100%;height:38px" data-act="signin">Continue securely</button>`}
+   <div style="font:400 11px var(--ui);color:var(--ink4);text-align:center;margin-top:14px">2FA enforced · session activity is recorded</div>
+  </div>
+  <div style="text-align:center;font:400 11.5px var(--ui);color:var(--ink4);margin-top:14px">Governed deal execution for investment banking.</div>
+ </div></div>`}
+/* ---------- drawer + modals ---------- */
+function drawer(){
+ const s=SOURCES[UI.cite]||SOURCES[1];
+ return `<aside class="drawer" aria-label="Evidence">
+ <div class="drw-h">${ic('quote',14)}<strong style="font:600 13px var(--ui)">Evidence</strong><span class="vc ok">Entitled</span><button class="xbtn" data-act="close-drawer" aria-label="Close">${ic('x',14)}</button></div>
+ <div class="drw-b">
+  <div class="m2">SOURCE ${UI.cite} · ${s.kind.toUpperCase()}</div>
+  <div style="font:600 14.5px var(--ui);margin:5px 0 10px">${esc(s.name)}</div>
+  <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+   <div style="padding:9px 12px;font:400 11.5px var(--ui);color:var(--ink4)">${s.loc} · ${s.date} · entitled: deal team · view logged</div>
+   <div class="src">"${s.ex}"</div>
+   <div style="padding:9px 12px;border-top:1px solid #F1F0EC;font:500 12px var(--ui);color:var(--ink2);cursor:pointer">Open highlighted passage →</div>
+  </div>
+  ${String(UI.cite)==='3'?`<div class="notice ai" style="margin-top:12px"><span><b>Casey explained.</b> Ranked the approved universe by fit model v3, screened the perimeter, compared capacity across both buyer documents. Your fit-weight override (08.21) applied and disclosed. Run 24s, logged.</span></div>`:''}
+  <div style="margin-top:10px"><div class="kv"><span>Freshness</span><b style="font-size:12px">${s.date}</b></div><div class="kv"><span>Register</span><b style="font-size:12px">view written on open</b></div></div>
+ </div></aside>`}
+function modal(){
+ const k=UI.modal;const close=`<button class="xbtn" data-act="close-modal" aria-label="Close">${ic('x',14)}</button>`;
+ if(k==='cmd')return `<div class="dlg" style="width:min(640px,calc(100vw - 32px))" role="dialog" aria-modal="true">
+  <div style="height:52px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid var(--line)"><input placeholder="Search deals, stations, documents, or run a command…" style="flex:1;border:0;outline:0;font:400 14px var(--ui)" autofocus></div>
+  <div style="padding:8px 8px 10px">
+   <div style="font:400 11px var(--ui);color:var(--ink4);padding:6px 10px">Go to</div>
+   ${[['rail','Deal Rail — station 05','grid'],['buyers','Buyers — knowledge grid','db'],['mail','Mail — held queue','file'],['audit','Audit register','book']].map(x=>`<button class="cmdrow" data-act="go" data-to="${x[0]}">${ic(x[2],14,'#6E6E6B')}${x[1]}<kbd>↵</kbd></button>`).join('')}
+   <div style="font:400 11px var(--ui);color:var(--ink4);padding:8px 10px 6px">Actions</div>
+   <button class="cmdrow" data-act="run-step">${ic('wand',14,'#6E6E6B')}Run station 05 — draft teaser<kbd>R</kbd></button>
+   <button class="cmdrow" data-act="export-audit">${ic('book',14,'#6E6E6B')}Export decision package<kbd>⌘E</kbd></button>
+  </div></div>`;
+ if(k==='switch')return `<div class="dlg" style="width:min(400px,calc(100vw - 32px))" role="dialog"><div class="dlg-h"><h2>Your deals</h2>${close}</div>
+  <div class="dlg-b">
+  <button class="row" style="border:1px solid var(--line);border-radius:10px;margin-bottom:7px;background:#FAF9F6" data-act="close-modal"><span class="serif" style="font-size:15px">⚭</span><div class="grow"><div class="rt" style="font-weight:600">Project Summit</div><span class="rs mono" style="font-size:10px">DL-2026-0114 · phase 2 of 5</span></div><span class="vc ok">Active</span></button>
+  <button class="row" style="border:1px solid var(--line);border-radius:10px" data-act="deal-locked"><span class="serif" style="font-size:15px">⚓</span><div class="grow"><div class="rt" style="font-weight:500;color:var(--ink2)">Project Harbor</div><span class="rs mono" style="font-size:10px">DL-2026-0087 · phase 3 of 5</span></div></button>
+  <div style="padding:12px 2px 0"><button style="font:500 12.5px var(--ui);color:var(--ink2)" data-act="deal-locked">+ New mandate (Gate 0)</button></div>
+  <div class="notice warn" style="margin-top:10px"><span>Deal identity is URL state. Switching never mixes perimeters.</span></div></div></div>`;
+ if(k==='approve')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Approve teaser v4</h2>${close}</div>
+  <div class="dlg-b"><div class="notice ai"><span><b>Casey output verified.</b> 4 changes vs v3 · screened clear (L1 + MNPI) · counsel sign-off carried forward.</span></div>
+  <div class="fg" style="margin-top:14px"><label>Decision rationale (recorded)</label><textarea id="rationale">Scope reconciles to the approved mandate record. Proceed to counsel-ready.</textarea></div>
+  <div class="kv"><span>Commit effect</span><b style="font-size:12px">Creates approved v5 · unlocks station 06</b></div>
+  <div class="kv"><span>Register</span><b style="font-size:12px">writes approval + rationale + before/after</b></div>
+  <div style="display:flex;gap:8px;margin-top:18px"><button class="btn pri" data-act="confirm-approve">Approve version</button><button class="btn" data-act="close-modal">Cancel</button></div></div></div>`;
+ if(k==='release')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Release and send to buyer-a</h2>${close}</div>
+  <div class="dlg-b"><div class="notice warn"><span><b>You are overriding an L1 hold.</b> "Guaranteed" is a restricted performance term (rule L1-COMM-014). Releasing sends the message unchanged to an external recipient and records your override.</span></div>
+  <div class="fg" style="margin-top:14px"><label>Override rationale (required, recorded)</label><textarea id="rationale">Term appears in a quoted client statement; not a firm performance claim.</textarea></div>
+  <div class="kv"><span>Recipient</span><b style="font-size:12px">buyer-a@… (external)</b></div><div class="kv"><span>Recovery</span><b style="font-size:12px">none after send — rejection returns it to drafts instead</b></div>
+  <div style="display:flex;gap:8px;margin-top:18px"><button class="btn pri" data-act="confirm-release">Release and send</button><button class="btn" data-act="close-modal">Cancel</button></div></div></div>`;
+ if(k==='skip')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Skip station 05</h2>${close}</div>
+  <div class="dlg-b"><div class="notice warn"><span>A skip is recorded, attributed, and distinct from completion. Downstream evidence coverage drops.</span></div>
+  <div class="fg" style="margin-top:14px"><label>Reason (required)</label><textarea id="skipwhy"></textarea></div>
+  <div style="display:flex;gap:8px;margin-top:6px"><button class="btn pri" data-act="confirm-skip">Record governed skip</button><button class="btn" data-act="close-modal">Cancel</button></div></div></div>`;
+ if(k==='contract')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Step contract — station 05</h2>${close}</div>
+  <div class="dlg-b"><div class="kv"><span>Inputs</span><b style="font-size:12px">mandate record · perimeter · counsel notes</b></div>
+  <div class="kv"><span>Output</span><b style="font-size:12px">teaser v4 (anonymized)</b></div>
+  <div class="kv"><span>Gate</span><b style="font-size:12px">your approval + L1 screen</b></div>
+  <div class="kv"><span>Bounds</span><b style="font-size:12px">no external send · code names only · deal-scope retrieval</b></div>
+  <div style="display:flex;gap:8px;margin-top:18px"><button class="btn pri" data-act="close-modal">Close</button></div></div></div>`;
+ if(k==='compose')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>New message</h2>${close}</div>
+  <div class="dlg-b"><div class="fg"><label>To</label><input value="elena.vasquez@…"></div><div class="fg"><label>Subject</label><input value="Project Summit — process update"></div><div class="fg"><label>Message</label><textarea>The management presentation dry run is confirmed for Thursday 2pm.</textarea><div class="help">Recipient, content, and attachment screening run before Send is enabled.</div></div>
+  <div style="display:flex;gap:8px;margin-top:6px"><button class="btn pri" data-act="send-mail">Screen and send</button><button class="btn" data-act="close-modal">Cancel</button></div></div></div>`;
+ if(k==='upload')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Add to the data room</h2>${close}</div>
+  <div class="dlg-b" style="text-align:center;padding:28px 20px 24px">
+   ${ic('file',30,'#C9C5BC')}
+   <div style="font:400 15px var(--ui);margin-top:8px">Drag and drop your files</div>
+   <button class="btn pri" style="margin-top:12px" data-act="do-upload">Upload</button>
+   <div style="font:400 12px var(--ui);color:var(--ink4);margin:14px 0 10px">Or choose from</div>
+   <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <span class="dp" style="cursor:pointer"><span class="d" style="background:#2E5BFF"></span>Deal Folder</span>
+    <span class="dp" style="cursor:pointer"><span class="d" style="background:#17B26A"></span>SharePoint</span>
+    <span class="dp" style="cursor:pointer"><span class="d" style="background:#F5A524"></span>Google Drive</span>
+   </div>
+   <div style="font:400 11px var(--ui);color:var(--ink4);margin-top:14px">Classification is assigned on upload · every add writes to the register</div>
+  </div></div>`;
+ if(k==='invite')return `<div class="dlg" role="dialog"><div class="dlg-h"><h2>Invite to the deal perimeter</h2>${close}</div>
+  <div class="dlg-b"><div class="fg"><label>Work email</label><input value="advisor@outside.example"></div>
+  <div class="fg"><label>Boundary</label><input value="Buyer room · Phase II · NDA required" readonly></div>
+  <div class="notice warn"><span>External participants see only explicitly released content in their assigned room. The invitation and every later view are logged.</span></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn pri" data-act="confirm-invite">Send invitation</button><button class="btn" data-act="close-modal">Cancel</button></div></div></div>`;
+ return '';}
+/* ---------- render + actions ---------- */
+const VIEWS={home:vHome,today:vToday,rail:vRail,ask:vAsk,buyers:vBuyers,mail:vMail,room:vRoom,team:vTeam,audit:vAudit};
+function render(){
+ const app=$('#app');
+ if(!S.signedIn){app.innerHTML=vAuth()}
+ else{app.innerHTML=shell((VIEWS[UI.route]||vHome)())+(UI.cite?drawer():'')}
+ const ov=$('#overlay');ov.hidden=!UI.modal;ov.innerHTML=UI.modal?modal():'';
+ if(UI.modal){setTimeout(()=>ov.querySelector('input,textarea,button')?.focus(),0)}
+}
+let agentTimer=null;
+function runStep(){
+ UI.modal=null;UI.route='rail';UI.station=5;UI.agent={stage:0,done:false};
+ audit('Step','#17B26A','Casey run started — station 05 (Draft teaser) · attempt 1','run #2208');
+ render();toast('<b>Casey run started.</b> 4 bounded stages; your approval is the gate.');
+ let i=0;agentTimer=setInterval(()=>{i++;
+  if(!UI.agent){clearInterval(agentTimer);return}
+  if(i>=4){clearInterval(agentTimer);UI.agent={stage:4,done:true};audit('Step','#17B26A','Casey output ready — teaser v4 screened clear · your approval is the gate','run #2208');toast('<b>Teaser v4 is ready.</b> Screened clear; review 4 changes.');render();return}
+  UI.agent={stage:i,done:false};render()},900)}
+function handle(act,el){
+ const id=el?.dataset?.id,to=el?.dataset?.to;
+ switch(act){
+  case'signin':UI.mfa=true;render();break;
+  case'mfa':S.signedIn=true;save();audit('Platform','#2E90FA','Session started · J. Morrison (MD) · MFA verified','device trusted');render();toast('<b>Signed in.</b> Perimeter active; session is recorded.');break;
+  case'go':UI.route=to;UI.modal=null;UI.cite=null;render();break;
+  case'close-modal':UI.modal=null;render();break;
+  case'close-drawer':UI.cite=null;render();break;
+  case'modal':UI.modal=id;render();break;
+  case'deal-locked':UI.modal=null;render();toast('Prototype: Harbor is stubbed — deal identity is URL state.','warn');break;
+  case'cite':UI.cite=id||'1';UI.modal=null;audit('File','#F5A524','Evidence opened — source ['+UI.cite+'] · view logged','entitled: deal team');render();break;
+  case'station':UI.station=+id;render();break;
+  case'run-step':runStep();break;
+  case'stop-run':UI.agent=null;audit('Step','#17B26A','Casey run stopped by MD — partial work preserved','run #2208');render();toast('<b>Run stopped.</b> Partial work preserved.','warn');break;
+  case'confirm-approve':{const r=$('#rationale');if(r&&!r.value.trim()){toast('Decision rationale is required.','bad');r.focus();return}
+   const st=S.stations.find(x=>x.id===5);st.st='done';st.receipt={v:'clear',line:'screened clear · 6s',checks:'approved v5 by MD · rationale recorded'};
+   const nx=S.stations.find(x=>x.id===6);nx.st='active';nx.desc='Casey builds the buyer long list from the acquirer graph, scored by fit model v3. The compliance verdict gates the result.';
+   const d2=S.decisions.find(x=>x.id==='d2');if(d2)d2.done=true;
+   UI.agent=null;UI.modal=null;UI.station=6;
+   audit('Step','#17B26A','Teaser APPROVED v5 by MD · rationale recorded · station 06 unlocked','before/after kept');save();render();toast('<b>Approved v5.</b> Station 06 unlocked; receipt in the register.');break}
+  case'confirm-skip':{const w=$('#skipwhy');if(!w?.value.trim()){toast('A skip reason is required.','bad');w?.focus();return}
+   const st=S.stations.find(x=>x.id===UI.station);st.st='skip';st.skipBy='J. Morrison';UI.modal=null;
+   audit('Step','#17B26A','Governed skip recorded — station '+String(UI.station).padStart(2,'0')+' · reason captured','distinct from completion');save();render();toast('<b>Skip recorded</b> with receipt.');break}
+  case'retry-kyc':{const st=S.stations.find(x=>x.id===3);st.st='done';st.receipt={v:'clear',line:'screened clear · 9s',checks:'all beneficial owners verified · entity current'};
+   audit('Step','#17B26A','KYC retry — 1 owner re-verified · hold cleared','scoped retry');save();render();toast('<b>KYC hold cleared.</b> Receipt updated.');break}
+  case'escalate':audit('Platform','#2E90FA','Escalated to compliance — KYC hold, station 03','CCO queue');save();render();toast('<b>Escalated.</b> Compliance notified with your note.');break;
+  case'decide':{const d=S.decisions.find(x=>x.id===id);if(!d)break;
+   if(d.goto){UI.route='mail';UI.mailF='held';UI.mailSel='h1';render();break}
+   if(d.id==='d2'){UI.route='rail';UI.station=5;UI.agent={stage:4,done:true};render();break}
+   d.done=true;audit('Mail','#2E90FA','Buyer outreach wave 1 APPROVED by MD · 6 sends queued behind screening','station 10');save();render();toast('<b>Approved.</b> 6 sends queued behind screening.');break}
+  case'mailf':UI.mailF=id;UI.mailSel=(S.mail.find(m=>m.f===id)||{}).id;render();break;
+  case'mailsel':UI.mailSel=id;render();break;
+  case'confirm-release':{const r=$('#rationale');if(r&&!r.value.trim()){toast('Override rationale is required.','bad');r.focus();return}
+   const m=S.mail.find(x=>x.id===UI.mailSel);if(m){m.released=true}UI.modal=null;
+   const d3=S.decisions.find(x=>x.id==='d3');if(d3)d3.done=true;
+   audit('Mail','#2E90FA','Process letter RELEASED by MD · L1 override · rationale attached','lexicon v12 · snapshot kept');save();render();toast('<b>Released and sent.</b> Override recorded in the register.');break}
+  case'reject-mail':{const m=S.mail.find(x=>x.id===UI.mailSel);if(m){m.f='drafts';m.meta='returned with note'}
+   audit('Mail','#2E90FA','Held message REJECTED with note — returned to drafts','no send occurred');save();UI.mailSel=null;render();toast('<b>Rejected.</b> Returned to drafts with your note.','warn');break}
+  case'edit-resend':toast('Prototype: opens the editor with the flagged phrase selected.','warn');break;
+  case'send-mail':UI.modal=null;audit('Mail','#2E90FA','Message screened CLEAR and sent — process update to client','9s · logged');save();render();toast('<b>Screened clear</b> and sent.');break;
+  case'doc':UI.docSel=id;render();break;
+  case'doc-open':audit('File','#F5A524','Document opened — '+(S.docs.find(x=>x.id===UI.docSel)||{}).name,'view logged');save();render();toast('<b>Preview opened.</b> View logged.');break;
+  case'doc-dl':audit('File','#F5A524','Document DOWNLOADED — '+(S.docs.find(x=>x.id===UI.docSel)||{}).name,'sha kept');save();render();toast('<b>Download logged</b> to the register.');break;
+  case'do-upload':UI.modal=null;audit('File','#F5A524','Document uploaded to 05. Data room · classification assigned','sha computed');save();render();toast('<b>Uploaded.</b> Classification assigned; write logged.');break;
+  case'confirm-invite':UI.modal=null;audit('Platform','#2E90FA','External invitation sent — buyer room, Phase II, NDA required','boundary enforced');save();render();toast('<b>Invitation sent.</b> Boundary: buyer room, Phase II.');break;
+  case'buyer':UI.buyer=id;render();break;
+  case'approve-buyer':{const b=S.buyers.find(x=>x.id===id);b.approved=true;
+   audit('Step','#17B26A','Outreach draft APPROVED — '+b.name+' · queued behind screening','fit '+b.fit);save();render();toast('<b>'+b.name+' approved.</b> Queued behind screening.');break}
+  case'approve-drafts':{let n=0;S.buyers.forEach(b=>{if(b.ds==='In review'&&!b.approved){b.approved=true;n++}});
+   if(n){audit('Step','#17B26A',n+' outreach drafts APPROVED in bulk · queued behind screening','run #2207');save();render();toast('<b>'+n+' drafts approved.</b> Queued behind screening.')}else toast('Nothing in review to approve.','warn');break}
+  case'rerun':toast('<b>Column re-run queued.</b> Prior values kept in history.','warn');break;
+  case'suggest':{const t=$('#ask-in');if(t){t.value=el.dataset.q;t.focus()}break}
+  case'ask-send':{const t=$('#ask-in');if(!t?.value.trim()){toast('Type a question first.','warn');t?.focus();return}
+   audit('Chat','#2E90FA','Ask: "'+t.value.trim().slice(0,60)+'" · screened · queued','deal scope');save();
+   if(UI.route==='home'){S.history.unshift({icon:'quote',t:t.value.trim().slice(0,80),when:'just now'});save();UI.route='ask';render()}else{t.value=''}
+   toast('<b>Screened and queued.</b> Casey is reading the deal room.');break}
+  case'auditf':UI.auditF=id;render();break;
+  case'export-audit':UI.modal=null;audit('Platform','#2E90FA','Decision package EXPORTED by MD — full reconstruction','SEC 17a-4');save();render();toast('<b>Decision package exported.</b> The export itself is logged.');break;
+ }}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(el){e.preventDefault();handle(el.dataset.act,el)}});
+document.addEventListener('keydown',e=>{
+ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();UI.modal=UI.modal==='cmd'?null:'cmd';render()}
+ if(e.key==='Escape'){if(UI.modal){UI.modal=null;render()}else if(UI.cite){UI.cite=null;render()}}
+});
+render();
+})();
+</script>
+</body>
+</html>

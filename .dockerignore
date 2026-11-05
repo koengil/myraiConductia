@@ -1,0 +1,32 @@
+# Build context for worker/Dockerfile: sources and the lockfile only.
+# No environment file, key or local state ever enters an image.
+**/.env*
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+node_modules
+.next
+.git
+.claude
+.humanlayer
+coverage
+dist
+docs
+e2e
+evals
+openapi
+playwright-report
+public
+scripts
+# The connection probe runs from the worker image (#344, design R15): its
+# source is bundled at build time, and no other script enters the context.
+!scripts/google
+supabase
+test-results
+tests
+# Re-applied after the allow-list above, so they win inside scripts/google too.
+**/.env*
+**/*.pem
+**/*.key
+**/*.pfx

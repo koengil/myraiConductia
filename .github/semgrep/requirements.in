@@ -1,0 +1,3 @@
+# Semgrep CE for the advisory "Static analysis" job in .github/workflows/ci.yml (#473).
+# Regenerate requirements.txt after changing this pin (see that file's header).
+semgrep==1.182.0

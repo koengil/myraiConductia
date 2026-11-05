@@ -1,0 +1,287 @@
+
+===== Slide 1 =====
+Banking in the front.  AI in the back.  Control everywhere.
+SEED FINANCING  ·  CONFIDENTIAL
+Storm Duncan, CEO & Co-Founder    |    Jess Mah, Co-Founder
+
+===== Slide 2 =====
+THE PROBLEM
+Banking doesn’t scale.
+Even the best independent advisory firms stay pinned at services margins. Revenue scales only by adding people, and people consume two-thirds of every dollar.
+Independent advisory firm (FY2024)
+Net revenue
+Comp as % of revenue
+Perella Weinberg
+~$0.9B
+~67%
+Moelis & Company
+~$1.2B
+~67%
+PJT Partners
+~$1.5B
+~69%
+Houlihan Lokey
+~$1.9B
+~63%
+Lazard
+~$2.9B
+~66%
+Evercore
+~$3.0B
+~66%
+Average gross margin, 2025
+Same revenue, structurally different business
+~40-55%
+IB advisory
+vs
+~75%+
+software
+Net revenue and comp ratios: company filings, FY2024. Gross margins: SaaS benchmarks (KeyBanc, Software Equity Group, 2025); IB advisory (industry benchmarks, 2025-2026).
+02
+
+===== Slide 3 =====
+THE PROCESS PROBLEM
+The value is Judgment, but the costs are in process
+Value-added judgment
+what clients pay a premium for
+Process
+repeatable, automatable, the bulk of the hours
+PHASE 01
+Preparation
+Buyer appetite & positioning
+Valuation & price framing
+CIM, teaser & materials
+Data room & diligence tracker
+WGL, timeline & kickoff
+PHASE 02
+Outreach & Negotiation
+Negotiation & bid strategy
+IOI / LOI analysis
+Buyer outreach & process mgmt
+Management meetings & Q&A
+Tracking & weekly updates
+PHASE 03
+Confirmatory Diligence & Signing
+Final negotiation of terms
+Confirmatory diligence coordination
+SPA & definitive docs
+Closing checklist & logistics
+Signing & funds flow
+Process is the bulk of the hours and a fraction of the value.
+Yet for every revenue-originating MD, a bank carries
+1-2x
+in junior, execution & support headcount.
+Headcount and compensation: public investment-bank disclosures and front-office vs middle/back-office staffing benchmarks.
+03
+
+===== Slide 4 =====
+THE INSIGHT
+Automate the process.
+Sell the judgment.
+Compensation is 60-70% of revenue at advisory firms, and most of it pays for repeatable process, not the differentiated judgment clients pay a premium for. Conductia automates the process and elevates judgment to the core of the offering.
+04
+
+===== Slide 5 =====
+WHY US
+There is no better team for this.
+The operator who ran the workflow, paired with the founder who turns workflows into software.
+SD
+Storm Duncan
+CEO & Co-Founder
+Nearly 30 years at the center of technology M&A. Storm IS the customer.
+Google’s M&A advisor for over a decade including leading YouTube & DoubleClick acquisitions
+Ex-Global Head of Tech M&A at Jefferies and Credit Suisse; founder of Ignatious
+We sell into the room Storm has run for 30 years: customer access, workflows, and regulatory fluency rivals chase for years
+JM
+Jess Mah
+Co-Founder
+Founder of inDinero;
+Founded Mahway, building companies across fintech and AI
+Incubated 10+ companies, ~$1.5B combined value
+Youngest woman into Y Combinator; CS, UC Berkeley
+Turns expert-services workflows into venture-scale software
+05
+
+===== Slide 6 =====
+TRACTION
+We are not starting from zero.
+We are starting from inside.
+A live deal environment, a regulated distribution path, and the network that supplies both.
+DESIGN PARTNER · LIVE DEALS
+Ignatious
+Storm’s own tech M&A advisory firm is the founding design partner. Conductia is being built and pressure-tested on real, live sell-side mandates, not in a lab.
+REGULATED DISTRIBUTION
+Finalis
+A broker-dealer and compliance network for independent bankers. A path to deploy Conductia to many small and mid-market firms inside an existing regulated perimeter.
+NETWORK & VALIDATION
+Qatalyst-caliber reach
+Three decades of relationships across the elite tech M&A world (the Qatalyst tier) put the product in front of the exact buyers who set the standard.
+Build on live deals, distribute through a regulated network, validate with the people who set the standard.
+06
+
+===== Slide 7 =====
+WHY NOW
+AI can do the work.
+Two gates just opened together.
+1.  The quality gate
+Frontier models are finally good enough to draft, check, and reason over real deal work.
+2.  The regulatory gate
+FINRA Notice 24-09 and the 2026 Oversight Report give first-time guidance on supervised AI agents. Permissioned, logged, human-gated AI is now usable inside a bank.
+07
+
+===== Slide 8 =====
+WHY A PLATFORM, NOT AN APP  ·  THE MOAT
+A compliant workflow platform is
+the moat.
+Standalone apps can’t win
+Point tools are thin wrappers on someone else’s model. The model will eventually swallow that work, and banks and regulators won’t trust a wrapper with a live deal.
+Compliance is the perimeter
+Supervision, permissions, audit, and information barriers must live in the platform. Apps comply with it, or they don’t ship.
+Own the workflows, not the model
+The governed workflow graph, permissioned process data, and institutional memory are exactly what a wrapper can never replicate. Models are swappable; the layer a bank trusts is not.
+08
+
+===== Slide 9 =====
+COMPETITIVE LANDSCAPE
+Everyone is racing to the
+same empty corner.
+Tools make a banker faster. Conductia runs the deal. Rogo solves junior productivity; we solve senior productivity, which is worth far more.
+Point tool
+Full platform
+Compliance-grade, deal-native
+General / horizontal AI
+Maywood
+Model ML
+Rogo
+Blueflame
+Hebbia
+OffDeal
+Mosaic
+Crunched
+Keye
+Harvey
+Bloomberg / FactSet
+DealCloud
+Copilot
+Conductia
+09
+
+===== Slide 10 =====
+HOW WE DO THIS
+Three layers.
+One governed Command Center.
+10
+
+===== Slide 11 =====
+HOW WE DO THIS
+The Command Center Runs the Deal:
+compliant & supervised
+Workflow orchestration
+Sequences and gates every step of the live deal, from mandate to close.
+Human / agent routing
+Assigns each task to the best human, agent, or hybrid team by risk and skill.
+Governance & regulation
+WSP-mapped supervision, approvals, information barriers, and recordkeeping.
+Model & cost optimization
+Routes to the right model by sensitivity, cost, and quality; tracks spend.
+Permissioned data & memory
+Role-scoped access, code names, and reusable institutional knowledge.
+Observability & audit
+Every action, source, and approval logged for regulator and litigation export.
+11
+
+===== Slide 12 =====
+THE PRODUCT
+The deal,
+organized and in motion.
+12
+
+===== Slide 13 =====
+WHY IT WINS
+We don’t sell AI.
+We sell success.
+Senior leverage
+The firm’s most valuable people get more scalable, not just its most junior.
+End-to-end orchestration
+One command center for tasks, drafts, diligence, approvals, and closing.
+Secure AI adoption
+Permissioned data, role-based access, audit trails, human guardrails.
+Execution risk down
+Nothing missed, nothing lost: deadlines, obligations, deliverables tracked.
+Quality & consistency
+Institutional best practices embedded in every deal, not trapped in heads.
+Knowledge compounding
+Every deal makes the firm smarter, without exposing client data.
+13
+
+===== Slide 14 =====
+WEDGE & GO-TO-MARKET
+We start where the pain
+is sharpest.
+Sell-side M&A at boutiques and mid-market banks: acute pain, reachable buyers, high willingness to pay. Storm’s network opens the door. Design partners, then paid pilots, then platform.
+14
+
+===== Slide 15 =====
+BUSINESS MODEL
+We price enhanced value,
+not the declining seats.
+No per-seat pricing. A platform fee tiered by deal capacity, plus a deal-linked component. Measured by Net Labor Value Captured: Standard Task Value minus AI cost minus measured human time.
+15
+
+===== Slide 16 =====
+NETWORK EFFECTS
+Every deal seeds
+more customers.
+A single sell-side deal puts Conductia in front of the client and its lawyers, accountants, and advisors, plus every counterparty and their bankers, lawyers, and accountants. Each becomes a pre-qualified prospect who sees the platform in action: our revenue is also our sales engine.
+16
+
+===== Slide 17 =====
+REVENUE PROJECTIONS
+A path to
+$380M ARR
+in five years.
+ARR ramp
+Where the global IB fee pool goes today
+2025 global IB fees: ~$137.6B
+Compensation
+~66%  ·  $91B
+Non-compensation
+~17%  ·  $23B
+Pre-tax profit
+~17%  ·  $23B
+Two-thirds of every dollar is labor. That is the cost Conductia compresses.
+The engine:
+design partners to paid pilots to platform. ~6 banks at ~$0.8M ACV in Y1 scaling to ~120 banks at ~$3.2M ACV by Y5.
+Fee-pool split: industry estimates, 2025. ARR ramp: management projections; illustrative, not a forecast.
+17
+
+===== Slide 18 =====
+THE FUTURE
+One platform.
+Many Opportunities.
+THE PRIZE  ·  ONE PLATFORM, EXPANDING SECTOR BY SECTOR
+18
+Sector by sector
+accounting · consulting · wealth · legal · insurance · tax
+each a new market on the same platform
+~$6.4T
+global professional-services market
+the full platform opportunity
+~$137.6B
+global investment-banking fees (2025)
+the first wedge: ~2% of the TAM
+
+===== Slide 19 =====
+THE VISION
+Software is still
+eating the world.
+It just reached
+services.
+From the appetizer (products) to the main course (services). Conductia productizes people-heavy services into software businesses, starting with investment banking.
+Raising $20M
+seed  ·  18-month runway
+Use of funds:
+product & compliance build, design-partner success, go-to-market.
+Milestones:
+paying banks on live deals, SOC 2, first marketplace partners.
+19

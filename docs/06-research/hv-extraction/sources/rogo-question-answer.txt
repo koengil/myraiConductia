@@ -1,0 +1,36 @@
+Q&A: 
+
+	1	Once we’ve uploaded files to the data room - can we search across deal files / have the files been tagged to relate to a certain deal? will the agents know to search those specific files only? is there an automatic tagging or a way to tag files so we can split them based on the deal they are related to? do you provide connectors for our existing filesystems (ie. google drive, sharepoint)? 
+	2	How can we share documents to other parties that need to them? (ie. signing an NDA, or sharing a pitch deck). does this happen through the platform or do we need to download and send separately?
+
+
+=========
+
+Great set of questions — these all come down to how Rogo handles your deal files, so let me walk through each one.
+
+1. Organizing deal files: use Projects
+The right home for data-room files is a Project. A Project is a persistent workspace where you upload all your deal documents (financial model, call notes, marketing materials, legal docs, VDR exports) and they stay available across every chat in that Project.
+	•	Create one per deal: Click New Project from the sidebar, name it after the deal, then Add Files (drag-and-drop or browse — PDF, PowerPoint, Word, Excel, and images; plus .txt, .md, .json, .html, .xml, .tsv, .csv when uploading via Felix). You can upload individual files or whole folders, up to ~100 files per project.
+	•	This is effectively your “tagging by deal.” Rather than tagging individual files, you separate deals by putting each deal’s files in its own Project. That’s the cleaner mental model — one Project = one deal’s document universe.
+2. Will the agents search only that deal’s files?
+Yes — that’s exactly what Projects give you, and you have two levels of control:
+	•	Project scoping: When you work inside a Project, Rogo draws on that Project’s library — not files from other deals/Projects.
+	•	File context toggles: Within a Project you can toggle specific files as “context” for your next chat, so you can point Rogo at, say, just the credit agreement or just the model for a given question. You can also reference a specific document directly in a conversation to ground the answer precisely.
+There isn’t a separate free-form “tag” field on individual files, and there’s no automatic per-file deal tagging — the deal separation is achieved through the Project structure itself. If you want everything in one Project but need finer slicing, the file-context toggles are the tool for that.
+One thing worth flagging: Projects do not currently pull context from your previous chats in the same Project — they share the files and Project instructions, not prior conversation history. So the “memory” of a Project is its document library plus the persistent instructions you set, not past threads.
+3. Connectors for Google Drive / SharePoint
+Yes — Rogo has read-only connectors for both, plus several others:
+	•	SharePoint — searches files, folders, and OneNote across your SharePoint sites; available in all Rogo modes + Felix. Comes in Full Access or a Limited variant (restricted to admin-selected sites).
+	•	Google Drive — Docs, Sheets, Slides, PDFs, and other Drive files; Felix only.
+	•	OneDrive, Box, Egnyte are also available (Felix only), and there are Microsoft 365 / Google productivity connectors (Outlook, Teams, Gmail, Calendar, Notion) plus Salesforce.
+A few important notes:
+	•	All connectors are read-only — Rogo can search and read, never modify, move, or delete anything.
+	•	They inherit your existing permissions (e.g., SharePoint access flows through Microsoft Graph, so you only see what you already have rights to). Rogo doesn’t index/store the files — it retrieves at query time.
+	•	Availability is admin-gated. Your org’s administrator enables each connector, and then you authorize your own account under Account Settings → Connections. If you don’t see Google Drive or SharePoint there, it likely hasn’t been turned on for your organization yet — your account team can sort that out.
+4. Sharing documents to other parties
+Here’s the important distinction:
+Inside Rogo — internal collaboration only. Project Sharing lets you give colleagues access to a Project (Owner / Editor / Viewer roles) via the Share button in the project title bar. But this is scoped to users, teams, or your organization within your own Rogo tenant — it’s not a way to grant access to an outside counterparty. Also note: when you share a thread or export internally, colleagues can’t download the underlying files off a shared thread — you have to send the actual file yourself.
+To external parties (counterparty who signed an NDA, sending a pitch deck to a buyer) — you download and send separately. Rogo isn’t a virtual data room or an external file-distribution/e-signature platform, and there’s no documented workflow for sharing files out to non-Rogo third parties or for executing NDAs through the platform. The pattern is: build/pull the materials in Rogo, export them (Word, PowerPoint, PDF, or Excel — with a ZIP option to bundle a PDF with its source files), then distribute through your usual channel (email, your VDR provider, DocuSign for the NDA, etc.).
+So think of Rogo as the place to organize, search, and produce your deal materials — and your existing tools as the place to distribute and sign with outside parties.
+
+If it would help, your account team can confirm exactly which connectors and Project features are enabled for Ignatious, and you can always reach Support via the Help & Support chat at the bottom of the left pane or at support@rogo.ai.

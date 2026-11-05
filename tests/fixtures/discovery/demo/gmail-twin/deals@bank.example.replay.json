@@ -1,0 +1,2383 @@
+{
+  "format": "conductia.gmail-replay/v1",
+  "mailbox": "deals@bank.example",
+  "synthetic": true,
+  "phases": {
+    "seeded": {
+      "GET /gmail/v1/users/deals@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "deals@bank.example",
+            "messagesTotal": 8,
+            "threadsTotal": 0,
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "6d268eb38c91f8af",
+                "historyId": "1008"
+              },
+              {
+                "id": "19d5dfcd4e74c2ae",
+                "historyId": "1008"
+              },
+              {
+                "id": "e3f9e2619673bec4",
+                "historyId": "1008"
+              },
+              {
+                "id": "de6a22f7f4914dff",
+                "historyId": "1008"
+              },
+              {
+                "id": "a2caf0a7587f5b48",
+                "historyId": "1008"
+              },
+              {
+                "id": "200298d0257cc2ad",
+                "historyId": "1008"
+              },
+              {
+                "id": "d4c63985a8e94f61",
+                "historyId": "1008"
+              },
+              {
+                "id": "11a9bd18efff37f9",
+                "historyId": "1008"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/6d268eb38c91f8af?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "6d268eb38c91f8af",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "49ddbbb9e3a43fb6",
+                "threadId": "6d268eb38c91f8af",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1789752600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-015@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1789752600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-015@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1789752600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDE1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IEZyaSwgMTggU2VwIDIwMjYgMTc6MzA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJQcml5YSBOYWlyIiA8cHJpeWEubmFpckBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogTE9JIHNpZ25lZA0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPlByaXlhLDwvcD48cD5UaGUgTE9JIGZvciBQcm9qZWN0IEtlc3RyZWwgd2FzIHNpZ25lZCB0b2RheSwgMT0NCjggU2VwdGVtYmVyIDIwMjYuIEkgd2lsbCB3YWxrIHlvdSB0aHJvdWdoIHRoZSBleGNsdXNpdml0eSB0ZXJtcyB0b21vcnJvdy48Lz0NCnA-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/19d5dfcd4e74c2ae?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19d5dfcd4e74c2ae",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "85f5ec49de9479c0",
+                "threadId": "19d5dfcd4e74c2ae",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781508600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Facilities\" <facilities@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-002@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781508600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Facilities\" <facilities@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-002@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781508600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBNb24sIDE1IEp1biAyMDI2IDA3OjMwOjAwICswMDAwDQpGcm9tOiAiRmFjaWxpdGllcyIgPGZhY2lsaXRpZXNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIkFsZXggQ2hlbiINCiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IENhbnRlZW4gbWVudSBjaGFuZ2VzIHRoaXMgbW9udGgNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5UaGUgY2FudGVlbiBhZGRzIGEgdmVnZXRhcmlhbiBvcHRpb24gb24gVHVlc2RheXMgYW5kIGEgc291cCA9DQpvZiB0aGUgZGF5IGZyb20gdGhpcyB3ZWVrLjwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/e3f9e2619673bec4?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "e3f9e2619673bec4",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "18c21f9cff229030",
+                "threadId": "e3f9e2619673bec4",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781004000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-005@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781004000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-005@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781004000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFR1ZSwgMDkgSnVuIDIwMjYgMTE6MjA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJSYXZpIE1lbm9uIiA8cmF2aS5tZW5vbkBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogdGVhc2VyDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KPGh0bWw-PGJvZHk-PHA-UmF2aSw8L3A-PHA-VGhlIFByb2plY3QgS2VzdHJlbCB0ZWFzZXIgd2FzIGRyYWZ0ZWQgb24gOSBKdW5lPQ0KIDIwMjYgYW5kIGlzIHJlYWR5IGZvciB5b3VyIHJldmlldy48L3A-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/de6a22f7f4914dff?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "de6a22f7f4914dff",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "7366d3cbe6812b55",
+                "threadId": "de6a22f7f4914dff",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1780387200000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Events Team\" <events@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1780387200000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Events Team\" <events@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1780387200000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDAyIEp1biAyMDI2IDA4OjAwOjAwICswMDAwDQpGcm9tOiAiRXZlbnRzIFRlYW0iIDxldmVudHNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIk1vcmdhbiBWYWxlIg0KIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-LCAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFRlYW0gb2Zmc2l0ZTogc2F2ZSB0aGUgZGF0ZQ0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQpQbGVhc2Ugc2F2ZSB0aGUgZGF0ZSBmb3IgdGhlIHRlYW0gb2Zmc2l0ZSBvbiB0aGUgc2Vjb25kIFRodXJzZGF5IG9mIE9jdG9iZXI9DQouIEx1bmNoIGFuZCBhIGZhY2lsaXRhdGVkIHNlc3Npb24gYXJlIHBsYW5uZWQuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/a2caf0a7587f5b48?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "a2caf0a7587f5b48",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "75b4680b6069e428",
+                "threadId": "a2caf0a7587f5b48",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1779986700000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1779986700000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1779986700000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA0QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMjggTWF5IDIwMjYgMTY6NDU6MDAgKzAwMDANCkZyb206ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClRvOiAiU3Rvcm0gRHVuY2FuIiA8c3Rvcm0uZHVuY2FuQGJhbmsuZXhhbXBsZT4NCkNjOiAiUHJpeWEgTmFpciIgPHByaXlhLm5haXJAbm9ydGh3aW5kLXJvYm90aWNzLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEtlc3RyZWw6IGRhdGEgcm9vbSBvcGVuDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClN0b3JtLA0KDQpUaGUgdmlydHVhbCBkYXRhIHJvb20gZm9yIFByb2plY3QgS2VzdHJlbCBvcGVuZWQgb24gMjggTWF5IDIwMjYuIE5vcnRod2luZCA9DQpmaW5hbmNlIGhhcyB1cGxvYWRlZCB0aGUgZmlyc3QgZm9sZGVycy4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/200298d0257cc2ad?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "200298d0257cc2ad",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "1139323febd0e0f0",
+                "threadId": "200298d0257cc2ad",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1752594300000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-007@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1752594300000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-007@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1752594300000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDdAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBKdWwgMjAyNSAxNTo0NTowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIkhlbGVuIEJyYW5kdCIgPGhlbGVuLmJyYW5kdEBsYXJrc3B1ci1oZWFsdGguZXhhbXBsZT4sICJKb25hcyBLZWxsZXIiDQogPGpvbmFzLmtlbGxlckBtZXJpZGlhbi1jYXJlLmV4YW1wbGU-DQpDYzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGNsb3NpbmcNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5IZWxlbiwgSm9uYXMsPC9wPjxwPlByb2plY3QgT3NwcmV5IGNsb3NlZCBvbiAxNSBKdWx5IDIwMjUuIEY9DQp1bmRzIHdlcmUgcmVsZWFzZWQgdGhpcyBtb3JuaW5nLjwvcD48cD5TdG9ybTwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/d4c63985a8e94f61?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "d4c63985a8e94f61",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "accf56bc77e39da4",
+                "threadId": "d4c63985a8e94f61",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1744734000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1744734000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1744734000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDRAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBBcHIgMjAyNSAxNjoyMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJKb25hcyBLZWxsZXIiIDxqb25hcy5rZWxsZXJAbWVyaWRpYW4tY2FyZS5leGFtcGxlPg0KQ2M6ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGxldHRlciBvZiBpbnRlbnQNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5Kb25hcyw8L3A-PHA-VGhlIGxldHRlciBvZiBpbnRlbnQgZm9yIFByb2plY3QgT3NwcmV5IHdhcyBzaWc9DQpuZWQgb24gMTUgQXByaWwgMjAyNS4gQ29uZmlybWF0b3J5IGRpbGlnZW5jZSBiZWdpbnMgbmV4dCB3ZWVrLjwvcD48cD5Nb3JnYW49DQo8L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/11a9bd18efff37f9?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "11a9bd18efff37f9",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "82694c28cc662182",
+                "threadId": "11a9bd18efff37f9",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1736762400000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1736762400000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?format=raw": [
+        {
+          "status": 429,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 429,
+              "message": "Rate Limit Exceeded",
+              "errors": [
+                {
+                  "reason": "rateLimitExceeded"
+                }
+              ],
+              "status": "RESOURCE_EXHAUSTED"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1736762400000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogTW9uLCAxMyBKYW4gMjAyNSAxMDowMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJIZWxlbiBCcmFuZHQiIDxoZWxlbi5icmFuZHRAbGFya3NwdXItaGVhbHRoLmV4YW1wbGU-DQpDYzogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IE9zcHJleTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KSGVsZW4sDQoNClRoZSBlbmdhZ2VtZW50IGxldHRlciBmb3IgUHJvamVjdCBPc3ByZXkgd2FzIGNvdW50ZXJzaWduZWQgb24gMTMgSmFudWFyeSAyMD0NCjI1LiBXZSBzdGFydCB3b3JrIHRoaXMgd2Vlay4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1008": [
+        {
+          "status": 200,
+          "body": {
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1": [
+        {
+          "status": 404,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 404,
+              "message": "Requested entity was not found.",
+              "errors": [
+                {
+                  "reason": "notFound"
+                }
+              ],
+              "status": "NOT_FOUND"
+            }
+          }
+        }
+      ]
+    },
+    "after-imports": {
+      "GET /gmail/v1/users/deals@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "deals@bank.example",
+            "messagesTotal": 8,
+            "threadsTotal": 0,
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "6d268eb38c91f8af",
+                "historyId": "1008"
+              },
+              {
+                "id": "19d5dfcd4e74c2ae",
+                "historyId": "1008"
+              },
+              {
+                "id": "e3f9e2619673bec4",
+                "historyId": "1008"
+              },
+              {
+                "id": "de6a22f7f4914dff",
+                "historyId": "1008"
+              },
+              {
+                "id": "a2caf0a7587f5b48",
+                "historyId": "1008"
+              },
+              {
+                "id": "200298d0257cc2ad",
+                "historyId": "1008"
+              },
+              {
+                "id": "d4c63985a8e94f61",
+                "historyId": "1008"
+              },
+              {
+                "id": "11a9bd18efff37f9",
+                "historyId": "1008"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/6d268eb38c91f8af?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "6d268eb38c91f8af",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "49ddbbb9e3a43fb6",
+                "threadId": "6d268eb38c91f8af",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1789752600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-015@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1789752600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-015@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1789752600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDE1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IEZyaSwgMTggU2VwIDIwMjYgMTc6MzA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJQcml5YSBOYWlyIiA8cHJpeWEubmFpckBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogTE9JIHNpZ25lZA0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPlByaXlhLDwvcD48cD5UaGUgTE9JIGZvciBQcm9qZWN0IEtlc3RyZWwgd2FzIHNpZ25lZCB0b2RheSwgMT0NCjggU2VwdGVtYmVyIDIwMjYuIEkgd2lsbCB3YWxrIHlvdSB0aHJvdWdoIHRoZSBleGNsdXNpdml0eSB0ZXJtcyB0b21vcnJvdy48Lz0NCnA-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/19d5dfcd4e74c2ae?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19d5dfcd4e74c2ae",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "85f5ec49de9479c0",
+                "threadId": "19d5dfcd4e74c2ae",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781508600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Facilities\" <facilities@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-002@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781508600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Facilities\" <facilities@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-002@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781508600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBNb24sIDE1IEp1biAyMDI2IDA3OjMwOjAwICswMDAwDQpGcm9tOiAiRmFjaWxpdGllcyIgPGZhY2lsaXRpZXNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIkFsZXggQ2hlbiINCiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IENhbnRlZW4gbWVudSBjaGFuZ2VzIHRoaXMgbW9udGgNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5UaGUgY2FudGVlbiBhZGRzIGEgdmVnZXRhcmlhbiBvcHRpb24gb24gVHVlc2RheXMgYW5kIGEgc291cCA9DQpvZiB0aGUgZGF5IGZyb20gdGhpcyB3ZWVrLjwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/e3f9e2619673bec4?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "e3f9e2619673bec4",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "18c21f9cff229030",
+                "threadId": "e3f9e2619673bec4",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781004000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-005@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781004000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-005@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781004000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFR1ZSwgMDkgSnVuIDIwMjYgMTE6MjA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJSYXZpIE1lbm9uIiA8cmF2aS5tZW5vbkBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogdGVhc2VyDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KPGh0bWw-PGJvZHk-PHA-UmF2aSw8L3A-PHA-VGhlIFByb2plY3QgS2VzdHJlbCB0ZWFzZXIgd2FzIGRyYWZ0ZWQgb24gOSBKdW5lPQ0KIDIwMjYgYW5kIGlzIHJlYWR5IGZvciB5b3VyIHJldmlldy48L3A-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/de6a22f7f4914dff?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "de6a22f7f4914dff",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "7366d3cbe6812b55",
+                "threadId": "de6a22f7f4914dff",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1780387200000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Events Team\" <events@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1780387200000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Events Team\" <events@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1780387200000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDAyIEp1biAyMDI2IDA4OjAwOjAwICswMDAwDQpGcm9tOiAiRXZlbnRzIFRlYW0iIDxldmVudHNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIk1vcmdhbiBWYWxlIg0KIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-LCAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFRlYW0gb2Zmc2l0ZTogc2F2ZSB0aGUgZGF0ZQ0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQpQbGVhc2Ugc2F2ZSB0aGUgZGF0ZSBmb3IgdGhlIHRlYW0gb2Zmc2l0ZSBvbiB0aGUgc2Vjb25kIFRodXJzZGF5IG9mIE9jdG9iZXI9DQouIEx1bmNoIGFuZCBhIGZhY2lsaXRhdGVkIHNlc3Npb24gYXJlIHBsYW5uZWQuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/a2caf0a7587f5b48?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "a2caf0a7587f5b48",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "75b4680b6069e428",
+                "threadId": "a2caf0a7587f5b48",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1779986700000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1779986700000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1779986700000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA0QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMjggTWF5IDIwMjYgMTY6NDU6MDAgKzAwMDANCkZyb206ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClRvOiAiU3Rvcm0gRHVuY2FuIiA8c3Rvcm0uZHVuY2FuQGJhbmsuZXhhbXBsZT4NCkNjOiAiUHJpeWEgTmFpciIgPHByaXlhLm5haXJAbm9ydGh3aW5kLXJvYm90aWNzLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEtlc3RyZWw6IGRhdGEgcm9vbSBvcGVuDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClN0b3JtLA0KDQpUaGUgdmlydHVhbCBkYXRhIHJvb20gZm9yIFByb2plY3QgS2VzdHJlbCBvcGVuZWQgb24gMjggTWF5IDIwMjYuIE5vcnRod2luZCA9DQpmaW5hbmNlIGhhcyB1cGxvYWRlZCB0aGUgZmlyc3QgZm9sZGVycy4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/200298d0257cc2ad?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "200298d0257cc2ad",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "1139323febd0e0f0",
+                "threadId": "200298d0257cc2ad",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1752594300000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-007@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1752594300000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-007@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1752594300000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDdAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBKdWwgMjAyNSAxNTo0NTowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIkhlbGVuIEJyYW5kdCIgPGhlbGVuLmJyYW5kdEBsYXJrc3B1ci1oZWFsdGguZXhhbXBsZT4sICJKb25hcyBLZWxsZXIiDQogPGpvbmFzLmtlbGxlckBtZXJpZGlhbi1jYXJlLmV4YW1wbGU-DQpDYzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGNsb3NpbmcNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5IZWxlbiwgSm9uYXMsPC9wPjxwPlByb2plY3QgT3NwcmV5IGNsb3NlZCBvbiAxNSBKdWx5IDIwMjUuIEY9DQp1bmRzIHdlcmUgcmVsZWFzZWQgdGhpcyBtb3JuaW5nLjwvcD48cD5TdG9ybTwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/d4c63985a8e94f61?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "d4c63985a8e94f61",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "accf56bc77e39da4",
+                "threadId": "d4c63985a8e94f61",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1744734000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1744734000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1744734000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDRAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBBcHIgMjAyNSAxNjoyMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJKb25hcyBLZWxsZXIiIDxqb25hcy5rZWxsZXJAbWVyaWRpYW4tY2FyZS5leGFtcGxlPg0KQ2M6ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGxldHRlciBvZiBpbnRlbnQNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5Kb25hcyw8L3A-PHA-VGhlIGxldHRlciBvZiBpbnRlbnQgZm9yIFByb2plY3QgT3NwcmV5IHdhcyBzaWc9DQpuZWQgb24gMTUgQXByaWwgMjAyNS4gQ29uZmlybWF0b3J5IGRpbGlnZW5jZSBiZWdpbnMgbmV4dCB3ZWVrLjwvcD48cD5Nb3JnYW49DQo8L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/11a9bd18efff37f9?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "11a9bd18efff37f9",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "82694c28cc662182",
+                "threadId": "11a9bd18efff37f9",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1736762400000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1736762400000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?format=raw": [
+        {
+          "status": 429,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 429,
+              "message": "Rate Limit Exceeded",
+              "errors": [
+                {
+                  "reason": "rateLimitExceeded"
+                }
+              ],
+              "status": "RESOURCE_EXHAUSTED"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1736762400000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogTW9uLCAxMyBKYW4gMjAyNSAxMDowMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJIZWxlbiBCcmFuZHQiIDxoZWxlbi5icmFuZHRAbGFya3NwdXItaGVhbHRoLmV4YW1wbGU-DQpDYzogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IE9zcHJleTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KSGVsZW4sDQoNClRoZSBlbmdhZ2VtZW50IGxldHRlciBmb3IgUHJvamVjdCBPc3ByZXkgd2FzIGNvdW50ZXJzaWduZWQgb24gMTMgSmFudWFyeSAyMD0NCjI1LiBXZSBzdGFydCB3b3JrIHRoaXMgd2Vlay4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1008": [
+        {
+          "status": 200,
+          "body": {
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1": [
+        {
+          "status": 404,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 404,
+              "message": "Requested entity was not found.",
+              "errors": [
+                {
+                  "reason": "notFound"
+                }
+              ],
+              "status": "NOT_FOUND"
+            }
+          }
+        }
+      ]
+    },
+    "after-unspam": {
+      "GET /gmail/v1/users/deals@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "deals@bank.example",
+            "messagesTotal": 8,
+            "threadsTotal": 0,
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "6d268eb38c91f8af",
+                "historyId": "1008"
+              },
+              {
+                "id": "19d5dfcd4e74c2ae",
+                "historyId": "1008"
+              },
+              {
+                "id": "e3f9e2619673bec4",
+                "historyId": "1008"
+              },
+              {
+                "id": "de6a22f7f4914dff",
+                "historyId": "1008"
+              },
+              {
+                "id": "a2caf0a7587f5b48",
+                "historyId": "1008"
+              },
+              {
+                "id": "200298d0257cc2ad",
+                "historyId": "1008"
+              },
+              {
+                "id": "d4c63985a8e94f61",
+                "historyId": "1008"
+              },
+              {
+                "id": "11a9bd18efff37f9",
+                "historyId": "1008"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/6d268eb38c91f8af?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "6d268eb38c91f8af",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "49ddbbb9e3a43fb6",
+                "threadId": "6d268eb38c91f8af",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1789752600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-015@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1789752600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-015@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/49ddbbb9e3a43fb6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "49ddbbb9e3a43fb6",
+            "threadId": "6d268eb38c91f8af",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1789752600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDE1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IEZyaSwgMTggU2VwIDIwMjYgMTc6MzA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJQcml5YSBOYWlyIiA8cHJpeWEubmFpckBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogTE9JIHNpZ25lZA0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPlByaXlhLDwvcD48cD5UaGUgTE9JIGZvciBQcm9qZWN0IEtlc3RyZWwgd2FzIHNpZ25lZCB0b2RheSwgMT0NCjggU2VwdGVtYmVyIDIwMjYuIEkgd2lsbCB3YWxrIHlvdSB0aHJvdWdoIHRoZSBleGNsdXNpdml0eSB0ZXJtcyB0b21vcnJvdy48Lz0NCnA-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/19d5dfcd4e74c2ae?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19d5dfcd4e74c2ae",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "85f5ec49de9479c0",
+                "threadId": "19d5dfcd4e74c2ae",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781508600000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Facilities\" <facilities@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-002@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781508600000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Facilities\" <facilities@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-002@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/85f5ec49de9479c0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "85f5ec49de9479c0",
+            "threadId": "19d5dfcd4e74c2ae",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781508600000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBNb24sIDE1IEp1biAyMDI2IDA3OjMwOjAwICswMDAwDQpGcm9tOiAiRmFjaWxpdGllcyIgPGZhY2lsaXRpZXNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIkFsZXggQ2hlbiINCiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IENhbnRlZW4gbWVudSBjaGFuZ2VzIHRoaXMgbW9udGgNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5UaGUgY2FudGVlbiBhZGRzIGEgdmVnZXRhcmlhbiBvcHRpb24gb24gVHVlc2RheXMgYW5kIGEgc291cCA9DQpvZiB0aGUgZGF5IGZyb20gdGhpcyB3ZWVrLjwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/e3f9e2619673bec4?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "e3f9e2619673bec4",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "18c21f9cff229030",
+                "threadId": "e3f9e2619673bec4",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1781004000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-005@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1781004000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Ravi Menon\" <ravi.menon@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-005@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/18c21f9cff229030?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "18c21f9cff229030",
+            "threadId": "e3f9e2619673bec4",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1781004000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA1QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFR1ZSwgMDkgSnVuIDIwMjYgMTE6MjA6MDAgKzAwMDANCkZyb206ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KVG86ICJSYXZpIE1lbm9uIiA8cmF2aS5tZW5vbkBub3J0aHdpbmQtcm9ib3RpY3MuZXhhbXBsZT4NClN1YmplY3Q6IFByb2plY3QgS2VzdHJlbDogdGVhc2VyDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KPGh0bWw-PGJvZHk-PHA-UmF2aSw8L3A-PHA-VGhlIFByb2plY3QgS2VzdHJlbCB0ZWFzZXIgd2FzIGRyYWZ0ZWQgb24gOSBKdW5lPQ0KIDIwMjYgYW5kIGlzIHJlYWR5IGZvciB5b3VyIHJldmlldy48L3A-PHA-U3Rvcm08L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/de6a22f7f4914dff?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "de6a22f7f4914dff",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "7366d3cbe6812b55",
+                "threadId": "de6a22f7f4914dff",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1780387200000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Events Team\" <events@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<noise-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1780387200000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Events Team\" <events@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>, \"Morgan Vale\" <morgan.vale@bank.example>, \"Alex Chen\" <alex.chen@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<noise-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/7366d3cbe6812b55?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "7366d3cbe6812b55",
+            "threadId": "de6a22f7f4914dff",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1780387200000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG5vaXNlLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDAyIEp1biAyMDI2IDA4OjAwOjAwICswMDAwDQpGcm9tOiAiRXZlbnRzIFRlYW0iIDxldmVudHNAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPiwgIk1vcmdhbiBWYWxlIg0KIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-LCAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFRlYW0gb2Zmc2l0ZTogc2F2ZSB0aGUgZGF0ZQ0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQpQbGVhc2Ugc2F2ZSB0aGUgZGF0ZSBmb3IgdGhlIHRlYW0gb2Zmc2l0ZSBvbiB0aGUgc2Vjb25kIFRodXJzZGF5IG9mIE9jdG9iZXI9DQouIEx1bmNoIGFuZCBhIGZhY2lsaXRhdGVkIHNlc3Npb24gYXJlIHBsYW5uZWQuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/a2caf0a7587f5b48?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "a2caf0a7587f5b48",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "75b4680b6069e428",
+                "threadId": "a2caf0a7587f5b48",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1779986700000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<kestrel-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1779986700000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Priya Nair\" <priya.nair@northwind-robotics.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<kestrel-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/75b4680b6069e428?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "75b4680b6069e428",
+            "threadId": "a2caf0a7587f5b48",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1779986700000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPGtlc3RyZWwtMDA0QGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMjggTWF5IDIwMjYgMTY6NDU6MDAgKzAwMDANCkZyb206ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClRvOiAiU3Rvcm0gRHVuY2FuIiA8c3Rvcm0uZHVuY2FuQGJhbmsuZXhhbXBsZT4NCkNjOiAiUHJpeWEgTmFpciIgPHByaXlhLm5haXJAbm9ydGh3aW5kLXJvYm90aWNzLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEtlc3RyZWw6IGRhdGEgcm9vbSBvcGVuDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClN0b3JtLA0KDQpUaGUgdmlydHVhbCBkYXRhIHJvb20gZm9yIFByb2plY3QgS2VzdHJlbCBvcGVuZWQgb24gMjggTWF5IDIwMjYuIE5vcnRod2luZCA9DQpmaW5hbmNlIGhhcyB1cGxvYWRlZCB0aGUgZmlyc3QgZm9sZGVycy4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/200298d0257cc2ad?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "200298d0257cc2ad",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "1139323febd0e0f0",
+                "threadId": "200298d0257cc2ad",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1752594300000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-007@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1752594300000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>, \"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-007@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/1139323febd0e0f0?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "1139323febd0e0f0",
+            "threadId": "200298d0257cc2ad",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1752594300000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDdAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBKdWwgMjAyNSAxNTo0NTowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIkhlbGVuIEJyYW5kdCIgPGhlbGVuLmJyYW5kdEBsYXJrc3B1ci1oZWFsdGguZXhhbXBsZT4sICJKb25hcyBLZWxsZXIiDQogPGpvbmFzLmtlbGxlckBtZXJpZGlhbi1jYXJlLmV4YW1wbGU-DQpDYzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGNsb3NpbmcNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5IZWxlbiwgSm9uYXMsPC9wPjxwPlByb2plY3QgT3NwcmV5IGNsb3NlZCBvbiAxNSBKdWx5IDIwMjUuIEY9DQp1bmRzIHdlcmUgcmVsZWFzZWQgdGhpcyBtb3JuaW5nLjwvcD48cD5TdG9ybTwvcD48L2JvZHk-PC9odG1sPg0K"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/d4c63985a8e94f61?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "d4c63985a8e94f61",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "accf56bc77e39da4",
+                "threadId": "d4c63985a8e94f61",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1744734000000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-004@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1744734000000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Jonas Keller\" <jonas.keller@meridian-care.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-004@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/accf56bc77e39da4?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "accf56bc77e39da4",
+            "threadId": "d4c63985a8e94f61",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1744734000000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDRAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAxNSBBcHIgMjAyNSAxNjoyMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJKb25hcyBLZWxsZXIiIDxqb25hcy5rZWxsZXJAbWVyaWRpYW4tY2FyZS5leGFtcGxlPg0KQ2M6ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBPc3ByZXk6IGxldHRlciBvZiBpbnRlbnQNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8aHRtbD48Ym9keT48cD5Kb25hcyw8L3A-PHA-VGhlIGxldHRlciBvZiBpbnRlbnQgZm9yIFByb2plY3QgT3NwcmV5IHdhcyBzaWc9DQpuZWQgb24gMTUgQXByaWwgMjAyNS4gQ29uZmlybWF0b3J5IGRpbGlnZW5jZSBiZWdpbnMgbmV4dCB3ZWVrLjwvcD48cD5Nb3JnYW49DQo8L3A-PC9ib2R5PjwvaHRtbD4NCg"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/threads/11a9bd18efff37f9?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "11a9bd18efff37f9",
+            "historyId": "1008",
+            "messages": [
+              {
+                "id": "82694c28cc662182",
+                "threadId": "11a9bd18efff37f9",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "internalDate": "1736762400000",
+                "historyId": "1008",
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "From",
+                      "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Message-ID",
+                      "value": "<osprey-001@bank.example>"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "internalDate": "1736762400000",
+            "historyId": "1008",
+            "payload": {
+              "headers": [
+                {
+                  "name": "From",
+                  "value": "\"Morgan Vale\" <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "\"Helen Brandt\" <helen.brandt@larkspur-health.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "\"Storm Duncan\" <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Message-ID",
+                  "value": "<osprey-001@bank.example>"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/messages/82694c28cc662182?format=raw": [
+        {
+          "status": 429,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 429,
+              "message": "Rate Limit Exceeded",
+              "errors": [
+                {
+                  "reason": "rateLimitExceeded"
+                }
+              ],
+              "status": "RESOURCE_EXHAUSTED"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "id": "82694c28cc662182",
+            "threadId": "11a9bd18efff37f9",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "",
+            "historyId": "1008",
+            "internalDate": "1736762400000",
+            "sizeEstimate": 0,
+            "raw": "TWVzc2FnZS1JRDogPG9zcHJleS0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogTW9uLCAxMyBKYW4gMjAyNSAxMDowMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJIZWxlbiBCcmFuZHQiIDxoZWxlbi5icmFuZHRAbGFya3NwdXItaGVhbHRoLmV4YW1wbGU-DQpDYzogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IE9zcHJleTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KSGVsZW4sDQoNClRoZSBlbmdhZ2VtZW50IGxldHRlciBmb3IgUHJvamVjdCBPc3ByZXkgd2FzIGNvdW50ZXJzaWduZWQgb24gMTMgSmFudWFyeSAyMD0NCjI1LiBXZSBzdGFydCB3b3JrIHRoaXMgd2Vlay4NCg0KTW9yZ2FuDQo"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1008": [
+        {
+          "status": 200,
+          "body": {
+            "historyId": "1008"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/deals@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=1": [
+        {
+          "status": 404,
+          "synthetic": true,
+          "body": {
+            "error": {
+              "code": 404,
+              "message": "Requested entity was not found.",
+              "errors": [
+                {
+                  "reason": "notFound"
+                }
+              ],
+              "status": "NOT_FOUND"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

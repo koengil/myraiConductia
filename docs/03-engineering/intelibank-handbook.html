@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conductia · Engineering Team Handbook</title>
+<style>
+  :root{
+    --accent:#6058F8; --accent-soft:#8b84fb; --accent-ink:#ffffff;
+    --ok:#1d9e75; --warn:#ba7517; --danger:#d85a30;
+    --radius:12px; --maxw:860px; --sidebar:280px;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+  }
+  [data-theme="light"]{
+    --bg:#ffffff; --bg-soft:#f6f7f9; --panel:#ffffff; --panel-2:#f9f9fb;
+    --text:#191b22; --muted:#5f6168; --faint:#6e7079; --border:#e6e7ec;
+    --code-bg:#f2f2f7; --accent-bg:#eeedfe; --shadow:0 1px 2px rgba(20,20,40,.06),0 8px 24px rgba(20,20,40,.06);
+  }
+  [data-theme="dark"]{
+    --bg:#0c0d13; --bg-soft:#12131b; --panel:#14151f; --panel-2:#191b27;
+    --text:#e9e9f1; --muted:#9da0b0; --faint:#7e8194; --border:#262838;
+    --code-bg:#1b1d29; --accent-bg:#1d1b3a; --accent:#7b74ff; --accent-soft:#a39dff;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+    font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  a.skiplink:focus-visible{outline-color:#fff}
+  nav.toc a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .step:focus-visible,details>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .gl:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skiplink{position:fixed;top:8px;left:8px;z-index:200;background:var(--accent);color:var(--accent-ink);
+    padding:9px 14px;border-radius:8px;font-size:.85rem;font-weight:600;transform:translateY(-150%);
+    transition:transform .15s}
+  .skiplink:focus{transform:translateY(0);text-decoration:none;outline:2px solid #fff;outline-offset:2px}
+  code,kbd,.ent{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.1em .4em;border-radius:6px;color:var(--text)}
+  .ent{color:var(--accent-soft);background:var(--accent-bg);font-weight:500}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em}
+  h2{font-size:1.6rem;margin:0 0 .2em}
+  h3{font-size:1.18rem;margin:2.2em 0 .4em;padding-top:.3em}
+  h4{font-size:1rem;margin:1.6em 0 .3em;color:var(--text)}
+  /* heading anchors */
+  .anchored{position:relative}
+  .hanchor{position:absolute;left:-1.1em;top:0;opacity:0;text-decoration:none;color:var(--faint);
+    font-weight:400;padding:0 .15em;transition:opacity .12s;border-radius:5px}
+  .anchored:hover .hanchor,.hanchor:focus-visible{opacity:1;color:var(--accent)}
+  .hanchor.copied::after{content:'Copied';position:absolute;left:1.4em;top:0;white-space:nowrap;
+    font-size:.6em;background:var(--accent);color:var(--accent-ink);padding:2px 7px;border-radius:6px}
+  @media(max-width:920px){ .hanchor{position:static;opacity:1;margin-right:.3em;left:auto} }
+  /* back to top */
+  .totop{position:fixed;right:22px;bottom:22px;z-index:60;width:42px;height:42px;border-radius:50%;
+    border:1px solid var(--border);background:var(--panel);color:var(--accent);font-size:1.2rem;line-height:1;
+    cursor:pointer;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;
+    transition:opacity .18s,transform .18s}
+  .totop.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .totop:hover{border-color:var(--accent-soft)}
+  p{margin:.7em 0}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* layout */
+  .layout{display:flex;min-height:100vh}
+  .sidebar{width:var(--sidebar);flex:0 0 var(--sidebar);position:fixed;top:0;left:0;height:100vh;
+    overflow-y:auto;background:var(--bg-soft);border-right:1px solid var(--border);
+    padding:22px 16px 40px;z-index:40}
+  .main{margin-left:var(--sidebar);flex:1;min-width:0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:56px 40px 120px}
+
+  /* brand */
+  .brand{display:flex;align-items:center;gap:10px;margin:0 6px 20px}
+  .brand .dot{width:30px;height:30px;border-radius:9px;flex:0 0 30px;
+    background:linear-gradient(135deg,#6058F8,#a39dff);display:grid;place-items:center;
+    color:#fff;font-weight:800;font-size:15px;box-shadow:0 4px 14px rgba(96,88,248,.4)}
+  .brand b{font-size:.95rem;display:block;letter-spacing:-.01em}
+  .brand span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+  /* nav */
+  .navsearch{width:100%;padding:8px 11px;margin:0 0 14px;border-radius:9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--text);font-family:inherit;font-size:.85rem}
+  .navsearch:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  /* global content search */
+  .gsearch{position:relative;margin:0 0 12px}
+  .gsearch input{width:100%;padding:8px 30px 8px 11px;border-radius:9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--text);font-family:inherit;font-size:.85rem}
+  .gsearch input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .gsearch .gsx{position:absolute;right:6px;top:30px;border:0;background:none;
+    color:var(--faint);cursor:pointer;font-size:1rem;line-height:1;padding:2px 5px;border-radius:6px;display:none}
+  .gsearch .gsx:hover{color:var(--text)}
+  .gsearch.has-q .gsx{display:block}
+  .gsearch .gscount{font-size:.72rem;color:var(--faint);margin:5px 2px 0;min-height:1em}
+  .gsearch .gsnav{display:flex;gap:6px;margin:6px 0 0}
+  .gsearch .gsnav button{flex:1;font-size:.74rem;padding:5px 8px;border-radius:7px;border:1px solid var(--border);
+    background:var(--panel);color:var(--muted);cursor:pointer;font-family:inherit}
+  .gsearch .gsnav button:hover{border-color:var(--accent-soft);color:var(--text)}
+  .gsearch .gsnav button[disabled]{opacity:.4;cursor:default}
+  mark.gsHit{background:var(--accent-bg);color:var(--accent-soft);border-radius:3px;padding:0 1px;
+    box-shadow:0 0 0 1px var(--accent) inset}
+  mark.gsHit.gsCurrent{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+  nav.toc{display:flex;flex-direction:column;gap:1px}
+  nav.toc a{display:flex;gap:9px;align-items:baseline;padding:7px 11px;border-radius:8px;color:var(--muted);
+    font-size:.88rem;font-weight:500}
+  nav.toc a .n{font-family:var(--mono);font-size:.74rem;color:var(--faint);width:14px;flex:0 0 14px}
+  nav.toc a:hover{background:var(--panel);color:var(--text);text-decoration:none}
+  nav.toc a.active{background:var(--accent-bg);color:var(--accent-soft);font-weight:600}
+  nav.toc a.active .n{color:var(--accent)}
+  .navfoot{margin:22px 6px 0;padding-top:16px;border-top:1px solid var(--border);
+    font-size:.74rem;color:var(--faint);line-height:1.5}
+
+  .themetoggle{display:flex;align-items:center;gap:8px;margin:4px 6px 18px;cursor:pointer;
+    font-size:.8rem;color:var(--muted);user-select:none;background:none;border:0;padding:6px;
+    border-radius:9px;font-family:inherit;width:calc(100% - 12px);text-align:left}
+  .themetoggle:hover{background:var(--panel)}
+  .themetoggle:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .switch{width:38px;height:21px;border-radius:20px;background:var(--border);position:relative;transition:.2s}
+  .switch::after{content:'';position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;
+    background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  [data-theme="dark"] .switch{background:var(--accent)}
+  [data-theme="dark"] .switch::after{transform:translateX(17px)}
+
+  /* hero */
+  .hero{margin-bottom:8px}
+  .eyebrow{color:var(--accent);font-weight:650;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
+  .hero h1{font-size:2.5rem;margin:.15em 0 .25em;letter-spacing:-.025em}
+  .lede{font-size:1.18rem;color:var(--muted);max-width:62ch}
+  .metaline{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+  .chip{font-size:.74rem;background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+    padding:4px 10px;border-radius:20px}
+
+  section{scroll-margin-top:24px;padding-top:46px;border-top:1px solid transparent}
+  section.sec{border-top:1px solid var(--border);margin-top:30px}
+  .sectag{font-family:var(--mono);font-size:.75rem;color:var(--accent);font-weight:600;letter-spacing:.04em}
+
+  /* callouts */
+  .note{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);
+    padding:16px 18px;margin:18px 0;box-shadow:var(--shadow)}
+  .note.accent{border-left:3px solid var(--accent)}
+  .note.warn{border-left:3px solid var(--warn);background:linear-gradient(0deg,var(--panel),var(--panel))}
+  .note .lbl{font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+  .note.warn .lbl{color:var(--warn)} .note.accent .lbl{color:var(--accent)}
+
+  /* the invariant banner */
+  .invariant{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 0;
+    padding:20px;border-radius:var(--radius);background:var(--accent-bg);border:1px solid var(--border)}
+  .inv-box{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .inv-box b{display:block;font-size:.95rem;margin-bottom:2px}
+  .inv-box small{color:var(--muted);font-size:.82rem}
+  .inv-arrow{font-size:1.5rem;color:var(--accent);font-weight:700}
+  .inv-box.humans{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+
+  /* cards / constraints */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 18px;box-shadow:var(--shadow)}
+  .card .k{font-family:var(--mono);font-size:.74rem;color:var(--accent);font-weight:600}
+  .card h4{margin:.3em 0 .2em}
+  .card p{font-size:.9rem;color:var(--muted);margin:.2em 0 0}
+
+  /* tables */
+  .tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:var(--radius)}
+  table{border-collapse:collapse;width:100%;font-size:.88rem}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--panel-2);font-weight:650;font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--panel-2)}
+  .filterbar{display:flex;gap:10px;align-items:center;margin:18px 0 8px}
+  .filterbar input{flex:1;padding:9px 13px;border-radius:9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--text);font-family:inherit;font-size:.9rem}
+  .filterbar input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .filtercount{font-size:.78rem;color:var(--faint);white-space:nowrap}
+
+  /* glossary tooltip terms */
+  .gl{border-bottom:1px dotted var(--accent);cursor:help;color:inherit;font-weight:500}
+  .gl:hover{color:var(--accent-soft)}
+  #tip{position:fixed;z-index:90;max-width:300px;background:var(--panel);color:var(--text);
+    border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:.84rem;line-height:1.5;
+    box-shadow:var(--shadow);opacity:0;transform:translateY(4px);pointer-events:none;transition:.13s;visibility:hidden}
+  #tip.show{opacity:1;transform:translateY(0);visibility:visible}
+  #tip b{color:var(--accent-soft);display:block;margin-bottom:2px;font-size:.82rem}
+
+  /* badges */
+  .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;
+    vertical-align:middle;letter-spacing:.02em}
+  .badge.ok{background:rgba(29,158,117,.16);color:#0f6e50}
+  .badge.re{background:rgba(186,117,23,.16);color:#9a5f12}
+  [data-theme="dark"] .badge.ok{background:rgba(29,158,117,.16);color:#5dcaa5}
+  [data-theme="dark"] .badge.re{background:rgba(186,117,23,.16);color:#ef9f27}
+
+  /* stage stepper */
+  .stepper{display:flex;gap:6px;margin:20px 0 0;flex-wrap:wrap}
+  .step{flex:1;min-width:90px;padding:11px 10px;border-radius:10px;border:1px solid var(--border);
+    background:var(--panel);cursor:pointer;text-align:center;transition:.15s}
+  .step{font-family:inherit;color:var(--text);appearance:none}
+  .step:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .step:hover{border-color:var(--accent-soft)}
+  .step.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .step .sn{font-family:var(--mono);font-size:.7rem;opacity:.7;display:block}
+  .step b{font-size:.82rem;font-weight:600}
+  .stagepanel{margin-top:14px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow)}
+  .stagepanel h4{margin-top:0;color:var(--accent)}
+  .stagepanel .docs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .stagepanel .docs span{font-size:.74rem;background:var(--accent-bg);color:var(--accent-soft);
+    border-radius:6px;padding:3px 9px;font-family:var(--mono)}
+  .signoff{font-size:.82rem;color:var(--muted);margin-top:10px}
+
+  /* repo tree */
+  details.tree{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:6px 16px;margin:16px 0;font-family:var(--mono);font-size:.82rem}
+  details.tree>summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--text);list-style:none}
+  details.tree>summary::-webkit-details-marker{display:none}
+  details.tree>summary::before{content:'▸ ';color:var(--accent)}
+  details.tree[open]>summary::before{content:'▾ '}
+  .tree ul{list-style:none;margin:4px 0 10px;padding-left:14px;border-left:1px solid var(--border)}
+  .tree li{padding:2px 0;color:var(--muted)}
+  .tree li .f{color:var(--text)} .tree li em{color:var(--accent-soft);font-style:normal}
+
+  /* deep dive details */
+  details.dd{border:1px solid var(--border);border-radius:10px;margin:14px 0;background:var(--panel-2)}
+  details.dd>summary{cursor:pointer;padding:11px 16px;font-weight:600;font-size:.92rem;list-style:none;display:flex;gap:8px;align-items:center}
+  details.dd>summary::-webkit-details-marker{display:none}
+  details.dd>summary::before{content:'+';color:var(--accent);font-weight:800;font-size:1.1em}
+  details.dd[open]>summary::before{content:'–'}
+  details.dd .body{padding:2px 16px 16px}
+
+  /* checkpoint */
+  .check{display:flex;gap:12px;align-items:flex-start;background:var(--accent-bg);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 16px;margin:24px 0 6px}
+  .check .ic{color:var(--accent);font-size:1.1rem;flex:0 0 auto}
+  .check b{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+  .check ul{margin:6px 0 0;padding-left:18px;font-size:.9rem;color:var(--muted)}
+
+  ul.clean{padding-left:20px} ul.clean li{margin:.3em 0}
+  .ref{font-size:.82rem;color:var(--muted)}
+  hr.soft{border:none;border-top:1px solid var(--border);margin:30px 0}
+
+  .mobtop{display:none}
+  @media(max-width:920px){
+    .sidebar{transform:translateX(-100%);transition:.2s;box-shadow:var(--shadow)}
+    .sidebar.open{transform:translateX(0)}
+    .main{margin-left:0}
+    .mobtop{display:flex;position:sticky;top:0;z-index:30;align-items:center;gap:12px;
+      padding:12px 18px;background:var(--bg-soft);border-bottom:1px solid var(--border)}
+    .hamb{font-size:1.4rem;cursor:pointer;background:none;border:none;color:var(--text)}
+    .wrap{padding:28px 22px 90px}
+    .grid3{grid-template-columns:1fr}
+    .hero h1{font-size:2rem}
+  }
+  /* quiz */
+  .quiz{margin:18px 0 0}
+  .qitem{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 18px;margin:14px 0;box-shadow:var(--shadow)}
+  .qitem .qnum{font-family:var(--mono);font-size:.72rem;color:var(--accent);font-weight:600;letter-spacing:.04em}
+  .qitem .qq{font-weight:600;margin:.2em 0 .7em;font-size:1rem}
+  .qopts{display:flex;flex-direction:column;gap:7px;margin:0;padding:0;border:0}
+  .qopts legend{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .qopt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--border);
+    border-radius:9px;background:var(--panel-2);cursor:pointer;font-size:.9rem;transition:.13s}
+  .qopt:hover{border-color:var(--accent-soft)}
+  .qopt input{margin:.25em 0 0;accent-color:var(--accent);flex:0 0 auto;cursor:pointer}
+  .qopt .opttext{flex:1}
+  .qopt.correct{border-color:var(--ok);background:rgba(29,158,117,.1)}
+  .qopt.incorrect{border-color:var(--danger);background:rgba(216,90,48,.1)}
+  .qopt.locked{cursor:default}
+  .qopt.locked:hover{border-color:var(--border)}
+  .qopt.locked.correct:hover{border-color:var(--ok)}
+  .qopt.locked.incorrect:hover{border-color:var(--danger)}
+  .qexpl{font-size:.85rem;color:var(--muted);margin-top:10px;padding:9px 12px;border-radius:8px;
+    background:var(--accent-bg);border-left:3px solid var(--accent);display:none}
+  .qexpl.show{display:block}
+  .qexpl b{color:var(--accent-soft)}
+  .qexpl.wrong{border-left-color:var(--danger)}
+  .quizbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 0 6px;
+    padding:14px 16px;border-radius:var(--radius);background:var(--accent-bg);border:1px solid var(--border)}
+  .quizscore{font-weight:650;font-size:1rem}
+  .quizscore .big{font-family:var(--mono);color:var(--accent);font-size:1.15rem}
+  .quizbar .bar{flex:1;min-width:120px;height:8px;border-radius:6px;background:var(--border);overflow:hidden}
+  .quizbar .bar > i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+  .quizreset{font-size:.8rem;padding:7px 13px;border-radius:8px;border:1px solid var(--border);
+    background:var(--panel);color:var(--text);cursor:pointer;font-family:inherit}
+  .quizreset:hover{border-color:var(--accent-soft)}
+
+  /* worked-example trace component */
+  .trace{position:relative;margin:22px 0 8px;padding-left:8px}
+  .trace-step{position:relative;display:flex;gap:16px;padding:0 0 22px 0}
+  .trace-step::before{content:'';position:absolute;left:17px;top:36px;bottom:-2px;width:2px;background:var(--border)}
+  .trace-step:last-child::before{display:none}
+  .trace-num{flex:0 0 36px;width:36px;height:36px;border-radius:50%;
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    font-family:var(--mono);font-size:.85rem;font-weight:700;display:grid;place-items:center;z-index:1;box-shadow:var(--shadow)}
+  .trace-body{flex:1;min-width:0;padding-top:2px}
+  .trace-body h5{margin:.15em 0 .25em;font-size:.97rem;font-weight:650;letter-spacing:-.01em;color:var(--text)}
+  .trace-body p{margin:.2em 0;font-size:.9rem;color:var(--muted);line-height:1.55}
+  .trace-body .ent{font-size:.82em}
+  .who{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:20px;
+    vertical-align:middle;white-space:nowrap;border:1px solid transparent}
+  .who::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+  .who.agent{color:var(--accent);background:var(--accent-bg);border-color:var(--accent)}
+  .who.code{color:var(--warn);background:rgba(186,117,23,.12);border-color:rgba(186,117,23,.4)}
+  [data-theme="dark"] .who.code{color:#ef9f27}
+  .who.human{color:var(--ok);background:rgba(29,158,117,.13);border-color:rgba(29,158,117,.4)}
+  [data-theme="dark"] .who.human{color:#5dcaa5}
+  .trace-body .audit{display:inline-block;margin-top:7px;font-family:var(--mono);
+    font-size:.74rem;color:var(--accent-soft);background:var(--accent-bg);
+    border:1px dashed var(--accent);border-radius:6px;padding:3px 9px;line-height:1.4}
+  .trace-body .audit b{color:var(--accent);font-weight:700}
+  .trace-step.is-agent .trace-num{border-color:var(--accent)}
+  .trace-step.is-code  .trace-num{border-color:var(--warn)}
+  .trace-step.is-human .trace-num{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok) inset,var(--shadow)}
+  .trace-step.blocked .trace-num{background:var(--danger);border-color:var(--danger);color:#fff}
+  .trace-block{margin-top:8px;border:1px solid var(--danger);border-left:3px solid var(--danger);
+    background:rgba(216,90,48,.07);border-radius:10px;padding:11px 14px;font-size:.86rem}
+  .trace-block b{color:var(--danger)}
+  .who-legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:14px 0 4px;font-size:.78rem;color:var(--muted)}
+  .who-legend .who{cursor:default}
+  .trace-scope{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}
+  .trace-scope span{font-size:.72rem;font-family:var(--mono);background:var(--panel-2);
+    border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:3px 9px}
+  @media(max-width:920px){ .trace-step{gap:12px} .trace-step::before{left:15px} .trace-num{flex-basis:32px;width:32px;height:32px} }
+
+  @media(prefers-reduced-motion:reduce){ *{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important} }
+  @media print{
+    .sidebar,.mobtop,.themetoggle,.totop,.gsearch,#tip{display:none}
+    .main{margin:0}
+    details.dd,details.tree{border-color:#ccc}
+    details>summary{list-style:none}
+    details .body,details.tree ul{display:block!important}
+    a[href^="http"]::after{content:" (" attr(href) ")";font-size:.8em;color:#555}
+  }
+</style>
+</head>
+<body>
+<a href="#start" class="skiplink">Skip to main content</a>
+<p class="sr-only">Conductia engineering team handbook. A governed AI workflow for a live sell-side M&amp;A deal. The one invariant: AI agents draft, summarize, retrieve and propose; humans and deterministic code decide, gate, approve and release. Sections cover the domain, role-based tracks, the rulebook (FINRA 3110 / 2210, SEC 17a-4), the architecture, what V1 builds, worked examples, build-versus-plug-in, open risks, a self-check quiz, and a glossary.</p>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="dot">i</div>
+      <div><b>Conductia</b><span>Engineering Handbook</span></div>
+    </div>
+    <button type="button" class="themetoggle" id="themeToggle" aria-pressed="true" aria-label="Toggle dark mode"><span class="switch" aria-hidden="true"></span><span id="themeLabel">Dark</span></button>
+    <div class="gsearch" id="gsearch">
+      <label for="gsInput" class="navfoot" style="margin:0 0 5px;padding:0;border:0;display:block">Search the handbook</label>
+      <input id="gsInput" type="search" placeholder="Search all sections…" autocomplete="off" role="searchbox" aria-label="Search all handbook content" aria-describedby="gsCount">
+      <button type="button" class="gsx" id="gsClear" aria-label="Clear search">×</button>
+      <div class="gscount" id="gsCount" aria-live="polite"></div>
+      <div class="gsnav" id="gsNav" hidden>
+        <button type="button" id="gsPrev">↑ Prev</button>
+        <button type="button" id="gsNext">↓ Next</button>
+      </div>
+    </div>
+    <input class="navsearch" id="navsearch" placeholder="Filter sections…" aria-label="Filter sections">
+    <nav class="toc" id="toc" aria-label="Sections">
+      <a href="#start" data-t="start orientation invariant"><span class="n">0</span>Start here</a>
+      <a href="#tracks" data-t="tracks roles reading paths backend frontend infra compliance new to m&a"><span class="n">0b</span>Role-based tracks</a>
+      <a href="#domain" data-t="domain investment banking mnpi deal lifecycle"><span class="n">1</span>The domain</a>
+      <a href="#rulebook" data-t="rulebook finra sec 3110 2210 17a-4 worm"><span class="n">2</span>The rulebook</a>
+      <a href="#architecture" data-t="architecture entities invariant sealed envelope concept code"><span class="n">3</span>Architecture &amp; vocabulary</a>
+      <a href="#building" data-t="what building v1 surfaces journeys issues repo map"><span class="n">4</span>What we're building</a>
+      <a href="#examples" data-t="worked examples walkthroughs traces standup diligence qc"><span class="n">W</span>Worked examples</a>
+      <a href="#buildvsplugin" data-t="build vs plugin moat commodity"><span class="n">5</span>Build vs. plug-in</a>
+      <a href="#risks" data-t="undecided risky decisions limitations pre-mortem"><span class="n">6</span>Undecided &amp; risky</a>
+      <a href="#quiz" data-t="quiz check understanding self-test questions"><span class="n">7</span>Check yourself</a>
+      <a href="#glossary" data-t="glossary terms definitions"><span class="n">G</span>Glossary</a>
+    </nav>
+    <div class="navfoot">
+      Companion to the <code>blueprint-engineering</code> pack (files 00–08).<br>
+      Regulatory claims verified against FINRA / SEC primary sources · Jun 2026.
+    </div>
+  </aside>
+
+  <main class="main" id="main" tabindex="-1" aria-label="Handbook content">
+    <div class="mobtop">
+      <button class="hamb" id="hamb" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+      <div class="brand" style="margin:0"><div class="dot">i</div><div><b>Conductia Handbook</b></div></div>
+    </div>
+    <div class="wrap">
+
+      <!-- ===== 0 START ===== -->
+      <section id="start" class="hero">
+        <div class="eyebrow">Engineering team handbook</div>
+        <h1>Conductia — the engineering team's handbook</h1>
+        <p class="lede">Conductia is a governed AI workflow that runs a live <span class="gl" data-k="sellside">sell-side M&amp;A</span> deal at an investment bank. This is the team's shared reference for building it: one vocabulary, one mental model of the domain and the architecture, and a place to send every new engineer so the whole team reasons about the system the same way. No finance background assumed — read it cover to cover (~2 hours) or jump to your <a href="#tracks">track</a>.</p>
+        <div class="metaline">
+          <span class="chip">⏱ ~2 hours cover-to-cover · or pick a track</span>
+          <span class="chip">📚 Built from the blueprint pack + verified research</span>
+          <span class="chip">✓ Regulatory claims checked at the source</span>
+        </div>
+
+        <h3>The one idea — the whole team shares this even if nothing else</h3>
+        <p>An investment bank running a live deal lives under <b>three permanent constraints</b>. Every strange-looking thing about this product traces back to one of them — keep them in shared view:</p>
+        <div class="grid3">
+          <div class="card"><div class="k">CONSTRAINT 1</div><h4>Secrecy</h4><p>Leaking deal info can be <span class="gl" data-k="mnpi">insider trading</span> — a crime. → code names, information barriers, deal-linked ingestion.</p></div>
+          <div class="card"><div class="k">CONSTRAINT 2</div><h4>Supervision</h4><p>A qualified human must supervise the firm's activity. An unsupervised tool is a violation. → a human gates every external action; agents are capped + killable.</p></div>
+          <div class="card"><div class="k">CONSTRAINT 3</div><h4>Reconstructability</h4><p>Years later a regulator can demand the complete record, intact. → everything emits an append-only <span class="ent">AuditEvent</span>.</p></div>
+        </div>
+        <p>From those three, the <b>one invariant</b> that governs the whole codebase falls out automatically. This is the line the entire team designs against:</p>
+        <div class="invariant">
+          <div class="inv-box"><b>AI agents</b><small>draft · summarize · retrieve · propose</small></div>
+          <div class="inv-arrow">→</div>
+          <div class="inv-box humans"><b>Humans + deterministic code</b><small>decide · gate · approve · release</small></div>
+        </div>
+        <p>Anything that <i>decides access, approves, enforces a barrier, or picks the authoritative number</i> is plain, testable code or a human — <b>never an LLM</b>. Not because models are bad, but because a regulator will not accept "the model decided" as a control. When a design puts an agent in charge of a permission, an approval, a barrier, or a source-of-truth conflict, it's wrong — and that's a thing any reviewer on the team can name out loud. Hold this in your head and the architecture explains itself.</p>
+
+        <div class="check"><div class="ic">✓</div><div><b>What this handbook gives the team</b>
+          <ul><li>A shared picture of what a sell-side M&amp;A deal is, stage by stage</li><li>Why secrecy + supervision + recordkeeping shape every component we build</li><li>The entity model and the "agents never decide" boundary every PR is held to</li><li>What V1 builds, what we plug in, and what's still undecided — so scope conversations start from the same map</li></ul></div></div>
+      </section>
+
+      <!-- ===== 0b ROLE-BASED TRACKS ===== -->
+      <section id="tracks" style="scroll-margin-top:24px;padding-top:40px">
+        <h3 style="margin-top:0">Read it in your lane — four tracks</h3>
+        <p>The handbook reads start-to-finish, but most people don't start in the same place. Find your role, read those sections in that order first, then fill in the rest. New joiners: start with whichever track matches your first project; everyone benefits from <b>The domain (§1)</b> and <b>the invariant (§0 above)</b>.</p>
+        <div class="grid3">
+          <div class="card">
+            <div class="k">TRACK · NEW TO M&amp;A</div>
+            <h4>You've never touched a deal</h4>
+            <p><b>Who:</b> any engineer (any role) without a finance background. <b>Read:</b> §0 invariant → <b>§1 The domain</b> → <b>Glossary</b> → §3 Architecture. Goal: the vocabulary and why secrecy is a product constraint, before any code.</p>
+          </div>
+          <div class="card">
+            <div class="k">TRACK · GOVERNANCE CORE</div>
+            <h4>Backend / governance</h4>
+            <p><b>Who:</b> engineers building the deterministic core — <span class="ent">Permission</span>/<span class="ent">Barrier</span>, <span class="ent">Approval</span>/<span class="ent">Gate</span>, the screen, the orchestrator. <b>Read:</b> §0 → <b>§3 Architecture &amp; vocabulary</b> → §2 The rulebook (3110) → §5 Build vs. plug-in → §6 Undecided. This is where the moat lives.</p>
+          </div>
+          <div class="card">
+            <div class="k">TRACK · SURFACES</div>
+            <h4>Frontend / product surfaces</h4>
+            <p><b>Who:</b> engineers building the four surfaces — Deal Console, Comms + Pre-Send QC, Deal Inbox, Search/Ask. <b>Read:</b> §0 → <b>§4 What we're building</b> → §3 Architecture (the entity spine you render) → §1 The domain (the stages your UI walks). Keep the shell deliberately thin.</p>
+          </div>
+          <div class="card">
+            <div class="k">TRACK · INFRA / COMPLIANCE</div>
+            <h4>Infra · compliance · audit</h4>
+            <p><b>Who:</b> engineers on the audit store, runtime control, ingestion/connectors, recordkeeping. <b>Read:</b> §0 → <b>§2 The rulebook</b> (17a-4, 2210, two-party consent) → §3 (sealed envelope) → §5 Build vs. plug-in → §6 the legal go/no-gos. You own the parts a regulator inspects.</p>
+          </div>
+        </div>
+        <div class="note accent"><span class="lbl">Cross-role, non-negotiable</span>Whatever your track, two things are everyone's: <b>the invariant</b> (agents propose, humans + deterministic code decide) and <b>the glossary</b>. Disagreements about "can an agent do X?" resolve against the invariant; disagreements about a word resolve against the glossary. That's what keeps a multi-role team building one coherent system.</div>
+      </section>
+
+      <!-- ===== 0c HOW TO USE (AS A TEAM) ===== -->
+      <section style="scroll-margin-top:24px;padding-top:36px">
+        <h3 style="margin-top:0">How to use this handbook — as a team</h3>
+        <div class="grid3">
+          <div class="card"><div class="k">ONBOARD</div><h4>Send every new engineer here first</h4><p>Day one, before the repo: read §0 + your <a href="#tracks">track</a>. It replaces a week of "wait, what's a CIM / why can't the agent just send it?" with a shared starting line.</p></div>
+          <div class="card"><div class="k">REFERENCE</div><h4>Keep it open while you build</h4><p>It's a desk reference, not a one-time read. Every dotted term shows its definition on hover; the <b>concept→code map</b> (§3) and <b>build-vs-plug-in table</b> (§5) are made to be re-checked mid-PR.</p></div>
+          <div class="card"><div class="k">CHEAT-SHEETS</div><h4>Use the live tables in reviews</h4><p>The filterable <b>concept map</b>, the <b>invariant table</b> (§3), the <b>glossary</b>, and the <b>stage stepper</b> (§1) are the team's quick-reference surfaces — cite them in design docs and code review instead of re-deriving.</p></div>
+          <div class="card"><div class="k">CONTRIBUTE</div><h4>Keep it current</h4><p>This is a living doc. When a <a href="#risks">decision (Q1–Q12)</a> lands, a regulation shifts, or the repo moves past the prototype, update the handbook in the same PR — stale guidance is worse than none.</p></div>
+          <div class="card"><div class="k">SOURCE OF TRUTH</div><h4>Defer to the pack for depth</h4><p>This handbook is the orientation layer over the <code>blueprint-engineering</code> pack (files 00–08). Each section ends with a <span class="ent">→ Reference</span> pointer; when the handbook and a source doc disagree, the source doc wins — then fix the handbook.</p></div>
+          <div class="card"><div class="k">VERIFY</div><h4>Re-check before external use</h4><p>Regulatory claims are checked at the source and dated. A <span class="badge re">reconfirm</span> badge flags anything to re-verify before it leaves the team. Don't quote a rule to a banker straight from memory.</p></div>
+        </div>
+        <div class="note"><span class="lbl">In one line</span>Onboard new engineers with it, keep it open as a reference while you build, lean on its tables in reviews, and update it in the same PR that changes the truth underneath it.</div>
+      </section>
+
+      <!-- ===== 1 DOMAIN ===== -->
+      <section id="domain" class="sec">
+        <div class="sectag">01 · THE DOMAIN</div>
+        <h2>What investment banking is — and the one thing we build for</h2>
+        <p>An investment bank is an <b>advisor and intermediary</b> in big financial transactions. It gets <i>hired</i> to run a deal and is paid a fee. There are many kinds of IB work. <b>We build for exactly one:</b></p>
+        <div class="note accent"><span class="lbl">Our scope</span><span class="gl" data-k="sellside">Sell-side M&amp;A</span> — advising the <b>owner of a company that is being sold</b>, and running the entire sale: find buyers, run the auction, get to a signed deal. Not buy-side. Not IPOs. Not trading. One workflow: a live <span class="gl" data-k="mandate">mandate</span>. That narrowness is a feature.</div>
+        <p>Conductia is the <b>system of record + operating engine</b> for that live deal — the thing the team works <i>inside</i> all day. AI runs <i>within</i> the workflow. It is not a chatbot bolted onto a bank.</p>
+
+        <h3>The cast — who's on a deal, and who can say "send it"</h3>
+        <p>A deal team is a hierarchy, and <b>the hierarchy is the approval model.</b> Seniority = authority to release things to the outside world.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Role</th><th>What they do</th><th>In code</th></tr></thead>
+          <tbody>
+            <tr><td><b><span class="gl" data-k="md">MD</span></b></td><td>Owns the client + the deal. <b>Approves anything that leaves the firm.</b> Makes the pursue/decline call; signs the engagement letter.</td><td><span class="ent">role: md</span></td></tr>
+            <tr><td><b><span class="gl" data-k="vp">VP</span></b></td><td>Runs the deal day-to-day. <b>First reviewer</b> before work goes to the MD.</td><td><span class="ent">role: vp</span></td></tr>
+            <tr><td>Associate / Analyst</td><td>Do the work — models, documents, the data room, task tracking.</td><td><span class="ent">associate, analyst</span></td></tr>
+            <tr><td>Compliance</td><td>Polices secrecy + supervision: conflict checks, barriers, the archive. Can block.</td><td><span class="ent">compliance</span></td></tr>
+            <tr><td>Legal</td><td>Owns the contracts — NDAs, the definitive purchase agreement.</td><td><span class="ent">legal</span></td></tr>
+            <tr><td>Client / Counterparty</td><td>The seller (approves big steps); buyers + advisors, always behind a code name.</td><td><span class="ent">client, third-party</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="note"><span class="lbl">The default gate, encoded everywhere</span>For any external send or material release → <b>reviewer = VP, approver = MD</b>. Firm-configurable via <span class="ent">Policy</span>. The nine roles are an <b>enum on one <span class="ent">HumanActor</span></b>, not nine classes — "who can approve this?" is a deterministic check, never a judgment the software makes.</div>
+
+        <h3>The deal, stage by stage</h3>
+        <p>A sell-side deal moves through <b>five stages</b> — the five <span class="ent">Phase</span> values. Each ends at a <b>gate</b> before the next begins. Click through them:</p>
+        <div class="stepper" id="stepper" role="tablist" aria-label="Deal stages"></div>
+        <div class="stagepanel" id="stagepanel" role="tabpanel" tabindex="0" aria-live="polite"></div>
+
+        <h3>Secrecy is the product constraint</h3>
+        <p>This is the section that makes the rest of the architecture click. The reason AI is <i>hard</i> here — and why this product can exist at all — is one acronym.</p>
+        <ul class="clean">
+          <li><b><span class="gl" data-k="mnpi">MNPI</span></b> — secret info that could move a stock price ("Company X is being acquired"). Trading or tipping on it is insider trading, a federal crime. <b>Section 15(g) of the Exchange Act</b> <i>requires</i> firms to have written procedures to prevent its misuse — so the controls below are legally mandatory, not optional. → forces deal-linked ingestion, the <span class="gl" data-k="sealed">sealed envelope</span>, and <span class="ent">Permission</span>/<span class="ent">Barrier</span> on every operation.</li>
+          <li><b><span class="gl" data-k="barrier">Information barriers</span></b> ("Chinese walls") — internal walls keeping deal secrets from other teams. A central "Control Room" logs every deal; firms keep a <b>watch list</b> (observe) and a <b>restricted list</b> (block); adding someone is a logged "over-the-wall" step. → <span class="ent">Barrier</span> is a <b>deterministic query, never an agent</b>.</li>
+          <li><b><span class="gl" data-k="codename">Code names</span></b> — deals run as "Project Atlas" so identities never leak. The real identity sits behind an access-controlled key; every lookup is logged. → the code-name service redacts <i>before</i> any agent prompt is built.</li>
+        </ul>
+        <h3>How long all this takes — and why it matters to the build</h3>
+        <p>A well-run sell-side process typically runs <b>6–12 months</b> from engagement to close (often cited as 9–12): prep ~8–12 weeks, buyer outreach + first-round IOIs ~4–6 weeks, management meetings and second-round LOIs with 30–60-day exclusivity, then confirmatory diligence to signing ~8–12 weeks. Complex deals stretch to 18 months+. <b>The takeaway:</b> an agent touching deal artifacts holds <span class="gl" data-k="mnpi">MNPI</span> for <i>months</i> — so retention, access logging, and wall controls must persist for the whole lifecycle, not a single session.</p>
+        <details class="dd"><summary>How a real firm runs the wall — Control Room, watch vs. restricted, over-the-wall</summary><div class="body">
+          <p>The barriers in §0 aren't abstract; here's the live machinery the <span class="ent">Permission</span>/<span class="ent">Barrier</span> model is mirroring:</p>
+          <ul class="clean">
+            <li><b><span class="gl" data-k="controlroom">Control Room</span>.</b> A compliance group, separate from the deal teams, logs every MNPI-bearing deal in a control database.</li>
+            <li><b>Watch list vs. restricted list.</b> The <i>watch list</i> is a confidential surveillance list; the <i>restricted list</i> actively <b>blocks</b> firm and employee activity in named securities. Model both as authoritative, queryable allow/deny services agents must check — never self-adjudicate.</li>
+            <li><b><span class="gl" data-k="wallcross">Over-the-wall</span> (wall-crossing).</b> Bringing someone onto the deal is a formal, consented, logged, time-bounded step. An agent that moves information between a private-side (deal) context and a public-side context is <i>functionally an uncontrolled wall-crossing</i> — the sealed envelope + barriers are what prevent it.</li>
+          </ul>
+          <p class="ref">Statutory root: <b>Section 15(g)</b> of the Exchange Act (originally enacted as §15(f), renumbered by Dodd-Frank 2010) requires written procedures to prevent MNPI misuse; FINRA implemented "minimum standards" via NASD Notice 91-45. Per SEC OCIE's information-barriers report.</p>
+        </div></details>
+        <div class="ref">→ Full detail with citations: <code>06-investment-banking-for-engineers.md §1–4</code></div>
+      </section>
+
+      <!-- ===== 2 RULEBOOK ===== -->
+      <section id="rulebook" class="sec">
+        <div class="sectag">02 · THE RULEBOOK</div>
+        <h2>The regulations, in engineer terms</h2>
+        <p>Four bodies of rules shape the build. Here's each one, what it actually says, and the one line of "what it means for the build." <span class="badge ok">✓ verified</span> = checked against the FINRA/SEC source; <span class="badge re">reconfirm</span> = well-sourced but re-verify before external use.</p>
+
+        <h3><span class="gl" data-k="rule3110">FINRA Rule 3110</span> — Supervision <span class="badge ok">✓ verified</span></h3>
+        <ul class="clean">
+          <li><b>3110(a)</b> — firms must maintain a <b>system to supervise</b> each associated person, reasonably designed to achieve compliance.</li>
+          <li><b>3110(b)(1)</b> — that system must include <b>written supervisory procedures (<span class="gl" data-k="wsp">WSPs</span>)</b>.</li>
+          <li><b>3110(d)</b> — must include a <b>process to review securities transactions</b> to catch possible insider trading.</li>
+        </ul>
+        <div class="note accent"><span class="lbl">What it means for the build</span>The product <i>is</i> a supervision system. The always-on compliance ribbon, reviewer/approver on every <span class="ent">Task</span>, and the runtime caps on every agent <span class="ent">Run</span> (an uncapped agent is an <i>unsupervised actor</i>) all exist to satisfy 3110. WSPs live in <span class="ent">Policy</span>.</div>
+
+        <h3><span class="gl" data-k="rule2210">FINRA Rule 2210</span> — Communications <span class="badge ok">✓ verified</span></h3>
+        <ul class="clean">
+          <li>Sorts outbound comms into <b>correspondence</b> (≤25 retail / 30 days), <b>retail</b> (&gt;25 retail), and <b>institutional</b> (only to institutional investors).</li>
+          <li><b>2210(b)(1)(A)</b> — a registered principal must <b>approve each <i>retail</i> communication before use</b>.</li>
+          <li><b>2210(d)(1)</b> — content must be <b>fair, balanced, not misleading</b>, with a sound basis to evaluate. <span class="badge ok">✓ verified</span></li>
+        </ul>
+        <div class="note warn"><span class="lbl">⚠ Precision nuance — don't mis-cite this</span>2210's <i>hard pre-approval</i> applies to <b>retail</b> communications. <b>Most sell-side M&amp;A counterparties are <span class="gl" data-k="institutional">institutional</span></b> (companies, PE sponsors, advisors), so the bulk of deal comms are <b>institutional communications</b> — which get <b>relief from <i>pre</i>-approval</b> (2210(b)(1)(D)), <b>not</b> a blanket exemption: supervision and recordkeeping (the approving principal, dates of first/last use) still apply. One trap — a comm <b>can't</b> be treated as institutional if you have reason to believe it'll be forwarded to a retail investor (live risk when a teaser reaches an individual principal of a target). The product's "MD approves every send" gate is <b>firm policy + 3110 supervision</b>, a safe default that covers the occasional individual buyer too. So don't tell a banker "2210 <i>requires</i> the MD to approve this email to a PE fund." Good firm policy does; the rule's hard pre-approval is a retail trigger.</div>
+        <div class="note accent"><span class="lbl">What it means for the build</span><b>Pre-Send QC</b> (the deterministic screen) operationalizes 2210's content + retention discipline — claims-sourced, figures-match, code-name-intact, approval-present — <i>with no LLM in the verdict</i>. Every send is retained as a <span class="ent">Communication</span> + <span class="ent">AuditEvent</span>.</div>
+
+        <h3><span class="gl" data-k="notice2409">FINRA Notice 24-09</span> — AI gets no grace period <span class="badge ok">✓ verified</span></h3>
+        <p>The most directly relevant guidance for this team. <b>FINRA Regulatory Notice 24-09 (June 2024)</b> states that <b>all existing FINRA rules and the federal securities laws apply to generative AI and LLMs</b> — technology-neutral, firm-built or third-party. It adds <b>no new requirements</b>, but expressly flags supervision (<span class="gl" data-k="rule3110">Rule 3110</span>), recordkeeping, Reg BI, communications (<span class="gl" data-k="rule2210">Rule 2210</span> — AI-generated content is still firm communication), customer-information protection, and model accuracy / "hallucination" risk.</p>
+        <div class="note accent"><span class="lbl">What it means for the build</span>Deploying an AI agent at a broker-dealer creates <b>no regulatory grace period</b>. Supervisory review, books-and-records capture of AI inputs/outputs (every <span class="ent">ModelCall</span>), and 2210 content standards attach <b>from day one</b>. This is <i>why</i> the invariant exists — it isn't gold-plating, it's the rulebook applied to agents.</div>
+
+        <h3><span class="gl" data-k="rule17a4">SEC Rule 17a-4</span> — Recordkeeping <span class="badge ok">✓ verified</span></h3>
+        <p>The broker-dealer <b>recordkeeping/retention</b> rule: records (incl. communications) must be preserved, tamper-evident, retained for years, and <b>promptly producible</b> to regulators. Communications: ≥3 years (17a-4(b)(4)); FINRA Rule 4511 sets a 6-year default otherwise.</p>
+        <div class="note warn"><span class="lbl">⚠ Correction to carry back to the team</span>The blueprint says 17a-4 <i>requires</i> <b>WORM</b> (write-once-read-many) storage. <b>That changed.</b> The SEC's <b>Oct 12, 2022 amendment (Release 34-96034)</b> kept WORM as one option and <b>added an "audit-trail alternative"</b>: a system that preserves records so an original can be <i>recreated if modified or deleted</i> (time-stamped, capturing who changed what) satisfies 17a-4 <b>without</b> WORM. We comply by meeting <b>EITHER</b> WORM <b>OR</b> the audit-trail requirement.</div>
+        <div class="note accent"><span class="lbl">Why this is good news</span>Conductia's append-only <span class="ent">AuditEvent</span> event-sourcing model can <b>itself be the compliance mechanism</b> under the audit-trail option — you may not strictly need certified WORM media (e.g. S3 Object Lock). This shifts the audit store from "buy WORM" toward "build a rigorous audit trail." Still validate the final design with compliance counsel ("permits recreation" is a real bar).</div>
+
+        <h3>Two-party-consent recording — a hard legal wall</h3>
+        <p>Some U.S. states require <b>everyone on a call to consent</b> before recording. Recording without it is an illegal wiretap. → In V1, <b>capture email + meeting notes only</b>; live call recording is gated on a per-jurisdiction consent flow + legal sign-off (decision <b>Q7</b>). Don't ship "record every call" as just another connector.</p>
+        <div class="ref">→ Full citations: <code>06-investment-banking-for-engineers.md §5 &amp; §9</code></div>
+      </section>
+
+      <!-- ===== 3 ARCHITECTURE ===== -->
+      <section id="architecture" class="sec">
+        <div class="sectag">03 · ARCHITECTURE &amp; VOCABULARY</div>
+        <h2>The entity model and the one boundary that matters</h2>
+        <p>Everything hangs off one root, <span class="ent">Deal</span>. "Mandate / project / transaction" are display aliases — <b>never separate tables.</b> Here's the spine:</p>
+        <div class="note" style="font-family:var(--mono);font-size:.82rem;white-space:pre;overflow-x:auto;line-height:1.5">Deal ──&lt; Phase ──&lt; Task ──(mode≠human)── Run ──&lt; ModelCall
+ ├──&lt; Communication ──spawns──&gt; Task ──cites──&gt; Artifact
+ ├──&lt; Counterparty   (always code-named)
+ └──&lt; AuditEvent     (append-only; everything emits it)
+
+Permission / Barrier · Approval / Gate · Policy  →  deterministic backend, NOT agents</div>
+
+        <h3>The schema, one level down — fields a backend engineer needs</h3>
+        <p>The spine above shows the relationships; here's the <b>shape of each row</b>. Not full DDL — enough to see the columns that carry governance. Two fields do the heavy lifting: the <b>access-controlled <span class="ent">realIdentityKeyRef</span></b> (the code-name perimeter) and the <b>append-only <span class="ent">AuditEvent</span></b> (the 17a-4 substrate).</p>
+        <div class="note" style="font-family:var(--mono);font-size:.8rem;white-space:pre;overflow-x:auto;line-height:1.5">Deal {                         // root — "mandate/project/transaction" are display aliases only
+  id, codeName,                //   "Project Atlas" — what shows everywhere
+  realIdentityKeyRef  &lt;-LOCKED //   ref into access-controlled key store; every deref -&gt; AuditEvent
+  owner-&gt;HumanActor(md), team-&gt;Actor[],
+  currentPhase, status, probability, governanceConfig-&gt;Policy, createdAt
+}
+Phase   { id, dealId, kind: origination|preparation|marketing|diligence|closing,
+          state: not-started|active|gated|complete|skipped, gate-&gt;Gate, enteredAt }
+Task    { id, dealId, phaseId, title,
+          mode: human|agent|both, owner-&gt;Actor, reviewer-&gt;HumanActor, approver-&gt;HumanActor,
+          dueDate, dependsOn-&gt;Task[], riskTier: reversible|sensitive|irreversible,
+          evidence-&gt;(Artifact|AuditEvent)[], standardValue (STV, locked at onboarding), state }
+
+Actor (abstract)
+ +- HumanActor { role: md|vp|associate|analyst|compliance|legal|admin|client|third-party,
+ |               permissions-&gt;Permission[], approvalAuthority }   // 9 roles = ONE enum, not 9 tables
+ +- AgentActor { kind: intelibank|third-party|expert-panel,
+                 capabilities, allowedTools, forbiddenTools, scopeCredentials, registryRef }
+
+Run       { id, taskId, agentActor, stepCount, tokenBudget, stopConditions,
+            status, killSwitchState, modelCalls-&gt;ModelCall[] }   // created when Task.mode != human
+ModelCall { id, runId, model, tool, promptRef, outputRef, sources,
+            tokens, cost, approvalRef, disposition, timestamp }  // the recordkeeping atom
+
+Artifact      { id, dealId, type: deck|cim|teaser|model|memo|draft|file,
+                version, authority (precedence rank), source, sensitivity,
+                permissionTags, approvedState, storageRef }
+Communication { id, dealId, channel: email|call|meeting|message, direction,
+                participants (code-named), summary, transcriptRef,
+                spawnedTasks-&gt;Task[], citedArtifacts-&gt;Artifact[], preservedCopyRef }
+Counterparty  { id, dealId, codeName, realIdentityKeyRef &lt;-LOCKED, kind, barrierStatus }
+
+— governance (deterministic backend, never an AgentActor) —
+Approval     { id, subjectRef-&gt;(Task|Phase|Communication|Artifact|access-change),
+               approver-&gt;HumanActor, decision, rationale, timestamp, evidenceRef }
+Gate         { rule requiring an Approval before send / release / advance / irreversible act }
+Permission/Barrier { id, subjectActor, scope(role/deal/client/sensitivity),
+               barrierKind: deal-wall|restricted|watch|clean-team|code-name, wallCrossingLog-&gt;AuditEvent[] }
+Policy       { firm config: approverChains, retention, disclosureLists, routingDefaults }
+
+— the record substrate —
+AuditEvent  APPEND-ONLY { id, dealId, actor, verb, subjectRef, data,
+               model?, tool?, approvalRef?, timestamp }   // emitted by EVERY entity above</div>
+        <div class="note accent"><span class="lbl">The two load-bearing fields</span><b><span class="ent">realIdentityKeyRef</span></b> is never a plaintext name on the row — it's a reference into a separately access-controlled key store. The real identity is resolved only on an authorized deref, and <b>every deref writes an <span class="ent">AuditEvent</span></b>. That is the code-name perimeter in one column. <b><span class="ent">AuditEvent</span></b> is the one table where <code>UPDATE</code> and <code>DELETE</code> must be physically impossible (not just discouraged) — make it append-only at the database grant level, because it is the record a regulator reconstructs the deal from years later.</div>
+        <details class="dd"><summary>Why there's no <code>Mandate</code>, <code>Job</code>, or stored-<code>Run</code> table</summary><div class="body">
+          <ul class="clean">
+            <li><b>No <span class="ent">Mandate</span>/<span class="ent">Project</span> table.</b> "Mandate" is the engaged <i>state</i> of a <span class="ent">Deal</span>; "project"/"transaction" are display synonyms. One root, aliases in the UI.</li>
+            <li><b><span class="ent">Job</span> is not stored.</b> It's the typed <i>dispatch envelope</i> (next) — the call shape that produces a <span class="ent">Run</span>. The <span class="ent">Run</span> + its <span class="ent">ModelCall</span>s are what persist.</li>
+            <li><b><span class="ent">Approval</span> is polymorphic.</b> One table; <code>subjectRef</code> points at a <span class="ent">Task</span>, <span class="ent">Phase</span>, <span class="ent">Communication</span>, <span class="ent">Artifact</span>, or an access-change — so the gate engine has one code path.</li>
+            <li><b><span class="ent">Artifact.authority</span> is a rank, not an entity.</b> "Model of record" is the precedence resolver, not a separate "source of truth" table.</li>
+          </ul>
+        </div></details>
+        <div class="ref">→ Field-level source: <code>01-glossary-and-entities.md §B</code></div>
+
+        <h3>The invariant, restated for code</h3>
+        <p>This is the single most important line in the system. Think <b>CQRS</b>: agents are pure producers on the query/propose side; deterministic code + humans own the command/commit side.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Capability</th><th>Modeled as</th><th>NOT</th></tr></thead>
+          <tbody>
+            <tr><td>"Can this actor see/send this?"</td><td><span class="ent">Permission</span>/<span class="ent">Barrier</span> query</td><td>an agent deciding access</td></tr>
+            <tr><td>"Does this need sign-off?"</td><td><span class="ent">Gate</span> rule + <span class="ent">Approval</span> event</td><td>an agent "approving"</td></tr>
+            <tr><td>"Which number is right?"</td><td>precedence function over <span class="ent">Artifact.authority</span></td><td>an agent adjudicating</td></tr>
+            <tr><td>Pre-send checks</td><td>deterministic compliance screen</td><td>an LLM "reviewing"</td></tr>
+            <tr><td>Runtime caps (steps/tokens/kill)</td><td><span class="ent">Run</span> governance</td><td>agent self-policing</td></tr>
+          </tbody>
+        </table></div>
+        <div class="note accent"><span class="lbl">The sealed envelope</span>An <span class="ent">AgentActor</span> never touches raw firm data. It receives only a <b>permission-filtered, code-name-redacted context envelope</b>, and returns a proposal back <i>through the screen</i>. Barriers/MNPI are enforced <b>before</b> the model sees anything — so swapping models changes nothing about the data boundary. (Think: tokenize the card number before it ever reaches the processor's logs.)</div>
+
+        <h3>The Job contract — the typed envelope that makes a Run governable</h3>
+        <p>Every non-human <span class="ent">Task</span> is dispatched as a <b><span class="ent">Job</span></b>: a fixed, logged shape declared <i>before</i> the agent runs. It's the single most important data structure in the agent layer — the difference between "an agent we hope behaves" and "an agent that is supervised by construction" (FINRA 3110).</p>
+        <div class="note" style="font-family:var(--mono);font-size:.8rem;white-space:pre;overflow-x:auto;line-height:1.5">Job {
+  dealId, taskId, phaseId,
+  mode,                  // agent | both
+  context,               // &lt;- the SEALED ENVELOPE: permission-scoped, code-name-redacted
+  allowedTools, forbiddenTools, scopeCredentials,
+  modelPolicy,           // sensitivity / cost / latency / quality -&gt; the router
+  budget {               // &lt;- declared up front, not discovered after
+    maxSteps, maxTokens, maxCost
+  },
+  stopConditions,        // done | failure | escalation
+  reviewer, approver, riskTier,
+  expectedOutputs,       // Artifact / Communication types this Job may produce
+  evidenceRequirements   // what must be cited / logged to satisfy the Gate
+}
+                         // executing a Job -&gt; a Run, which emits ModelCalls and AuditEvents</div>
+        <div class="note accent"><span class="lbl">Why declaring budget + tools + stop-conditions up front is the whole game</span>An agent with no declared ceiling is, in regulatory terms, an <b>unsupervised actor</b> — and an unsupervised actor is a 3110 violation. By fixing <code>budget</code>, <code>allowedTools</code>, and <code>stopConditions</code> in the envelope <i>before</i> dispatch, the runtime can enforce caps, kill a runaway, and prove afterward exactly what the agent was permitted to do. Supervision becomes a property of the <span class="ent">Run</span>'s inputs, not a hope about its behavior.</div>
+        <div class="ref">→ Source: <code>04-engineering-handbook.md §2.1</code> · runtime enforcement: §14 / Epic X-5</div>
+
+        <h3>The concept → code map</h3>
+        <p>The spine of the whole training: each banking idea, the requirement it forces, and what breaks if we get it wrong. <b>Filter it:</b></p>
+        <div class="filterbar">
+          <input id="mapFilter" placeholder="Filter concepts… (try 'MNPI', 'figure', 'send')" aria-label="Filter the concept map">
+          <span class="filtercount" id="mapCount"></span>
+        </div>
+        <div class="tablewrap"><table id="mapTable">
+          <thead><tr><th>Concept</th><th>What it forces in the software</th><th>If you get it wrong</th></tr></thead>
+          <tbody id="mapBody"></tbody>
+        </table></div>
+
+        <details class="dd"><summary>Eight mental models (the analogies that make it stick)</summary><div class="body">
+          <ul class="clean">
+            <li><b>Information barriers ≈ row-level security / multi-tenant isolation.</b> A deal is a tenant; MNPI is tenant data; a clean team is a nested tenant. Enforce in the data layer, never the UI.</li>
+            <li><b>Code names ≈ tokenization / PII redaction at the boundary.</b> Redact before anything reaches a model or a log. Every detokenization is logged.</li>
+            <li><b>Audit trail ≈ append-only event log / event sourcing — with regulatory teeth.</b> Make <code>UPDATE</code>/<code>DELETE</code> on audit rows impossible, not discouraged.</li>
+            <li><b>"Agents never decide" ≈ CQRS / pure functions vs. side-effecting commands.</b> When someone's tempted to "let the agent just approve it" — that's the bug.</li>
+            <li><b>Human gate on irreversible actions ≈ the confirm step before <code>DROP TABLE</code> / a force-push.</b> The dangerous bug is mis-classifying an irreversible task as reversible.</li>
+            <li><b>Model of record ≈ single source of truth + a deterministic resolver.</b> An unsourced figure blocks the send like a failing referential-integrity check.</li>
+            <li><b>Pre-Send QC ≈ a deterministic CI gate / pre-commit hook on the firm boundary.</b> The agent <i>cleans</i> the draft; the <i>gate</i> is code; the <i>merge</i> (release) is a human.</li>
+            <li><b>Runtime control ≈ resource limits / circuit breakers / a sandbox with a kill switch.</b> An uncapped agent is an unsupervised one (3110 again).</li>
+          </ul>
+        </div></details>
+        <div class="ref">→ Reference: <code>01-glossary-and-entities.md</code> (entities) · <code>04-engineering-handbook.md §0–2</code> (orchestration)</div>
+      </section>
+
+      <!-- ===== 4 BUILDING ===== -->
+      <section id="building" class="sec">
+        <div class="sectag">04 · WHAT WE'RE BUILDING</div>
+        <h2>V1 scope, the surfaces, and where the code lives</h2>
+        <p>V1 = a <b>governed spine</b>: four surfaces over a deterministic governance core. Build the floor first, the agents last.</p>
+        <div class="grid3">
+          <div class="card"><div class="k">SURFACE</div><h4>Deal Console</h4><p>The hero. Read view over <span class="ent">Deal</span>/<span class="ent">Phase</span>/<span class="ent">Task</span>/<span class="ent">Approval</span>.</p></div>
+          <div class="card"><div class="k">SURFACE</div><h4>Comms + Pre-Send QC</h4><p>The compliance floor. Outbound → screen → <span class="ent">Approval</span>.</p></div>
+          <div class="card"><div class="k">SURFACE</div><h4>Deal Inbox</h4><p>The daily driver. Action / Read / Waiting queue.</p></div>
+          <div class="card"><div class="k">SURFACE</div><h4>Search / Ask</h4><p>Permission-aware, cited answers over the deal corpus.</p></div>
+          <div class="card"><div class="k">CORE</div><h4>Governance primitives</h4><p>Permissions + code-names · approvals/gates · audit log · runtime control. <b>Deterministic, not AI.</b></p></div>
+          <div class="card"><div class="k">AGENT</div><h4>Compliance Comms (PA-1)</h4><p>The one V1-aligned agent: capture + draft-clean over the Pre-Send QC core.</p></div>
+        </div>
+        <div class="note"><span class="lbl">Seams, not full builds</span>The <b>Pitch/Mandate agent (PA-2)</b> and <b>CIM Creator (PA-3)</b> are <i>not</i> built in V1 — §9 says V1 "does not author CIMs." V1 builds only their <b>seam</b> (the slot + job contract + sign-off gate) so they drop in later. Whether they enter V1 at all is decision <b>Q1</b> (see next section).</div>
+
+        <h3>Build order (one screen)</h3>
+        <ol class="clean">
+          <li><b>Pour the floor:</b> choose the datastore (Supabase/Postgres) + land the entity model + design the audit store. <i>This is sprint 0.</i></li>
+          <li>Governance primitives → deal-linked ingestion → task plan → Deal Console.</li>
+          <li>The compliance floor: screen + Pre-Send QC + capture = the Compliance Comms agent.</li>
+          <li>Search/Ask + Weekly Update. Then runtime control + router instrumentation under every <span class="ent">Run</span>.</li>
+          <li>Leave PA-2 / PA-3 as built seams pending Q1.</li>
+        </ol>
+
+        <h3>Where it lives in the repo today</h3>
+        <div class="note warn"><span class="lbl">⚠ Honest status</span>The repo today is a <b>Next.js front-end + mock API</b>. The governed backend (orchestrator, agents, runtime, audit store) is <b>greenfield — not built yet.</b> The seven "journeys" are UI shells over fixtures. Re-baseline the timeline from "build a governed backend," not "wire up the prototype."</div>
+        <details class="tree"><summary>src/ — the prototype (what exists)</summary>
+          <ul>
+            <li>📁 app/ <em>— Next.js App Router; acquirer-analysis demo</em></li>
+            <li>📁 components/shell/ <span class="f">AppShell, CommandBar, StageStatus, MandateOnboarding</span> <em>— workflow shell seeds</em></li>
+            <li>📁 components/compliance/ <span class="f">ComplianceRibbon, ScreeningOverlay</span> <em>— the compliance-screen UI seeds</em></li>
+            <li>📁 components/mandate/ <span class="f">PitchCta, VitalsStrip</span> <em>— origination/pitch seeds</em></li>
+            <li>📄 lib/compliance/<span class="f">screen.ts</span> <em>— ⭐ the deterministic Pre-Send QC seed (productionize this)</em></li>
+            <li>📄 lib/api/<span class="f">index.ts → mock.ts</span> <em>— the swap-point for the real backend</em></li>
+            <li>📁 tests/ <em>— vitest: compliance, screening-overlay, golden-path</em></li>
+          </ul>
+        </details>
+        <h3>Sprint 0 — pour the floor before any feature work</h3>
+        <p>The build order says "start" at the governance primitives — but there's one step <i>before</i> step 1 that the prototype hides: <b>nothing persists yet.</b> The whole app today runs on an in-memory mock. Resolve this first, or every governance primitive has nowhere to live.</p>
+        <div class="note" style="font-family:var(--mono);font-size:.8rem;white-space:pre;overflow-x:auto;line-height:1.5">// the swap-point — where the real backend goes in
+src/lib/api/index.ts   getApi() --&gt; new MockConductiaAPI()   // &lt;- in-memory, fixtures only
+                                       |
+                                       v  (swap to)
+                                 new SupabaseConductiaAPI() // &lt;- real persistence, same interface
+src/lib/api/types.ts   -- the entity contract both sides implement (Deal/Phase/Task/Approval/...)</div>
+        <div class="note warn"><span class="lbl">⚠ The one place the plan says "start" but the floor isn't poured</span>The mock (<code>MockConductiaAPI</code> behind <code>getApi()</code>) is a clean seam — the interface is right, the implementation is fake. But <b>no datastore, schema, or migration path is chosen.</b> The step-1 primitives (<span class="ent">Approval</span>, <span class="ent">Permission</span>, append-only <span class="ent">AuditEvent</span>) all need real persistence a mock can't fake. Re-baseline the timeline from here.</div>
+        <h4>The sprint-0 checklist</h4>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Step</th><th>Decision / deliverable</th><th>Why it blocks features</th></tr></thead>
+          <tbody>
+            <tr><td><b>1. Datastore</b></td><td>Confirm <b>Supabase / Postgres</b> for this repo; provision it.</td><td>The audit + governance tables need ACID + row-level security; an in-memory mock offers neither.</td></tr>
+            <tr><td><b>2. Land the contract</b></td><td>Write the <code>01</code> entity model into <code>docs/03-engineering/data-contracts.md</code> as the canonical interface both <code>lib/api</code> impls satisfy.</td><td><code>03</code>'s stories carry no data-contract acceptance criteria — those get added <i>here</i>.</td></tr>
+            <tr><td><b>3. Append-only audit</b></td><td>Make <span class="ent">AuditEvent</span> physically immutable — revoke <code>UPDATE</code>/<code>DELETE</code> at the grant level (insert-only role + trigger guard).</td><td>17a-4 needs a record that "permits recreation if modified." Discouraging mutation isn't enough.</td></tr>
+            <tr><td><b>4. Legal hold</b></td><td>Design the freeze: a deal's <span class="ent">AuditEvent</span> / <span class="ent">ModelCall</span> / <span class="ent">Approval</span> / <span class="ent">Communication</span> set can be locked from purge/expiry.</td><td>A regulator can demand the intact record years later; retention expiry must be overridable per deal.</td></tr>
+            <tr><td><b>5. Migrate off the mock</b></td><td>Sequence the cutover from <code>MockConductiaAPI</code> behind the unchanged <code>getApi()</code> seam.</td><td>Keeps the four UI surfaces working on real data without a rewrite — the interface already exists.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="note accent"><span class="lbl">Good news on the audit store</span>Because the SEC's Oct-2022 amendment lets you satisfy 17a-4 with <b>WORM <i>or</i> a complete audit-trail system</b>, the append-only <span class="ent">AuditEvent</span> model can <i>itself</i> be the compliance mechanism — you likely don't need certified WORM media. Sprint 0 leans <b>build a rigorous audit trail</b>, not <b>buy WORM</b>. (Validate with compliance counsel: "permits recreation" is a real bar.)</div>
+
+        <h3>Testing strategy — test the gates like a safety system</h3>
+        <p>A corollary of the build-vs-plug-in rule: <b>anything you'd build because a FINRA examiner could request it, you test like a safety system.</b> The deterministic governance core isn't "high coverage would be nice" — it's the part where a silent bug ships a leak or an unapproved send. Test priority follows blast radius, not code volume.</p>
+        <div class="grid3">
+          <div class="card"><div class="k">SAFETY-CRITICAL</div><h4>Pre-Send QC screen</h4><p>The <code>lib/compliance/screen.ts</code> core. Unit + <b>golden tests</b>; invariant: <b>100% of covered sends pass QC before release</b>.</p></div>
+          <div class="card"><div class="k">SAFETY-CRITICAL</div><h4>Permission / Barrier</h4><p><b>Deny-by-default</b> tests: the absence of a grant must block, and a mis-tag must fail closed, never open.</p></div>
+          <div class="card"><div class="k">SAFETY-CRITICAL</div><h4>Approval / Gate</h4><p>No release without a logged <span class="ent">Approval</span>; irreversible <span class="ent">Task</span>s cannot complete agent-only.</p></div>
+        </div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Subsystem</th><th>Test type</th><th>The invariant under test</th></tr></thead>
+          <tbody>
+            <tr><td><b>Pre-Send QC</b></td><td>Unit + <b>golden</b></td><td>Same draft always yields the same pass/block + reasons; <b>no LLM in the verdict</b>. 100% of covered sends pass.</td></tr>
+            <tr><td><b>Figure / code-name checks</b></td><td>Golden + property</td><td>An unsourced figure <b>blocks</b>; a leaked real identity <b>blocks</b>; a figure matching its <span class="ent">Artifact.authority</span> source <b>passes</b>.</td></tr>
+            <tr><td><b>Permission / Barrier</b></td><td>Unit, <b>deny-by-default</b></td><td>No matching grant ⇒ deny. "Show-exists-but-withhold-contents" honored. A mis-tag fails closed (sev-1 class).</td></tr>
+            <tr><td><b>Approval / Gate</b></td><td>Unit + integration</td><td>External send / material release is impossible without a logged <span class="ent">Approval</span> (default VP→MD).</td></tr>
+            <tr><td><b>Sealed-envelope retrieval</b></td><td>Integration (adversarial)</td><td>Raw firm data / cross-wall MNPI <b>never</b> reaches the model context — an SPOF; test as first-class.</td></tr>
+            <tr><td><b><span class="ent">Run</span> runtime control</b></td><td>Unit + integration</td><td>Budgets enforced; loop detected; kill switch halts; an agent can never send externally.</td></tr>
+            <tr><td><b>End-to-end</b></td><td><b>Golden-path</b></td><td>The happy deal flow (the existing <code>golden-path</code> seed) stays green as the backend lands.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="note accent"><span class="lbl">Start from the seeds you already have</span>The repo's <code>tests/</code> already carries <b>vitest</b> suites for <b>compliance</b>, <b>screening-overlay</b>, and <b>golden-path</b>. Productionizing <code>screen.ts</code> means <b>expanding the <code>compliance</code> golden set</b> until every covered send class has a frozen pass/block case — that suite <i>is</i> your 100%-pass-QC proof, and it's the artifact you show an examiner.</div>
+
+        <h3>The first issues — four tickets that build the spine</h3>
+        <p>Don't start at the agents. Build order: floor → primitives → console → compliance floor. These four starter tickets map onto the GitHub issues in <code>03-deal-stages-issues.md</code> and together stand up a governed <span class="ent">Deal</span> end-to-end. Each lists the entities/files it touches and its risk tier.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Ticket</th><th>What you build</th><th>Touches</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td><b>Epic X-2</b><br><small>permissions + code-name</small></td><td>The MNPI perimeter <b>first</b> — RBAC over the 9-role enum + the code-name service, so <span class="ent">realIdentityKeyRef</span> resolution is access-controlled and logged before any artifact lands.</td><td><span class="ent">Permission</span>/<span class="ent">Barrier</span>, <span class="ent">HumanActor.role</span>, <span class="ent">Counterparty.codeName</span> · <code>lib/api/types.ts</code></td><td>gov:permissions</td></tr>
+            <tr><td><b>Issue 1.1</b><br><small>deal standup</small></td><td>"As an MD, create a <span class="ent">Deal</span> in minutes": code name, owner, team, <span class="ent">Policy</span> defaults; generates <span class="ent">Deal</span> + <span class="ent">Counterparty</span> shells + initial <span class="ent">Permission</span> grants. Every key access writes an <span class="ent">AuditEvent</span>.</td><td><span class="ent">Deal</span>, <span class="ent">Counterparty</span>, <span class="ent">Permission</span> · <code>shell/MandateOnboarding</code></td><td><span class="badge re">sensitive</span> · MD</td></tr>
+            <tr><td><b>Issue 2.1</b><br><small>live task plan</small></td><td>Produce + maintain the live <span class="ent">Task</span> plan (mode, owner, reviewer, approver, due, deps, risk tier, evidence). Owner edits; every change writes an <span class="ent">AuditEvent</span>; renders on Console + Inbox.</td><td><span class="ent">Task</span>, <span class="ent">Phase</span>, <span class="ent">AuditEvent</span> · <code>shell/StageStatus</code></td><td><span class="badge ok">reversible</span></td></tr>
+            <tr><td><b>Epic X-1 / Issue 3.2</b><br><small>Pre-Send QC ⭐</small></td><td>Productionize the deterministic screen — recipient · attachment · code name · figures vs <span class="ent">Artifact.authority</span> · claims-sourced · metadata · required <span class="ent">Approval</span>. Block on any miss; release only on a logged <span class="ent">Approval</span> (VP→MD). <b>No LLM in the verdict.</b></td><td><span class="ent">Communication</span>, <span class="ent">Approval</span>, <span class="ent">Artifact.authority</span> · <code>lib/compliance/screen.ts</code> ⭐</td><td><span class="badge re">irreversible</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="note accent"><span class="lbl">The order is the point</span>X-2 before 1.1 (the perimeter must exist before a deal can hold a real identity), 1.1 before 2.1 (a task plan needs a deal to hang off), and X-1/3.2 last of the four (the floor needs <span class="ent">Communication</span>, <span class="ent">Approval</span>, and <span class="ent">Artifact.authority</span> already persisting). Ship these and you have a governed <span class="ent">Deal</span> that can stand up, plan work, and block an unapproved send. Leave <b>PA-2 / PA-3</b> as <b>seams</b> pending Q1.</div>
+        <div class="ref">→ Reference: <code>00-structure-map.md</code> (scope) · <code>02</code> (roadmap) · <code>03-deal-stages-issues.md</code> (the first issues) · <code>04 §4</code> (repo)</div>
+      </section>
+
+      <!-- ===== W WORKED EXAMPLES ===== -->
+      <section id="examples" class="sec">
+        <div class="sectag">W · WORKED EXAMPLES</div>
+        <h2>Three traces through the machine</h2>
+        <p>Read the architecture once, then watch it run. Each walkthrough below follows one real scenario <b>step by step</b> through the canonical entities — <span class="ent">Deal</span>, <span class="ent">Communication</span>, <span class="ent">Task</span>, <span class="ent">Run</span>, <span class="ent">ModelCall</span>, <span class="ent">Artifact</span>, the <span class="gl" data-k="sealed">sealed envelope</span>, the deterministic <span class="ent">Gate</span>, and the human <span class="ent">Approval</span> — marking <b>who acts at every step</b> and <b>where an <span class="ent">AuditEvent</span> is written</b>. The point of all three is the same one line: agents propose; deterministic code and humans decide, gate, and release.</p>
+
+        <div class="invariant" style="margin-top:18px">
+          <div class="inv-box"><b>AI agents</b><small>draft · summarize · retrieve · propose</small></div>
+          <div class="inv-arrow">→</div>
+          <div class="inv-box humans"><b>Humans + deterministic code</b><small>decide · gate · approve · release</small></div>
+        </div>
+
+        <div class="note accent"><span class="lbl">How to read the badges</span>Every step is tagged with who performs it. Watch the colour change at the gate and at the sign-off — that colour change <i>is</i> the invariant.</div>
+        <div class="who-legend">
+          <span class="who agent">Agent · proposes</span> sealed-envelope draft / summary, never a decision &nbsp;·&nbsp;
+          <span class="who code">Deterministic code · gates</span> plain, testable, no LLM in the verdict &nbsp;·&nbsp;
+          <span class="who human">Human · decides / approves</span> the only actor who can release
+        </div>
+
+        <h3>1 · Deal standup — an MD opens <span class="ent">Project&nbsp;Atlas</span></h3>
+        <p>An MD has just won the sell-side mandate to sell a software company. Before a single document lands, the MNPI perimeter has to exist. This is <a href="#building"><code>Issue&nbsp;1.1</code></a> — mode <b>human</b>, agent pre-fills defaults, approver <b>MD</b>, risk <b>sensitive</b>. Nothing here is an LLM judgment: creating a deal is deterministic setup plus a human sign-off.</p>
+        <div class="trace-scope">
+          <span>surface: Deal Console</span><span>Deal</span><span>Counterparty</span><span>Permission/Barrier</span><span>Policy</span><span>AuditEvent</span>
+        </div>
+        <div class="trace">
+          <div class="trace-step is-human">
+            <div class="trace-num">1</div>
+            <div class="trace-body">
+              <h5>MD starts a new deal <span class="who human">Human · decides</span></h5>
+              <p>On the Deal Console the MD enters the code name <b>“Project Atlas”</b>, names the team from the firm directory, and picks a governance bundle (approver chain, retention, default barriers) from <span class="ent">Policy</span> defaults. The MD — not the software — chose to pursue and owns the deal.</p>
+            </div>
+          </div>
+          <div class="trace-step is-agent">
+            <div class="trace-num">2</div>
+            <div class="trace-body">
+              <h5>Agent pre-fills the defaults <span class="who agent">Agent · proposes</span></h5>
+              <p>The origination agent <i>suggests</i> a team roster, a starter task plan, and a buyer hypothesis as editable defaults. It proposes; it cannot create the deal, grant access, or set a barrier. Every value lands in a field the MD can override.</p>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">3</div>
+            <div class="trace-body">
+              <h5>Deterministic setup creates the perimeter <span class="who code">Deterministic code · executes</span></h5>
+              <p>On submit, plain backend code — never an agent — writes the <span class="ent">Deal</span> root (<code>currentPhase = origination</code>), the seller and buyer <span class="ent">Counterparty</span> shells (each with a <code>codeName</code>, real identity sealed behind <code>realIdentityKeyRef</code>), a <b>code-name key entry</b>, and the first <span class="ent">Permission</span> grants pulled from the firm directory. The MNPI <span class="gl" data-k="barrier">barrier</span> (<code>barrierKind: deal-wall</code>) now scopes every future read, write, and send.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>deal.created</code> · verb:<code>counterparty.shelled</code> · verb:<code>permission.granted</code> (one per actor)</span>
+            </div>
+          </div>
+          <div class="trace-step is-human">
+            <div class="trace-num">4</div>
+            <div class="trace-body">
+              <h5>MD <span class="ent">Approval</span> seals the standup <span class="who human">Human · approves</span></h5>
+              <p>Because Issue&nbsp;1.1 is <b>risk: sensitive</b>, the deal is live only after a logged MD <span class="ent">Approval</span>. The deal appears on the Console; the perimeter is armed before any artifact exists.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>approval.recorded</code> subject:<code>Deal:atlas</code> approver:<code>md</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">5</div>
+            <div class="trace-body">
+              <h5>Every identity lookup, from now on, is logged <span class="who code">Deterministic code · enforces</span></h5>
+              <p>The instant anyone resolves <b>“Project Atlas”</b> to the real company name, the code-name service writes a key-access event. Real identities never sit in a view, a prompt, or a log without that detokenization being recorded.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>codename.key_accessed</code> actor:<code>…</code> (written on <i>every</i> lookup)</span>
+            </div>
+          </div>
+        </div>
+        <div class="note"><span class="lbl">What this trace proves</span>The only judgment calls — “pursue this deal,” “this team” — are the MD’s, recorded as an <span class="ent">Approval</span>. The agent only proposed defaults. Everything that <i>created access</i> was deterministic code, and it emitted an <span class="ent">AuditEvent</span> at each write. The perimeter exists <b>before</b> the work does.</div>
+
+        <h3>2 · A buyer’s diligence question, end to end</h3>
+        <p>The deal is in <a href="#domain"><b>marketing / diligence</b></a>. A buyer — code-named “Counterparty&nbsp;C” — emails a question: <i>“What was FY24 recurring revenue?”</i> This is the day-in-the-life made traceable: <a href="#building"><code>Issue&nbsp;3.1</code></a> (capture) → <a href="#building"><code>Issue&nbsp;4.1</code></a> (source-grounded answer) → <a href="#building"><code>Issue&nbsp;3.2</code></a> (Pre-Send QC). Watch the badge colour move from amber (capture) to indigo (the agent drafts) to amber (the gate) to green (the humans release) — and never the other way.</p>
+        <div class="trace-scope">
+          <span>surface: Comms + Pre-Send QC</span><span>Communication</span><span>Task</span><span>Run</span><span>ModelCall</span><span>Artifact.authority</span><span>Gate / Approval</span>
+        </div>
+        <div class="trace">
+          <div class="trace-step is-code">
+            <div class="trace-num">1</div>
+            <div class="trace-body">
+              <h5>Inbound email captured under the code name <span class="who code">Deterministic code · captures</span></h5>
+              <p>Deal-linked ingestion creates a <span class="ent">Communication</span> (<code>channel: email, direction: inbound</code>) with <b>code-named</b> participants and a preserved copy. The buyer’s real identity never enters the record un-tokenized.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>communication.captured</code> subject:<code>Comm:atlas-114</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">2</div>
+            <div class="trace-body">
+              <h5>The Communication spawns a <span class="ent">Task</span> <span class="who code">Deterministic code · routes</span></h5>
+              <p>The captured question deterministically spawns a diligence-answer <span class="ent">Task</span> — <code>mode: both</code>, <code>reviewer: vp</code>, <code>approver: md</code>, <code>riskTier: irreversible</code> (it will leave the firm). The orchestrator routes it; it does not answer it.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>task.spawned</code> from:<code>Comm:atlas-114</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-agent">
+            <div class="trace-num">3</div>
+            <div class="trace-body">
+              <h5>Sealed envelope assembled — then the agent drafts <span class="who agent">Agent · proposes</span></h5>
+              <p>The governed retrieval service builds a <span class="gl" data-k="sealed">sealed context envelope</span>: permission-filtered, code-name-redacted, scoped to this deal. The Compliance Comms agent (<span class="ent">Run</span> under a budgeted <code>Job</code>) drafts an answer, pulling the figure from the <b>model of record</b> (<code>Artifact.authority</code>) and citing it. Each model request is one logged <span class="ent">ModelCall</span>. <b>The agent never saw raw firm data and cannot send.</b></p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>run.completed</code> · each <span class="ent">ModelCall</span> logs prompt/output/sources/tokens/cost</span>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">4</div>
+            <div class="trace-body">
+              <h5>Deterministic Pre-Send QC screens the draft <span class="who code">Deterministic code · gates</span></h5>
+              <p>Before anything can leave the firm the draft runs the <b>Pre-Send QC</b> screen — plain code, <b>no LLM in the verdict</b>: recipient ✓ · attachment ✓ · code-name-intact ✓ · <b>every figure matches <code>Artifact.authority</code></b> ✓ · claims-sourced ✓ · no hidden metadata ✓ · required <span class="ent">Approval</span> present ✓. The FY24 figure traces to the model of record, so it <b>passes</b>. (When it doesn’t, see Scenario&nbsp;3.)</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>screen.passed</code> subject:<code>draft:atlas-114</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-human">
+            <div class="trace-num">5</div>
+            <div class="trace-body">
+              <h5>VP reviews, MD approves <span class="who human">Human · decides / approves</span></h5>
+              <p>A clean screen is necessary, not sufficient. The <b>VP</b> (first reviewer) reads the draft, then the <b>MD</b> records the <span class="ent">Approval</span> that authorizes release. Two humans on the command side; the agent stayed on the propose side.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>approval.recorded</code> reviewer:<code>vp</code> approver:<code>md</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">6</div>
+            <div class="trace-body">
+              <h5>Send + retain <span class="who code">Deterministic code · releases on the approval</span></h5>
+              <p>Only now — gate passed <b>and</b> <span class="ent">Approval</span> present — does deterministic code release the email. The outbound is retained as a <span class="ent">Communication</span> with its full lineage: the inbound it answers, the <span class="ent">Run</span>/<span class="ent">ModelCall</span>s that drafted it, the cited <span class="ent">Artifact</span>, the screen result, and the approval.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>communication.sent</code> · full chain reconstructable for 17a-4 export</span>
+            </div>
+          </div>
+        </div>
+        <div class="note accent"><span class="lbl">Where the boundary lives</span>Steps 1, 2, 4, 6 are deterministic code. Step 3 is the only agent step — and it is sealed (redacted input) and capped (a budgeted <span class="ent">Run</span>) and cannot send. Step 5 is the human gate. The agent <i>cleaned and drafted</i>; the <i>gate is code</i>; the <i>release is a human</i>. Move the figure check out of code and into the model and you’ve broken the compliance unlock.</div>
+
+        <h3>3 · Pre-Send QC blocks a send, then passes</h3>
+        <p>Same machine, different outcome. An associate is releasing a CIM excerpt to an NDA-signed buyer. The draft contains a headline figure — <i>“42% YoY growth”</i> — that <b>no <span class="ent">Artifact.authority</span> source backs.</b> The deterministic screen catches it exactly like a failing referential-integrity check. This is the <a href="#building"><code>Issue&nbsp;3.2</code></a> / <a href="#building"><code>Issue&nbsp;2.3</code></a> acceptance criterion in motion: <i>an unsourced figure blocks release until resolved.</i></p>
+        <div class="trace-scope">
+          <span>surface: Comms + Pre-Send QC</span><span>Artifact (cim excerpt)</span><span>Artifact.authority</span><span>Gate</span><span>Approval</span><span>AuditEvent</span>
+        </div>
+        <div class="trace">
+          <div class="trace-step is-agent">
+            <div class="trace-num">1</div>
+            <div class="trace-body">
+              <h5>Agent drafts the CIM excerpt <span class="who agent">Agent · proposes</span></h5>
+              <p>From the sealed envelope, the agent assembles the excerpt <span class="ent">Artifact</span> (<code>type: cim</code>) and the cover note. One figure — “42% YoY growth” — has <b>no provenance link</b> to the model of record; the agent surfaced a number it could not source. That is allowed — drafting is the agent’s job. Catching it is not.</p>
+            </div>
+          </div>
+          <div class="trace-step is-code blocked">
+            <div class="trace-num">2</div>
+            <div class="trace-body">
+              <h5>Pre-Send QC <b>BLOCKS</b> the send <span class="who code">Deterministic code · gates</span></h5>
+              <p>The screen runs and stops at the figures check: <code>figures vs Artifact.authority</code> fails — “42%” resolves to no authoritative source. Verdict is <b>BLOCK</b>, deterministic and reproducible, with the reason attached. No LLM was consulted and no human override is offered at this layer; the send simply cannot proceed.</p>
+              <div class="trace-block"><b>⛔ BLOCKED — unsourced figure.</b> <code>"42% YoY growth"</code> has no <code>Artifact.authority</code> match. Release halted, like a failing referential-integrity constraint.</div>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>screen.blocked</code> reason:<code>figure_unsourced</code> value:<code>"42%"</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-human">
+            <div class="trace-num">3</div>
+            <div class="trace-body">
+              <h5>A human sources the figure to <span class="ent">Artifact.authority</span> <span class="who human">Human · decides</span></h5>
+              <p>The associate opens the model of record, confirms the correct number, and binds the claim to its authoritative source (or corrects it). The fix is a human action against the source of truth — not the agent “trying again,” and not the screen being relaxed.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>figure.sourced</code> to:<code>Artifact:model-of-record#rev_growth</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-code">
+            <div class="trace-num">4</div>
+            <div class="trace-body">
+              <h5>Re-run — the screen now <b>PASSES</b> <span class="who code">Deterministic code · gates</span></h5>
+              <p>The identical deterministic screen runs again. Every figure now maps to an <code>Artifact.authority</code> source; recipient, code name, claims, and metadata all check. Verdict <b>PASS</b> — same code, same inputs minus the one defect, reproducible result.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>screen.passed</code> subject:<code>Artifact:cim-excerpt-7 (v2)</code></span>
+            </div>
+          </div>
+          <div class="trace-step is-human">
+            <div class="trace-num">5</div>
+            <div class="trace-body">
+              <h5>MD <span class="ent">Approval</span>, then release <span class="who human">Human · approves</span></h5>
+              <p>With a clean screen, the <b>MD</b> records the <span class="ent">Approval</span> and deterministic code releases the excerpt, retained as an <span class="ent">Artifact</span> + <span class="ent">Communication</span>. The full block→source→pass→approve history is preserved — a regulator can see the firm caught its own error and the gate held.</p>
+              <span class="audit"><b>AuditEvent ✎</b> verb:<code>approval.recorded</code> · verb:<code>communication.sent</code> · block + fix retained in the chain</span>
+            </div>
+          </div>
+        </div>
+        <div class="note warn"><span class="lbl">⚠ The bug to never write</span>The fix in step 3 is a <i>human</i> sourcing the figure and a <i>re-run of the deterministic screen</i> — <b>never</b> an LLM “deciding” the figure is close enough, and <b>never</b> a path that lets the agent or a user wave the block through. The moment a model gets a vote in that verdict, “the model decided” becomes the firm’s defense to a regulator, and there is no defense in that sentence.</div>
+
+        <div class="check"><div class="ic">✓</div><div><b>Across all three traces, the same shape holds</b>
+          <ul>
+            <li><b>Agents</b> only ever produce a draft from a sealed envelope — capped, redacted, unable to send.</li>
+            <li><b>Deterministic code</b> creates access, captures, and runs the gate — plain, testable, no LLM in any verdict (every amber step).</li>
+            <li><b>Humans</b> are the only actor that decides and releases — recorded as an <span class="ent">Approval</span> (every green step).</li>
+            <li><b>An <span class="ent">AuditEvent</span> is written at every state change</b>, so the whole chain reconstructs years later.</li>
+          </ul></div></div>
+        <div class="ref">→ Entities: <code>01-glossary-and-entities.md</code> · Job/Run + screen: <code>04-engineering-handbook.md §2</code> · the issues traced here: <code>03-deal-stages-issues.md</code> (1.1, 2.3, 3.1, 3.2, 4.1)</div>
+      </section>
+
+      <!-- ===== 5 BUILD VS PLUGIN ===== -->
+      <section id="buildvsplugin" class="sec">
+        <div class="sectag">05 · BUILD VS. PLUG-IN</div>
+        <h2>What's our moat, what do we integrate</h2>
+        <div class="note accent"><span class="lbl">The one rule</span>If a component would appear in a <b>FINRA examiner's record request</b> — <b>build it</b>, deterministically, test it like a safety system. If it'd appear on an <b>AWS/SaaS invoice</b> — <b>buy it</b>. Agents live in between: they draft, bought models power them, the built core always gets the final gated word.</div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Component</th><th>Verdict</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Pre-Send QC / compliance screen</td><td><b>BUILD ⭐</b></td><td>The crown jewel — the compliance unlock; a seed already exists</td></tr>
+            <tr><td>Permissions + barriers + code-name service</td><td><b>BUILD</b></td><td>The MNPI perimeter; banking barrier semantics no vendor sells</td></tr>
+            <tr><td>Approval/Gate engine + precedence resolver</td><td><b>BUILD</b></td><td>The §12 human gates + §11.1 conflict logic — proprietary</td></tr>
+            <tr><td>Orchestrator / conductor</td><td><b>BUILD</b></td><td>Only the governance-coupling (task→risk→gate→approval), not generic scheduling</td></tr>
+            <tr><td>Audit / recordkeeping store</td><td><b>HYBRID→BUILD</b></td><td>Your audit trail can now <i>be</i> the 17a-4 mechanism (no WORM required)</td></tr>
+            <tr><td>Ingestion + connectors</td><td><b>HYBRID</b></td><td>Buy the connectors; build the tag/deal-link/permission layer</td></tr>
+            <tr><td>Model router + cost instrumentation</td><td><b>HYBRID</b></td><td>Build sensitivity-routing + <span class="ent">ModelCall</span> audit; buy the gateway</td></tr>
+            <tr><td>Search / retrieval (RAG)</td><td><b>HYBRID</b></td><td>Buy the vector store; build the permission-aware filter + provenance</td></tr>
+            <tr><td>Runtime control (sandbox/kill)</td><td><b>HYBRID</b></td><td>Build the budget/kill policy; buy the sandbox isolation</td></tr>
+            <tr><td>Foundation models (LLMs)</td><td><b>PLUG-IN</b></td><td>Stateless, swappable; off-thesis to build</td></tr>
+            <tr><td>Datastore / persistence</td><td><b>PLUG-IN</b></td><td>Postgres/Supabase; the schema/contract over it is yours</td></tr>
+            <tr><td>The four UI surfaces</td><td><b>BUILD (thin)</b></td><td>Proprietary assembly of the engine; keep the shell deliberately light</td></tr>
+          </tbody>
+        </table></div>
+        <p><b>The moat</b> is the deterministic governance core — everything that decides, gates, or releases. <b>The commodity</b> is everything that drafts, moves bytes, or runs inference. Self-built sandbox/WORM are liabilities, not assets.</p>
+        <div class="ref">→ Full component-by-component: <code>07-build-vs-plugin.md</code></div>
+      </section>
+
+      <!-- ===== 6 RISKS ===== -->
+      <section id="risks" class="sec">
+        <div class="sectag">06 · UNDECIDED &amp; RISKY</div>
+        <h2>What's not settled — and what could sink it</h2>
+        <h3>The three blocking decisions</h3>
+        <p>These are for the founder (Storm), and they set most of the V1 boundary. The build proceeds on the recommended default and adjusts.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>#</th><th>The question</th><th>Recommended default</th></tr></thead>
+          <tbody>
+            <tr><td><b>Q1</b></td><td>Pitch + CIM agents <i>in V1</i>, or <b>seams only</b> (full build fast-follow)?</td><td>Seams. Protects the shippable spine.</td></tr>
+            <tr><td><b>Q2</b></td><td>Ingest the <b>whole mailbox</b>, or only <b>deal-linked</b> threads?</td><td>Deal-linked. Bounds cost + MNPI exposure.</td></tr>
+            <tr><td><b>Q8</b></td><td>What <i>is</i> the "model of record" in a V1 that builds no model?</td><td>An ingested, owner-marked-authoritative artifact + deterministic checks.</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>The risks the pack under-states</h3>
+        <div class="grid3">
+          <div class="card"><div class="k">HIGH</div><h4>Greenfield backend</h4><p>~0% of the governed spine exists. Timeline is "build a backend," not "wire up a prototype."</p></div>
+          <div class="card"><div class="k">HIGH</div><h4>Model-of-record hole</h4><p>Pre-Send QC must verify figures, but V1 builds no model + bans LLM math. Resolve Q8 + Q10 together.</p></div>
+          <div class="card"><div class="k">HIGH</div><h4>Legal go/no-gos</h4><p>MNPI over-collection, two-party consent, 17a-4 retention — closer to gates than scope dials.</p></div>
+          <div class="card"><div class="k">HIGH</div><h4>Un-measurable pricing</h4><p>Net Labor Value needs in-tenant effort telemetry that may be privacy-blocked or API-impossible.</p></div>
+          <div class="card"><div class="k">HIGH</div><h4>Two load-bearing SPOFs</h4><p>Orchestrator + sealed-envelope retrieval are greenfield and under-specified. Harden + test as first-class.</p></div>
+          <div class="card"><div class="k">MED</div><h4>Deterministic data</h4><p>"Permissions aren't AI" only helps if the tagging pipeline is right. A mis-tag passes a leak.</p></div>
+        </div>
+        <div class="note"><span class="lbl">The honest one-liner</span>The thinking is well ahead of the code. The strategy is sound and the moat is correctly located — but the governed backend is essentially greenfield, and three decisions + a non-negotiable "sprint 0" stand between this plan and a credible pilot.</div>
+        <div class="ref">→ Full register + pre-mortem: <code>08-limitations-and-value.md</code> · open decisions: <code>05-storm-decision-backlog.md</code></div>
+      </section>
+
+      <!-- ===== 7 QUIZ ===== -->
+      <section id="quiz" class="sec">
+        <div class="sectag">07 · CHECK YOURSELF</div>
+        <h2>Check your understanding</h2>
+        <p>Eight questions on the load-bearing ideas. Pick an answer to see whether it's right and why — your score tallies as you go.</p>
+        <div class="quizbar">
+          <div class="quizscore">Score <span class="big" id="quizScore">0</span> / <span id="quizTotal">0</span></div>
+          <div class="bar" aria-hidden="true"><i id="quizFill"></i></div>
+          <button type="button" class="quizreset" id="quizReset">Reset quiz</button>
+        </div>
+        <div class="quiz" id="quizList" role="list" aria-label="Self-check questions"></div>
+        <div class="ref" aria-live="polite" id="quizDone" style="margin-top:14px"></div>
+      </section>
+
+      <!-- ===== GLOSSARY ===== -->
+      <section id="glossary" class="sec">
+        <div class="sectag">G · GLOSSARY</div>
+        <h2>60-second glossary</h2>
+        <p>Every dotted term in this handbook shows its definition on hover. The full set, searchable:</p>
+        <div class="filterbar"><input id="glFilter" placeholder="Search the glossary…" aria-label="Search glossary"><span class="filtercount" id="glCount"></span></div>
+        <div class="tablewrap"><table id="glTable"><thead><tr><th style="width:200px">Term</th><th>Definition</th></tr></thead><tbody id="glBody"></tbody></table></div>
+        <div class="ref" style="margin-top:24px">Conductia Engineer Handbook · companion to the <code>blueprint-engineering</code> pack · regulatory anchors verified against FINRA &amp; SEC primary sources, June 2026.</div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<button type="button" class="totop" id="toTop" aria-label="Back to top" title="Back to top">↑</button>
+<div id="tip" role="tooltip"></div>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------- glossary data ---------- */
+  var GLOSSARY = {
+    sellside:["Sell-side M&A","Advising the company that is being sold, and running the whole sale process. This product is for sell-side deals only."],
+    mandate:["Mandate","A signed, engaged deal the bank has been hired to run. In code it is a Deal — never a separate table."],
+    mnpi:["MNPI","Material Non-Public Information — secret info that could move a stock price. Mishandling it is an insider-trading risk; it's the reason the walls and code names exist."],
+    barrier:["Information barrier","An enforced internal wall ('Chinese wall') keeping deal secrets from people who shouldn't see them. Modeled as a deterministic query, never an agent."],
+    codename:["Code name","A fake deal name ('Project Atlas') so identities never leak in calendars, emails, or documents. The real identity sits behind an access-controlled key."],
+    cleanteam:["Clean team","A tighter ring of people cleared for the most sensitive data, walled off even from the rest of the deal team."],
+    conflict:["Conflict check","A screen confirming the firm isn't compromised (e.g. already acting for the other side) before taking a deal. Compliance must disposition it — no auto-resolve."],
+    teaser:["Teaser","A 1–2 page anonymous document that sparks buyer interest before an NDA is signed. Must describe the company without revealing who it is."],
+    nda:["NDA / MNDA","The confidentiality contract a buyer signs before getting real data. NDA = one side promises secrecy; MNDA = mutual, both do."],
+    cim:["CIM","Confidential Information Memorandum — the detailed 'sales book' given to NDA-signed buyers. Every number must tie to the model of record."],
+    vdr:["Data room / VDR","The secure online vault where vetted buyers review confidential documents. Access is per-document and logged."],
+    ioi:["IOI","Indication of Interest — a non-binding, rough-price signal from a buyer."],
+    loi:["LOI","Letter of Intent — partly-binding terms, often with exclusivity."],
+    el:["Engagement letter","The contract that hires the bank and sets its fee. Signing it converts a pitch into a live mandate."],
+    mor:["Model of record","The single authoritative set of financial numbers every published figure must match."],
+    counterparty:["Counterparty","The other side of a deal — a buyer or seller — always behind a code name."],
+    fundsflow:["Funds flow","The instructions for who pays and receives what at closing."],
+    md:["MD","Managing Director — owns the client and approves anything that leaves the firm."],
+    vp:["VP","Vice President — runs the deal day-to-day; first reviewer of work before it goes to the MD."],
+    finra:["FINRA","The brokerage industry's self-regulator."],
+    sec:["SEC","The U.S. government securities regulator."],
+    wsp:["WSP","Written Supervisory Procedures — a firm's documented rulebook for supervising its people (required by FINRA 3110)."],
+    rule17a4:["SEC Rule 17a-4","Broker-dealer recordkeeping rule: records must be preserved tamper-evidently (WORM or, since 2022, an audit-trail system) and producible to regulators."],
+    rule3110:["FINRA Rule 3110","Supervision rule: firms must maintain a supervisory system plus written procedures (WSPs)."],
+    rule2210:["FINRA Rule 2210","Communications rule: outbound comms must be fair, not misleading, supervised, and retained."],
+    twoparty:["Two-party consent","Laws (in some states) requiring everyone on a call to agree before it's recorded."],
+    sealed:["Sealed envelope","The rule that an agent only ever receives permission-filtered, code-name-redacted context — never raw firm data."],
+    invariant:["The invariant","Agents draft, summarize, and propose; humans + deterministic code decide, gate, and release."],
+    wallcross:["Wall-crossing (over-the-wall)","Formally bringing someone over an information barrier onto a deal: they're asked to consent, warned the info is confidential and may be material, logged by the Control Room, and restricted from trading the affected securities until cleansed."],
+    controlroom:["Control Room","A central compliance group, separate from the deal teams, that logs every MNPI-bearing deal in a control database and maintains the watch list (surveillance) and the restricted list (blocks activity)."],
+    institutional:["Institutional investor (2210(a)(4))","Broadly: banks, registered funds/advisers, large plans, and any entity with at least $50M in assets. Most M&A counterparties qualify — but a communication can't be treated as 'institutional' if it may reach a retail investor."],
+    notice2409:["FINRA Notice 24-09","2024 FINRA guidance: all existing rules and the securities laws apply to generative AI / LLMs. No new rules — but no grace period. Supervision (3110), recordkeeping, and 2210 attach from day one."]
+  };
+
+  /* ---------- helpers ---------- */
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* ---------- glossary tooltips ---------- */
+  var tip = document.getElementById('tip');
+  tip.setAttribute('role','tooltip');
+  var tipFor = null;
+  function showTip(el){
+    var k = el.getAttribute('data-k'); var g = GLOSSARY[k]; if(!g) return;
+    tip.innerHTML = '<b></b><span class="td"></span>';
+    tip.querySelector('b').textContent = g[0];
+    tip.querySelector('.td').textContent = g[1];
+    tip.classList.add('show');
+    el.setAttribute('aria-describedby','tip');
+    tipFor = el;
+    var r = el.getBoundingClientRect();
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = Math.min(Math.max(8, r.left), window.innerWidth - tw - 8);
+    var top = r.top - th - 8; if(top < 8) top = r.bottom + 8;
+    tip.style.left = left+'px'; tip.style.top = top+'px';
+  }
+  function hideTip(){
+    tip.classList.remove('show');
+    if(tipFor){ tipFor.removeAttribute('aria-describedby'); tipFor = null; }
+  }
+  document.querySelectorAll('.gl').forEach(function(el){
+    el.setAttribute('tabindex','0');
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label', (GLOSSARY[el.getAttribute('data-k')]||['',''])[0] + ' — definition');
+    el.addEventListener('mouseenter',function(){showTip(el)});
+    el.addEventListener('mouseleave',hideTip);
+    el.addEventListener('focus',function(){showTip(el)});
+    el.addEventListener('blur',hideTip);
+    el.addEventListener('keydown',function(e){ if(e.key==='Escape') hideTip(); });
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') hideTip(); });
+  window.addEventListener('scroll',function(){ if(tipFor) showTip(tipFor); }, {passive:true});
+
+  /* ---------- theme toggle ---------- */
+  var root = document.documentElement, tlabel = document.getElementById('themeLabel');
+  var saved = null; try{ saved = localStorage.getItem('ib-theme'); }catch(e){}
+  if(saved){ root.setAttribute('data-theme',saved); }
+  var toggleBtn = document.getElementById('themeToggle');
+  function syncLabel(){
+    var dark = root.getAttribute('data-theme')==='dark';
+    tlabel.textContent = dark ? 'Dark' : 'Light';
+    toggleBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+  }
+  syncLabel();
+  toggleBtn.addEventListener('click',function(){
+    var next = root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next); try{ localStorage.setItem('ib-theme',next); }catch(e){} syncLabel();
+  });
+
+  /* ---------- mobile sidebar ---------- */
+  var sb = document.getElementById('sidebar');
+  var hb = document.getElementById('hamb');
+  if(hb){ hb.addEventListener('click',function(){
+    var open = sb.classList.toggle('open');
+    hb.setAttribute('aria-expanded', open?'true':'false');
+  }); }
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    a.addEventListener('click',function(){
+      if(window.innerWidth<=920){ sb.classList.remove('open'); if(hb) hb.setAttribute('aria-expanded','false'); }
+    });
+  });
+
+  /* ---------- scrollspy ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var visible = {};
+  function setActive(id){ links.forEach(function(l){ l.classList.toggle('active', l===map[id]); }); }
+  function resolveActive(){
+    var ids = Object.keys(visible).filter(function(k){ return visible[k]; });
+    if(ids.length){
+      ids.sort(function(a,b){
+        return document.getElementById(a).getBoundingClientRect().top - document.getElementById(b).getBoundingClientRect().top;
+      });
+      setActive(ids[0]); return;
+    }
+    var best=null, bestTop=-Infinity, mid=window.innerHeight*0.3;
+    document.querySelectorAll('section[id]').forEach(function(s){
+      var top=s.getBoundingClientRect().top;
+      if(top<mid && top>bestTop){ bestTop=top; best=s.id; }
+    });
+    if(best) setActive(best);
+  }
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting; });
+    resolveActive();
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){ spy.observe(s); });
+  window.addEventListener('scroll', function(){ if(!Object.keys(visible).some(function(k){return visible[k];})) resolveActive(); }, {passive:true});
+
+  /* ---------- nav filter ---------- */
+  document.getElementById('navsearch').addEventListener('input',function(e){
+    var q = e.target.value.toLowerCase();
+    links.forEach(function(a){
+      var hay = (a.textContent+' '+(a.getAttribute('data-t')||'')).toLowerCase();
+      a.style.display = hay.indexOf(q)>=0 ? '' : 'none';
+    });
+  });
+
+  /* ---------- stage stepper ---------- */
+  var STAGES = [
+    {n:'1',name:'Origination',title:'Origination / Mandate',desc:'The bank wins the work. Sources the lead, runs a conflict check, does light research, optionally pitches, and signs the contract that hires it.',docs:['Engagement Letter','pitch deck','valuation','buyer hypothesis'],sign:'MD owns the pursuit decision, conflicts, and the engagement letter.'},
+    {n:'2',name:'Preparation',title:'Preparation & Market Readiness',desc:'Get ready to go to market. Kickoff, build the timeline + working group list, set up the data room, write the marketing documents.',docs:['Teaser','CIM','NDA / MNDA','financial model','buyer list'],sign:'MD/VP approve the narrative, buyer list, and valuation; Legal owns the NDA.'},
+    {n:'3',name:'Marketing',title:'Marketing & First-round Bids',desc:'Contact buyers, get NDAs signed, open the data room, run buyer calls, collect first bids.',docs:['signed NDAs','VDR access logs','buyer log','IOIs','weekly update'],sign:'MD/VP control outreach, data-room access, and bid interpretation.'},
+    {n:'4',name:'Diligence',title:'Diligence, LOI, Definitive Docs',desc:'Serious buyers dig deep; negotiate terms; draft the binding contract.',docs:['diligence Q&A','LOI','risk log','definitive agreement','board materials'],sign:'MD/VP approve answers + terms; Legal owns the agreement; the board approves.'},
+    {n:'5',name:'Closing',title:'Signing, Closing, Post-close',desc:'Sign, move the money, announce, archive, and learn.',docs:['closing checklist','funds flow','closing binder','compliance archive','post-mortem'],sign:'MD approves closing items, payment, and the announcement.'}
+  ];
+  var stepper = document.getElementById('stepper'), panel = document.getElementById('stagepanel');
+  var stepEls = [];
+  STAGES.forEach(function(s,i){
+    var b = document.createElement('button');
+    b.type='button'; b.className='step'; b.setAttribute('role','tab');
+    b.id='stage-tab-'+i; b.setAttribute('aria-controls','stagepanel'); b.setAttribute('aria-selected','false');
+    b.tabIndex = i===0 ? 0 : -1;
+    b.innerHTML='<span class="sn">STAGE '+s.n+'</span><b>'+esc(s.name)+'</b>';
+    b.addEventListener('click',function(){ selectStage(i); });
+    b.addEventListener('keydown',function(e){
+      var k=e.key, ni=null;
+      if(k==='ArrowRight'||k==='ArrowDown') ni=(i+1)%STAGES.length;
+      else if(k==='ArrowLeft'||k==='ArrowUp') ni=(i-1+STAGES.length)%STAGES.length;
+      else if(k==='Home') ni=0;
+      else if(k==='End') ni=STAGES.length-1;
+      else if(k==='Enter'||k===' '){ e.preventDefault(); selectStage(i); return; }
+      if(ni!==null){ e.preventDefault(); selectStage(ni); stepEls[ni].focus(); }
+    });
+    stepEls.push(b); stepper.appendChild(b);
+  });
+  function selectStage(i){
+    stepEls.forEach(function(c,j){
+      var on=j===i; c.classList.toggle('active',on);
+      c.setAttribute('aria-selected', on?'true':'false'); c.tabIndex = on?0:-1;
+    });
+    var s = STAGES[i];
+    panel.setAttribute('aria-labelledby','stage-tab-'+i);
+    panel.innerHTML = '<h4>'+esc(s.title)+'</h4><p>'+esc(s.desc)+'</p>'+
+      '<div class="docs">'+s.docs.map(function(d){return '<span>'+esc(d)+'</span>';}).join('')+'</div>'+
+      '<div class="signoff"><b>Signs off:</b> '+esc(s.sign)+'</div>';
+  }
+  selectStage(0);
+
+  /* ---------- concept map ---------- */
+  var MAP = [
+    ['MNPI','Deal-linked ingestion; sealed-envelope agent calls; Permission/Barrier everywhere','Insider-trading exposure; the firm loses its license'],
+    ['Information barrier','Deterministic Barrier query (never an agent); wall-crossing log','Cross-deal leak; regulatory fine'],
+    ['Code name','codeName + access-controlled key; redact before any model or log','Leaked deal → lost client, reputational hit'],
+    ['Conflict check','Deterministic check at intake; Compliance must disposition; no auto-resolve','Conflicted mandate → enforcement, lawsuits'],
+    ['NDA / MNDA','Gates VDR/CIM access per Counterparty; execution is an Approval event','Releasing data to an unsigned buyer → breach, litigation'],
+    ['CIM / Teaser','Artifact types with per-figure provenance; release needs Pre-Send QC + MD Approval','Unsourced figure or identity leak → misrepresentation, blown deal'],
+    ['Data room / VDR','Per-item Permission tags; "show-exists-but-withhold-contents"','Buyer sees above their tier → leak, broken clean team'],
+    ['IOI / LOI','Assemble the comparison for the banker; never auto-rank','Software "decides" a bid → fiduciary breach'],
+    ['Model of record','Artifact.authority + deterministic precedence resolver; unsourced figures block send','Wrong number leaves the firm → misrepresentation'],
+    ['Roles & approval','role enum + approvalAuthority; external send → VP review, MD approve','Junior releases what only an MD may → 3110 supervision failure'],
+    ['Reversible vs irreversible','riskTier drives gating; irreversible → hard human Approval','Mis-tag removes a gate → an un-take-backable send'],
+    ['17a-4 recordkeeping','Append-only AuditEvent + ModelCall; WORM or audit-trail; legal hold; export','Mutable/gappy records → 17a-4 violation, failed exam'],
+    ['3110 supervision','Compliance ribbon; reviewer/approver per task; runtime caps on every Run','No demonstrable supervision → headline regulatory failure'],
+    ['2210 communications','Deterministic Pre-Send QC; retain every send','Misleading/unsourced send leaves firm → 2210 violation']
+  ];
+  var mapBody = document.getElementById('mapBody'), mapCount = document.getElementById('mapCount');
+  function renderMap(q){
+    q = (q||'').toLowerCase(); mapBody.innerHTML='';
+    var shown=0;
+    MAP.forEach(function(r){
+      var hay = r.join(' ').toLowerCase();
+      if(q && hay.indexOf(q)<0) return;
+      shown++;
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td>';
+      mapBody.appendChild(tr);
+    });
+    mapCount.textContent = shown+' / '+MAP.length;
+  }
+  renderMap('');
+  document.getElementById('mapFilter').addEventListener('input',function(e){ renderMap(e.target.value); });
+
+  /* ---------- glossary table ---------- */
+  var glBody=document.getElementById('glBody'), glCount=document.getElementById('glCount');
+  var GLIST = Object.keys(GLOSSARY).map(function(k){return GLOSSARY[k];}).sort(function(a,b){return a[0].localeCompare(b[0]);});
+  function renderGl(q){
+    q=(q||'').toLowerCase(); glBody.innerHTML=''; var shown=0;
+    GLIST.forEach(function(g){
+      if(q && (g[0]+' '+g[1]).toLowerCase().indexOf(q)<0) return;
+      shown++;
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><b>'+esc(g[0])+'</b></td><td>'+esc(g[1])+'</td>';
+      glBody.appendChild(tr);
+    });
+    glCount.textContent = shown+' / '+GLIST.length;
+  }
+  renderGl('');
+  document.getElementById('glFilter').addEventListener('input',function(e){ renderGl(e.target.value); });
+
+  /* ---------- self-check quiz ---------- */
+  var QUIZ = [
+    {q:'What is the one invariant that governs the whole codebase?',
+      a:['Agents draft, summarize, retrieve and propose; humans + deterministic code decide, gate, approve and release',
+        'Every agent must be reviewed by a second, larger model before acting',
+        'Humans draft the work and agents approve it once it passes a confidence threshold',
+        'All decisions are made by the model, then logged for a human to read later'],
+      c:0, e:'Anything that decides access, approves, enforces a barrier, or picks the authoritative number is deterministic code or a human — never an LLM. A regulator will not accept "the model decided" as a control.'},
+    {q:'Why does the product ingest only deal-linked threads rather than the whole mailbox (decision Q2)?',
+      a:['To make the search index smaller and faster',
+        'To bound cost and limit MNPI exposure',
+        'Because email connectors cannot read a full mailbox',
+        'Because FINRA 2210 forbids reading non-deal email'],
+      c:1, e:'Deal-linked ingestion is the recommended default for Q2: it bounds cost and limits how much MNPI the system collects. Over-collection of MNPI is a legal go/no-go, not a scope dial.'},
+    {q:'In Pre-Send QC, which of these will block an outbound communication?',
+      a:['An LLM reviewer rating the tone as "too casual"',
+        'A figure that does not tie to a sourced model-of-record artifact',
+        'The email being longer than the firm average',
+        'A senior banker disagreeing with the strategy'],
+      c:1, e:'Pre-Send QC is a deterministic screen: claims-sourced, figures-match, code-name-intact, approval-present — with no LLM in the verdict. An unsourced figure blocks the send like a failing referential-integrity check.'},
+    {q:'For a routine external send, who must approve it before it leaves the firm?',
+      a:['Compliance','The VP who runs the deal day-to-day','The MD (VP is the first reviewer)','Any registered associate'],
+      c:2, e:'The default gate, encoded everywhere: reviewer = VP, approver = MD. The MD owns the client and approves anything that leaves the firm. It is firm-configurable via Policy.'},
+    {q:'Since the SEC 2022 amendment, how can a firm satisfy 17a-4 record retention?',
+      a:['Only with certified WORM (write-once-read-many) media',
+        'With EITHER WORM OR an audit-trail system that can recreate an original if modified or deleted',
+        'By keeping records for at least 3 years in any mutable database',
+        'By having an LLM summarize each record as it is created'],
+      c:1, e:'Release 34-96034 kept WORM as one option and added an audit-trail alternative. The append-only AuditEvent model can itself be the compliance mechanism — no certified WORM media strictly required.'},
+    {q:'WORM and an append-only audit trail both prevent tampering. What is the key difference the rule cares about?',
+      a:['WORM physically prevents overwrite; the audit-trail option permits change but must let an original be recreated (who changed what, when)',
+        'They are identical; the names are interchangeable',
+        'The audit trail is only for emails, WORM is only for documents',
+        'WORM is cheaper to operate at scale'],
+      c:0, e:'WORM makes records physically unchangeable. The audit-trail alternative allows modification/deletion but must preserve enough (time-stamped, who-changed-what) to recreate the original — "permits recreation" is the real bar.'},
+    {q:'A teammate suggests "let the agent just approve this low-risk send to save a click." What is the correct response?',
+      a:['Fine, as long as the agent logs an AuditEvent',
+        'That is the bug — approving is a command/commit; agents never decide. It stays a Gate rule + human Approval',
+        'Allow it only for institutional counterparties',
+        'Allow it if the model confidence is above 0.95'],
+      c:1, e:'"Agents never decide" is CQRS: agents are pure producers on the propose side; deterministic code + humans own the commit side. When you are tempted to let the agent approve — that is the bug.'},
+    {q:'Why is correctly tagging a Task riskTier (reversible vs irreversible) safety-critical?',
+      a:['Irreversible tasks run on faster hardware',
+        'Reversible tasks skip the audit log entirely',
+        'Mis-tagging an irreversible action as reversible removes its human gate — producing an un-take-backable send',
+        'The riskTier only changes the UI color, nothing functional'],
+      c:2, e:'riskTier drives gating: irreversible actions require a hard human Approval, like the confirm step before DROP TABLE. The dangerous bug is mis-classifying an irreversible task as reversible and dropping the gate.'}
+  ];
+  (function buildQuiz(){
+    var list = document.getElementById('quizList');
+    if(!list) return;
+    var totalEl = document.getElementById('quizTotal'), scoreEl = document.getElementById('quizScore'),
+        fillEl = document.getElementById('quizFill'), doneEl = document.getElementById('quizDone'),
+        resetEl = document.getElementById('quizReset');
+    var answered = [], score = 0;
+    totalEl.textContent = QUIZ.length;
+    function letter(i){ return String.fromCharCode(65+i); }
+    function render(){
+      list.innerHTML = ''; answered = []; score = 0;
+      QUIZ.forEach(function(item, qi){
+        var fs = document.createElement('fieldset');
+        fs.className = 'qitem qopts'; fs.setAttribute('role','listitem');
+        var name = 'quiz-q'+qi;
+        var legend = document.createElement('legend');
+        legend.textContent = 'Question '+(qi+1)+': '+item.q; fs.appendChild(legend);
+        var num = document.createElement('div'); num.className = 'qnum';
+        num.textContent = 'QUESTION '+(qi+1); num.setAttribute('aria-hidden','true'); fs.appendChild(num);
+        var qq = document.createElement('div'); qq.className = 'qq';
+        qq.textContent = item.q; qq.setAttribute('aria-hidden','true'); fs.appendChild(qq);
+        item.a.forEach(function(opt, oi){
+          var lab = document.createElement('label'); lab.className = 'qopt';
+          var input = document.createElement('input'); input.type = 'radio'; input.name = name; input.value = oi;
+          var span = document.createElement('span'); span.className = 'opttext'; span.textContent = letter(oi)+'. '+opt;
+          lab.appendChild(input); lab.appendChild(span);
+          input.addEventListener('change', function(){ choose(qi, oi, fs, item); });
+          fs.appendChild(lab);
+        });
+        var expl = document.createElement('div'); expl.className = 'qexpl'; expl.setAttribute('role','status'); fs.appendChild(expl);
+        list.appendChild(fs);
+      });
+      updateScore(); doneEl.textContent = '';
+    }
+    function choose(qi, oi, fs, item){
+      if(answered[qi] != null) return;
+      answered[qi] = oi;
+      fs.querySelectorAll('.qopt').forEach(function(l, li){
+        l.classList.add('locked'); l.querySelector('input').disabled = true;
+        if(li === item.c) l.classList.add('correct');
+        else if(li === oi) l.classList.add('incorrect');
+      });
+      var correct = (oi === item.c); if(correct) score++;
+      var expl = fs.querySelector('.qexpl');
+      expl.classList.add('show'); expl.classList.toggle('wrong', !correct);
+      expl.innerHTML = '<b>'+(correct ? 'Correct.' : 'Not quite — the answer is '+letter(item.c)+'.')+'</b> '+esc(item.e);
+      updateScore();
+      if(answered.filter(function(x){return x!=null;}).length === QUIZ.length){
+        doneEl.textContent = 'Done — you scored '+score+' / '+QUIZ.length+
+          (score===QUIZ.length ? '. Perfect. You have the invariant.' : '. Re-read any section a missed question points to.');
+      }
+    }
+    function updateScore(){ scoreEl.textContent = score; fillEl.style.width = Math.round((score/QUIZ.length)*100)+'%'; }
+    resetEl.addEventListener('click', render); render();
+  })();
+
+  /* ---------- global content search ---------- */
+  (function(){
+    var box = document.getElementById('gsearch'), input = document.getElementById('gsInput');
+    if(!box || !input) return;
+    var countEl = document.getElementById('gsCount'), navEl = document.getElementById('gsNav'),
+        prevBtn = document.getElementById('gsPrev'), nextBtn = document.getElementById('gsNext'),
+        clearBtn = document.getElementById('gsClear');
+    var scope = document.querySelector('.wrap'), hits = [], cur = -1, t = null;
+    var SKIP = {SCRIPT:1, STYLE:1, NOSCRIPT:1, MARK:1};
+    function clearMarks(){
+      scope.querySelectorAll('mark.gsHit').forEach(function(m){
+        var parent = m.parentNode; parent.replaceChild(document.createTextNode(m.textContent), m); parent.normalize();
+      });
+      hits = []; cur = -1;
+    }
+    function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+    function run(q){
+      clearMarks(); box.classList.toggle('has-q', q.length > 0);
+      if(q.length < 2){ countEl.textContent = q.length===1 ? 'Type one more character…' : ''; navEl.hidden = true; return; }
+      var re = new RegExp(escapeRe(q),'gi');
+      var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, { acceptNode: function(node){
+        if(!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = node.parentNode;
+        while(p && p !== scope){
+          if(SKIP[p.nodeName] || (p.offsetParent===null && p.getClientRects().length===0)) return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        return re.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }});
+      var targets = [], n;
+      while((n = walker.nextNode())) targets.push(n);
+      targets.forEach(function(node){
+        re.lastIndex = 0;
+        var frag = document.createDocumentFragment(), last = 0, text = node.nodeValue, m;
+        while((m = re.exec(text))){
+          if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+          var mk = document.createElement('mark'); mk.className = 'gsHit'; mk.textContent = m[0];
+          frag.appendChild(mk); hits.push(mk);
+          last = m.index + m[0].length;
+          if(m[0].length === 0) re.lastIndex++;
+        }
+        if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      });
+      if(hits.length){ countEl.textContent = hits.length + (hits.length===1?' match':' matches'); navEl.hidden = false; go(0); }
+      else { countEl.textContent = 'No matches'; navEl.hidden = true; }
+    }
+    function go(i){
+      if(!hits.length) return;
+      if(cur>=0 && hits[cur]) hits[cur].classList.remove('gsCurrent');
+      cur = (i + hits.length) % hits.length;
+      var el = hits[cur]; el.classList.add('gsCurrent');
+      var open = el.closest('details'); if(open && !open.open) open.open = true;
+      el.scrollIntoView({block:'center', behavior:'smooth'});
+      countEl.textContent = (cur+1)+' of '+hits.length+(hits.length===1?' match':' matches');
+    }
+    input.addEventListener('input', function(){ clearTimeout(t); t = setTimeout(function(){ run(input.value.trim()); }, 160); });
+    input.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); go(cur + (e.shiftKey?-1:1)); }
+      if(e.key==='Escape'){ input.value=''; run(''); input.blur(); }
+    });
+    nextBtn.addEventListener('click', function(){ go(cur+1); });
+    prevBtn.addEventListener('click', function(){ go(cur-1); });
+    clearBtn.addEventListener('click', function(){ input.value=''; run(''); input.focus(); });
+  })();
+
+  /* ---------- heading anchors ---------- */
+  (function(){
+    var heads = document.querySelectorAll('.wrap h2, .wrap h3'), used = {};
+    function slug(s){
+      s = s.toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,50) || 'section';
+      if(used[s] != null){ used[s]++; s = s+'-'+used[s]; } else { used[s] = 0; }
+      return s;
+    }
+    heads.forEach(function(h){
+      var sec = h.closest('section[id]'), id;
+      if(h.tagName === 'H2' && sec){ id = sec.id; }
+      else { id = h.id || slug(h.textContent); if(!h.id) h.id = id; }
+      h.classList.add('anchored');
+      var a = document.createElement('a'); a.className = 'hanchor'; a.href = '#'+id; a.textContent = '#';
+      a.setAttribute('aria-label','Copy link to "'+h.textContent.trim()+'"');
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var url = location.origin + location.pathname + '#' + id;
+        history.replaceState(null,'','#'+id);
+        var done = function(){ a.classList.add('copied'); setTimeout(function(){a.classList.remove('copied');},1100); };
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, done); } else { done(); }
+      });
+      h.appendChild(a);
+    });
+  })();
+
+  /* ---------- back to top ---------- */
+  (function(){
+    var btn = document.getElementById('toTop'); if(!btn) return;
+    var ticking = false;
+    function check(){ btn.classList.toggle('show', window.pageYOffset > 600); ticking = false; }
+    window.addEventListener('scroll', function(){ if(!ticking){ requestAnimationFrame(check); ticking = true; } }, {passive:true});
+    btn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+      var sk = document.querySelector('.wrap h1') || document.body;
+      if(sk.tabIndex == null || sk.tabIndex < 0) sk.tabIndex = -1;
+      sk.focus({preventScroll:true});
+    });
+    check();
+  })();
+
+  /* ---------- expand collapsibles for print ---------- */
+  (function(){
+    var saved = [];
+    window.addEventListener('beforeprint', function(){
+      saved = []; document.querySelectorAll('details').forEach(function(d){ saved.push([d, d.open]); d.open = true; });
+    });
+    window.addEventListener('afterprint', function(){ saved.forEach(function(p){ p[0].open = p[1]; }); });
+  })();
+})();
+</script>
+</body>
+</html>

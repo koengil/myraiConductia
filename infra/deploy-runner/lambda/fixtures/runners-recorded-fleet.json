@@ -1,0 +1,200 @@
+{
+  "_source": "gh api repos/Conductia/Conductia/actions/runners (GET, 2026-10-21; runner names stripped). The six shared CI fleet runners, recorded from the repository list because the conductia-deploy group does not exist yet (its endpoints answer 403 to a non-owner). A group runners list holds the same runner objects. None was minted by the launcher, so in a group listing every one is unknown",
+  "total_count": 6,
+  "runners": [
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 23,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    },
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 28,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-heavy",
+          "type": "custom"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    },
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 21,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-heavy",
+          "type": "custom"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    },
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 22,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-heavy",
+          "type": "custom"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    },
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 24,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    },
+    {
+      "busy": true,
+      "ephemeral": null,
+      "id": 27,
+      "labels": [
+        {
+          "id": 0,
+          "name": "self-hosted",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "Linux",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "X64",
+          "type": "read-only"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-heavy",
+          "type": "custom"
+        },
+        {
+          "id": 0,
+          "name": "conductia-ci-light",
+          "type": "custom"
+        }
+      ],
+      "os": "Linux",
+      "status": "online"
+    }
+  ]
+}

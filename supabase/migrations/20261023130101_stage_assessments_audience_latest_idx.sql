@@ -1,0 +1,11 @@
+-- G-07 slice 1a (#173): the latest assessment is now read per (candidate, audience). The index is
+-- swapped in three steps so stage_assessments is never without a latest-row index:
+--   20261023130101 (this file) builds the per-audience index under a new name, concurrently;
+--   20261023130102 stops the migration unless that index is valid;
+--   20261023130103 drops the old (candidate_id, as_of desc) index, concurrently.
+-- Concurrently and alone in its file because stage_assessments is a big table
+-- (supabase/lint/big-tables.txt): a plain build holds a SHARE lock that blocks every assessment
+-- write until the scan ends. `supabase db push` runs this file outside a transaction. If the build
+-- fails it leaves an invalid index that `if not exists` would skip on a retry, so 20261023130102
+-- stops there: drop stage_assessments_audience_latest_idx and re-run this file.
+create index concurrently if not exists stage_assessments_audience_latest_idx on stage_assessments (candidate_id, team_mailbox_id, as_of desc);

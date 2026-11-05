@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teach the skill mockup</title>
+<style>
+:root{
+  --ink:#191919;--ink-secondary:#55534e;--ink-tertiary:#6e6e6b;
+  --surface:#fff;--surface-subtle:#f1f0ec;--surface-warm:#f5f4f1;
+  --stroke:#eceae5;--stroke-strong:#e0ded8;
+  --ai:#5e5ce6;--ai-soft:#edecfb;
+  --hold-deep:#6e5308;--hold-tint:#fbf3d9;--hold-fill:#fae6a8;
+  --radius-control:8px;--radius-card:12px;
+  --shadow-ambient:0 14px 40px rgb(25 25 25 / .09);
+  --font-bank:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--surface-warm);color:var(--ink);font-family:var(--font-bank);font-size:13px;line-height:1.45;padding:24px 16px}
+main{max-width:1000px;margin:0 auto;display:grid;gap:28px}
+h1{font-size:20px;margin:0}
+h2{font-size:14px;margin:0 0 4px}
+.lead{color:var(--ink-secondary);margin:4px 0 0}
+.frame{background:var(--surface);border:1px solid var(--stroke);border-radius:var(--radius-card);box-shadow:var(--shadow-ambient);overflow:hidden}
+.pad{padding:16px}
+.mono{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary)}
+.btn{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:var(--radius-control);border:1px solid var(--stroke-strong);background:var(--surface);font-size:12px;font-weight:500;white-space:nowrap}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.ghost{border-color:transparent;color:var(--ink-secondary)}
+.tag{display:inline-block;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--ai-soft);color:var(--ai);font-family:var(--font-bank);font-size:10px;font-weight:500}
+.check{display:flex;gap:6px;align-items:flex-start;font-size:12px}
+.check input{margin:2px 0 0}
+.help{display:block;color:var(--ink-tertiary);font-size:11px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 280px}
+.doc{padding:16px 20px;font-family:var(--font-display);font-size:13px}
+.doc p{margin:0 0 8px}
+.marked{border-left:3px solid var(--hold-fill);padding-left:8px}
+.selected{border-left:3px solid var(--ai);padding-left:8px}
+.pane{background:var(--surface-warm);border-left:1px solid var(--stroke);padding:16px}
+.pane h3{font-size:11px;font-weight:500;color:var(--ink-secondary);margin:0 0 8px}
+.item{border-top:1px solid var(--stroke);padding:10px 0}
+.item:first-of-type{border-top:0}
+.composer{border:1px solid var(--stroke-strong);border-radius:var(--radius-card);padding:12px;margin:6px 0 10px;background:var(--surface);font-family:var(--font-bank)}
+.field{border:1px solid var(--stroke);border-radius:6px;padding:8px;margin:6px 0 10px;min-height:44px;font-size:12px}
+.modes{display:flex;gap:6px;font-size:12px}
+.modes span{padding:2px 10px;border-radius:var(--radius-control);color:var(--ink-secondary)}
+.modes .on{background:var(--surface-subtle);color:var(--ink)}
+.foot{border-top:1px solid var(--stroke);padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.note{max-width:470px;background:var(--hold-tint);color:var(--hold-deep);border-radius:var(--radius-control);padding:8px 10px;font-size:12px}
+.output{border:1px solid var(--stroke);border-radius:6px;padding:10px;margin:8px 0;max-height:120px;overflow:hidden;font-size:12px}
+.prompt{white-space:pre-wrap;font-family:var(--font-mono);font-size:11px;border:1px solid var(--stroke);border-radius:6px;padding:10px;margin:8px 0 10px;background:var(--surface)}
+@media (max-width:760px){.split{grid-template-columns:1fr}.pane{border-left:0;border-top:1px solid var(--stroke)}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Teach the skill from comments</h1>
+    <p class="lead">Static mockup for <code>2026-10-20-teach-the-skill-from-comments-design.md</code>. Layouts chosen on 2026-10-19: the tick in the composer, the button beside Review output.</p>
+  </header>
+
+  <section>
+    <h2>1. Writing a comment, and the note beside Apply</h2>
+    <p class="lead">Comment 2 is a one-off fix, so it stays unticked. The note shows while any pending comment is ticked.</p>
+    <div class="frame">
+      <div class="pad" style="border-bottom:1px solid var(--stroke);font-weight:600">Review output</div>
+      <div class="split">
+        <div class="doc">
+          <p class="marked"><span class="mono">1 </span>Atlassian's FY26 revenue reached $5.2bn, up 20% year on year</p>
+          <p class="marked"><span class="mono">2 </span>Gross margin held at 82.1%, versus 81.4% in the prior year</p>
+          <p class="selected">Key risks: cloud migration pace, seat compression in SMB</p>
+          <div class="composer">
+            <div class="modes"><span class="on">Comment</span><span>Edit text</span></div>
+            <div class="help" style="margin-top:8px">What should change in this passage</div>
+            <div class="field">Always lead risks with the biggest one by revenue impact.</div>
+            <div class="row">
+              <label class="check"><input type="checkbox" checked><span>Teach the skill<span class="help">For rules everyone on this project should get, not fixes to this document.</span></span></label>
+              <span><span class="btn">Cancel</span> <span class="btn primary">Add comment</span></span>
+            </div>
+          </div>
+        </div>
+        <aside class="pane">
+          <h3>Pending · 2</h3>
+          <div class="item"><div class="mono">1 · Comment<span class="tag">Teaches skill</span></div><div>End every bullet with a period.</div></div>
+          <div class="item"><div class="mono">2 · Comment</div><div>Margin is 81.9%, not 82.1%.</div></div>
+        </aside>
+      </div>
+      <div class="foot">
+        <span class="btn ghost">Discard pending edits</span>
+        <div style="display:grid;gap:8px;justify-items:end">
+          <div><span class="btn">Close</span> <span class="btn primary">Apply 3 edits</span></div>
+          <div class="note">2 comments are marked to teach the skill. After applying, use Teach the skill to update this step's skill for everyone on this project. Leave a comment unticked when it only fixes this document.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. The step after applying</h2>
+    <p class="lead">The button shows while this output has ticked comments that have not been sent.</p>
+    <div class="frame pad">
+      <div class="row">
+        <span class="mono">Version 2 · Storm Duncan · 19/10/2026, 14:02</span>
+        <span><span class="btn" style="border-color:var(--ai);color:var(--ai)">Teach the skill · 2 comments</span> <span class="btn">Review output</span></span>
+      </div>
+      <div class="output">Atlassian's FY26 revenue reached $5.2bn, up 20% year on year.<br>Gross margin held at 81.9%, versus 81.4% in the prior year.<br>Key risks: seat compression in SMB, cloud migration pace.</div>
+      <div class="mono">Storm Duncan · 19/10/2026, 13:40 · succeeded · <u>Improve this skill</u></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Improve this skill, opened from the button</h2>
+    <p class="lead">The existing skill builder. The prompt is filled in and not sent; the banker can edit it, then sends and publishes as today.</p>
+    <div class="frame pad">
+      <div style="font-weight:600;margin-bottom:6px">Improve this skill</div>
+      <div class="prompt">Update this skill with lessons from reviews of its output.
+
+Keep the lessons in a section titled "Learned from reviews". Merge these with any
+lessons already in that section: drop duplicates, and where two conflict, keep the
+newer one. Write each lesson as a short standing rule. Leave every other part of
+the skill unchanged.
+
+1. Comment: "End every bullet with a period."
+   Written on: "Atlassian's FY26 revenue reached $5.2bn, up 20% year on year"
+   Became: "Atlassian's FY26 revenue reached $5.2bn, up 20% year on year."
+
+2. Comment: "Always lead risks with the biggest one by revenue impact."
+   Written on: "Key risks: cloud migration pace, seat compression in SMB"
+   Became: "Key risks: seat compression in SMB, cloud migration pace."</div>
+      <div class="row"><span class="mono">Draft · basis: this step's current version</span><span class="btn primary">Send</span></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

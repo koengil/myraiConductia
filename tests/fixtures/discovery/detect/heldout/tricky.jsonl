@@ -1,0 +1,40 @@
+{"sentence": "The LOI was signed, but exclusivity has not been granted yet.", "sentAt": "2026-09-15T12:18:00Z", "expected": "loi_signed"}
+{"sentence": "We signed the NDA with Corvane, though the VDR is not yet open to them.", "sentAt": "2026-09-22T15:29:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "The SPA was signed on Tuesday and the deal was announced the same morning.", "sentAt": "2026-09-29T08:40:00Z", "expected": "signed"}
+{"sentence": "Bids were received on Friday and Ludlow was then granted exclusivity.", "sentAt": "2026-10-06T11:51:00Z", "expected": "exclusivity_granted"}
+{"sentence": "Has the SPA been signed, given the deal was announced yesterday?", "sentAt": "2026-10-13T14:02:00Z", "expected": "announced"}
+{"sentence": "Ana asked whether the LOI was signed, but I can only confirm exclusivity was granted.", "sentAt": "2026-10-20T17:13:00Z", "expected": "exclusivity_granted"}
+{"sentence": "The process letter went out, but no NDAs have been signed.", "sentAt": "2026-08-07T10:24:00Z", "expected": "process_letter_sent"}
+{"sentence": "We held the kickoff but have not signed the EL.", "sentAt": "2026-08-14T13:35:00Z", "expected": "kickoff_held"}
+{"sentence": "Management presentations were held; bids are not due until 30 Oct.", "sentAt": "2026-08-21T16:46:00Z", "expected": "management_presentation_held"}
+{"sentence": "The VDR opened Monday, yet nobody has been given access.", "sentAt": "2026-08-28T09:57:00Z", "expected": "vdr_opened"}
+{"sentence": "Kestrel received VDR access, but their NDA is still unsigned.", "sentAt": "2026-09-04T12:08:00Z", "expected": "buyer_vdr_access_granted"}
+{"sentence": "The pitch was delivered and the client has not decided on the EL.", "sentAt": "2026-09-11T15:19:00Z", "expected": "pitch_delivered"}
+{"sentence": "The deal has not closed although the SPA was signed on 20 Oct.", "sentAt": "2026-09-18T08:30:00Z", "expected": "signed"}
+{"sentence": "Exclusivity lapsed on Friday, and the LOI was never countersigned.", "sentAt": "2026-09-25T11:41:00Z", "expected": "exclusivity_lapsed"}
+{"sentence": "We reopened the round after the process had been paused.", "sentAt": "2026-10-02T14:52:00Z", "expected": "round_reopened"}
+{"sentence": "Is the process terminated now that the bidder walked?", "sentAt": "2026-10-09T17:03:00Z", "expected": null}
+{"sentence": "Rumor that the SPA was signed is false.", "sentAt": "2026-10-16T10:14:00Z", "expected": null}
+{"sentence": "Please confirm the filing was made, I assumed it went in on 12 Oct.", "sentAt": "2026-08-03T13:25:00Z", "expected": null}
+{"sentence": "The LOI draft was circulated, not signed.", "sentAt": "2026-08-10T16:36:00Z", "expected": null}
+{"sentence": "The teaser was drafted last month but we scrapped it and have nothing now.", "sentAt": "2026-08-17T09:47:00Z", "expected": null}
+{"sentence": "Both the CIM draft and the teaser are done.", "sentAt": "2026-08-24T12:58:00Z", "expected": null}
+{"sentence": "We paused, then terminated the process on 18 Oct.", "sentAt": "2026-08-31T15:09:00Z", "expected": "process_terminated"}
+{"sentence": "Closing is expected after HSR filing, which was submitted on 12 Oct.", "sentAt": "2026-09-07T08:20:00Z", "expected": "regulatory_filing"}
+{"sentence": "Corvane signed the NDA and then walked away from the process.", "sentAt": "2026-09-14T11:31:00Z", "expected": "buyer_nda_executed"}
+{"sentence": "The announcement that we closed is premature; the SPA is only signed.", "sentAt": "2026-09-21T14:42:00Z", "expected": "signed"}
+{"sentence": "If the NDA that was signed on 3 Sep covers affiliates, we can share the CIM.", "sentAt": "2026-09-28T17:53:00Z", "expected": "client_nda_signed"}
+{"sentence": "Whether the IOIs that arrived Friday are binding is unclear.", "sentAt": "2026-10-05T10:04:00Z", "expected": "bids_received"}
+{"sentence": "They say the data room is open, but I could not log in.", "sentAt": "2026-10-12T13:15:00Z", "expected": null}
+{"sentence": "I think the LOI was signed but I need to check with legal.", "sentAt": "2026-10-19T16:26:00Z", "expected": null}
+{"sentence": "It sounds like exclusivity may have been granted.", "sentAt": "2026-08-06T09:37:00Z", "expected": null}
+{"sentence": "We were supposed to send the process letter on 25 Sep but it slipped.", "sentAt": "2026-08-13T12:48:00Z", "expected": null}
+{"sentence": "The MP was due on Tuesday and was postponed.", "sentAt": "2026-08-20T15:59:00Z", "expected": null}
+{"sentence": "Outreach began last week, although only to sponsors.", "sentAt": "2026-08-27T08:10:00Z", "expected": "buyer_outreach_started"}
+{"sentence": "After disclosure schedules were exchanged, the SPA was still unsigned.", "sentAt": "2026-09-03T11:21:00Z", "expected": "disclosure_schedules_exchanged"}
+{"sentence": "The first draft SPA was circulated before the LOI was signed.", "sentAt": "2026-09-10T14:32:00Z", "expected": "spa_draft_circulated"}
+{"sentence": "The offer was not accepted, so no LOI was signed and the round is open.", "sentAt": "2026-09-17T17:43:00Z", "expected": null}
+{"sentence": "Management presentation held? Not yet.", "sentAt": "2026-09-24T10:54:00Z", "expected": null}
+{"sentence": "We did not reopen the round; Ludlow simply resubmitted.", "sentAt": "2026-10-01T13:05:00Z", "expected": null}
+{"sentence": "Ignore my earlier note that the deal closed, it did not.", "sentAt": "2026-10-08T16:16:00Z", "expected": null}
+{"sentence": "The client signed the EL, so we are free to approach Ludlow, subject to the NDA.", "sentAt": "2026-10-15T09:27:00Z", "expected": "engagement_letter_signed"}

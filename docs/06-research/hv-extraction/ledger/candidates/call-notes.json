@@ -1,0 +1,30 @@
+{
+ "source": "call-notes-2026-07-07",
+ "gate0": [
+  {"action": "Assign a team (select team members/permissions)", "sourceRef": "call-notes §MVP; deal-lifecycle-notes.png item 2"},
+  {"action": "Create a code name", "sourceRef": "call-notes §MVP; deal-lifecycle-notes.png item 1"},
+  {"action": "Notify compliance and management", "sourceRef": "call-notes §MVP; deal-lifecycle-notes.png item 3"},
+  {"action": "Confirm where in the lifecycle the deal is entering", "sourceRef": "call-notes §MVP; deal-lifecycle-notes.png item 4"}
+ ],
+ "steps": [],
+ "semantics": {
+  "hvReframe": {"horizontal": "spans the entire deal lifecycle (workflow engine, compliance checker, spell check)", "vertical": "happens at a specific step (valuation, pitch deck, advocacy deck)", "hybrid": "some verticals built by the horizontal team (e.g. deal onboarding routing)", "sourceRef": "call-notes §OS vs App Layer"},
+  "skipRule": {"rule": "any step can be skipped with human approval; reason for skip routes to the appropriate next step", "sourceRef": "call-notes §MVP"},
+  "editRule": {"rule": "editing completed steps always allowed — updates that step's output, does not revert the flow; outputs stored versioned (Pitch Valuation V1/V2, Advocacy Valuation V1/V2)", "sourceRef": "call-notes §MVP"},
+  "assignmentRule": {"rule": "each step can be skipped or assigned to a human or an agent, and needs a deadline or priority tag", "sourceRef": "deal-lifecycle-notes.png Slack message"},
+  "mvp": {"storm": "all 82 steps present, human marks done/not-done, advances linearly — no skills, no agents", "lance": "16 core steps across all five phases, origination through close", "agreed": "full step timeline in place, limited automation added progressively", "sourceRef": "call-notes §MVP"},
+  "stepAnatomy": {"rule": "each step can: run a skill/agent, track token usage, require approval, be marked complete; step-level compliance tracking and audit trail", "sourceRef": "call-notes §Workflow Demo (Roberto)"},
+  "views": {"rule": "two views: Focus (current step) and Full Array (all steps)", "sourceRef": "call-notes §Workflow Demo"},
+  "teams": {"futureproofing": "horizontal layer, workflow engine, orchestration, audit/tracking", "rts": "vertical agents and skills at each step (Markus, Svetozar)", "ignatious": "process expertise, step descriptions, prioritization input", "process": "each vertical step gets a dedicated 5-page spec doc assigned to a banker + RTS team member; integration/testing require step-lock between Futureproofing and RTS", "sourceRef": "call-notes §Roles"},
+  "ioFramework": {"rule": "per component: input (what/format/source: API, file, etc.), transformation/process, expected output format, constraints/edge cases/guardrails for AI", "sourceRef": "call-notes §Markus framework"}
+ },
+ "conflicts": [
+  "'82 steps' (Storm's framing, call notes) vs Master Process v2 Seq 1-65 + 21 horizontal apps — count needs Storm's confirmation",
+  "Workflow process was priority #1 in discussion but listed #9 in the then-current doc (OS-vs-app-layer tension)",
+  "Master Process 2.0 is explicitly a first draft: ordering and H/V classification 'needs everyone's input' (Storm)"
+ ],
+ "notes": [
+  "D1 deliverable expectation: one-to-two page visual showing each step, owner, inputs/outputs, human vs agent split; review 1-on-1 with Storm before wider group",
+  "Sample deal folder ('Blinky') being compiled by Dan/Storm for RTS"
+ ]
+}

@@ -1,0 +1,19 @@
+{
+  "format": "conductia.recall-corpus/v1",
+  "firm": { "companyId": "co-smoke", "domain": "smoke.example", "approvals": ["firm_name_alias"] },
+  "sources": [
+    { "id": "smoke-personal", "address": "quinn@smoke.example", "kind": "personal", "ownerPersonId": "p-quinn" },
+    { "id": "smoke-deals", "address": "deals@smoke.example", "kind": "team", "readerPersonIds": ["p-quinn"], "headline": true }
+  ],
+  "people": [
+    { "id": "p-quinn", "address": "quinn@smoke.example", "companyId": "co-smoke", "leadsView": true, "searchCompanies": true }
+  ],
+  "companies": [
+    { "id": "co-smoke", "name": "Smoke Partners", "type": "bank", "registeredByCompanyId": "co-smoke" },
+    { "id": "co-fenwick", "name": "Fenwick Foods", "type": "client", "registeredByCompanyId": "co-smoke" }
+  ],
+  "deals": {
+    "quill": { "keys": ["quill"] },
+    "fenwick": { "keys": ["firm:fenwick-foods"] }
+  }
+}

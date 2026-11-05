@@ -1,0 +1,13 @@
+{
+  "comment": "One call's worst-case cost, held to the same numbers by ceilingCostFor (src/lib/discovery/extract/estimate.ts) and by discovery_extract_ceiling_usd (supabase/migrations/20261021190000). tests/discovery/extract-run.test.ts checks the TS side and that supabase/tests/discovery_milestones.sql asserts each expectedCeilingUsd literal. ceiling = round(ceil((overheadBytes + subjectBytes + bodyBytes) / bytesPerToken) * inputUsdPerToken + outputCeilingUsd, 6). Prices are the pinned model's: $2 and $10 per million tokens, 2048 output tokens.",
+  "model": "anthropic/claude-sonnet-5",
+  "overheadBytes": 2420,
+  "bytesPerToken": 2.0,
+  "inputUsdPerToken": 0.000002,
+  "outputCeilingUsd": 0.02048,
+  "cases": [
+    { "name": "small body", "subjectBytes": 13, "bodyBytes": 200, "expectedCeilingUsd": "0.023114" },
+    { "name": "mid body", "subjectBytes": 40, "bodyBytes": 10000, "expectedCeilingUsd": "0.032940" },
+    { "name": "large body, about 200 KB", "subjectBytes": 80, "bodyBytes": 200000, "expectedCeilingUsd": "0.222980" }
+  ]
+}

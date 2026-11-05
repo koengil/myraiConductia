@@ -1,0 +1,43 @@
+{
+ "source": "png-trio",
+ "phases7": [
+  {"num": 1, "name": "Mandate", "detail": "engagement & kickoff", "sourceRef": "deal-lifecycle.png"},
+  {"num": 2, "name": "Preparation", "detail": "CIM, model, data room", "sourceRef": "deal-lifecycle.png"},
+  {"num": 3, "name": "Marketing", "detail": "buyer outreach & NDAs", "sourceRef": "deal-lifecycle.png"},
+  {"num": 4, "name": "Diligence", "detail": "Q&A, data room management", "sourceRef": "deal-lifecycle.png"},
+  {"num": 5, "name": "Negotiation", "detail": "bids, terms, SPA markup", "sourceRef": "deal-lifecycle.png"},
+  {"num": 6, "name": "Signing", "detail": "definitive agreement", "sourceRef": "deal-lifecycle.png"},
+  {"num": 7, "name": "Close", "detail": "funds flow & completion", "sourceRef": "deal-lifecycle.png"}
+ ],
+ "phases5_whiteboard": [
+  {"num": 1, "name": "Origination → Qualification & Mandate", "sourceRef": "whiteboard png"},
+  {"num": 2, "name": "Preparation & Market Readiness", "sourceRef": "whiteboard png"},
+  {"num": 3, "name": "Marketing & First-Round Bids", "sourceRef": "whiteboard png"},
+  {"num": 4, "name": "Diligence, LOI & Definitive Docs", "sourceRef": "whiteboard png"},
+  {"num": 5, "name": "Signing, Closing & Post-Close", "sourceRef": "whiteboard png"}
+ ],
+ "gate0": [
+  {"action": "create project code name", "sourceRef": "deal-lifecycle-notes.png item 1"},
+  {"action": "select team members/permissions", "sourceRef": "deal-lifecycle-notes.png item 2"},
+  {"action": "notify internal compliance/management team", "sourceRef": "deal-lifecycle-notes.png item 3"},
+  {"action": "where you're at in the deal lifecycle", "sourceRef": "deal-lifecycle-notes.png item 4"}
+ ],
+ "whiteboard_phase_panels": [
+  {"phase": 1, "steps": ["Lead intake & registration", "Conflicts check", "Company & buyer research", "Decision-maker / relationship map", "Client NDA · diligence request list", "Pitch → Engagement Letter signed"], "roles": ["MD — relationship, pursue/pass, EL", "Analyst/Assoc — research, pitch", "Compliance — conflicts"], "tools": ["HubSpot (light)", "S&P Capital IQ", "PitchBook", "M365", "email"], "sourceRef": "whiteboard png phase 1 panels"},
+  {"phase": 2, "steps": ["Kickoff · WGL · timeline", "Financial model / normalization", "Teaser & CIM", "Buyer list finalized", "Data room (VDR) setup", "FAQ · buyer Q&A prep"], "roles": ["VP — runs prep", "Analyst — model, materials", "MD — approves narrative & buyer list"], "tools": ["Excel", "Word/PPT", "SharePoint", "VDR (Box / Datasite — varies)", "S&P Capital IQ", "PitchBook"], "sourceRef": "whiteboard png phase 2 panels"},
+  {"phase": 3, "steps": ["Buyer outreach (code name)", "NDA negotiation", "VDR access · buyer & mgmt calls", "Q&A · feedback tracking", "Weekly client updates", "First-round bids (IOIs)"], "roles": ["MD/VP — outreach, strategy, meetings", "Associate — trackers, Q&A", "Analyst — weekly updates"], "tools": ["Email", "VDR", "Excel / Google Sheets trackers", "manual call notes"], "sourceRef": "whiteboard png phase 3 panels"},
+  {"phase": 4, "steps": ["Deep diligence (legal/fin/tech)", "Issue lists · risk log", "LOI · exclusivity", "Definitive agreement", "Board approvals"], "roles": ["MD/VP — negotiation", "Outside counsel — documents", "Analyst — diligence support", "Client — approvals"], "tools": ["VDR", "Word", "Excel", "email"], "sourceRef": "whiteboard png phase 4 panels"},
+  {"phase": 5, "steps": ["Closing checklist · funds flow", "Announcement", "Invoice", "League-table submission", "Case study · post-mortem"], "roles": ["VP/Analyst — closing mechanics", "MD — sign-off", "Finalis — billing / collection", "Compliance — records"], "tools": ["Word / Excel / email", "Word invoice → Finalis", "manual league-table sites"], "sourceRef": "whiteboard png phase 5 panels"}
+ ],
+ "alwaysOnLayer": {"items": ["Enterprise Search", "Model Optimization", "Data Room Hosting (Box)", "Comms Compliance (Global Relay / Smarsh)", "Orchestration + QC"], "note": "runs under every phase; full list in the Master Process doc", "sourceRef": "whiteboard png always-on band"},
+ "regulatoryBand": {"items": ["FINRA", "SEC", "MNPI / information barriers", "code names", "human-gated external sends", "via Finalis Securities (Member FINRA/SIPC)"], "sourceRef": "whiteboard png regulatory band"},
+ "painPoints": ["File findability — split across SharePoint + Google Drive; weak naming", "Version control — which model / deck / CIM is current?", "External-send errors — wrong recipient / attachment / code name", "Dropped balls — missed follow-ups, stale trackers across 3-5 live deals", "Re-work — research & materials rebuilt every deal; no reusable memory", "Inconsistent materials & manual conflicts — numbers drift across docs"],
+ "steps": [],
+ "conflicts": [
+  "7-phase lifecycle (deal-lifecycle.png deck slide) vs 5-phase whiteboard/Master Process; mapping: Mandate→P1, Preparation→P2, Marketing→P3, Diligence+Negotiation→P4, Signing+Close→P5; docx v2 + whiteboard = 5 wins per precedence, deck slide is the older investor framing"
+ ],
+ "notes": [
+  "Deal Console mock on deal-lifecycle.png shows tasks with AGENT/HIL owner chips and statuses (Review, In progress, Approved, Pre-send QC, Waiting): 'Every task routed to a human, agent, or hybrid team - supervised - logged - permissioned'",
+  "Deck slide aesthetic: dark navy + gold, 'The deal, organized and in motion', Project Atlas sample deal, 'Day 38' position marker"
+ ]
+}

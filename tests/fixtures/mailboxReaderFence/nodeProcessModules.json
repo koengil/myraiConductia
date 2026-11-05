@@ -1,0 +1,58 @@
+[
+  {
+    "file": "scripts/lib/schemaCatalog.ts",
+    "reason": "Operator tooling for the schema snapshot: runs execFileSync for a `node --env-file` child that reads DATABASE_URL and for psql; invoked by hand or in CI, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/preflight-env.ts",
+    "reason": "Operator preflight (npm run preflight:env): runs execFileSync for a `node --env-file` child that reads the mail and Ignatious settings from an env file; invoked by hand or by the Vercel build, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/ci/docs-only.mjs",
+    "reason": "CI helper: runs execFileSync('git', ...) to decide whether a change is docs-only; runs only in the CI workflow, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "src/lib/graph/reader/extractText.ts",
+    "reason": "The sandboxed document extractor (#243): spawns extract/child.mjs under Node's permission model (no write, spawn or worker threads, empty environment, SIGKILL timeout) so no parser runs in the worker; reached only through the drive reader, behind the reader capability."
+  },
+  {
+    "file": "scripts/discovery-export.ts",
+    "reason": "Operator script (phase 5 eval export): runs execFileSync('git', ['rev-parse', ...]) to learn the repository roots, so --out is refused inside the repo (an export is metadata of real mail and must not be committed); invoked by hand, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/m365/cassette/outsideRepo.ts",
+    "reason": "Recorder guard (CDT-277): runs execFileSync('git', ...) to learn the repository roots (so --out is refused inside the repo: a cassette never goes into git) and, through gitIn, the reader's commit and cleanliness for the cassette manifest; invoked by hand from the recorder, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/perf/pg-stat.ts",
+    "reason": "Perf harness for #162: runs execFileSync('psql', ...) to reset and read pg_stat_statements on the throwaway cdt162-rail stack only (assertLocalStack before every call); invoked by hand under scripts/perf/with-local-stack.sh, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/check-migration-prefixes.ts",
+    "reason": "CI and operator check (npm run check:migrations): runs execFileSync('git', ...) to read the migration files on origin/main and to hash the ones in the working tree, so a released migration cannot change; invoked by hand or in the CI workflow, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/check-migration-open-prs.ts",
+    "reason": "CI and operator check (npm run check:migrations): runs execFileSync('git', ...) to list and hash the migrations this branch adds, and `gh auth token` for a local --open-prs run, so two open PRs cannot share a migration prefix; invoked by hand or in the CI workflow, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/check-migration-order.ts",
+    "reason": "CI and operator check (npm run check:migrations): runs execFileSync('git', ...) to list the migrations on the PR's base branch and the ones this branch adds, so a new migration sorts after the base's newest; invoked by hand or in the CI workflow, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/ai-review/run.ts",
+    "reason": "CI-only AI PR reviewer (.github/workflows/ai-review.yml): spawns `gh api` and the Claude Code CLI against a checkout of the PR that it reads and never installs or executes; runs only in that workflow, never by a request path, the worker or an agent, and imports nothing from the reader."
+  },
+  {
+    "file": "scripts/ai-review/gate-run.ts",
+    "reason": "CI-only AI review gate actions (.github/workflows/ai-review.yml finalize and override jobs): spawns `gh api` to read and post ai-review check runs and PR comments; runs only in that workflow, never by a request path, the worker or an agent, and imports nothing from the reader."
+  },
+  {
+    "file": "scripts/ai-review/score-run.ts",
+    "reason": "CI-only weekly AI review score (.github/workflows/ai-review-score.yml): runs `gh api` and `unzip` on review result artifacts; runs only in that workflow, never by a request path, the worker or an agent."
+  },
+  {
+    "file": "scripts/rehearsal/probes.ts",
+    "reason": "The #173 demo rehearsal's probes: spawnSync runs one classify-once --propose pass of worker/classify.ts on the recorded replies (an env built from scratch by localStatusEnv, no gateway key), and execFileSync('git', ...) reads the commit the run tested; every probe pins w9-m365cap first (assertRehearsalStack) and runs only through scripts/rehearsal/rehearse.sh, by hand, never by a request path, the worker or an agent."
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "format": "conductia.graph-cassette-digest/v1",
+  "files": [
+    {
+      "path": "bodies/607fb888c4b0f8a444849a323da6c36dcd5a16e2ef54f7eec7f51b67b2ff3ca1",
+      "sha256": "607fb888c4b0f8a444849a323da6c36dcd5a16e2ef54f7eec7f51b67b2ff3ca1",
+      "bytes": 605
+    },
+    {
+      "path": "bodies/64b8d345e0b2f4b7e619ed31e2e62013cf36ab5c1cdbcce35e8a030e687e91f7",
+      "sha256": "64b8d345e0b2f4b7e619ed31e2e62013cf36ab5c1cdbcce35e8a030e687e91f7",
+      "bytes": 16
+    },
+    {
+      "path": "interactions.jsonl",
+      "sha256": "d7517be3d4824c0f2a9191178bc1172c7f4e11aafc61b2cbe46ec4e7f71acfef",
+      "bytes": 30409
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "bd36dd4f992aa36188cb6b8030bdf28ed827c4169923eeef842e0e5cabf618be",
+      "bytes": 645
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Management Accounts (YTD).txt
+=============================
+
+PLACEHOLDER — external data room document.
+
+This is the CLIENT's own document (source material the client provides), distinct from our internal Deal Folder (our work product).
+
+The real virtual-data-room index and files will be supplied by the Ignatious team (Dan). This placeholder exists so the Data Room explorer is fully navigable end to end.

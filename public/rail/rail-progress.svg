@@ -1,0 +1,18 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Complete" filter="url(#filter0_d_0_193)">
+<rect x="2.5" y="2.5" width="13" height="13" rx="6.5" stroke="#2A2826"/>
+<circle id="Ellipse 4" cx="9" cy="9" r="5" fill="#F4F2EF"/>
+<path id="Vector" d="M12 7L7.875 11.125L6 9.25" stroke-width="0.9375" stroke-linecap="round" stroke-linejoin="round" stroke="#2A2826"/>
+</g>
+<defs>
+<filter id="filter0_d_0_193" x="0" y="0" width="18" height="18" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_0_193"/>
+<feOffset/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.94902 0 0 0 0 0.933333 0 0 0 0 0.921569 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_193"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_193" result="shape"/>
+</filter>
+</defs>
+</svg>

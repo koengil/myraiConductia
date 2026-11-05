@@ -1,0 +1,7 @@
+{
+  "_source": "hand-written in the documented shape of GET /orgs/{org}/actions/runner-groups/{id}/repositories; fields other than name, full_name and private stripped",
+  "total_count": 1,
+  "repositories": [
+    { "name": "Conductia", "full_name": "Conductia/Conductia", "private": true }
+  ]
+}

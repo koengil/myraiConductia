@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+#
+# Normalise CRLF -> LF in staged text files.
+#
+# The repo is uniformly LF. CRLF gets in when a tool rewrites a file with
+# Windows newline translation -- a scripted edit through Python's text mode, an
+# editor saving with autocrlf, a copy-paste through a Windows utility. The
+# damage is invisible in review: the file looks unchanged but every line shows
+# as modified, so a two-line fix arrives as a 600-line diff and the real change
+# is impossible to see.
+#
+# This rewrites the staged blob in the git INDEX, and only touches the working
+# tree when it is safe to do so (see below). That ordering matters: a hook that
+# blindly `git add`s a file would quietly stage unrelated unstaged edits from a
+# partial `git add -p` session.
+#
+# Opt out for a single commit with: git commit --no-verify
+
+set -uo pipefail
+
+# .gitattributes decides what is exempt (binary, eol=crlf). Nothing is
+# hardcoded here, so a file that genuinely needs CRLF is declared in one place.
+should_skip() {
+	local path="$1" attrs
+
+	# Declared binary, or explicitly not text.
+	attrs="$(git check-attr binary text eol -- "$path" 2>/dev/null)"
+	case "$attrs" in
+	*"binary: set"*) return 0 ;;
+	*"text: unset"*) return 0 ;;
+	*"eol: crlf"*) return 0 ;;
+	esac
+
+	return 1
+}
+
+# A NUL byte in the first 8k means binary, whatever the extension claims.
+#
+# Compared against a NUL-stripped copy rather than grepped for. bash cannot hold
+# a NUL in a string, so $'\0' collapses to the EMPTY pattern and `grep -q ''`
+# matches every line -- which silently classifies every file as binary and makes
+# the whole hook a no-op.
+looks_binary() {
+	local head_bytes stripped rc
+	head_bytes="$(mktemp)"
+	stripped="$(mktemp)"
+	head -c 8000 -- "$1" >"$head_bytes" 2>/dev/null
+	LC_ALL=C tr -d '\000' <"$head_bytes" >"$stripped"
+	if cmp -s "$head_bytes" "$stripped"; then
+		rc=1 # identical: no NUL, so text
+	else
+		rc=0 # differed: NUL present, so binary
+	fi
+	rm -f "$head_bytes" "$stripped"
+	return "$rc"
+}
+
+fixed_count=0
+fixed_names=()
+index_only=()
+
+# -z so paths with spaces, and this repo's [dealId] route brackets, survive.
+while IFS= read -r -d '' path; do
+	should_skip "$path" && continue
+
+	# Index content, not the working tree: the index is what is being committed.
+	staged_blob="$(git rev-parse ":$path" 2>/dev/null)" || continue
+	[ -n "$staged_blob" ] || continue
+
+	tmp_staged="$(mktemp)"
+	git cat-file blob "$staged_blob" >"$tmp_staged" 2>/dev/null || {
+		rm -f "$tmp_staged"
+		continue
+	}
+
+	if looks_binary "$tmp_staged"; then
+		rm -f "$tmp_staged"
+		continue
+	fi
+
+	# Nothing to do unless a CR is actually present.
+	if ! grep -qU $'\r' "$tmp_staged"; then
+		rm -f "$tmp_staged"
+		continue
+	fi
+
+	tmp_clean="$(mktemp)"
+	tr -d '\r' <"$tmp_staged" >"$tmp_clean"
+
+	mode="$(git ls-files --stage -- "$path" | awk '{print $1}')"
+	[ -n "$mode" ] || mode=100644
+
+	new_blob="$(git hash-object -w --path "$path" --stdin <"$tmp_clean")" || {
+		rm -f "$tmp_staged" "$tmp_clean"
+		continue
+	}
+	git update-index --cacheinfo "$mode,$new_blob,$path" || {
+		rm -f "$tmp_staged" "$tmp_clean"
+		continue
+	}
+
+	# Only rewrite the file on disk when the working tree still matches what was
+	# staged. If it does not, the file is partially staged and overwriting it
+	# would destroy edits the author deliberately held back.
+	if [ -f "$path" ] && cmp -s "$path" "$tmp_staged"; then
+		cat "$tmp_clean" >"$path"
+	else
+		index_only+=("$path")
+	fi
+
+	fixed_names+=("$path")
+	fixed_count=$((fixed_count + 1))
+	rm -f "$tmp_staged" "$tmp_clean"
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [ "$fixed_count" -gt 0 ]; then
+	echo "pre-commit: converted CRLF -> LF in $fixed_count staged file(s):"
+	for name in "${fixed_names[@]}"; do
+		echo "  $name"
+	done
+	if [ "${#index_only[@]}" -gt 0 ]; then
+		echo "pre-commit: these were partially staged, so only the staged copy was"
+		echo "            normalised and the file on disk still has CRLF:"
+		for name in "${index_only[@]}"; do
+			echo "  $name"
+		done
+	fi
+fi
+
+exit 0

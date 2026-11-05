@@ -1,0 +1,143 @@
+name: E2E (live)
+
+# NO pull_request trigger, deliberately. This tier exercises real Box, Resend,
+# Microsoft 365, and the Ignatious skill API; an outage, a rate limit, or a
+# rotated credential on someone else's system carries no information about the
+# change under review, so it must be structurally incapable of gating a merge
+# (design D4). Its output is a list, not a verdict.
+on:
+  workflow_dispatch:
+  # Post-merge, so it still cannot gate anything -- but it pins a break to a
+  # single merge commit instead of to a whole day's worth of them, which the
+  # nightly alone cannot do. No path filter: this tier validates the live
+  # third-party integration of whatever shipped, not of specific files.
+  push:
+    branches: [develop]
+  schedule:
+    # 06:00 UTC nightly. GitHub fires `schedule` from the repository DEFAULT
+    # branch (`main`), so main's copy of this file is the one that runs; the
+    # checkout below pins the nightly to develop, like e2e-gmail.yml. The
+    # nightly catches third-party drift (a rotated credential, a changed API)
+    # on weeks with no merges at all, which a push trigger by definition cannot.
+    - cron: '0 6 * * *'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: e2e-live
+  # NOT cancel-in-progress. Cancelling discards the coverage for the very merge
+  # this run exists to attribute, which defeats the push trigger. GitHub keeps
+  # at most one QUEUED run per group and drops older pending ones, so a burst
+  # of merges yields a run for the first and a run for the latest rather than
+  # one serialized 30-minute run each. Serializing also matters because the
+  # live environment is shared mutable state: concurrent runs would collide on
+  # each other's deal, document, and outbox rows.
+  cancel-in-progress: false
+
+jobs:
+  live:
+    # One job per TIER, never per journey (design D5).
+    name: E2E (live)
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_LIGHT || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The nightly reads develop; every other event checks out its own ref.
+          ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
+
+      # The live target is a SECRET, and GitHub exposes no `secrets` context to
+      # any `if:` -- not on the job, not on a step. Mapping it into `env` here
+      # is the only way to branch on whether the live environment exists yet.
+      # Without this, an unconfigured repo runs the whole suite against a
+      # locally booted app (an empty E2E_BASE_URL is falsy, so
+      # playwright.config.ts still starts `webServer`), fails, and files the
+      # tracking issue below on every merge to develop.
+      - name: Check the live environment is configured
+        id: preflight
+        env:
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+        run: |
+          if [ -z "$E2E_BASE_URL" ]; then
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+            echo '::notice::E2E_BASE_URL is not set; skipping the live tier.'
+          else
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        if: steps.preflight.outputs.configured == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.preflight.outputs.configured == 'true'
+        run: npm ci --no-audit
+
+      - name: Install Chromium
+        if: steps.preflight.outputs.configured == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the live suite
+        id: run
+        if: steps.preflight.outputs.configured == 'true'
+        continue-on-error: true
+        run: npm run test:e2e:live
+        env:
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+          SEED_PASSWORD: ${{ secrets.E2E_SEED_PASSWORD }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+
+      - name: Upload the report
+        if: always() && steps.preflight.outputs.configured == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-live-report
+          path: |
+            playwright-report/
+            e2e-results.json
+            test-results/
+          retention-days: 14
+
+      - name: Open or update the tracking issue
+        if: steps.run.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TRIGGER: ${{ github.event_name }}
+        run: |
+          TITLE="E2E (live) is failing"
+          # The trigger and commit are the whole point of the push trigger: a
+          # report that does not name what it ran against cannot attribute a
+          # break to a merge. The commit is the checked-out HEAD, not
+          # github.sha: the nightly checks out develop while github.sha names
+          # main's head.
+          SHA=$(git rev-parse HEAD)
+          SUBJECT=$(git log -1 --pretty=%s HEAD 2>/dev/null || echo 'unknown')
+          BODY="The live suite broke.
+
+          - Trigger: \`$TRIGGER\`
+          - Commit: ${SHA:0:7} — $SUBJECT
+          - Report: $RUN_URL
+
+          This is a list, not a gate: it never blocks a merge. Work the failing
+          steps from the uploaded Playwright report."
+          EXISTING=$(gh issue list --state open --search "\"$TITLE\" in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            # No --label: this step's only job is to report a break, so it
+            # must not depend on repo state (a label existing) it cannot
+            # guarantee. Reuse is keyed on the stable title above instead.
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi

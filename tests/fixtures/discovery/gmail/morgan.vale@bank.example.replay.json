@@ -1,0 +1,1657 @@
+{
+  "format": "conductia.gmail-replay/v1",
+  "mailbox": "morgan.vale@bank.example",
+  "synthetic": false,
+  "transformed": "Request keys rewritten to the reader's queries (fields masks and metadata header list) and snippet, sizeEstimate, payload.mimeType and other fields outside those masks removed from listing, history and metadata answers (#263), and metadata headers the reader no longer asks for removed (#337). Not the bytes Google sent; replace with a fresh live recording (thread T2).",
+  "phases": {
+    "after-imports": {
+      "GET /gmail/v1/users/morgan.vale@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "morgan.vale@bank.example",
+            "messagesTotal": 6,
+            "threadsTotal": 4,
+            "historyId": "2056"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19c7597aaa565714",
+                "historyId": "1805"
+              },
+              {
+                "id": "19c70ba8c30a1a71",
+                "historyId": "2043"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "historyId": "1794"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "historyId": "1768"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c7597aaa565714?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "historyId": "1805",
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1805",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c70ba8c30a1a71?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "historyId": "2043",
+            "messages": [
+              {
+                "id": "19c70ba8c30a1a71",
+                "threadId": "19c70ba8c30a1a71",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-007@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Analyst Pool <analyst.pool@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "2043",
+                "internalDate": "1771417800000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c22c5e3b4c6539?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "historyId": "1794",
+            "messages": [
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1779",
+                "internalDate": "1770109920000"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-002@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1794",
+                "internalDate": "1770112920000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19a4f61c869a263a?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "historyId": "1768",
+            "messages": [
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    }
+                  ]
+                },
+                "historyId": "1733",
+                "internalDate": "1762268400000"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-002@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1768",
+                "internalDate": "1762420800000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714"
+              },
+              {
+                "id": "19c70ba8c30a1a71",
+                "threadId": "19c70ba8c30a1a71"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a"
+              }
+            ],
+            "resultSizeEstimate": 6
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 879,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c70ba8c30a1a71?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "threadId": "19c70ba8c30a1a71",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-007@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Analyst Pool <analyst.pool@bank.example>"
+                }
+              ]
+            },
+            "historyId": "2043",
+            "internalDate": "1771417800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c70ba8c30a1a71?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "threadId": "19c70ba8c30a1a71",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "The updated buyer list is attached: 14 strategics and 9 sponsors.",
+            "sizeEstimate": 957,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDdAYmFuay5leGFtcGxlPg0KRGF0ZTogV2VkLCAxOCBGZWIgMjAyNiAxMjozMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJBbmFseXN0IFBvb2wiIDxhbmFseXN0LnBvb2xAYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBGYWxjb246IGJ1eWVyIGxpc3QgdjINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KVGhlIHVwZGF0ZWQgYnV5ZXIgbGlzdCBpcyBhdHRhY2hlZDogMTQgc3RyYXRlZ2ljcyBhbmQgOSBzcG9uc29ycy4NCg",
+            "historyId": "2043",
+            "internalDate": "1771417800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-002@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Works for me. I will circulate the working group list by Friday. On Tue, 3 Feb 2026 at 09:12, Storm Duncan &lt;storm.duncan@bank.example&gt; wrote: &gt; Morgan, Dana, &gt; Project Falcon kicks off next",
+            "sizeEstimate": 1227,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDJAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAxMDowMjowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBSRTogUHJvamVjdCBGYWxjb246IGtpY2tvZmYNCkluLVJlcGx5LVRvOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpSZWZlcmVuY2VzOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCldvcmtzIGZvciBtZS4gSSB3aWxsIGNpcmN1bGF0ZSB0aGUgd29ya2luZyBncm91cCBsaXN0IGJ5IEZyaWRheS4NCg0KT24gVHVlLCAzIEZlYiAyMDI2IGF0IDA5OjEyLCBTdG9ybSBEdW5jYW4gPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-IHdyb3RlPQ0KOg0KPiBNb3JnYW4sIERhbmEsDQo-IFByb2plY3QgRmFsY29uIGtpY2tzIG9mZiBuZXh0IHdlZWsuDQo",
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Morgan, Dana, Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday. Storm",
+            "sizeEstimate": 1104,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAwOToxMjowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEZhbGNvbjoga2lja29mZg0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPk1vcmdhbiwgRGFuYSw8L3A-PHA-UHJvamVjdCBGYWxjb24ga2lja3Mgb2ZmIG5leHQgd2Vlay4gSGVsaT0NCm90cm9wZSYjMzk7cyBib2FyZCBhcHByb3ZlZCB0aGUgc2FsZSBwcm9jZXNzIG9uIEZyaWRheS48L3A-PHA-U3Rvcm08L3A-PC9ibz0NCmR5PjwvaHRtbD4NCg",
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-002@cobalt-systems.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Signed copy attached.",
+            "sizeEstimate": 1014,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMkBjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KRGF0ZTogVGh1LCAwNiBOb3YgMjAyNSAwOToyMDowMCArMDAwMA0KRnJvbTogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KVG86ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFJFOiBQcm9qZWN0IENvYnJhOiBlbmdhZ2VtZW50IGxldHRlcg0KSW4tUmVwbHktVG86IDxjb2JyYS0wMDFAYmFuay5leGFtcGxlPg0KUmVmZXJlbmNlczogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClNpZ25lZCBjb3B5IGF0dGFjaGVkLg0K",
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                }
+              ]
+            },
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Jon, The Project Cobra engagement letter is attached for signature.",
+            "sizeEstimate": 982,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDA0IE5vdiAyMDI1IDE1OjAwOjAwICswMDAwDQpGcm9tOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpUbzogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBDb2JyYTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8cD5Kb24sPC9wPjxwPlRoZSBQcm9qZWN0IENvYnJhIGVuZ2FnZW1lbnQgbGV0dGVyIGlzIGF0dGFjaGVkIGZvciBzaWduYXR1cmU9DQouPC9wPg0K",
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=2041": [
+        {
+          "status": 200,
+          "body": {
+            "history": [
+              {
+                "id": "2043",
+                "messagesAdded": [
+                  {
+                    "message": {
+                      "id": "19c70ba8c30a1a71",
+                      "threadId": "19c70ba8c30a1a71",
+                      "labelIds": [
+                        "INBOX"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "historyId": "2056"
+          }
+        }
+      ]
+    },
+    "after-unspam": {
+      "GET /gmail/v1/users/morgan.vale@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "morgan.vale@bank.example",
+            "messagesTotal": 6,
+            "threadsTotal": 4,
+            "historyId": "2056"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19c7597aaa565714",
+                "historyId": "1805"
+              },
+              {
+                "id": "19c70ba8c30a1a71",
+                "historyId": "2043"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "historyId": "1794"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "historyId": "1768"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c7597aaa565714?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "historyId": "1805",
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1805",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c70ba8c30a1a71?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "historyId": "2043",
+            "messages": [
+              {
+                "id": "19c70ba8c30a1a71",
+                "threadId": "19c70ba8c30a1a71",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-007@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Analyst Pool <analyst.pool@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "2043",
+                "internalDate": "1771417800000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c22c5e3b4c6539?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "historyId": "1794",
+            "messages": [
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1779",
+                "internalDate": "1770109920000"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-002@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1794",
+                "internalDate": "1770112920000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19a4f61c869a263a?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "historyId": "1768",
+            "messages": [
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    }
+                  ]
+                },
+                "historyId": "1733",
+                "internalDate": "1762268400000"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-002@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1768",
+                "internalDate": "1762420800000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714"
+              },
+              {
+                "id": "19c70ba8c30a1a71",
+                "threadId": "19c70ba8c30a1a71"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a"
+              }
+            ],
+            "resultSizeEstimate": 6
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 879,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c70ba8c30a1a71?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "threadId": "19c70ba8c30a1a71",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-007@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Analyst Pool <analyst.pool@bank.example>"
+                }
+              ]
+            },
+            "historyId": "2043",
+            "internalDate": "1771417800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c70ba8c30a1a71?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c70ba8c30a1a71",
+            "threadId": "19c70ba8c30a1a71",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "The updated buyer list is attached: 14 strategics and 9 sponsors.",
+            "sizeEstimate": 957,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDdAYmFuay5leGFtcGxlPg0KRGF0ZTogV2VkLCAxOCBGZWIgMjAyNiAxMjozMDowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJBbmFseXN0IFBvb2wiIDxhbmFseXN0LnBvb2xAYmFuay5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBGYWxjb246IGJ1eWVyIGxpc3QgdjINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KVGhlIHVwZGF0ZWQgYnV5ZXIgbGlzdCBpcyBhdHRhY2hlZDogMTQgc3RyYXRlZ2ljcyBhbmQgOSBzcG9uc29ycy4NCg",
+            "historyId": "2043",
+            "internalDate": "1771417800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-002@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Works for me. I will circulate the working group list by Friday. On Tue, 3 Feb 2026 at 09:12, Storm Duncan &lt;storm.duncan@bank.example&gt; wrote: &gt; Morgan, Dana, &gt; Project Falcon kicks off next",
+            "sizeEstimate": 1227,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDJAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAxMDowMjowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBSRTogUHJvamVjdCBGYWxjb246IGtpY2tvZmYNCkluLVJlcGx5LVRvOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpSZWZlcmVuY2VzOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCldvcmtzIGZvciBtZS4gSSB3aWxsIGNpcmN1bGF0ZSB0aGUgd29ya2luZyBncm91cCBsaXN0IGJ5IEZyaWRheS4NCg0KT24gVHVlLCAzIEZlYiAyMDI2IGF0IDA5OjEyLCBTdG9ybSBEdW5jYW4gPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-IHdyb3RlPQ0KOg0KPiBNb3JnYW4sIERhbmEsDQo-IFByb2plY3QgRmFsY29uIGtpY2tzIG9mZiBuZXh0IHdlZWsuDQo",
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Morgan, Dana, Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday. Storm",
+            "sizeEstimate": 1104,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAwOToxMjowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEZhbGNvbjoga2lja29mZg0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPk1vcmdhbiwgRGFuYSw8L3A-PHA-UHJvamVjdCBGYWxjb24ga2lja3Mgb2ZmIG5leHQgd2Vlay4gSGVsaT0NCm90cm9wZSYjMzk7cyBib2FyZCBhcHByb3ZlZCB0aGUgc2FsZSBwcm9jZXNzIG9uIEZyaWRheS48L3A-PHA-U3Rvcm08L3A-PC9ibz0NCmR5PjwvaHRtbD4NCg",
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-002@cobalt-systems.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Signed copy attached.",
+            "sizeEstimate": 1014,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMkBjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KRGF0ZTogVGh1LCAwNiBOb3YgMjAyNSAwOToyMDowMCArMDAwMA0KRnJvbTogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KVG86ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFJFOiBQcm9qZWN0IENvYnJhOiBlbmdhZ2VtZW50IGxldHRlcg0KSW4tUmVwbHktVG86IDxjb2JyYS0wMDFAYmFuay5leGFtcGxlPg0KUmVmZXJlbmNlczogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClNpZ25lZCBjb3B5IGF0dGFjaGVkLg0K",
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                }
+              ]
+            },
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Jon, The Project Cobra engagement letter is attached for signature.",
+            "sizeEstimate": 982,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDA0IE5vdiAyMDI1IDE1OjAwOjAwICswMDAwDQpGcm9tOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpUbzogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBDb2JyYTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8cD5Kb24sPC9wPjxwPlRoZSBQcm9qZWN0IENvYnJhIGVuZ2FnZW1lbnQgbGV0dGVyIGlzIGF0dGFjaGVkIGZvciBzaWduYXR1cmU9DQouPC9wPg0K",
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=2041": [
+        {
+          "status": 200,
+          "body": {
+            "history": [
+              {
+                "id": "2043",
+                "messagesAdded": [
+                  {
+                    "message": {
+                      "id": "19c70ba8c30a1a71",
+                      "threadId": "19c70ba8c30a1a71",
+                      "labelIds": [
+                        "INBOX"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "historyId": "2056"
+          }
+        }
+      ]
+    },
+    "seeded": {
+      "GET /gmail/v1/users/morgan.vale@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "morgan.vale@bank.example",
+            "messagesTotal": 5,
+            "threadsTotal": 3,
+            "historyId": "2041"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19c7597aaa565714",
+                "historyId": "1805"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "historyId": "1794"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "historyId": "1768"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c7597aaa565714?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "historyId": "1805",
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1805",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19c22c5e3b4c6539?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "historyId": "1794",
+            "messages": [
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1779",
+                "internalDate": "1770109920000"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<falcon-002@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Storm Duncan <storm.duncan@bank.example>"
+                    },
+                    {
+                      "name": "Cc",
+                      "value": "Dana Price <dana.price@heliotrope.example>"
+                    }
+                  ]
+                },
+                "historyId": "1794",
+                "internalDate": "1770112920000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/threads/19a4f61c869a263a?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "historyId": "1768",
+            "messages": [
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    }
+                  ]
+                },
+                "historyId": "1733",
+                "internalDate": "1762268400000"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<cobra-002@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1768",
+                "internalDate": "1762420800000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19c7597aaa565714",
+                "threadId": "19c7597aaa565714"
+              },
+              {
+                "id": "19c22f3a9a2ea0d6",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19c22c5e3b4c6539",
+                "threadId": "19c22c5e3b4c6539"
+              },
+              {
+                "id": "19a58773b13e943a",
+                "threadId": "19a4f61c869a263a"
+              },
+              {
+                "id": "19a4f61c869a263a",
+                "threadId": "19a4f61c869a263a"
+              }
+            ],
+            "resultSizeEstimate": 5
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c7597aaa565714?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaa565714",
+            "threadId": "19c7597aaa565714",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 879,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1805",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-002@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22f3a9a2ea0d6?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22f3a9a2ea0d6",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Works for me. I will circulate the working group list by Friday. On Tue, 3 Feb 2026 at 09:12, Storm Duncan &lt;storm.duncan@bank.example&gt; wrote: &gt; Morgan, Dana, &gt; Project Falcon kicks off next",
+            "sizeEstimate": 1227,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDJAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAxMDowMjowMCArMDAwMA0KRnJvbTogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KVG86ICJTdG9ybSBEdW5jYW4iIDxzdG9ybS5kdW5jYW5AYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBSRTogUHJvamVjdCBGYWxjb246IGtpY2tvZmYNCkluLVJlcGx5LVRvOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpSZWZlcmVuY2VzOiA8ZmFsY29uLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCldvcmtzIGZvciBtZS4gSSB3aWxsIGNpcmN1bGF0ZSB0aGUgd29ya2luZyBncm91cCBsaXN0IGJ5IEZyaWRheS4NCg0KT24gVHVlLCAzIEZlYiAyMDI2IGF0IDA5OjEyLCBTdG9ybSBEdW5jYW4gPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-IHdyb3RlPQ0KOg0KPiBNb3JnYW4sIERhbmEsDQo-IFByb2plY3QgRmFsY29uIGtpY2tzIG9mZiBuZXh0IHdlZWsuDQo",
+            "historyId": "1794",
+            "internalDate": "1770112920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<falcon-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Storm Duncan <storm.duncan@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "Cc",
+                  "value": "Dana Price <dana.price@heliotrope.example>"
+                }
+              ]
+            },
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19c22c5e3b4c6539?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c22c5e3b4c6539",
+            "threadId": "19c22c5e3b4c6539",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Morgan, Dana, Project Falcon kicks off next week. Heliotrope&#39;s board approved the sale process on Friday. Storm",
+            "sizeEstimate": 1104,
+            "raw": "TWVzc2FnZS1JRDogPGZhbGNvbi0wMDFAYmFuay5leGFtcGxlPg0KRGF0ZTogVHVlLCAwMyBGZWIgMjAyNiAwOToxMjowMCArMDAwMA0KRnJvbTogIlN0b3JtIER1bmNhbiIgPHN0b3JtLmR1bmNhbkBiYW5rLmV4YW1wbGU-DQpUbzogIk1vcmdhbiBWYWxlIiA8bW9yZ2FuLnZhbGVAYmFuay5leGFtcGxlPg0KQ2M6ICJEYW5hIFByaWNlIiA8ZGFuYS5wcmljZUBoZWxpb3Ryb3BlLmV4YW1wbGU-DQpTdWJqZWN0OiBQcm9qZWN0IEZhbGNvbjoga2lja29mZg0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNCjxodG1sPjxib2R5PjxwPk1vcmdhbiwgRGFuYSw8L3A-PHA-UHJvamVjdCBGYWxjb24ga2lja3Mgb2ZmIG5leHQgd2Vlay4gSGVsaT0NCm90cm9wZSYjMzk7cyBib2FyZCBhcHByb3ZlZCB0aGUgc2FsZSBwcm9jZXNzIG9uIEZyaWRheS48L3A-PHA-U3Rvcm08L3A-PC9ibz0NCmR5PjwvaHRtbD4NCg",
+            "historyId": "1779",
+            "internalDate": "1770109920000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-002@cobalt-systems.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a58773b13e943a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a58773b13e943a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Signed copy attached.",
+            "sizeEstimate": 1014,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMkBjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KRGF0ZTogVGh1LCAwNiBOb3YgMjAyNSAwOToyMDowMCArMDAwMA0KRnJvbTogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KVG86ICJNb3JnYW4gVmFsZSIgPG1vcmdhbi52YWxlQGJhbmsuZXhhbXBsZT4NClN1YmplY3Q6IFJFOiBQcm9qZWN0IENvYnJhOiBlbmdhZ2VtZW50IGxldHRlcg0KSW4tUmVwbHktVG86IDxjb2JyYS0wMDFAYmFuay5leGFtcGxlPg0KUmVmZXJlbmNlczogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClNpZ25lZCBjb3B5IGF0dGFjaGVkLg0K",
+            "historyId": "1768",
+            "internalDate": "1762420800000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<cobra-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Jon Reyes <jon.reyes@cobalt-systems.example>"
+                }
+              ]
+            },
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/morgan.vale@bank.example/messages/19a4f61c869a263a?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19a4f61c869a263a",
+            "threadId": "19a4f61c869a263a",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Jon, The Project Cobra engagement letter is attached for signature.",
+            "sizeEstimate": 982,
+            "raw": "TWVzc2FnZS1JRDogPGNvYnJhLTAwMUBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUdWUsIDA0IE5vdiAyMDI1IDE1OjAwOjAwICswMDAwDQpGcm9tOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpUbzogIkpvbiBSZXllcyIgPGpvbi5yZXllc0Bjb2JhbHQtc3lzdGVtcy5leGFtcGxlPg0KU3ViamVjdDogUHJvamVjdCBDb2JyYTogZW5nYWdlbWVudCBsZXR0ZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQo8cD5Kb24sPC9wPjxwPlRoZSBQcm9qZWN0IENvYnJhIGVuZ2FnZW1lbnQgbGV0dGVyIGlzIGF0dGFjaGVkIGZvciBzaWduYXR1cmU9DQouPC9wPg0K",
+            "historyId": "1733",
+            "internalDate": "1762268400000"
+          }
+        }
+      ]
+    }
+  }
+}

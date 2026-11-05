@@ -1,0 +1,3 @@
+# The synthetic cassette's downloaded bodies (a PDF with fixed-width xref lines that end in a space) are opaque
+# bytes, sealed by digest.json. Never diff, merge or line-ending-convert them; `git diff --check` skips them.
+synthetic/bodies/* binary

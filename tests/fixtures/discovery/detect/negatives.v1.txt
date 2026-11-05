@@ -1,0 +1,128 @@
+# Hand-written negatives for the rule detector rules/v1 (#173 G-07, design R7). Every entry must yield no event.
+# One entry per line. A literal \n inside an entry is a line break, for the wrapped quote openers. Lines starting
+# with # are section headers or comments; blank lines are ignored. Synthetic text only: no real mail.
+
+# negation
+The LOI has not been signed.
+Aldermoor has yet to sign the letter of intent.
+The SPA was never executed.
+The data room is no longer open to Castellan.
+We did not receive any bids for Project Harbor.
+The engagement letter hasn't been countersigned.
+Castellan withdrew without signing the exclusivity agreement.
+No indications of interest were received for the carve-out.
+The process letter wasn't sent to the financial sponsors.
+Neither party has signed the merger agreement.
+The VDR did not go live on Monday.
+Aldermoor cannot sign the purchase agreement this month.
+
+# questions
+Has the LOI been signed?
+Was the process letter sent to Aldermoor?
+Did the data room open on schedule?
+Can you confirm the SPA was executed?
+Were the IOIs received on 28 August 2026?
+Has Northwind countersigned the engagement letter?
+Is the exclusivity agreement signed?
+The bids came in on Friday, right?
+
+# plans and the future
+The LOI will be signed on Friday.
+We expect the SPA to be executed by 30 October 2026.
+The data room is scheduled to open on 1 June.
+We plan to send the process letter next week.
+Aldermoor intends to sign the exclusivity agreement.
+The draft of the SPA was signed off by legal.
+The SPA signed by Aldermoor is pending board approval.
+The merger agreement was signed subject to shareholder approval.
+The target date for the LOI to be signed is 30 September.
+The bids are going to be received next Monday.
+The engagement letter should be countersigned this week.
+Once the LOI is signed we move to confirmatory diligence.
+The VDR would have gone live in May.
+The process letter is ready to go out to buyers tomorrow.
+Castellan aims to have its bid received by the deadline.
+The SPA may be executed on Monday.
+
+# conditions and time relations
+If the LOI is signed, exclusivity starts at once.
+Unless the SPA is executed by Friday, Castellan walks away.
+When the data room opened, the buyers were already waiting.
+Exclusivity is granted after the LOI is signed.
+The bids must be received before 5 pm on 28 August.
+Assuming the engagement letter is countersigned, we start on Monday.
+Provided the merger agreement is executed, the deal closes in the fourth quarter.
+In case the process letter went out early, tell me at once.
+Diligence waits until the IOIs are received.
+Let me know whether the exclusivity letter was countersigned.
+
+# comparables
+In the Atlas precedent, the LOI was signed within three weeks.
+Comparable deals saw the SPA signed two months into exclusivity.
+Our benchmark has the data room opened two weeks into the process.
+Similar processes had bids received in the first round.
+The comps show indications of interest came in at nine times EBITDA.
+It went like the Osprey sale, where the purchase agreement was signed early.
+
+# wrapped quote openers
+Thanks, see below.\nOn Fri, 18 Sep 2026 at 17:30, Storm Duncan <storm.duncan@bank.example>\nwrote:\nThe LOI for Project Kestrel was signed today, 18 September 2026.
+Noted.\nOn Thu, 28 Aug 2026 at 18:10, Morgan Vale\n<morgan.vale@bank.example> wrote:\nFinal bids for Project Kestrel were received on 28 August 2026.
+Agreed.\nOn Wed, 6 May 2026 at 14:30, Ravi Menon <ravi.menon@northwind-robotics.example> wrote:\nThe engagement letter was countersigned on 6 May 2026.
+Thanks.\nOn Wed, 28 Oct 2026 at 16:00,\nElena Ward\n<elena.ward@aldermoor.example> wrote:\nThe SPA for Project Kestrel was signed on 28 October 2026.
+
+# closed the data room
+Northwind closed the data room on 30 September 2026.
+The data room was closed to Castellan on 2 October 2026.
+The VDR closed on Friday.
+Larkspur closed out the data room review with no open points.
+
+# near misses
+The engagement letter for Project Kestrel is awaiting your signature.
+Please open the data room to our team.
+Aldermoor sent comments on the LOI.
+The SPA draft was circulated to the buyers.
+The bids were sent back to the bidders with questions.
+Aldermoor signed the NDA and asked for data room access.
+Executed NDAs were received from twelve buyers.
+Elena executed the NDA for the data room.
+Legal signed off on the SPA.
+The SPA signature page was sent to Elena.
+Morgan opened the email about the LOI.
+The data room index was received from Larkspur.
+The hotel spa was signed over to the buyer.
+Our team signed up for the data room training.
+Morgan received the process letter template from legal.
+The Aldermoor bid is the higher of the two.
+The kickoff meeting was held on 14 May 2026.
+Equity indices closed mixed last week.
+
+# requests and imperatives
+We need the LOI signed by Friday.
+Please get the engagement letter countersigned.
+Let's get the SPA executed.
+Kindly confirm the LOI was countersigned.
+Get the engagement letter countersigned by the client.
+Send the process letter to the remaining bidders.
+Have the purchase agreement executed by both parties.
+Make sure the data room is opened for Ludlow.
+Ludlow needs the exclusivity agreement signed this week.
+We are waiting for the LOI signed by Ludlow.
+Hopefully the bids were received by now.
+Corvane requested the data room opened to their advisers.
+Ask counsel to confirm the SPA was executed.
+Confirm the process letter was sent to all six buyers.
+
+# questions with a lower-case line after
+Was the LOI signed?\nthanks
+Was the SPA executed?\nlet me know
+Has the data room opened?\nping me when it has
+
+# refuted and hypothetical
+The rumor that the LOI was signed is false.
+Reports that the SPA was executed are untrue.
+I think the SPA was signed but need to check.
+We believe the exclusivity agreement was signed last night, unconfirmed.
+Supposedly the bids were received on Friday.
+Template: The LOI was signed on [date].
+Example wording: "The engagement letter was countersigned on [DATE]."
+Use this line for the update: The data room opened on <date>.

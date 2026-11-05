@@ -1,0 +1,4 @@
+{
+  "_comment": "advisory: a check that could not finish is neutral. gate: it is failure, because GitHub counts neutral as passing for a required check. Switch to gate in the same PR that makes ai-review required on develop.",
+  "mode": "advisory"
+}

@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conductia · Integrated</title>
+<link rel="stylesheet" href="../shared/brand-tokens.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../shared/fixtures.js"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: { fontFamily: {
+      sans: ['Inter', 'system-ui', 'sans-serif'],
+      mono: ['Geist Mono', 'ui-monospace', 'monospace'],
+      display: ['Fraunces', 'Georgia', 'serif'],
+    } } },
+  };
+</script>
+<style>
+  :root { color-scheme: dark; }
+  * { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--canvas-bg); color: var(--ink-on-dark);
+    font-family: var(--font-sans); font-size: var(--text-base); line-height: 1.45; overflow: hidden;
+  }
+
+  /* ── Surfaces / panels ─────────────────────────────────────── */
+  .panel { background: linear-gradient(180deg, rgba(20,37,77,.55) 0%, rgba(10,18,40,.55) 100%); border: 1px solid rgba(174,184,204,.10); border-radius: var(--radius-card); }
+  .panel-flat { background: rgba(20,37,77,.32); border: 1px solid rgba(174,184,204,.10); border-radius: var(--radius-card); }
+  .grid-tex { background-image: var(--texture-grid); }
+
+  /* ── Text helpers ──────────────────────────────────────────── */
+  .ink-2 { color: var(--ink-on-dark-secondary); }
+  .ink-3 { color: var(--ink-on-dark-tertiary); }
+  .accent { color: var(--accent); }
+  .buyer-ink { color: #E0A86B; }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .label-eyebrow { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-on-dark-tertiary); }
+  .h-section { font-weight: 600; letter-spacing: -.01em; }
+  .glow-accent { text-shadow: 0 0 18px rgba(194,148,69,.35); }
+  .glow-soft { box-shadow: 0 0 0 1px rgba(194,148,69,.35), 0 0 28px rgba(194,148,69,.14); }
+
+  /* ── Nav ───────────────────────────────────────────────────── */
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; color: var(--ink-on-dark-secondary); cursor: pointer; transition: background .18s ease, color .18s ease; min-height: 44px; width: 100%; text-align: left; border: 1px solid transparent; }
+  .nav-item:hover { background: rgba(174,184,204,.07); color: var(--ink-on-dark); }
+  .nav-item.active { background: rgba(194,148,69,.12); color: var(--ink-on-dark); border-color: rgba(194,148,69,.30); }
+  .nav-item.active .nav-ico { color: var(--accent); }
+  .nav-ico { color: var(--ink-on-dark-tertiary); flex: 0 0 auto; }
+  .nav-item.locked { opacity: .42; cursor: not-allowed; }
+  .nav-item.locked:hover { background: transparent; color: var(--ink-on-dark-secondary); }
+
+  /* ── Pills / chips ─────────────────────────────────────────── */
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: var(--radius-pill); border: 1px solid rgba(174,184,204,.20); color: var(--ink-on-dark-secondary); }
+  .chip-accent { color: var(--accent); border-color: rgba(194,148,69,.40); background: rgba(194,148,69,.08); }
+  .chip-clear { color: #6FD49E; border-color: rgba(45,126,84,.45); background: rgba(45,126,84,.14); }
+  .chip-hold  { color: #E2B35A; border-color: rgba(176,122,26,.45); background: rgba(176,122,26,.14); }
+  .chip-block { color: #F08A72; border-color: rgba(209,75,48,.45); background: rgba(209,75,48,.14); }
+  .chip-buyer { color: #E0A86B; border-color: rgba(200,140,80,.45); background: rgba(200,140,80,.12); }
+  .chip-client { color: #9FB8E6; border-color: rgba(120,150,210,.45); background: rgba(120,150,210,.12); }
+  .client-ink { color: #9FB8E6; }
+
+  .tone-strong { color: #6FD49E; } .tone-watch { color: #E2B35A; } .tone-risk { color: #F08A72; }
+  .bg-strong { background: rgba(45,126,84,.20); border-color: rgba(45,126,84,.40); }
+  .bg-watch  { background: rgba(176,122,26,.18); border-color: rgba(176,122,26,.40); }
+  .bg-risk   { background: rgba(209,75,48,.18); border-color: rgba(209,75,48,.40); }
+
+  /* ── Buttons ───────────────────────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--radius-button); font-weight: 600; font-size: var(--text-base); cursor: pointer; transition: all .18s ease; border: 1px solid transparent; }
+  .btn-gold { background: var(--accent); color: #1A1304; }
+  .btn-gold:hover { background: #d3a558; box-shadow: 0 0 24px rgba(194,148,69,.30); }
+  .btn-ghost { background: rgba(174,184,204,.06); color: var(--ink-on-dark); border-color: rgba(174,184,204,.16); }
+  .btn-ghost:hover { background: rgba(174,184,204,.12); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  /* ── Tables ────────────────────────────────────────────────── */
+  table.league { width: 100%; border-collapse: collapse; }
+  table.league th { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-on-dark-tertiary); text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(174,184,204,.12); cursor: pointer; user-select: none; white-space: nowrap; }
+  table.league th:hover { color: var(--ink-on-dark); }
+  table.league td { padding: 14px; border-bottom: 1px solid rgba(174,184,204,.07); vertical-align: middle; }
+  table.league tbody tr { cursor: pointer; transition: background .15s ease; }
+  table.league tbody tr:hover { background: rgba(194,148,69,.06); }
+
+  /* ── Segmented / persona control ───────────────────────────── */
+  .seg { display: inline-flex; gap: 4px; padding: 4px; background: rgba(10,18,40,.6); border: 1px solid rgba(174,184,204,.12); border-radius: var(--radius-pill); }
+  .seg button { min-height: 36px; padding: 0 14px; border-radius: var(--radius-pill); font-size: var(--text-sm); font-weight: 500; color: var(--ink-on-dark-secondary); cursor: pointer; transition: all .18s ease; white-space: nowrap; border: none; background: none; display:inline-flex; align-items:center; gap:7px; }
+  .seg button:hover { color: var(--ink-on-dark); }
+  .seg button.on { background: rgba(194,148,69,.16); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(194,148,69,.30); }
+  .seg button.on-buyer { background: rgba(200,140,80,.18); color: #E0A86B; box-shadow: inset 0 0 0 1px rgba(200,140,80,.40); }
+  .seg button.on-client { background: rgba(120,150,210,.18); color: #9FB8E6; box-shadow: inset 0 0 0 1px rgba(120,150,210,.40); }
+
+  /* ── Score dial ────────────────────────────────────────────── */
+  .dial-track { stroke: rgba(174,184,204,.14); } .dial-fin { stroke: var(--accent); } .dial-cul { stroke: #6FD49E; }
+
+  /* ── Entities (Beat 4) ─────────────────────────────────────── */
+  .entity { border: 1px solid rgba(174,184,204,.14); border-radius: var(--radius-card); background: rgba(20,37,77,.32); padding: 18px 20px; }
+  .entity.future { border-style: dashed; border-color: rgba(174,184,204,.28); opacity: .66; background: rgba(20,37,77,.16); }
+  .person-row { display:flex; align-items:center; gap:11px; padding:9px 0; border-bottom:1px solid rgba(174,184,204,.07); }
+  .person-row:last-child { border-bottom:none; }
+  .avatar { width:32px; height:32px; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:var(--text-xs); flex:0 0 auto; background:rgba(194,148,69,.16); color:var(--accent); }
+  .avatar.buyer { background:rgba(200,140,80,.18); color:#E0A86B; }
+  .avatar.client { background:rgba(120,150,210,.18); color:#9FB8E6; }
+  .avatar.add { background:rgba(174,184,204,.10); color:var(--ink-on-dark-tertiary); border:1px dashed rgba(174,184,204,.3); }
+
+  /* ── Departure cascade (Beat 11) ───────────────────────────── */
+  .revrow { display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:11px; border:1px solid rgba(174,184,204,.10); background:rgba(20,37,77,.3); opacity:.4; transform:translateY(4px); transition:all .4s ease; }
+  .revrow.done { opacity:1; transform:none; border-color:rgba(45,126,84,.40); background:rgba(45,126,84,.10); }
+
+  /* viewing-as banner */
+  .asbanner { display:none; align-items:center; gap:11px; padding:11px 28px; background:rgba(174,184,204,.06); border-bottom:1px solid rgba(174,184,204,.18); }
+
+  /* football field */
+  .ff-track { background: rgba(174,184,204,.10); border-radius: 9999px; height: 10px; position: relative; }
+  .ff-fill { position: absolute; top: 0; bottom: 0; border-radius: 9999px; }
+
+  /* focus + scroll + fades */
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+  .scroll-area { overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(174,184,204,.25) transparent; }
+  .scroll-area::-webkit-scrollbar { width: 9px; }
+  .scroll-area::-webkit-scrollbar-thumb { background: rgba(174,184,204,.2); border-radius: 9px; border: 2px solid transparent; background-clip: padding-box; }
+  .view-fade { animation: fade .26s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+
+  /* ── Responsive ───────────────────────────────────────────── */
+  .rail { transition: width .2s ease; }
+  @media (max-width: 1040px) { .persona-seg-label { display:none !important; } }
+  @media (max-width: 900px) {
+    .rail-labels { display: none !important; }
+    .rail { width: 64px !important; }
+    .rail-collapse-btn, .profile-meta, .deal-switcher { display: none !important; }
+  }
+  @media (max-width: 640px) {
+    .shell { flex-direction: column; }
+    .rail { width: 100% !important; height: 56px; flex-direction: row !important; align-items: center; overflow-x: auto; padding: 0 8px !important; gap: 4px; order: 2; border-top: 1px solid rgba(174,184,204,.12); border-right: none !important; }
+    .rail-top, .rail-foot, .rail-deal { display: none !important; }
+    .rail-nav { flex-direction: row !important; gap: 4px !important; }
+    .nav-item { min-width: 48px; justify-content: center; padding: 8px !important; }
+    .content { order: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="shell" style="display:flex; height:100vh; width:100vw;">
+
+  <!-- ════════════════════════ LEFT RAIL ════════════════════════ -->
+  <aside id="rail" class="rail grid-tex" style="width:256px; flex:0 0 auto; display:flex; flex-direction:column; background:linear-gradient(180deg,#0c1530 0%,#070d1c 100%); border-right:1px solid rgba(174,184,204,.10); padding:16px 12px;">
+    <div class="rail-top" style="display:flex; align-items:center; justify-content:space-between; padding:6px 8px 18px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:var(--ink);border:1px solid rgba(194,148,69,.4);display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        </div>
+        <span class="rail-labels" style="font-weight:600; letter-spacing:-.01em; font-size:15px;">Intel<span class="accent">i</span>bank</span>
+      </div>
+      <button class="rail-collapse-btn" onclick="toggleRail()" aria-label="Collapse navigation" style="background:none;border:none;color:var(--ink-on-dark-tertiary);cursor:pointer;padding:6px;border-radius:8px;display:flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="rail-deal deal-switcher" style="margin:0 4px 16px; position:relative;">
+      <button onclick="toggleDealMenu()" aria-haspopup="listbox" style="width:100%; text-align:left; background:rgba(174,184,204,.06); border:1px solid rgba(174,184,204,.14); border-radius:10px; padding:9px 12px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px;">
+        <span style="overflow:hidden;">
+          <span class="label-eyebrow" style="display:block;">Mandate</span>
+          <span id="dealLabel" class="rail-labels" style="font-weight:600; font-size:var(--text-sm); white-space:nowrap;">Project Atlas</span>
+        </span>
+        <svg class="rail-labels" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4"/><path d="M16 15l-4 4-4-4"/></svg>
+      </button>
+      <div id="dealMenu" role="listbox" style="display:none; position:absolute; left:0; right:0; top:calc(100% + 6px); background:#0c1530; border:1px solid rgba(174,184,204,.18); border-radius:12px; box-shadow:var(--elev-float); z-index:30; overflow:hidden;"></div>
+    </div>
+
+    <nav class="rail-nav" style="display:flex; flex-direction:column; gap:3px; flex:1 1 auto;" id="nav"></nav>
+
+    <div class="rail-foot" style="margin-top:12px; padding-top:14px; border-top:1px solid rgba(174,184,204,.10);">
+      <div style="display:flex; align-items:center; gap:9px; padding:4px 10px 14px;">
+        <span class="ib-pulse-dot" aria-hidden="true"></span>
+        <span class="rail-labels" style="letter-spacing:.1em;">Compliance live</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; padding:8px 8px; background:rgba(174,184,204,.05); border:1px solid rgba(174,184,204,.10); border-radius:12px;">
+        <div class="avatar" id="profInitials" style="width:34px;height:34px;">SD</div>
+        <div class="profile-meta rail-labels" style="overflow:hidden;">
+          <span id="profName" style="display:block; font-family:var(--font-sans); font-weight:600; font-size:var(--text-sm); color:var(--ink-on-dark); letter-spacing:0; text-transform:none;">Storm Duncan</span>
+          <span id="profRole" style="display:block; letter-spacing:.04em;">Managing Director</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════════════════ CONTENT ════════════════════════ -->
+  <main class="content scroll-area" id="content" style="flex:1 1 auto; overflow-y:auto; background:var(--bg-cinematic); position:relative;">
+    <header style="position:sticky; top:0; z-index:20; backdrop-filter:blur(14px); background:rgba(8,14,32,.72); border-bottom:1px solid rgba(174,184,204,.10);">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 28px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:14px; min-width:0;">
+          <h1 id="viewTitle" class="h-section" style="font-size:var(--text-lg); margin:0; white-space:nowrap;">Mandate</h1>
+          <span class="chip mono" style="border-color:rgba(194,148,69,.3);"><span class="accent">ATLAS-2026-001</span></span>
+          <span class="chip" id="stageChip">Buyer outreach</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <!-- PERSONA SWITCH — the signature interaction (bank / client / buyer) -->
+          <div class="seg persona-seg" role="group" aria-label="Perspective">
+            <button id="persona_storm" class="on" onclick="setActor('storm')" aria-pressed="true">
+              <span class="avatar" style="width:18px;height:18px;font-size:9px;">SD</span><span class="persona-seg-label">You · Storm (MD)</span>
+            </button>
+            <button id="persona_mike" onclick="setActor('mike')" aria-pressed="false">
+              <span class="avatar client" style="width:18px;height:18px;font-size:9px;">MC</span><span class="persona-seg-label">Client · Atlassian</span>
+            </button>
+            <button id="persona_dana" onclick="setActor('dana')" aria-pressed="false">
+              <span class="avatar buyer" style="width:18px;height:18px;font-size:9px;">DC</span><span class="persona-seg-label">Buyer · Anthropic</span>
+            </button>
+          </div>
+          <div data-compliance-status="topbar" style="display:flex; align-items:center; gap:9px; padding:6px 12px; background:rgba(45,126,84,.12); border:1px solid rgba(45,126,84,.35); border-radius:9999px;">
+            <span class="ib-pulse-dot" aria-hidden="true"></span>
+            <span class="mono" style="font-size:var(--text-xs); color:#6FD49E; letter-spacing:.08em;">COMPLIANCE · CLEAR</span>
+          </div>
+        </div>
+      </div>
+      <!-- viewing-as banner (non-bank actors) -->
+      <div id="asBanner" class="asbanner">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="ink-2" style="font-size:var(--text-sm);" id="asBannerText"></span>
+      </div>
+    </header>
+
+    <div id="viewRoot" style="padding:28px; max-width:1320px; margin:0 auto;"></div>
+
+    <footer style="padding:14px 28px 110px; max-width:1320px; margin:0 auto; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; border-top:1px solid rgba(174,184,204,.08); margin-top:8px;">
+      <span class="chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>Future-vision · integrated</span>
+      <span class="ink-3" style="font-size:var(--text-xs);">Conductia · One platform. Permissions computed per actor.</span>
+    </footer>
+  </main>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   Conductia — INTEGRATED. A1 platform shell + Martin's three Storm-
+   validated beats woven in as live platform mechanics:
+     · Beat 7  "The other side"  -> persona switch (Storm <-> Dana Cole)
+     · Beat 4  "Entities first"   -> entity-first Deal Team + lock gate
+     · Beat 11 "Someone leaves"   -> departure cascade across deals
+   Vanilla JS over window.IB. Numbers are canonical (computed scores,
+   Mike Cannon-Brookes). Navy+gold via shared/brand-tokens.css.
+   ════════════════════════════════════════════════════════════════ */
+const IB = window.IB;
+const fmt = IB.fmtUsd;
+
+/* ── icons ─────────────────────────────────────────────────── */
+const I = {
+  mandate:  '<path d="M8 6h8M8 10h8M8 14h5"/><rect x="4" y="3" width="16" height="18" rx="2"/>',
+  acquirers:'<circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/>',
+  team:     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  dataroom: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
+  skills:   '<path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.8 5.7 21l2.3-7.1-6-4.5h7.6z"/>',
+  audit:    '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  eye:      '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  lock:     '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+};
+function ico(p, size=18, color='currentColor', sw=1.7) {
+  return `<svg class="nav-ico" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+}
+
+/* ── PERSONA / PERMISSION MODEL (Beat 7) ───────────────────────
+   Three actors, one interface. Storm's words: "the platform is for a buyer or a
+   seller and everybody can access it... they should see the exact same system as
+   everybody else, but they only have their permissions." */
+const ACTORS = {
+  storm: { name:'Storm Duncan', role:'Managing Director · your bank', initials:'SD', cls:'', banner:'' },
+  mike:  { name:'Mike Cannon-Brookes', role:'CEO · Atlassian (client)', initials:'MC', cls:'client',
+           bannerHtml: 'You are seeing <span class="client-ink" style="font-weight:600;">Atlassian\'s</span> view (the client). Same platform, permissions computed per actor.' },
+  dana:  { name:'Dana Cole', role:'Corp Dev · Anthropic (buyer)', initials:'DC', cls:'buyer',
+           bannerHtml: 'You are seeing <span class="buyer-ink" style="font-weight:600;">Anthropic\'s</span> view (the buyer). Same platform, permissions computed per actor.' },
+};
+// Destinations each actor can reach. Everything else is removed from their menu.
+const ALLOWED = {
+  storm: ['mandate','acquirers','team','dataroom','skills','audit'],
+  mike:  ['mandate','acquirers','dataroom'],
+  dana:  ['mandate','dataroom'],
+};
+let actor = 'storm';
+function isBuyer()  { return actor === 'dana'; }
+function isClient() { return actor === 'mike'; }
+function allowed(viewId) {
+  if (viewId === 'deepdive') return ALLOWED[actor].includes('acquirers');
+  return ALLOWED[actor].includes(viewId);
+}
+
+/* ── nav model ─────────────────────────────────────────────── */
+const NAV = [
+  { id: 'mandate',   label: 'Mandate',          buyerLabel: 'The deal', clientLabel: 'The deal', icon: I.mandate },
+  { id: 'acquirers', label: 'Acquirers',        icon: I.acquirers },
+  { id: 'team',      label: 'Deal Team',        icon: I.team },
+  { id: 'dataroom',  label: 'Data Room',        icon: I.dataroom },
+  { id: 'skills',    label: 'Skills',           icon: I.skills },
+  { id: 'audit',     label: 'Audit & Lifecycle',icon: I.audit },
+];
+const TITLES = { mandate:'Mandate', acquirers:'Acquirers', team:'Deal Team', dataroom:'Data Room', skills:'Skills', audit:'Audit & Lifecycle', deepdive:'Acquirer deep-dive' };
+
+let currentView = 'mandate';
+let currentAcquirer = null;
+let sortKey = 'composite';
+let segPanel = 'football';
+let clientFlags = new Set();   // acquirers the client (seller) flags as "not a fit"
+
+/* ── helpers ───────────────────────────────────────────────── */
+function liveBadge(){ return '<span class="chip chip-clear" style="border-color:rgba(45,126,84,.4);">Live now</span>'; }
+function visionBadge(){ return '<span class="chip" style="border-color:rgba(194,148,69,.4); color:var(--accent);">Vision / next</span>'; }
+function sectionHead(eyebrow, title, badge='') {
+  return `<div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+    <div><div class="label-eyebrow" style="margin-bottom:5px;">${eyebrow}</div><h2 class="h-section" style="font-size:var(--text-xl); margin:0;">${title}</h2></div>
+    <div style="display:flex; gap:8px;">${badge}</div></div>`;
+}
+
+/* ════════════ PERSONA SWITCH ════════════ */
+function setActor(key) {
+  if (actor === key) return;
+  actor = key;
+  const a = ACTORS[key];
+  // topbar segmented control
+  document.querySelectorAll('.persona-seg button').forEach(b => { b.classList.remove('on','on-buyer','on-client'); b.setAttribute('aria-pressed','false'); });
+  const btn = document.getElementById('persona_' + key);
+  if (btn) { btn.classList.add(key==='storm'?'on':(key==='dana'?'on-buyer':'on-client')); btn.setAttribute('aria-pressed','true'); }
+  // rail persona card flips to the active actor
+  const pi = document.getElementById('profInitials');
+  pi.textContent = a.initials; pi.className = 'avatar ' + a.cls;
+  document.getElementById('profName').textContent = a.name;
+  document.getElementById('profRole').textContent = a.role;
+  // viewing-as banner for non-bank actors
+  const bn = document.getElementById('asBanner');
+  if (key === 'storm') { bn.style.display = 'none'; }
+  else { bn.style.display = 'flex'; document.getElementById('asBannerText').innerHTML = a.bannerHtml; }
+  // external / client actors are scoped to a single deal — hide the mandate switcher
+  document.querySelector('.deal-switcher').style.visibility = (key === 'storm') ? 'visible' : 'hidden';
+  renderNav();
+  // if the current destination is not in this actor's menu, fall back to the deal overview
+  if (!allowed(currentView)) currentView = 'mandate';
+  go(currentView);
+}
+
+/* ════════════ NAV RENDER ════════════
+   Sealed destinations are removed from the menu, not shown disabled — each actor
+   sees only the destinations their permissions grant. */
+function renderNav() {
+  document.getElementById('nav').innerHTML = NAV.filter(n => allowed(n.id)).map(n => {
+    const active = currentView===n.id || (currentView==='deepdive'&&n.id==='acquirers');
+    const label = (isBuyer() && n.buyerLabel) ? n.buyerLabel : ((isClient() && n.clientLabel) ? n.clientLabel : n.label);
+    return `<button class="nav-item ${active?'active':''}" onclick="go('${n.id}')" aria-label="${label}">
+      ${ico(n.icon)}
+      <span class="rail-labels" style="font-weight:500; font-size:var(--text-sm);">${label}</span>
+    </button>`;
+  }).join('');
+}
+
+/* ════════════ DEAL SWITCHER ════════════ */
+function renderDealMenu() {
+  document.getElementById('dealMenu').innerHTML = IB.deals.map((d,i) => `
+    <button onclick="pickDeal(${i})" role="option" style="width:100%; text-align:left; background:none; border:none; border-bottom:1px solid rgba(174,184,204,.08); padding:11px 13px; cursor:pointer; display:flex; flex-direction:column; gap:2px; min-height:44px;"
+      onmouseover="this.style.background='rgba(194,148,69,.08)'" onmouseout="this.style.background='none'">
+      <span style="display:flex; align-items:center; gap:8px;">
+        <span style="font-weight:600; font-size:var(--text-sm); color:var(--ink-on-dark);">${d.codename}</span>
+        ${d.status==='active' ? '<span class="ib-pulse-dot" style="width:6px;height:6px;"></span>' : '<span class="chip" style="padding:1px 6px; font-size:9px;">Paused</span>'}
+      </span>
+      <span class="mono ink-3" style="font-size:var(--text-xxs);">${d.code} · ${d.target} · ${d.stage}</span>
+    </button>`).join('');
+}
+function toggleDealMenu(){ const m = document.getElementById('dealMenu'); m.style.display = m.style.display==='none' ? 'block':'none'; }
+function pickDeal(i){
+  const d = IB.deals[i];
+  document.getElementById('dealLabel').textContent = d.codename;
+  document.getElementById('stageChip').textContent = d.stage;
+  const codeChip = document.querySelector('header .chip.mono span');
+  if (codeChip) codeChip.textContent = d.code;
+  toggleDealMenu();
+  go('mandate');
+}
+
+/* ════════════ ROUTER ════════════ */
+function go(view, acqId) {
+  if (!allowed(view)) view = 'mandate';
+  currentView = view;
+  if (acqId) currentAcquirer = acqId;
+  renderNav();
+  document.getElementById('viewTitle').textContent = TITLES[view];
+  const root = document.getElementById('viewRoot');
+  root.classList.remove('view-fade'); void root.offsetWidth; root.classList.add('view-fade');
+  document.getElementById('content').scrollTop = 0;
+  const map = {
+    mandate:   isBuyer() ? viewBuyerDeal : (isClient() ? viewClientDeal : viewMandate),
+    acquirers: viewAcquirers, deepdive: viewDeepDive, team: viewTeam,
+    dataroom:  viewDataRoom, skills: viewSkills, audit: viewAudit,
+  };
+  map[view]();
+}
+
+/* ════════════ VIEW: MANDATE (Storm) ════════════ */
+function viewMandate() {
+  const s = IB.seller, f = s.financials;
+  const vitals = [
+    { k:'Pipeline', v:'5', sub:'acquirers ranked' },
+    { k:'Top buyer', v:'Anthropic', sub:'composite 87', accent:true },
+    { k:'Deal team', v:'7', sub:'members, role-walled' },
+    { k:'Compliance', v:'Clear', sub:'KYC · FINRA · MNPI', clear:true },
+  ];
+  document.getElementById('viewRoot').innerHTML = `
+    <div class="panel grid-tex" style="padding:34px 32px; margin-bottom:22px; position:relative; overflow:hidden;">
+      <div style="position:absolute; inset:0; background:radial-gradient(80% 120% at 85% 0%, rgba(194,148,69,.12), transparent 60%); pointer-events:none;"></div>
+      <div style="position:relative;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+          <span class="label-eyebrow">Sell-side mandate · Project Atlas</span>${liveBadge()}
+        </div>
+        <div class="editorial-name glow-accent" style="font-size:clamp(40px,7vw,72px); line-height:1; margin-bottom:14px; color:var(--ink-on-dark);">${s.name}</div>
+        <p class="ink-2" style="max-width:640px; font-size:var(--text-md); margin:0 0 22px;">${s.tagline}</p>
+        <div class="editorial-question" style="font-size:clamp(18px,2.6vw,26px); color:var(--accent); max-width:680px; line-height:1.35;">${s.openQuestion}</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:22px;">
+      ${vitals.map(x => `
+        <div class="panel-flat" style="padding:18px 20px;">
+          <div class="label-eyebrow" style="margin-bottom:9px;">${x.k}</div>
+          <div class="${x.accent?'accent':''} ${x.clear?'tone-strong':''}" style="font-size:var(--text-2xl); font-weight:600; letter-spacing:-.02em; line-height:1;">${x.v}</div>
+          <div class="mono ink-3" style="font-size:var(--text-xs); margin-top:7px;">${x.sub}</div>
+        </div>`).join('')}
+    </div>
+    <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:18px;" class="md-stack">
+      <div class="panel" style="padding:22px;">
+        <div class="label-eyebrow" style="margin-bottom:16px;">Seller snapshot · live now</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+          ${[['Indicative valuation', fmt(f.valuationUsd)],['Revenue', fmt(f.revenueUsd)],['Revenue growth', f.revenueGrowthPct+'%'],['EBITDA', fmt(f.ebitdaUsd)],['EBITDA margin', f.ebitdaMarginPct+'%'],['Headcount', f.headcount.toLocaleString()]].map(([k,v]) => `<div><div class="ink-3" style="font-size:var(--text-xs); margin-bottom:5px;">${k}</div><div class="mono" style="font-size:var(--text-lg); font-weight:500; color:var(--ink-on-dark);">${v}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="panel" style="padding:22px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <div class="label-eyebrow">Compliance event feed</div><span class="ib-pulse-dot"></span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0;">
+          ${IB.auditLog.slice().reverse().slice(0,6).map(a => `
+            <div style="display:flex; gap:12px; padding:9px 0; border-bottom:1px solid rgba(174,184,204,.07);">
+              <span class="mono ink-3" style="font-size:var(--text-xs); flex:0 0 42px;">${a.ts}</span>
+              <span style="flex:1 1 auto;"><span style="color:var(--ink-on-dark); font-weight:500;">${a.actor}</span> <span class="ink-3">${a.action}</span><br><span class="ink-2" style="font-size:var(--text-xs);">${a.detail}</span></span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  applyMdStack();
+}
+
+/* ════════════ VIEW: BUYER DEAL (Dana / Beat 7) ════════════ */
+function viewBuyerDeal() {
+  const visibleDocs = IB.documents.filter(d => 1 >= d.minPhase); // buyer is at phase 1
+  document.getElementById('viewRoot').innerHTML = `
+    <div class="panel grid-tex" style="padding:30px 32px; margin-bottom:22px; position:relative; overflow:hidden; border-color:rgba(200,140,80,.3);">
+      <div style="position:absolute; inset:0; background:radial-gradient(80% 120% at 85% 0%, rgba(200,140,80,.12), transparent 60%); pointer-events:none;"></div>
+      <div style="position:relative;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+          <span class="label-eyebrow">Invited buyer · your view of Project Atlas</span>
+          <span class="chip chip-buyer">Anthropic · Phase 1</span>
+        </div>
+        <div class="editorial-name" style="font-size:clamp(30px,5vw,46px); line-height:1.05; margin-bottom:12px; color:var(--ink-on-dark);">Project Atlas</div>
+        <p class="ink-2" style="max-width:600px; font-size:var(--text-md); margin:0;">You were invited into a live sell-side process. You open the very same platform the bank does. Your permissions are computed from your role: you see your stage and your thread, and nothing that is not yours.</p>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:22px;">
+      ${[
+        { k:'Your phase', v:'Phase 1', sub:'teaser + process letter' },
+        { k:'Visible documents', v:String(visibleDocs.length), sub:'of '+IB.documents.length+' in the room', buyer:true },
+        { k:'Your thread', v:'1', sub:'screened messages with the bank' },
+        { k:'Compliance', v:'Clear', sub:'every message screened', clear:true },
+      ].map(x => `<div class="panel-flat" style="padding:18px 20px;">
+        <div class="label-eyebrow" style="margin-bottom:9px;">${x.k}</div>
+        <div class="${x.buyer?'buyer-ink':''} ${x.clear?'tone-strong':''}" style="font-size:var(--text-2xl); font-weight:600; letter-spacing:-.02em; line-height:1;">${x.v}</div>
+        <div class="mono ink-3" style="font-size:var(--text-xs); margin-top:7px;">${x.sub}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="panel" style="padding:22px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div class="label-eyebrow">Your documents · cleared to your phase</div>${liveBadge()}
+      </div>
+      ${visibleDocs.map(d => `<div class="person-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-tertiary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span style="font-weight:500; color:var(--ink-on-dark);">${d.name}</span>
+        <span class="chip ${classTone[d.classification]}" style="margin-left:6px;">C${d.classification} · ${d.label}</span>
+        <span class="ink-3" style="margin-left:auto; font-size:var(--text-xs);">visible at Phase 1</span>
+      </div>`).join('')}
+      <p class="ink-3" style="font-size:var(--text-xs); margin:12px 0 0;">Documents beyond your phase are not listed. Open the <span class="buyer-ink">Data Room</span> for the full set you can access.</p>
+    </div>`;
+}
+
+/* ════════════ VIEW: CLIENT DEAL (Mike Cannon-Brookes / seller) ════════════
+   Storm: "my client has access to the system as well... they can upload documents,
+   see the timeline, and see the buyers... 'I disagree, that's not a good buyer.'" */
+function viewClientDeal() {
+  const s = IB.seller;
+  const ownedDocs = IB.documents.filter(d => d.classification <= 3);
+  document.getElementById('viewRoot').innerHTML = `
+    <div class="panel grid-tex" style="padding:30px 32px; margin-bottom:22px; position:relative; overflow:hidden; border-color:rgba(120,150,210,.3);">
+      <div style="position:absolute; inset:0; background:radial-gradient(80% 120% at 85% 0%, rgba(120,150,210,.12), transparent 60%); pointer-events:none;"></div>
+      <div style="position:relative;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+          <span class="label-eyebrow">Client view · your company is on the market</span>
+          <span class="chip chip-client">Atlassian · seller</span>
+        </div>
+        <div class="editorial-name" style="font-size:clamp(32px,5vw,52px); line-height:1.03; margin-bottom:12px; color:var(--ink-on-dark);">${s.name}</div>
+        <p class="ink-2" style="max-width:640px; font-size:var(--text-md); margin:0;">You hired the bank to run this process. You open the same platform they do. You maintain your own documents, follow the timeline, and review the buyers the bank surfaces. The valuation work and the bank's internal brief stay with the bank.</p>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:22px;">
+      ${[
+        { k:'Buyers in process', v:'5', sub:'review and flag fit', client:true },
+        { k:'Your documents', v:String(ownedDocs.length), sub:'you can upload or replace' },
+        { k:'Stage', v:'Outreach', sub:'see the full timeline' },
+        { k:'Compliance', v:'Clear', sub:'every action logged', clear:true },
+      ].map(x => `<div class="panel-flat" style="padding:18px 20px;">
+        <div class="label-eyebrow" style="margin-bottom:9px;">${x.k}</div>
+        <div class="${x.client?'client-ink':''} ${x.clear?'tone-strong':''}" style="font-size:var(--text-2xl); font-weight:600; letter-spacing:-.02em; line-height:1;">${x.v}</div>
+        <div class="mono ink-3" style="font-size:var(--text-xs); margin-top:7px;">${x.sub}</div>
+      </div>`).join('')}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;" class="md-stack">
+      <div class="panel" style="padding:22px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <div class="label-eyebrow">Your documents · upload, replace, remove</div>${liveBadge()}
+        </div>
+        ${ownedDocs.map(d => `<div class="person-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-tertiary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span style="font-weight:500; color:var(--ink-on-dark);">${d.name}</span>
+          <span class="chip ${classTone[d.classification]}" style="margin-left:6px;">C${d.classification}</span>
+          <span class="ink-3" style="margin-left:auto; font-size:var(--text-xs);">you maintain this</span>
+        </div>`).join('')}
+        <p class="ink-3" style="font-size:var(--text-xs); margin:12px 0 0;">Review the ranked buyers and flag fit in <span class="client-ink">Acquirers</span>.</p>
+      </div>
+      <div class="panel" style="padding:22px;">
+        <div class="label-eyebrow" style="margin-bottom:14px;">Deal timeline · where we are</div>
+        ${IB.journey.map(b => {
+          const now = b.key === 'outreach', done = b.beat < 8;
+          return `<div class="person-row">
+            <span class="avatar ${done?'':(now?'client':'add')}" style="width:24px;height:24px;font-size:9px;">${b.beat}</span>
+            <span style="font-weight:500; color:var(--ink-on-dark);">${b.title}</span>
+            ${now?'<span class="chip chip-client" style="margin-left:6px;">now</span>':''}
+            <span class="ink-3" style="margin-left:auto; font-size:var(--text-xs);">${done?'done':(now?'current':'next')}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  applyMdStack();
+}
+
+/* ════════════ VIEW: ACQUIRERS ════════════ */
+function viewAcquirers() {
+  const sorted = IB.acquirers.slice().sort((a,b) => b[sortKey]-a[sortKey]);
+  const top = IB.acquirers.find(a => a.id==='anthropic');
+  document.getElementById('viewRoot').innerHTML = `
+    ${sectionHead('Five ranked buyers · scored, one-line rationale', 'Acquirer universe', liveBadge())}
+    ${isClient() ? `<div class="panel-flat" style="padding:14px 18px; margin-bottom:18px; display:flex; align-items:center; gap:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9FB8E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg><span class="ink-2" style="font-size:var(--text-sm);">These are the buyers the bank surfaced, with why they fit. Flag any you disagree with. The valuation work stays with the bank.</span></div>` : ''}
+    <div class="panel grid-tex" style="padding:26px 28px; margin-bottom:22px; position:relative; overflow:hidden; cursor:pointer;" onclick="go('deepdive','anthropic')" tabindex="0" onkeypress="if(event.key==='Enter')go('deepdive','anthropic')" role="button" aria-label="Open Anthropic deep-dive">
+      <div style="position:absolute; inset:0; background:radial-gradient(70% 120% at 90% 10%, rgba(194,148,69,.14), transparent 55%);"></div>
+      <div style="position:relative; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+        <div style="min-width:260px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <span class="chip chip-accent">Top fit</span>
+            ${top.aiNative ? '<span class="chip chip-accent"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>AI-native</span>' : ''}
+          </div>
+          <div style="font-size:var(--text-2xl); font-weight:600; letter-spacing:-.02em; margin-bottom:8px;">${top.name}</div>
+          <p class="ink-2" style="max-width:440px; margin:0 0 6px; font-size:var(--text-md);">${top.tagline}</p>
+          <p class="accent" style="max-width:460px; margin:0; font-size:var(--text-sm);">${top.rationale}</p>
+        </div>
+        <div style="display:flex; gap:30px; align-items:center;">
+          ${scoreBlock('Composite', top.composite, true)}${scoreBlock('Financial', top.financial)}${scoreBlock('Culture', top.culture)}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="padding:6px 6px 4px; overflow-x:auto;">
+      <table class="league">
+        <thead><tr>
+          <th onclick="setSort('name')">Acquirer ${sortArrow('name')}</th>
+          <th onclick="setSort('composite')" style="text-align:right;">Composite ${sortArrow('composite')}</th>
+          <th onclick="setSort('financial')" style="text-align:right;">Financial ${sortArrow('financial')}</th>
+          <th onclick="setSort('culture')" style="text-align:right;">Culture ${sortArrow('culture')}</th>
+          <th>Rationale</th>${isClient()?'<th style="text-align:center;">Your view</th>':''}<th></th>
+        </tr></thead>
+        <tbody>
+          ${sorted.map(a => `
+            <tr onclick="go('deepdive','${a.id}')" tabindex="0" onkeypress="if(event.key==='Enter')go('deepdive','${a.id}')">
+              <td><div style="display:flex; align-items:center; gap:10px;"><span style="font-weight:600; color:var(--ink-on-dark);">${a.name}</span>${a.aiNative ? '<span class="chip chip-accent" style="padding:1px 6px; font-size:9px;">AI-native</span>' : ''}</div></td>
+              <td style="text-align:right;"><span class="mono" style="font-size:var(--text-md); font-weight:600; color:${a.composite>=80?'var(--accent)':'var(--ink-on-dark)'};">${a.composite}</span></td>
+              <td style="text-align:right;" class="mono ink-2">${a.financial}</td>
+              <td style="text-align:right;" class="mono ink-2">${a.culture}</td>
+              <td class="ink-2" style="max-width:360px; font-size:var(--text-xs);">${a.rationale}</td>
+              ${isClient()?clientFlagCell(a):''}
+              <td style="text-align:right;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <p class="ink-3" style="font-size:var(--text-xs); margin-top:12px; font-family:var(--font-mono);">Composite = round(financial × 0.55 + culture × 0.45). Deterministic. <span class="accent">Click a row to open the deep-dive.</span></p>`;
+}
+function scoreBlock(label, v, big) {
+  return `<div style="text-align:center;">
+    <div class="mono ${big?'accent glow-accent':''}" style="font-size:${big?'44px':'24px'}; font-weight:600; line-height:1; ${big?'':'color:var(--ink-on-dark);'}">${v}</div>
+    <div class="label-eyebrow" style="margin-top:6px;">${label}</div></div>`;
+}
+function setSort(k){ sortKey = k; viewAcquirers(); }
+function sortArrow(k){ return sortKey===k ? '<span class="accent">↓</span>' : ''; }
+/* client (seller) "I disagree" feedback on a surfaced buyer */
+function clientFlagCell(a){
+  const flagged = clientFlags.has(a.id);
+  return `<td style="text-align:center;" onclick="event.stopPropagation()">
+    <button class="btn btn-ghost" style="min-height:30px; padding:0 10px; font-size:var(--text-xs); ${flagged?'border-color:rgba(209,75,48,.5); color:#F08A72;':'color:#9FB8E6; border-color:rgba(120,150,210,.4);'}" onclick="event.stopPropagation(); toggleClientFlag('${a.id}')">
+      ${flagged?'Flagged: not a fit':'I disagree'}
+    </button></td>`;
+}
+function toggleClientFlag(id){ clientFlags.has(id) ? clientFlags.delete(id) : clientFlags.add(id); viewAcquirers(); }
+
+/* ════════════ VIEW: DEEP-DIVE ════════════ */
+function viewDeepDive() {
+  const a = IB.acquirers.find(x => x.id===currentAcquirer) || IB.acquirers[0];
+  document.getElementById('viewRoot').innerHTML = `
+    <button class="btn btn-ghost" onclick="go('acquirers')" style="margin-bottom:18px; min-height:36px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back to acquirers
+    </button>
+    <div style="display:grid; grid-template-columns:300px 1fr; gap:22px; align-items:start;" class="dd-grid">
+      <div class="panel" style="padding:26px; text-align:center;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px;">
+          <span class="h-section" style="font-size:var(--text-xl);">${a.name}</span>${a.aiNative ? '<span class="chip chip-accent" style="padding:1px 6px; font-size:9px;">AI-native</span>':''}
+        </div>
+        <p class="ink-3" style="font-size:var(--text-xs); margin:0 0 18px;">${a.tagline}</p>
+        ${dial(a)}
+        <div style="display:flex; gap:18px; justify-content:center; margin-top:18px;">
+          <div><span style="display:inline-block; width:9px; height:9px; border-radius:2px; background:var(--accent); margin-right:6px;"></span><span class="mono ink-2" style="font-size:var(--text-xs);">Financial ${a.financial}</span></div>
+          <div><span style="display:inline-block; width:9px; height:9px; border-radius:2px; background:#6FD49E; margin-right:6px;"></span><span class="mono ink-2" style="font-size:var(--text-xs);">Culture ${a.culture}</span></div>
+        </div>
+        <p class="accent" style="font-size:var(--text-sm); margin-top:18px; line-height:1.4;">${a.rationale}</p>
+      </div>
+      <div>
+        <div style="overflow-x:auto; margin-bottom:18px;">
+          <div class="seg">
+            <button onclick="setSeg('football')" class="${segPanel==='football'?'on':''}">Valuation field</button>
+            <button onclick="setSeg('culture')" class="${segPanel==='culture'?'on':''}">Culture matrix</button>
+            <button onclick="setSeg('synergy')" class="${segPanel==='synergy'?'on':''}">Synergy stress test</button>
+            <button onclick="setSeg('founder')" class="${segPanel==='founder'?'on':''}">Founder read</button>
+          </div>
+        </div>
+        <div id="segPanelRoot" class="view-fade"></div>
+      </div>
+    </div>`;
+  applyDdGrid();
+  renderSeg(a);
+}
+function dial(a) {
+  const R = 70, C = 2*Math.PI*R, comp = a.composite/100, culFrac = a.culture/100;
+  return `<div style="position:relative; width:180px; height:180px; margin:0 auto;">
+    <svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg);">
+      <circle class="dial-track" cx="90" cy="90" r="${R}" fill="none" stroke-width="12"/>
+      <circle class="dial-cul" cx="90" cy="90" r="${R}" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-culFrac)}" opacity=".55"/>
+      <circle class="dial-fin" cx="90" cy="90" r="${R}" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}">
+        <animate attributeName="stroke-dashoffset" from="${C}" to="${C*(1-comp)}" dur="1.1s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/>
+      </circle>
+    </svg>
+    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <span class="mono accent glow-accent" style="font-size:46px; font-weight:600; line-height:1;">${a.composite}</span>
+      <span class="label-eyebrow" style="margin-top:2px;">Composite</span>
+    </div>
+  </div>`;
+}
+function setSeg(p){ segPanel = p; const a = IB.acquirers.find(x=>x.id===currentAcquirer)||IB.acquirers[0]; document.querySelectorAll('.seg button').forEach(b=>b.classList.remove('on')); event.target.classList.add('on'); const r=document.getElementById('segPanelRoot'); r.classList.remove('view-fade'); void r.offsetWidth; r.classList.add('view-fade'); renderSeg(a); }
+function renderSeg(a) {
+  const r = document.getElementById('segPanelRoot');
+  if (segPanel==='football') r.innerHTML = panelFootball();
+  else if (segPanel==='culture') r.innerHTML = panelCulture(a);
+  else if (segPanel==='synergy') r.innerHTML = panelSynergy();
+  else r.innerHTML = panelFounder();
+}
+function panelFootball() {
+  const v = IB.valuation;
+  return `<div class="panel" style="padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+      <div><div class="label-eyebrow" style="margin-bottom:5px;">Valuation football field</div><div class="ink-2" style="font-size:var(--text-sm);">Revenue ${v.trace.revenueLabel} · GM ${v.trace.grossMarginPct}% · last-qtr growth ${v.trace.lastQtrGrowthPct}%</div></div>${liveBadge()}
+    </div>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      ${v.rows.map(row => {
+        const has = !row.needsData && row.start!=null;
+        const left = has ? row.start*100 : 0, w = has ? (row.end-row.start)*100 : 0;
+        return `<div style="opacity:${row.needsData?.5:1};">
+          <div style="display:flex; justify-content:space-between; margin-bottom:7px;">
+            <span style="font-weight:500; font-size:var(--text-sm);">${row.name} ${row.needsData?'<span class="chip" style="padding:1px 6px;font-size:9px;">NEEDS-DATA</span>':''}</span>
+            <span class="mono ${row.tone==='accent'?'accent':'ink-2'}" style="font-size:var(--text-sm);">${row.value}</span>
+          </div>
+          <div class="ff-track">${has?`<div class="ff-fill" style="left:${left}%; width:${w}%; background:${row.tone==='accent'?'var(--accent)':'rgba(174,184,204,.5)'};"></div>`:`<div class="ff-fill" style="left:0; right:0; background:repeating-linear-gradient(90deg,rgba(174,184,204,.18) 0 6px,transparent 6px 12px);"></div>`}</div>
+          <div class="ink-3" style="font-size:var(--text-xs); margin-top:6px;">${row.note}</div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+}
+function panelCulture(a) {
+  const cm = IB.cultureMatrix;
+  const reads = cm.byAcquirer[a.id] || cm.byAcquirer.salesforce;
+  const note = cm.byAcquirer[a.id] ? '' : `<p class="ink-3" style="font-size:var(--text-xs); margin:0 0 16px;">No published fault-line read for ${a.name}. Showing Salesforce reference (lower-fit baseline).</p>`;
+  return `<div class="panel" style="padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px;"><div class="label-eyebrow">Culture matrix · 4 Bain fault lines</div>${liveBadge()}</div>
+    ${note}
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${cm.faultlines.map((fl,i) => { const rd = reads[i];
+        return `<div class="panel-flat bg-${rd.c}" style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px;">
+          <span style="font-weight:500; font-size:var(--text-sm); color:var(--ink-on-dark);">${fl}</span>
+          <span class="tone-${rd.c} mono" style="font-weight:600; letter-spacing:.04em; font-size:var(--text-sm);">${rd.v.toUpperCase()}</span>
+        </div>`; }).join('')}
+    </div></div>`;
+}
+function panelSynergy() {
+  const s = IB.synergyStressTest;
+  return `<div class="panel" style="padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px;"><div class="label-eyebrow">Synergy stress test</div>${liveBadge()}</div>
+    <table class="league" style="margin-bottom:18px;">
+      <thead><tr><th>Lever</th><th>Base rate</th><th>Source</th><th style="text-align:right;">Claim</th></tr></thead>
+      <tbody>${s.rows.map(row => `<tr style="cursor:default;">
+        <td style="font-weight:600; color:var(--ink-on-dark);">${row.label}</td>
+        <td class="mono accent">${row.baseRate}</td>
+        <td class="ink-2" style="font-size:var(--text-xs);">${row.note}</td>
+        <td style="text-align:right;"><span class="chip chip-hold" style="padding:1px 7px; font-size:9px;">${row.claim}</span></td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div class="panel-flat bg-risk" style="padding:15px 18px;">
+      <div class="label-eyebrow tone-risk" style="margin-bottom:7px;">Risk note</div>
+      <p style="margin:0; font-size:var(--text-sm); line-height:1.5; color:var(--ink-on-dark);">${s.riskNote}</p>
+    </div></div>`;
+}
+function panelFounder() {
+  const f = IB.founderRead;
+  const tone = { 'Low':'strong', 'Moderate':'watch', 'High':'risk' };
+  return `<div class="panel" style="padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px;"><div class="label-eyebrow">Founder read · ${f.founderName} (evaluated)</div>${liveBadge()}</div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      ${f.scenarios.map(sc => `<div class="panel-flat" style="padding:16px 18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px; flex-wrap:wrap;">
+          <span style="font-weight:600; font-size:var(--text-md); color:var(--ink-on-dark);">${sc.title}</span>
+          <div style="display:flex; gap:8px;">
+            <span class="chip chip-accent" style="padding:2px 8px;">${sc.likelihood}</span>
+            <span class="chip ${tone[sc.risk]==='strong'?'chip-clear':tone[sc.risk]==='watch'?'chip-hold':'chip-block'}" style="padding:2px 8px;">Risk ${sc.risk}</span>
+          </div>
+        </div>
+        <p class="ink-2" style="margin:0; font-size:var(--text-sm); line-height:1.5;">${sc.desc}</p>
+      </div>`).join('')}
+    </div></div>`;
+}
+
+/* ════════════ VIEW: DEAL TEAM — entities first (Beat 4) ════════════ */
+const ENTITIES = [
+  { key:'bank',   name:'Your bank · the advisory', side:'Sell side', tag:'chip-accent', roles:['md','deal_team','legal','cco','read_only'], note:'You run the deal. Members inherit the bank\'s access.' },
+  { key:'client', name:'Client · Atlassian (seller)', side:'Sell side', tag:'chip', roles:['seller'], note:'Edits its own documents, not the valuation.' },
+  { key:'buyer',  name:'Buy side · acquirer and advisors', side:'Joins later', tag:'chip-buyer', roles:['buyer'], future:true, note:'Same model, fewer permissions. Added when they enter the process.' },
+];
+const BENCH = [
+  { name:'Sarah Reid', initials:'SR', role:'M&A Advisor' },
+  { name:'Devin Kerr', initials:'DK', role:'Associate' },
+  { name:'Priya Anand', initials:'PA', role:'Specialist · enterprise SaaS' },
+];
+let added = [];        // bench members pulled onto the bank entity
+let teamLocked = false;
+
+function viewTeam() {
+  const roleLabel = id => (IB.roles.find(r=>r.slug===id)||{}).label || id;
+  const allPerms = [...new Set(IB.roles.flatMap(r=>r.permissions))].sort();
+  const memberFor = entity => IB.dealTeam.filter(m => entity.roles.includes(m.role));
+
+  document.getElementById('viewRoot').innerHTML = `
+    ${sectionHead('Entities first, then people · access scoped to this deal', 'Deal team', liveBadge())}
+    <p class="ink-2" style="margin:0 0 18px; font-size:var(--text-sm); max-width:680px;">Every deal is built from entities: your bank and its client on this side, the buyer and its advisors on the other. People sit inside an entity and inherit its permissions. Build it, lock it, and the deal is walled off from every other one in the firm. Reflects <span class="mono accent">deal_parties</span> + <span class="mono accent">POST /deals/{id}/members</span>.</p>
+
+    <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
+      ${ENTITIES.map(ent => {
+        const people = memberFor(ent);
+        return `<div class="entity ${ent.future?'future':''}">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="label-eyebrow">Entity</span>
+              <span style="font-weight:600; font-size:var(--text-md); color:var(--ink-on-dark);">${ent.name}</span>
+            </div>
+            <span class="chip ${ent.tag}">${ent.side}</span>
+          </div>
+          <p class="ink-3" style="margin:0 0 6px; font-size:var(--text-xs);">${ent.note}</p>
+          <div>
+            ${ent.future
+              ? `<div class="person-row"><span class="avatar add">+</span><span class="ink-3" style="font-size:var(--text-sm);">Added when they enter the process</span></div>`
+              : people.map(m => personRow(m, roleLabel)).join('')}
+            ${ent.key==='bank' ? added.map(m => `<div class="person-row"><span class="avatar">${m.initials}</span><span style="font-weight:600; color:var(--ink-on-dark);">${m.name}</span><span class="chip" style="margin-left:4px;">${m.role}</span>${teamLocked?'':`<button class="btn btn-ghost" style="margin-left:auto; min-height:30px; padding:0 10px; font-size:var(--text-xs);" onclick="removeAdded('${m.initials}')">Remove</button>`}</div>`).join('') : ''}
+          </div>
+          ${ent.key==='bank' && !teamLocked ? benchBlock() : ''}
+          ${ent.key==='bank' && teamLocked ? `<div style="display:flex; align-items:center; gap:9px; margin-top:12px; padding:10px 14px; background:rgba(45,126,84,.10); border:1px solid rgba(45,126,84,.35); border-radius:11px;"><span class="ib-pulse-dot"></span><span class="ink-2" style="font-size:var(--text-sm);">Deal team locked. Walled off from all other mandates. Access scoped to <span class="mono accent">ATLAS-2026-001</span> only.</span></div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="btn btn-gold" id="lockBtn" onclick="lockTeam()" ${teamLocked?'disabled':''}>
+        ${ico(I.lock,15,'#1A1304',2)} ${teamLocked?'Team locked':'Lock the deal team'}
+      </button>
+      <span class="ink-3" style="font-size:var(--text-xs);">MD-gated. You are signed in as Managing Director, so invite and lock are enabled.</span>
+    </div>
+
+    <div class="label-eyebrow" style="margin-bottom:12px;">Permission matrix · roles × permissions (roles.permissions jsonb)</div>
+    <div class="panel" style="padding:6px; overflow-x:auto;">
+      <table class="league" style="min-width:760px;">
+        <thead><tr><th style="position:sticky; left:0; background:#0a1228;">Role</th>${allPerms.map(p=>`<th style="text-align:center; font-size:9px;">${p}</th>`).join('')}</tr></thead>
+        <tbody>${IB.roles.map(r => `<tr style="cursor:default;">
+          <td style="position:sticky; left:0; background:#0a1228;"><span style="font-weight:600; color:var(--ink-on-dark); font-size:var(--text-sm);">${r.label}</span>${r.external?' <span class="chip chip-hold" style="padding:0 5px;font-size:8px;">ext</span>':''}</td>
+          ${allPerms.map(p => r.permissions.includes(p)
+            ? `<td style="text-align:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><path d="M20 6L9 17l-5-5"/></svg></td>`
+            : `<td style="text-align:center;"><span class="ink-3" style="opacity:.3;">·</span></td>`).join('')}
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+function personRow(m, roleLabel) {
+  const role = IB.roles.find(r=>r.slug===m.role)||{};
+  const buyerAv = role.external && m.role==='buyer';
+  return `<div class="person-row">
+    <span class="avatar ${buyerAv?'buyer':''}">${m.initials}</span>
+    <span style="font-weight:600; color:var(--ink-on-dark);">${m.name}</span>
+    <span class="chip ${m.role==='md'?'chip-accent':''}" style="margin-left:4px;">${roleLabel(m.role)}</span>
+    ${role.external?'<span class="chip chip-hold" style="padding:1px 7px;font-size:9px;">External</span>':''}
+    <span class="ink-3" style="margin-left:auto; font-size:var(--text-xs);">${m.sees}</span>
+  </div>`;
+}
+function benchBlock() {
+  const free = BENCH.filter(b => !added.some(a => a.initials===b.initials));
+  if (!free.length) return '';
+  return `<div style="margin-top:12px; padding-top:12px; border-top:1px dashed rgba(174,184,204,.18);">
+    <div class="label-eyebrow" style="margin-bottom:8px;">Bench · cleared to add (${free.length})</div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      ${free.map(b => `<button class="btn btn-ghost" style="min-height:36px;" onclick="addBench('${b.initials}')">
+        <span class="avatar" style="width:22px;height:22px;font-size:9px;">${b.initials}</span>${b.name} · ${b.role}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>`).join('')}
+    </div></div>`;
+}
+function addBench(initials){ const b = BENCH.find(x=>x.initials===initials); if(b && !teamLocked){ added.push({...b}); viewTeam(); } }
+function removeAdded(initials){ added = added.filter(m=>m.initials!==initials); viewTeam(); }
+function lockTeam(){ teamLocked = true; viewTeam(); }
+
+/* ════════════ VIEW: DATA ROOM ════════════ */
+const classTone = { 1:'chip-clear', 2:'chip', 3:'chip-hold', 4:'chip-block' };
+let buyerPhase = 0;
+function viewDataRoom() {
+  // buyer sees the room locked to their own phase; MD can simulate any phase.
+  if (isBuyer()) buyerPhase = 1;
+  const phaseControl = isBuyer() ? '' : `
+    <div class="panel-flat" style="padding:14px 16px;">
+      <div class="label-eyebrow" style="margin-bottom:9px;">Buyer view · phase</div>
+      <div style="display:flex; gap:6px;">
+        ${[0,1,2,3].map(p => `<button onclick="setPhase(${p})" id="phase${p}" class="mono" style="flex:1; min-height:38px; border-radius:9px; cursor:pointer; border:1px solid rgba(174,184,204,.16); background:${p===buyerPhase?'rgba(194,148,69,.16)':'rgba(174,184,204,.05)'}; color:${p===buyerPhase?'var(--accent)':'var(--ink-on-dark-secondary)'}; font-size:var(--text-sm);">P${p}</button>`).join('')}
+      </div>
+      <p class="ink-3" style="font-size:var(--text-xs); margin:9px 0 0;">Simulate what the acquirer contact sees as the process advances.</p>
+    </div>`;
+  document.getElementById('viewRoot').innerHTML = `
+    ${sectionHead('Staged access by classification and phase · buyers gated', 'Data room', liveBadge())}
+    <div style="display:grid; grid-template-columns:${isBuyer()?'1fr':'1fr 280px'}; gap:18px; margin-bottom:20px;" class="dr-grid">
+      <p class="ink-2" style="margin:0; font-size:var(--text-sm);">Documents carry a classification (1 Public to 4 Restricted) and a minimum phase. ${isBuyer()?'You are at <span class="buyer-ink">Phase 1</span>: you see only documents cleared to your phase. Every view you make is written to the audit trail.':'A Buyer sees only phase-gated documents at their current phase. Every view writes to the audit trail.'} Reflects <span class="mono accent">documents + min_phase</span> and <span class="mono accent">POST /documents/{id}/view</span>.</p>
+      ${phaseControl}
+    </div>
+    <div class="panel" style="padding:6px 6px 4px; overflow-x:auto;">
+      <table class="league">
+        <thead><tr><th>Document</th><th>Classification</th><th style="text-align:center;">Min phase</th><th style="text-align:center;">${isBuyer()?'Your access':'Buyer access'}</th><th style="text-align:right;">Action</th></tr></thead>
+        <tbody id="docRows"></tbody>
+      </table>
+    </div>`;
+  renderDocRows(buyerPhase);
+}
+function setPhase(p) {
+  buyerPhase = p;
+  [0,1,2,3].forEach(i => { const b = document.getElementById('phase'+i); if(!b)return;
+    const on = i===p; b.style.background = on?'rgba(194,148,69,.16)':'rgba(174,184,204,.05)'; b.style.color = on?'var(--accent)':'var(--ink-on-dark-secondary)'; });
+  renderDocRows(p);
+}
+function renderDocRows(phase) {
+  const rows = IB.documents.map(d => {
+    const visible = phase >= d.minPhase;
+    // a buyer cannot even see the gated rows exist beyond a count; the MD sees the full gating model.
+    if (isBuyer() && !visible) return '';
+    return `<tr style="cursor:default; opacity:${visible?1:.55};">
+      <td><div style="display:flex; align-items:center; gap:10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-on-dark-tertiary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span style="font-weight:500; color:var(--ink-on-dark);">${d.name}</span></div></td>
+      <td><span class="chip ${classTone[d.classification]}">C${d.classification} · ${d.label}</span></td>
+      <td style="text-align:center;" class="mono ink-2">${d.minPhase===0?'Open':'P'+d.minPhase}</td>
+      <td style="text-align:center;">${visible
+        ? '<span class="chip chip-clear" style="padding:1px 8px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Visible</span>'
+        : '<span class="chip" style="padding:1px 8px; opacity:.7;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Gated</span>'}</td>
+      <td style="text-align:right;"><button class="btn btn-ghost" onclick="viewDoc('${d.name.replace(/'/g,'')}')" style="min-height:34px; padding:0 12px; font-size:var(--text-xs);" ${visible?'':'disabled'}>View</button></td>
+    </tr>`;
+  }).join('');
+  const buyerGatedCount = isBuyer() ? IB.documents.filter(d => buyerPhase < d.minPhase).length : 0;
+  document.getElementById('docRows').innerHTML = rows + (buyerGatedCount ? `<tr style="cursor:default;"><td colspan="5"><div style="display:flex; align-items:center; gap:9px; padding:6px 4px;">${ico(I.lock,14,'var(--ink-on-dark-tertiary)',2)}<span class="ink-3" style="font-size:var(--text-xs);">${buyerGatedCount} more document${buyerGatedCount>1?'s':''} sealed until a later phase. The buyer cannot see that they exist.</span></div></td></tr>` : '');
+}
+function viewDoc(name) {
+  const t = toast();
+  t.innerHTML = `<span class="ib-pulse-dot"></span><span class="ink-2" style="font-size:var(--text-sm);">Audit trail written · <span style="color:var(--ink-on-dark);">${ACTORS[actor].name}</span> viewed ${name}</span>`;
+  t.style.borderColor = 'rgba(45,126,84,.4)';
+  showToast(t);
+}
+
+/* ════════════ VIEW: SKILLS ════════════ */
+function viewSkills() {
+  document.getElementById('viewRoot').innerHTML = `
+    ${sectionHead('Composable analysis · free tier vs Pro', 'Skills', liveBadge())}
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;">
+      ${IB.skills.map(s => `
+        <div class="panel ${s.premium?'glow-soft':''}" style="padding:20px; display:flex; flex-direction:column; gap:12px; position:relative; ${s.premium?'border-color:rgba(194,148,69,.3);':''}">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="chip">${s.category}</span>
+            ${s.premium ? '<span class="chip chip-accent"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Pro</span>' : '<span class="chip chip-clear" style="padding:1px 8px;">Free</span>'}
+          </div>
+          <div style="font-weight:600; font-size:var(--text-md); color:var(--ink-on-dark);">${s.name}</div>
+          <p class="ink-2" style="margin:0; font-size:var(--text-sm); line-height:1.45; flex:1 1 auto;">${s.description}</p>
+          ${s.premium ? '<button class="btn btn-gold" style="min-height:36px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.8 5.7 21l2.3-7.1-6-4.5h7.6z"/></svg>Upgrade to Pro</button>' : '<button class="btn btn-ghost" style="min-height:36px;">Run skill</button>'}
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ════════════ VIEW: AUDIT & LIFECYCLE (Beat 11) ════════════ */
+let leaveProcessed = false;
+function viewAudit() {
+  const actionTone = { grant:'chip-accent', view:'chip-clear', upload:'chip-hold' };
+  document.getElementById('viewRoot').innerHTML = `
+    ${sectionHead('Lifecycle event · entitlements follow employment', 'Process a departure', liveBadge())}
+    <div class="panel" style="padding:24px; margin-bottom:28px;">
+      <p class="ink-2" style="margin:0 0 18px; font-size:var(--text-sm); max-width:700px; line-height:1.55;">An associate on this deal resigns from the firm. The instant their company association ends, compliance revokes their access across every deal they touched. The deals stay. The team stays. The person is gone, and no one had to remember to off-board them.</p>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:16px 18px; background:rgba(20,37,77,.32); border:1px solid rgba(174,184,204,.12); border-radius:13px; margin-bottom:16px;">
+        <span class="avatar" style="width:38px;height:38px;">DK</span>
+        <div style="flex:1 1 auto; min-width:160px;">
+          <div style="font-weight:600; color:var(--ink-on-dark);">Devin Kerr</div>
+          <div class="ink-3" style="font-size:var(--text-xs);">Associate · resigned from the firm, 16:20</div>
+        </div>
+        <button class="btn btn-gold" id="leaveBtn" onclick="processLeave()" ${leaveProcessed?'disabled':''}>
+          ${ico(I.lock,15,'#1A1304',2)} ${leaveProcessed?'Processed':'Process the departure'}
+        </button>
+      </div>
+      <div id="revRows" style="display:flex; flex-direction:column; gap:10px;"></div>
+      <div id="revSummary" style="display:none; align-items:center; gap:9px; margin-top:14px; padding:11px 16px; background:rgba(45,126,84,.10); border:1px solid rgba(45,126,84,.35); border-radius:11px;"></div>
+    </div>
+
+    ${sectionHead('Immutable ledger · who, action, detail, time', 'Audit trail')}
+    <div class="panel" style="padding:6px 6px 4px; overflow-x:auto;">
+      <table class="league">
+        <thead><tr><th style="width:80px;">Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead>
+        <tbody>${IB.auditLog.map(a => `<tr style="cursor:default;">
+          <td class="mono ink-3" style="font-size:var(--text-xs);">${a.ts}</td>
+          <td><span style="font-weight:600; color:var(--ink-on-dark);">${a.actor}</span></td>
+          <td><span class="chip ${actionTone[a.action]||''}">${a.action}</span></td>
+          <td class="ink-2" style="font-size:var(--text-sm);">${a.detail}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <div style="display:flex; align-items:center; gap:9px; margin-top:14px;">
+      ${ico(I.lock,15,'var(--ink-on-dark-tertiary)',1.7)}
+      <span class="ink-3" style="font-size:var(--text-xs); font-family:var(--font-mono);">Append-only. Every document view, grant, departure, and intent screening is logged here.</span>
+    </div>`;
+  if (leaveProcessed) renderRevRows(true);
+}
+const LEAVE_DEALS = [
+  { code:'ATLAS-2026-001', name:'Atlassian — this deal' },
+  { code:'NIMBU-2026-014', name:'Project Nimbus — another mandate' },
+  { code:'HELIO-2026-022', name:'Project Helios — another mandate' },
+];
+function renderRevRows(done) {
+  document.getElementById('revRows').innerHTML = LEAVE_DEALS.map(d => `
+    <div class="revrow ${done?'done':''}" data-code="${d.code}">
+      <span class="mono accent" style="font-size:var(--text-xs); flex:0 0 auto;">${d.code}</span>
+      <span class="ink-2" style="flex:1 1 auto; font-size:var(--text-sm);">${d.name}</span>
+      <span class="chip ${done?'chip-clear':''}" style="flex:0 0 auto;">${done?'access revoked':'pending'}</span>
+    </div>`).join('');
+  if (done) {
+    const s = document.getElementById('revSummary');
+    s.style.display = 'flex';
+    s.innerHTML = `<span class="ib-pulse-dot"></span><span class="ink-2" style="font-size:var(--text-sm);">Removed from <span style="color:var(--ink-on-dark);">3 deals</span> · compliance and admin signed off · deals intact.</span>`;
+  }
+}
+function processLeave() {
+  leaveProcessed = true;
+  document.getElementById('leaveBtn').disabled = true;
+  document.getElementById('leaveBtn').innerHTML = `${ico(I.lock,15,'#1A1304',2)} Processed`;
+  renderRevRows(false);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rows = [...document.querySelectorAll('#revRows .revrow')];
+  rows.forEach((r,i) => setTimeout(() => {
+    r.classList.add('done');
+    r.querySelector('.chip').className = 'chip chip-clear';
+    r.querySelector('.chip').textContent = 'access revoked';
+  }, reduce ? 60*(i+1) : 250 + i*420));
+  setTimeout(() => {
+    const s = document.getElementById('revSummary');
+    s.style.display = 'flex';
+    s.innerHTML = `<span class="ib-pulse-dot"></span><span class="ink-2" style="font-size:var(--text-sm);">Removed from <span style="color:var(--ink-on-dark);">3 deals</span> · compliance and admin signed off · deals intact.</span>`;
+  }, reduce ? 220 : 1500);
+}
+
+/* ════════════ TOAST ════════════ */
+function toast() {
+  let t = document.getElementById('globalToast');
+  if (!t) {
+    t = document.createElement('div'); t.id = 'globalToast';
+    t.style.cssText = 'display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0c1530; border:1px solid rgba(45,126,84,.4); border-radius:10px; padding:11px 16px; box-shadow:var(--elev-float); z-index:70; align-items:center; gap:9px;';
+    document.body.appendChild(t);
+  }
+  return t;
+}
+function showToast(t) { t.style.display = 'flex'; clearTimeout(window._gt); window._gt = setTimeout(()=>{ t.style.display='none'; }, 2600); }
+
+/* ════════════ CHROME CONTROLS ════════════ */
+let railOpen = true;
+function toggleRail() {
+  railOpen = !railOpen;
+  const rail = document.getElementById('rail');
+  document.querySelectorAll('.rail-labels').forEach(e => e.style.display = railOpen ? '' : 'none');
+  document.querySelectorAll('.profile-meta, .deal-switcher').forEach(e => e.style.display = railOpen ? '' : 'none');
+  rail.style.width = railOpen ? '256px' : '72px';
+  const btn = document.querySelector('.rail-collapse-btn svg');
+  if (btn) btn.style.transform = railOpen ? '' : 'rotate(180deg)';
+}
+function applyMdStack(){ const g = document.querySelector('.md-stack'); if(g && window.innerWidth<860) g.style.gridTemplateColumns='1fr'; }
+function applyDdGrid(){ const g = document.querySelector('.dd-grid'); if(g && window.innerWidth<860) g.style.gridTemplateColumns='1fr'; }
+window.addEventListener('resize', () => {
+  const dr = document.querySelector('.dr-grid'); if(dr && !isBuyer()) dr.style.gridTemplateColumns = window.innerWidth<760?'1fr':'1fr 280px';
+  applyMdStack(); applyDdGrid();
+});
+document.addEventListener('click', e => {
+  const sw = document.querySelector('.deal-switcher');
+  const m = document.getElementById('dealMenu');
+  if (sw && m && !sw.contains(e.target)) m.style.display = 'none';
+});
+
+/* ════════════ BOOT ════════════ */
+function boot() {
+  document.getElementById('profInitials').textContent = ACTORS.storm.initials;
+  document.getElementById('profName').textContent = ACTORS.storm.name;
+  document.getElementById('profRole').textContent = ACTORS.storm.role;
+  document.getElementById('dealLabel').textContent = IB.currentUser.mandate.codename;
+  renderNav();
+  renderDealMenu();
+  go('mandate');
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,1447 @@
+@import "tailwindcss";
+
+/* Utilities come from application source only. The docs tree carries literal
+ * class-name examples with wildcard token placeholders; automatic source
+ * detection would treat them as real candidates and emit unparseable CSS
+ * (see docs/design/workbench/README.md). */
+@source not "../../docs";
+
+/*
+ * Conductia design tokens.
+ * Source: docs/04-brand/visual-language.md (reference-derived starting skin, D11).
+ * Light theme is the base. OS dark-mode behaviour is intentionally NOT wired
+ * here — that is a later design decision (see visual-language.md "Evolution
+ * note"). Values flagged [assumed]/[inferred] in the source are used as the
+ * agreed starting skin.
+ */
+:root {
+  /* Colour — reference-derived warm register (2026-07-08 final reskin, WS6a).
+   * Warm off-white canvas, warm neutrals, hairlines, airy small-type
+   * density — with DEEP NAVY as the single accent (primary buttons,
+   * toggles, selection, links, focus rings, provenance/receipt chips),
+   * doing the job the reference forest green does. No gold in the default
+   * palette; navy is the accent, never the page canvas. Light is the
+   * default experience. Token NAMES are byte-stable so every existing
+   * className keeps working; only the values change. Reference values:
+   * docs/06-research/hv-extraction/digests/rogo-ui-findings.md. */
+  --ink: #151312;
+  --ink-secondary: #34312E;
+  --ink-tertiary: #655E59;
+  --surface: #F9F9F7;
+  --surface-subtle: #F2F2F1;
+  --surface-warm: #FCFDFB;
+  --surface-dark: #1F1C1B;
+  --stroke: #EAE9E7;
+  /* Accent — deep navy #163561; white text on it passes AA (12.2:1).
+   * --accent-contrast is the text tone that sits ON an accent fill —
+   * palette- and mode-aware so accent fills stay legible in every skin.
+   * --accent-soft is the reference-style selection wash (chips, active rows). */
+  --accent: #163561;
+  --accent-dark: #0F2647;
+  --accent-contrast: #FFFFFF;
+  --accent-soft: #E9EEF6;
+  --positive: #2D7E54;
+  --positive-deep: #1B4D33;
+  --negative: #B8432B;
+  --canvas-bg: #171514;
+  /* Wordmark shield — palette-independent orange brand mark. */
+  /* Brand mark blues (conductia.com): ink-blue arc, lifted for dark surfaces. */
+  --brand-shield: #5B84FF;
+  --brand-shield-deep: #2447D6;
+
+  /* Semantic aliases — page background is the cool gray. */
+  --background: var(--surface-warm);
+  --foreground: var(--ink);
+
+  /* Type stacks — Editorial Institutional trio (design spec §2).
+   * Self-hosted faces (layout.tsx, next/font/google) are FIRST, then a real
+   * fallback chain (never bare serif → Times). Token NAMES are byte-stable so
+   * every existing font-display/sans/mono className keeps working. */
+  /* reference-faithful UI face: Inter is the whole interface (2026-07-09). */
+  --font-bank: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-bank);
+  /* Headers use the clean sans, not a serif display (Lance 2026-07-09: no
+   * serif headers). --font-display aliases the Inter UI stack so every heading
+   * reads as one clean sans system. */
+  --font-display: var(--font-bank);
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Type scale — IB-terminal density (Phase G2 sandbox merge, 2026-05-20).
+   * Body 15→13 to match Bloomberg/Linear rhythm. Added --text-xxs for
+   * 10px kicker / eyebrow micro-labels. The DOM-level ramp drops the
+   * magazine-longread register; the semantic ramp below reserves the
+   * serif to the named identity classes only. ADR-0006, then D48. */
+  --text-xxs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 28px;
+
+  /* Spacing — 4px grid. Phase G2 of the sandbox merge (2026-05-20) filled
+   * the missing rungs (5 / 7 / 10 / 11). The 5/7/10/11 tokens were
+   * referenced 24+ times across the codebase but previously undefined;
+   * they resolved to `unset`/0 at runtime — the visible cause of much of
+   * the "padding inconsistente" the user reported. See
+   * docs/archive/VISUAL-REVIEW.md and ADR-0006. */
+  --space-unit: 4px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Narrowest supported viewport. The shell clips rather than scrolls, so
+     below this width the document scrolls instead of losing controls. */
+  --app-min-width: 360px;
+
+  /* Radius — softened 2026-05-24 for a rounded, floating, native-app feel
+   * (the prior 5/6/8 read as rigid + squared-off). Cards and surfaces get a
+   * generous radius; the pill is for the floating command bar + chips. */
+  --radius-input: 10px;
+  --radius-button: 10px;
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+
+  /* Workbench system tokens (2026-08-27 handover) — additive names consumed
+   * by the workbench register. Defined at base so every palette x mode
+   * combination resolves them; the workbench palette re-states the canon. */
+  --ink-quiet: #9c9a94;
+  --surface-raised: #faf9f6;
+  --stroke-strong: #e0ded8;
+  --ai: #5e5ce6;
+  --ai-deep: #4340c4;
+  --ai-soft: #edecfb;
+  --ai-tint: #f3f2fc;
+  --positive-fill: #8fe6bf;
+  --hold-fill: #fae6a8;
+  --hold-tint: #fbf3d9;
+  --negative-fill: #f8c9d1;
+  --negative-deep: #8e2440;
+  --sync: #2e90fa;
+  --link: var(--accent);
+
+  /* Aliases for names call sites already read but nothing defined, which
+   * inherited silently. Base, not palette-scoped: the call sites are
+   * palette-independent and every palette was equally broken. */
+  --ink-2: var(--ink-secondary);
+  --border: var(--stroke);
+  --danger: var(--negative);
+  --warning-deep: var(--hold-deep);
+  --radius-control: 8px;
+  --radius-composer: 18px;
+  --shadow-ambient: 0 14px 40px rgb(25 25 25 / 0.09);
+  /* The one scrim behind every Dialog (src/components/overlay): ink at 55%,
+   * the value ExternalLinkDialog, SkipModal and CorrectionDialog already used. */
+  --scrim: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-tertiary: var(--ink-tertiary);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-warm: var(--surface-warm);
+  --color-surface-dark: var(--surface-dark);
+  --color-stroke: var(--stroke);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-positive: var(--positive);
+  --color-positive-deep: var(--positive-deep);
+  --color-negative: var(--negative);
+  --color-canvas-bg: var(--canvas-bg);
+
+  --font-sans: var(--font-sans);
+  --font-bank: var(--font-bank);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+
+  --radius-input: var(--radius-input);
+  --radius-button: var(--radius-button);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+
+  /* Workbench system utilities */
+  --color-ink-quiet: var(--ink-quiet);
+  --color-surface-raised: var(--surface-raised);
+  --color-stroke-strong: var(--stroke-strong);
+  --color-ai: var(--ai);
+  --color-ai-deep: var(--ai-deep);
+  --color-ai-soft: var(--ai-soft);
+  --color-ai-tint: var(--ai-tint);
+  --color-positive-fill: var(--positive-fill);
+  --color-hold-fill: var(--hold-fill);
+  --color-hold-tint: var(--hold-tint);
+  --color-negative-fill: var(--negative-fill);
+  --color-sync: var(--sync);
+  --color-link: var(--link);
+  --radius-control: var(--radius-control);
+  --radius-composer: var(--radius-composer);
+  --shadow-ambient: var(--shadow-ambient);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-bank);
+  font-size: var(--text-base);
+  min-width: var(--app-min-width);
+}
+
+/* ===========================================================================
+ * EXTENDED SYSTEM — Editorial Institutional (design spec §3 / §4).
+ * Purely ADDITIVE. The 16 frozen tokens above are NEVER mutated; everything
+ * here is new (elevation, cinematic surface, layout grid, semantic type ramp).
+ * Built only on the existing frozen tokens (--ink, --surface, --canvas-bg …).
+ * =========================================================================== */
+:root {
+  /* --- Elevation — the reference UI grammar: hairlines everywhere, one soft shadow only
+   * on popovers/modals/the composer. No glows, no heavy lifts. (2026-07-09) */
+  --elev-0: 0 0 0 1px var(--stroke);
+  --elev-1: 0 0 0 1px var(--stroke);
+  --elev-2: 0 1px 2px rgb(21 19 18 / 0.04), 0 0 0 1px var(--stroke);
+  --elev-3: 0 8px 28px rgb(21 19 18 / 0.10), 0 0 0 1px var(--stroke);
+
+  /* --- Elevation (dark cinematic / canvas surfaces) --------------------- */
+  --elev-dark-0: inset 0 0 0 1px var(--on-dark-fill-08);
+  --elev-dark-1: inset 0 0 0 1px var(--on-dark-fill-10),
+    0 8px 24px rgb(0 0 0 / 0.45);
+  --elev-dark-2: inset 0 0 0 1px var(--on-dark-fill-14),
+    0 18px 48px rgb(0 0 0 / 0.55);
+  /* Floating elements (the command bar, popovers) — soft, lifted, navy-cast.
+   * Reads as hovering above the surface rather than welded to it. */
+  --elev-float: 0 16px 48px rgb(10 18 40 / 0.45), 0 2px 10px rgb(10 18 40 / 0.30),
+    inset 0 0 0 1px var(--on-dark-fill-10);
+  /* Glows retired for the reference UI calm — reduced to quiet hairline rings. */
+  --glow-positive: 0 0 0 1px color-mix(in srgb, var(--positive) 40%, transparent);
+  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+
+  /* --- Cinematic background + texture -----------------------------------
+   * Phase G3 (2026-05-20): radial gradient anchor hexes pivoted from
+   * forest-green (#14352d / #0a1c18 / #16382f / #102a23 / #0c211b) to
+   * deep navy variants to match the brand logo + the --canvas-bg
+   * #0A1228 anchor. The gradient effect (slightly lighter at the radial
+   * origin, darker at the edges) is preserved. */
+  --bg-cinematic: radial-gradient(
+      120% 90% at 50% 0%,
+      #162850 0%,
+      var(--canvas-bg) 48%,
+      #06091A 100%
+    );
+  --bg-canvas-stage: radial-gradient(
+      130% 100% at 50% -10%,
+      #1A2950 0%,
+      #10193A 55%,
+      #0A1228 100%
+    );
+  --texture-grid: repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--ink-on-dark) 3.5%, transparent) 0,
+      color-mix(in srgb, var(--ink-on-dark) 3.5%, transparent) 1px,
+      transparent 1px,
+      transparent 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink-on-dark) 3.5%, transparent) 0,
+      color-mix(in srgb, var(--ink-on-dark) 3.5%, transparent) 1px,
+      transparent 1px,
+      transparent 48px
+    );
+
+  /* --- Compliance state extensions (Phase B sandbox merge, 2026-05-20) ----
+   * Hold is the third compliance verdict introduced by ADR-0003
+   * (compliant | hold | blocked). The frozen 16-token palette does not
+   * include a warning slot; --hold and --hold-deep extend it as additive
+   * tokens per the additive policy of this block. Editorial-institutional
+   * warm ochre — visually distinct from both --positive (clear) and
+   * --negative (blocked). */
+  --hold: #BD861F;
+  --hold-deep: #7A5210;
+
+  /* --- Pulse-dot animation (Phase G sandbox merge, 2026-05-20) -----------
+   * The "compliance is alive" heartbeat — ported from sandbox app-pill-dot
+   * (3px halo box-shadow → 5px transparent at 50%). Applied to the
+   * ComplianceRibbon idle dot. The keyframes are additive; the media
+   * query honors prefers-reduced-motion (suppresses the halo expansion
+   * while keeping the static dot + halo). */
+  --pulse-halo-color: color-mix(in srgb, var(--positive-deep) 24%, transparent);
+
+  /* --- Inverse / on-dark text tokens ------------------------------------ */
+  --ink-on-dark: var(--surface-warm);
+  --ink-on-dark-secondary: color-mix(in srgb, var(--ink-on-dark) 82%, transparent);
+  --ink-on-dark-tertiary: color-mix(in srgb, var(--ink-on-dark) 64%, transparent);
+  --on-dark-fill-03: color-mix(in srgb, var(--ink-on-dark) 3%, transparent);
+  --on-dark-fill-04: color-mix(in srgb, var(--ink-on-dark) 4%, transparent);
+  --on-dark-fill-05: color-mix(in srgb, var(--ink-on-dark) 5%, transparent);
+  --on-dark-fill-06: color-mix(in srgb, var(--ink-on-dark) 6%, transparent);
+  --on-dark-fill-07: color-mix(in srgb, var(--ink-on-dark) 7%, transparent);
+  --on-dark-fill-08: color-mix(in srgb, var(--ink-on-dark) 8%, transparent);
+  --on-dark-fill-10: color-mix(in srgb, var(--ink-on-dark) 10%, transparent);
+  --on-dark-fill-12: color-mix(in srgb, var(--ink-on-dark) 12%, transparent);
+  --on-dark-fill-14: color-mix(in srgb, var(--ink-on-dark) 14%, transparent);
+  --on-dark-fill-16: color-mix(in srgb, var(--ink-on-dark) 16%, transparent);
+  --on-dark-stroke-10: color-mix(in srgb, var(--ink-on-dark) 10%, transparent);
+  --on-dark-stroke-12: color-mix(in srgb, var(--ink-on-dark) 12%, transparent);
+  --on-dark-stroke-14: color-mix(in srgb, var(--ink-on-dark) 14%, transparent);
+  --on-dark-stroke-16: color-mix(in srgb, var(--ink-on-dark) 16%, transparent);
+
+  /* --- Shell surface abstraction (Dribbble-style rollout) ----------------- */
+  --shell-rail-bg: var(--canvas-bg);
+  --shell-rail-border: var(--on-dark-stroke-12);
+  --shell-ink: var(--ink-on-dark);
+  --shell-ink-muted: var(--ink-on-dark-secondary);
+  --shell-ink-tertiary: var(--ink-on-dark-tertiary);
+  --shell-topbar-bg: var(--shell-rail-bg);
+  --shell-topbar-border: var(--shell-rail-border);
+  --shell-topbar-text: var(--shell-ink);
+  --shell-topbar-muted: var(--shell-ink-muted);
+  --shell-panel-bg: color-mix(in srgb, var(--canvas-bg) 92%, transparent);
+  --shell-panel-border: var(--on-dark-stroke-14);
+  --shell-hover-bg: var(--on-dark-fill-06);
+  --shell-active-bg: var(--on-dark-fill-12);
+  --shell-popover-bg: color-mix(in srgb, var(--canvas-bg) 88%, var(--surface) 12%);
+  --shell-elev-1: 0 14px 30px rgb(3 9 26 / 0.38), inset 0 0 0 1px var(--shell-panel-border);
+  --shell-elev-2: 0 24px 50px rgb(3 9 26 / 0.45), inset 0 0 0 1px var(--shell-panel-border);
+  --home-stage-base: var(--canvas-bg);
+  --home-stage-bg: var(--bg-cinematic);
+  --home-stage-bg-light: radial-gradient(
+      120% 90% at 50% 0%,
+      #ffffff 0%,
+      #f1f4f9 52%,
+      #e8edf6 100%
+    );
+  --home-stage-fg: var(--ink-on-dark);
+  --shell-grid-line: color-mix(in srgb, var(--shell-ink) 4%, transparent);
+
+  /* --- Ink — pressed/hover strengthening (light surfaces) --------------- */
+  /* One step darker than --ink for primary-button hover/active. Tokenised so
+   * the "no raw hex" discipline holds across the whole system. */
+  --ink-strong: #000000;
+
+  /* --- Layout grid ------------------------------------------------------- */
+  --page-max: 100%;
+  --page-pad: 16px;
+  --shell-header-h: 56px;
+  --shell-spine-w: 64px;
+  --shell-spine-h: 48px;
+  /* Left navigation rail width (2026-05-24 AI-native shell). */
+  --shell-rail-w: 224px;
+  --grid-cols: 12;
+  --grid-gap: 24px;
+
+  /* Sidebar rail tokens (palette-driven). */
+  --sidebar-bg: #f4f6fb;
+  --sidebar-border: #d8deea;
+  --sidebar-title: #0f2347;
+  --sidebar-item: #64748b;
+  --sidebar-item-hover-bg: #e5eaf5;
+  --sidebar-item-hover-text: #1f2f52;
+  --sidebar-item-active-bg: #dbe8ff;
+  --sidebar-item-active-text: #244ea5;
+  --sidebar-toggle-bg: #0f172a;
+  --sidebar-toggle-text: #ffffff;
+  --sidebar-avatar-ring: #ffffff;
+
+  /* Mandate dashboard surfaces (mode-aware). */
+  --mandate-shell-bg: radial-gradient(
+      120% 90% at 20% 0%,
+      color-mix(in srgb, var(--accent) 34%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      100% 110% at 100% 0%,
+      color-mix(in srgb, var(--accent-dark) 24%, transparent) 0%,
+      transparent 60%
+    );
+  --mandate-header-bg: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--canvas-bg) 78%, var(--accent-dark) 22%) 0%,
+    color-mix(in srgb, var(--canvas-bg) 86%, black 14%) 56%,
+    color-mix(in srgb, var(--canvas-bg) 92%, black 8%) 100%
+  );
+  --mandate-header-shadow: 0 24px 56px rgb(4 10 42 / 0.55);
+  --mandate-panel-bg-primary: color-mix(in srgb, var(--canvas-bg) 78%, var(--accent) 22%);
+  --mandate-panel-bg-secondary: color-mix(in srgb, var(--canvas-bg) 84%, var(--accent) 16%);
+  --mandate-panel-bg-tertiary: color-mix(in srgb, var(--canvas-bg) 88%, var(--accent) 12%);
+  --mandate-panel-bg-base: color-mix(in srgb, var(--canvas-bg) 86%, var(--accent) 14%);
+  --mandate-card-bg-soft: var(--on-dark-fill-04);
+  --mandate-card-bg-subtle: var(--on-dark-fill-03);
+  --mandate-card-bg-strong: var(--on-dark-fill-07);
+  --mandate-card-bg-header: var(--on-dark-fill-08);
+  --mandate-card-border: var(--on-dark-stroke-12);
+  --mandate-card-border-subtle: var(--on-dark-stroke-10);
+  --mandate-progress-track: var(--on-dark-fill-12);
+  --mandate-chart-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+    color-mix(in srgb, var(--accent-dark) 20%, transparent) 45%,
+    color-mix(in srgb, var(--canvas-bg) 72%, transparent) 100%
+  );
+  --mandate-action-bg: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 34%, var(--canvas-bg) 66%) 0%,
+    color-mix(in srgb, var(--canvas-bg) 88%, black 12%) 100%
+  );
+}
+
+[data-palette='default'],
+[data-palette='navy'] {
+  /* reference-derived warm register with deep-navy single accent (2026-07-08
+   * reskin). Warm off-white canvas + warm neutrals + warm inks; navy is the
+   * accent (buttons, selection, links, focus, provenance), never the page
+   * canvas. No gold. Mirrors the :root base above. */
+  --ink: #151312;
+  --ink-secondary: #34312E;
+  --ink-tertiary: #655E59;
+  --surface: #F9F9F7;
+  --surface-subtle: #F2F2F1;
+  --surface-warm: #FCFDFB;
+  --surface-dark: #1F1C1B;
+  --stroke: #EAE9E7;
+  --accent: #163561;
+  --accent-dark: #0F2647;
+  --accent-contrast: #FFFFFF;
+  --accent-soft: #E9EEF6;
+  --positive: #2D7E54;
+  --positive-deep: #1B4D33;
+  --negative: #B8432B;
+  --hold: #4F6187;
+  --hold-deep: #33415C;
+  --canvas-bg: #FCFDFB;
+
+  --sidebar-bg: #f4f6fb;
+  --sidebar-border: #d8deea;
+  --sidebar-title: #102445;
+  --sidebar-item: #66748a;
+  --sidebar-item-hover-bg: #e6ebf5;
+  --sidebar-item-hover-text: #203659;
+  --sidebar-item-active-bg: #dce8fe;
+  --sidebar-item-active-text: #2b56ab;
+  --sidebar-toggle-bg: #151312;
+  --sidebar-toggle-text: #FCFDFB;
+  --sidebar-avatar-ring: #FCFDFB;
+  /* the reference UI home canvas: near-flat warm off-white (no cinematic radial). */
+  --home-stage-bg-light: var(--surface-warm);
+}
+
+[data-palette='gold-navy'] {
+  --ink: #0E1B3A;
+  --ink-secondary: #4F5B70;
+  --ink-tertiary: #8B95AC;
+  --surface: #ffffff;
+  --surface-subtle: #ECEEF2;
+  --surface-warm: #F4F5F8;
+  --surface-dark: #0E1B3A;
+  --stroke: #DDE0E7;
+  --accent: #C29445;
+  --accent-dark: #9A7530;
+  --positive: #2D7E54;
+  --positive-deep: #1B4D33;
+  --negative: #D14B30;
+  --hold: #b07a1a;
+  --hold-deep: #7a4f10;
+  --canvas-bg: #0A1228;
+
+  --sidebar-bg: #f4f6fb;
+  --sidebar-border: #d8deea;
+  --sidebar-title: #102445;
+  --sidebar-item: #66748a;
+  --sidebar-item-hover-bg: #e6ebf5;
+  --sidebar-item-hover-text: #203659;
+  --sidebar-item-active-bg: #ece1ce;
+  --sidebar-item-active-text: #8f6a2f;
+  --sidebar-toggle-bg: #111827;
+  --sidebar-toggle-text: #ffffff;
+  --sidebar-avatar-ring: #ffffff;
+  --home-stage-bg-light: radial-gradient(
+      120% 90% at 50% 0%,
+      #ffffff 0%,
+      #f2f5fa 52%,
+      #e8edf5 100%
+    );
+}
+
+[data-palette='editorial'],
+[data-palette='mono'] {
+  --ink: #0b0b0c;
+  --ink-secondary: #2f2f33;
+  --ink-tertiary: #66666f;
+  --surface: #ffffff;
+  --surface-subtle: #f6f6f8;
+  --surface-warm: #fbfbfc;
+  --surface-dark: #131316;
+  --stroke: #d9d9df;
+  --accent: #111114;
+  --accent-dark: #000000;
+  --positive: #2f6a4d;
+  --positive-deep: #214a36;
+  --negative: #e7000b;
+  --canvas-bg: #09090b;
+  --background: #ffffff;
+  --foreground: var(--ink);
+  --bg-cinematic: radial-gradient(
+      120% 90% at 50% 0%,
+      #303035 0%,
+      var(--canvas-bg) 48%,
+      #050507 100%
+    );
+  --bg-canvas-stage: radial-gradient(
+      130% 100% at 50% -10%,
+      #29292f 0%,
+      #121216 55%,
+      #070709 100%
+    );
+  --hold: #8d8d96;
+  --hold-deep: #5f5f67;
+  --ink-on-dark: #f7f7f8;
+
+  --sidebar-bg: #fafafa;
+  --sidebar-border: #e5e5e5;
+  --sidebar-title: #0a0a0a;
+  --sidebar-item: #717171;
+  --sidebar-item-hover-bg: #f5f5f5;
+  --sidebar-item-hover-text: #171717;
+  --sidebar-item-active-bg: #f5f5f5;
+  --sidebar-item-active-text: #171717;
+  --sidebar-toggle-bg: #171717;
+  --sidebar-toggle-text: #fafafa;
+  --sidebar-avatar-ring: #fafafa;
+  --home-stage-bg-light: radial-gradient(
+      120% 90% at 50% 0%,
+      #ffffff 0%,
+      #f1f1f1 52%,
+      #e4e4e4 100%
+    );
+}
+
+[data-palette='editorial'][data-style-mode='dark'],
+[data-palette='mono'][data-style-mode='dark'] {
+  --ink: #f6f6f8;
+  --ink-secondary: #c2c2ca;
+  --ink-tertiary: #888892;
+  --surface: #151518;
+  --surface-subtle: #1f1f24;
+  --surface-warm: #111114;
+  --surface-dark: #070709;
+  --stroke: #2e2e36;
+  --accent: #f3f3f6;
+  --accent-dark: #d7d7de;
+  --positive: #56a27a;
+  --positive-deep: #3f785b;
+  --negative: #ff6467;
+  --canvas-bg: #111214;
+  --background: #111214;
+  --foreground: #f6f6f8;
+  --bg-cinematic: #111214;
+  --bg-canvas-stage: #111214;
+  --mandate-shell-bg: none;
+  --hold: #a2a2ac;
+  --hold-deep: #787883;
+  --ink-on-dark: #f6f6f8;
+
+  --sidebar-bg: #101014;
+  --sidebar-border: color-mix(in srgb, var(--ink-on-dark) 16%, transparent);
+  --sidebar-title: #f6f6f8;
+  --sidebar-item: #b0b0b9;
+  --sidebar-item-hover-bg: #1a1a1f;
+  --sidebar-item-hover-text: #f6f6f8;
+  --sidebar-item-active-bg: #222228;
+  --sidebar-item-active-text: #ffffff;
+  --sidebar-toggle-bg: #f6f6f8;
+  --sidebar-toggle-text: #101014;
+  --sidebar-avatar-ring: #f6f6f8;
+}
+
+[data-palette='editorial'][data-style-mode='light'],
+[data-palette='mono'][data-style-mode='light'] {
+  /* Mono light mode uses true light surfaces, not dark-neon canvas. */
+  --canvas-bg: #ffffff;
+  --bg-cinematic: radial-gradient(
+      120% 90% at 50% 0%,
+      #ffffff 0%,
+      #f3f3f5 52%,
+      #e8e8ec 100%
+    );
+  --bg-canvas-stage: radial-gradient(
+      130% 100% at 50% -10%,
+      #ffffff 0%,
+      #f2f2f4 55%,
+      #e8e8ec 100%
+    );
+
+  /* Keep legacy on-dark utility classes readable on those light surfaces. */
+  --ink-on-dark: var(--ink);
+  --ink-on-dark-secondary: var(--ink-secondary);
+  --ink-on-dark-tertiary: var(--ink-tertiary);
+}
+
+[data-palette='editorial'][data-style-mode='light'],
+[data-palette='mono'][data-style-mode='light'] {
+  --background: #ffffff;
+  --mandate-shell-bg: none;
+  --mandate-header-bg: linear-gradient(
+    135deg,
+    #121216 0%,
+    #1d1d22 56%,
+    #060607 100%
+  );
+  --mandate-header-shadow: 0 22px 48px rgb(0 0 0 / 0.34);
+  --mandate-panel-bg-primary: #ffffff;
+  --mandate-panel-bg-secondary: #ffffff;
+  --mandate-panel-bg-tertiary: #ffffff;
+  --mandate-panel-bg-base: #ffffff;
+  --mandate-chart-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, black 11%, white 89%) 0%,
+    color-mix(in srgb, black 7%, white 93%) 44%,
+    #ffffff 100%
+  );
+  --mandate-action-bg: linear-gradient(
+    140deg,
+    #16161b 0%,
+    #0a0a0c 100%
+  );
+}
+
+/* Mono-only background flattening: no cinematic shadow in either mode. */
+[data-palette='mono'][data-style-mode='light'] {
+  --background: #ffffff;
+  --canvas-bg: #ffffff;
+  --bg-cinematic: #ffffff;
+  --bg-canvas-stage: #ffffff;
+  --home-stage-base: #ffffff;
+  --home-stage-bg-light: #ffffff;
+  --home-stage-bg: #ffffff;
+  --mandate-shell-bg: none;
+}
+
+[data-palette='mono'][data-style-mode='dark'] {
+  --background: #111214;
+  --canvas-bg: #111214;
+  --bg-cinematic: #111214;
+  --bg-canvas-stage: #111214;
+  --home-stage-base: #111214;
+  --home-stage-bg: #111214;
+  --mandate-shell-bg: none;
+}
+
+[data-palette='teal'],
+[data-palette='navy-orange'] {
+  --ink: #142647;
+  --ink-secondary: #3c537a;
+  --ink-tertiary: #6b82ab;
+  --surface: #f8faff;
+  --surface-subtle: #eaf0fb;
+  --surface-warm: #f1f5fd;
+  --surface-dark: #102447;
+  --stroke: #d1ddf3;
+  --accent: #f08d2f;
+  --accent-dark: #bc6513;
+  --positive: #2a7f61;
+  --positive-deep: #1a5541;
+  --negative: #c94f34;
+  --canvas-bg: #0a1630;
+  --background: var(--surface-warm);
+  --foreground: var(--ink);
+  --bg-cinematic: radial-gradient(
+      120% 90% at 50% 0%,
+      #1a2f58 0%,
+      var(--canvas-bg) 48%,
+      #060d1f 100%
+    );
+  --bg-canvas-stage: radial-gradient(
+      130% 100% at 50% -10%,
+      #213a67 0%,
+      #13284c 55%,
+      #0a1630 100%
+    );
+  --hold: #da8430;
+  --hold-deep: #9b5a16;
+  --ink-on-dark: #edf2ff;
+
+  --sidebar-bg: #eff4fc;
+  --sidebar-border: #cfddf1;
+  --sidebar-title: #17305a;
+  --sidebar-item: #47648f;
+  --sidebar-item-hover-bg: #e0e9f8;
+  --sidebar-item-hover-text: #1e3e70;
+  --sidebar-item-active-bg: #f9e5d2;
+  --sidebar-item-active-text: #bc6513;
+  --sidebar-toggle-bg: #17305a;
+  --sidebar-toggle-text: #fff6ee;
+  --sidebar-avatar-ring: #fff6ee;
+  --home-stage-bg-light: radial-gradient(
+      120% 90% at 50% 0%,
+      #fcfdff 0%,
+      #edf2fb 52%,
+      #dde8f8 100%
+    );
+}
+
+[data-palette='default'][data-style-mode='dark'],
+[data-palette='navy'][data-style-mode='dark'] {
+  --ink: #eef3ff;
+  --ink-secondary: #b8c6de;
+  --ink-tertiary: #8ea0bf;
+  --surface: #0f1a33;
+  --surface-subtle: #142241;
+  --surface-warm: #0b152b;
+  --surface-dark: #070e1f;
+  --stroke: #263757;
+  --accent: #5b8fc9;
+  --accent-dark: #3f6da0;
+  --positive: #4c9c7d;
+  --positive-deep: #337059;
+  --negative: #f0765f;
+  --canvas-bg: #070e1f;
+  --background: #070e1f;
+  --foreground: #eef3ff;
+  --hold: #8a9bb9;
+  --hold-deep: #647798;
+  --ink-on-dark: #eef3ff;
+}
+
+[data-palette='gold-navy'][data-style-mode='dark'] {
+  --ink: #eef3ff;
+  --ink-secondary: #b8c6de;
+  --ink-tertiary: #8ea0bf;
+  --surface: #0f1a33;
+  --surface-subtle: #142241;
+  --surface-warm: #0b152b;
+  --surface-dark: #070e1f;
+  --stroke: #263757;
+  --accent: #c7a15f;
+  --accent-dark: #9a7530;
+  --positive: #4c9c7d;
+  --positive-deep: #337059;
+  --negative: #f0765f;
+  --canvas-bg: #070e1f;
+  --background: #070e1f;
+  --foreground: #eef3ff;
+  --hold: #c09a57;
+  --hold-deep: #896c3a;
+  --ink-on-dark: #eef3ff;
+}
+
+[data-palette='teal'][data-style-mode='dark'],
+[data-palette='navy-orange'][data-style-mode='dark'] {
+  --ink: #edf2ff;
+  --ink-secondary: #bccae7;
+  --ink-tertiary: #8fa4ca;
+  --surface: #102345;
+  --surface-subtle: #152d55;
+  --surface-warm: #0b1a35;
+  --surface-dark: #081229;
+  --stroke: #274170;
+  --accent: #ffa54d;
+  --accent-dark: #d97b22;
+  --positive: #57ac8f;
+  --positive-deep: #3a7a64;
+  --negative: #f37a5f;
+  --canvas-bg: #081229;
+  --background: #081229;
+  --foreground: #edf2ff;
+  --hold: #ffba72;
+  --hold-deep: #c77a2c;
+  --ink-on-dark: #edf2ff;
+}
+
+[data-palette='navy-orange'][data-style-mode='dark'] {
+  /* Navy Orange dark mode: enforce solid card surfaces. */
+  --mandate-panel-bg-primary: #14305c;
+  --mandate-panel-bg-secondary: #14305c;
+  --mandate-panel-bg-tertiary: #14305c;
+  --mandate-panel-bg-base: #14305c;
+  --mandate-card-bg-soft: #163765;
+  --mandate-card-bg-subtle: #14305c;
+  --mandate-card-bg-strong: #1a3f74;
+  --mandate-card-bg-header: #1d467f;
+  --mandate-card-border: #2f5a96;
+  --mandate-card-border-subtle: #294e84;
+  --mandate-progress-track: #244b81;
+  --mandate-chart-bg: #14305c;
+  --mandate-action-bg: #14305c;
+}
+
+[data-style-mode='dark'] {
+  /* Dark-mode surfaces should use navy/accent-tinted edges, never white casts. */
+  --on-dark-fill-03: color-mix(in srgb, var(--accent) 4%, transparent);
+  --on-dark-fill-04: color-mix(in srgb, var(--accent) 5%, transparent);
+  --on-dark-fill-05: color-mix(in srgb, var(--accent) 6%, transparent);
+  --on-dark-fill-06: color-mix(in srgb, var(--accent) 7%, transparent);
+  --on-dark-fill-07: color-mix(in srgb, var(--accent) 8%, transparent);
+  --on-dark-fill-08: color-mix(in srgb, var(--accent) 10%, transparent);
+  --on-dark-fill-10: color-mix(in srgb, var(--accent) 12%, transparent);
+  --on-dark-fill-12: color-mix(in srgb, var(--accent) 14%, transparent);
+  --on-dark-fill-14: color-mix(in srgb, var(--accent) 16%, transparent);
+  --on-dark-fill-16: color-mix(in srgb, var(--accent) 18%, transparent);
+  --on-dark-stroke-10: color-mix(in srgb, var(--accent-dark) 22%, transparent);
+  --on-dark-stroke-12: color-mix(in srgb, var(--accent-dark) 26%, transparent);
+  --on-dark-stroke-14: color-mix(in srgb, var(--accent-dark) 30%, transparent);
+  --on-dark-stroke-16: color-mix(in srgb, var(--accent-dark) 34%, transparent);
+
+  --panel-bg: var(--on-dark-fill-07);
+  --panel-border: var(--on-dark-stroke-12);
+  --panel-shadow: 0 18px 44px rgb(2 7 36 / 0.55);
+
+  --shell-rail-bg: var(--canvas-bg);
+  --shell-rail-border: var(--on-dark-stroke-12);
+  --shell-ink: var(--ink-on-dark);
+  --shell-ink-muted: var(--ink-on-dark-secondary);
+  --shell-ink-tertiary: var(--ink-on-dark-tertiary);
+  --shell-topbar-bg: var(--shell-rail-bg);
+  --shell-topbar-border: var(--shell-rail-border);
+  --shell-topbar-text: var(--shell-ink);
+  --shell-topbar-muted: var(--shell-ink-muted);
+  --shell-panel-bg: color-mix(in srgb, var(--canvas-bg) 92%, transparent);
+  --shell-panel-border: var(--on-dark-stroke-14);
+  --shell-hover-bg: var(--on-dark-fill-06);
+  --shell-active-bg: var(--on-dark-fill-12);
+  --shell-popover-bg: color-mix(in srgb, var(--canvas-bg) 88%, var(--surface) 12%);
+  --shell-elev-1: 0 14px 30px rgb(3 9 26 / 0.38), inset 0 0 0 1px var(--shell-panel-border);
+  --shell-elev-2: 0 24px 50px rgb(3 9 26 / 0.45), inset 0 0 0 1px var(--shell-panel-border);
+  --home-stage-base: var(--canvas-bg);
+  --home-stage-bg: var(--bg-cinematic);
+  --home-stage-fg: var(--ink-on-dark);
+  --shell-grid-line: color-mix(in srgb, var(--shell-ink) 4%, transparent);
+
+  /* Sidebar follows active palette in dark mode. */
+  --sidebar-bg: color-mix(in srgb, var(--canvas-bg) 90%, black 10%);
+  --sidebar-border: var(--on-dark-stroke-12);
+  --sidebar-title: var(--ink-on-dark);
+  --sidebar-item: var(--ink-on-dark-secondary);
+  --sidebar-item-hover-bg: var(--on-dark-fill-06);
+  --sidebar-item-hover-text: var(--ink-on-dark);
+  --sidebar-item-active-bg: var(--on-dark-fill-12);
+  --sidebar-item-active-text: var(--ink-on-dark);
+  --sidebar-toggle-bg: color-mix(in srgb, var(--ink-on-dark) 18%, transparent);
+  --sidebar-toggle-text: var(--ink-on-dark);
+  --sidebar-avatar-ring: color-mix(in srgb, var(--ink-on-dark) 20%, transparent);
+}
+
+[data-style-mode='light'] {
+  /* Light mode remaps cinematic aliases to light-surface semantics.
+   * Many shared components still consume on-dark tokens; this keeps them
+   * readable and visually coherent without forking every call site. */
+  --canvas-bg: var(--surface);
+  --bg-cinematic: var(--home-stage-bg-light);
+  --bg-canvas-stage: radial-gradient(
+      130% 100% at 50% -10%,
+      #ffffff 0%,
+      color-mix(in srgb, var(--surface-warm) 86%, white 14%) 55%,
+      color-mix(in srgb, var(--surface-warm) 94%, black 6%) 100%
+    );
+  --ink-on-dark: var(--ink);
+  --ink-on-dark-secondary: var(--ink-secondary);
+  --ink-on-dark-tertiary: var(--ink-tertiary);
+  --pulse-halo-color: color-mix(in srgb, var(--positive) 24%, transparent);
+
+  --panel-bg: color-mix(in srgb, var(--surface) 92%, var(--surface-subtle) 8%);
+  --panel-border: color-mix(in srgb, var(--ink) 10%, transparent);
+  --panel-shadow: 0 16px 36px rgb(8 20 46 / 0.12);
+
+  --shell-rail-bg: var(--surface);
+  --shell-rail-border: color-mix(in srgb, var(--ink) 12%, transparent);
+  --shell-ink: var(--ink);
+  --shell-ink-muted: var(--ink-secondary);
+  --shell-ink-tertiary: var(--ink-tertiary);
+  --shell-topbar-bg: var(--shell-rail-bg);
+  --shell-topbar-border: var(--shell-rail-border);
+  --shell-topbar-text: var(--ink);
+  --shell-topbar-muted: var(--ink-secondary);
+  --shell-panel-bg: color-mix(in srgb, var(--surface) 96%, transparent);
+  --shell-panel-border: color-mix(in srgb, var(--ink) 12%, transparent);
+  --shell-hover-bg: color-mix(in srgb, var(--ink) 6%, transparent);
+  --shell-active-bg: color-mix(in srgb, var(--ink) 11%, transparent);
+  --shell-popover-bg: var(--surface);
+  --shell-elev-1: 0 8px 22px rgb(8 20 46 / 0.08), inset 0 0 0 1px var(--shell-panel-border);
+  --shell-elev-2: 0 18px 44px rgb(8 20 46 / 0.12), inset 0 0 0 1px var(--shell-panel-border);
+  --home-stage-base: var(--surface-warm);
+  --home-stage-bg: var(--home-stage-bg-light);
+  --home-stage-fg: var(--ink);
+  --shell-grid-line: color-mix(in srgb, var(--ink) 6%, transparent);
+
+  /* Sidebar follows active palette in light mode. */
+  --sidebar-bg: var(--surface-warm);
+  --sidebar-border: color-mix(in srgb, var(--ink) 14%, transparent);
+  --sidebar-title: var(--ink);
+  --sidebar-item: var(--ink-tertiary);
+  --sidebar-item-hover-bg: color-mix(in srgb, var(--ink) 8%, transparent);
+  --sidebar-item-hover-text: var(--ink-secondary);
+  --sidebar-item-active-bg: color-mix(in srgb, var(--accent) 18%, transparent);
+  --sidebar-item-active-text: var(--accent-dark);
+  --sidebar-toggle-bg: var(--ink);
+  --sidebar-toggle-text: var(--surface);
+  --sidebar-avatar-ring: var(--surface);
+
+  --mandate-shell-bg: radial-gradient(
+      120% 90% at 20% 0%,
+      color-mix(in srgb, var(--accent) 10%, white 90%) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      100% 110% at 100% 0%,
+      color-mix(in srgb, var(--surface-subtle) 88%, white 12%) 0%,
+      transparent 62%
+    );
+  --mandate-header-bg: transparent;
+  --mandate-header-shadow: none;
+  --mandate-panel-bg-primary: color-mix(in srgb, var(--surface) 94%, var(--accent) 6%);
+  --mandate-panel-bg-secondary: color-mix(in srgb, var(--surface) 95%, var(--accent) 5%);
+  --mandate-panel-bg-tertiary: color-mix(in srgb, var(--surface) 96%, var(--accent) 4%);
+  --mandate-panel-bg-base: color-mix(in srgb, var(--surface) 96%, var(--surface-subtle) 4%);
+  --mandate-chart-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 12%, white 88%) 0%,
+    color-mix(in srgb, var(--surface-subtle) 74%, white 26%) 46%,
+    color-mix(in srgb, var(--surface) 100%, transparent) 100%
+  );
+  --mandate-action-bg: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--surface) 90%, var(--accent) 10%) 0%,
+    color-mix(in srgb, var(--surface) 96%, var(--surface-subtle) 4%) 100%
+  );
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-pad: 24px;
+    --shell-header-h: 64px;
+  }
+}
+@media (min-width: 1280px) {
+  :root {
+    --page-pad: 48px;
+  }
+}
+
+/* --- Pulse-dot animation (Phase G sandbox merge, 2026-05-20) --------------
+ * The "compliance is alive" heartbeat — ported from sandbox app-pill-dot
+ * (3px halo box-shadow that expands to 5px transparent at 50%). Applied to
+ * the ComplianceRibbon idle dot via .compliance-idle-dot. The keyframes
+ * are additive; the media query honors prefers-reduced-motion (suppresses
+ * the halo expansion while keeping the static dot + halo). The --pulse-
+ * halo-color token lives in the extended :root above. */
+@keyframes compliance-idle-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--pulse-halo-color); }
+  50%      { box-shadow: 0 0 0 5px color-mix(in srgb, var(--positive-deep) 0%, transparent); }
+}
+.compliance-idle-dot {
+  background: var(--positive-deep);
+  box-shadow: 0 0 0 3px var(--pulse-halo-color);
+  animation: compliance-idle-pulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .compliance-idle-dot {
+    animation: none;
+  }
+}
+
+@theme inline {
+  --shadow-elev-0: var(--elev-0);
+  --shadow-elev-1: var(--elev-1);
+  --shadow-elev-2: var(--elev-2);
+  --shadow-elev-3: var(--elev-3);
+  --shadow-elev-dark-0: var(--elev-dark-0);
+  --shadow-elev-dark-1: var(--elev-dark-1);
+  --shadow-elev-dark-2: var(--elev-dark-2);
+  --shadow-elev-float: var(--elev-float);
+
+  --color-ink-on-dark: var(--ink-on-dark);
+  --color-ink-on-dark-secondary: var(--ink-on-dark-secondary);
+  --color-ink-on-dark-tertiary: var(--ink-on-dark-tertiary);
+  --color-ink-strong: var(--ink-strong);
+  --color-hold: var(--hold);
+  --color-hold-deep: var(--hold-deep);
+
+  --spacing-shell-header: var(--shell-header-h);
+  --spacing-shell-spine: var(--shell-spine-w);
+}
+
+/* --- Layout helper ------------------------------------------------------- */
+.page-shell {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+/* --- Surface utilities --------------------------------------------------- */
+.surface-cinematic {
+  background-color: var(--home-stage-base);
+  background-image: var(--home-stage-bg);
+  color: var(--home-stage-fg);
+}
+
+.surface-cinematic-textured {
+  background-color: var(--canvas-bg);
+  background-image: var(--texture-grid), var(--bg-cinematic);
+  color: var(--ink-on-dark);
+}
+
+.surface-canvas-stage {
+  background-color: var(--canvas-bg);
+  background-image: var(--bg-canvas-stage);
+  color: var(--ink-on-dark);
+}
+
+/* --- Semantic type ramp ------------------------------------------------
+ * Bank sans register. All heading/body/label utilities resolve to the
+ * modern sans stack via --font-bank for a consistent, reusable UI voice. */
+/* 2026-05-24: WRAPPED IN @layer components so Tailwind utilities
+ * (text-[var(--ink-on-dark)] etc.) can override these class colors. Unlayered,
+ * a class color BEATS any text-[...] utility (cascade layers: unlayered wins),
+ * which made on-dark overrides silently fail and text render invisible on navy
+ * surfaces. Layering this block lets the overrides win. */
+@layer components {
+.bank-heading {
+  font-family: var(--font-bank);
+  font-size: clamp(17px, 1.6vw, 20px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.bank-body {
+  font-family: var(--font-bank);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.bank-label {
+  font-family: var(--font-bank);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--ink-secondary);
+}
+
+.bank-number {
+  font-family: var(--font-bank);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.display-hero {
+  font-family: var(--font-sans);
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+}
+
+.display-1 {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.editorial-lead {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: var(--ink-secondary);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-tertiary);
+}
+
+.data-xl {
+  font-family: var(--font-sans);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink-secondary);
+}
+
+.mono-legal {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--ink-secondary);
+}
+
+/* --- Editorial aliases --------------------------------------------------
+ * These legacy class names are kept for compatibility, but they now use
+ * the same bank sans stack so typography stays uniform across the app. */
+.editorial-name {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.editorial-question {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: clamp(14px, 1.2vw, 16px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* The one serif moment (Workbench kit §01/§04): deal identity + source
+ * excerpts. Georgia via --font-display; 24/400, quiet and letterhead-like. */
+.deal-identity {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+  .review-doc [data-block-start] {
+    position: relative;
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    scroll-margin: var(--space-6);
+  }
+  .review-doc [data-block-start]:not([data-mark='comment']):not([data-mark='hand']):hover,
+  .review-doc [data-selected='true'] {
+    background: var(--surface-subtle);
+  }
+  .review-doc [data-block-start]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .review-doc [data-selected='true'] {
+    outline: 1px solid var(--stroke-strong);
+    outline-offset: 2px;
+  }
+  .review-doc [data-mark='pending'] {
+    outline: 1px dashed var(--ink-tertiary);
+    outline-offset: 2px;
+  }
+  .review-doc [data-mark='applying'] {
+    outline: 1px dashed var(--ai);
+    outline-offset: 2px;
+    opacity: 0.7;
+  }
+  .review-doc [data-mark='comment'] {
+    background: var(--ai-tint);
+  }
+  .review-doc [data-mark='hand'] {
+    background: var(--surface-subtle);
+  }
+  .review-doc :not(tr):not(pre)[data-mark='comment']::after,
+  .review-doc :not(tr):not(pre)[data-mark='hand']::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--space-3));
+    width: 2px;
+    border-radius: 1px;
+    background: var(--ai);
+  }
+  .review-doc :not(tr):not(pre)[data-mark='hand']::after {
+    background: var(--ink);
+  }
+  .review-doc [data-block-kind='listItem'][data-mark='comment']::after,
+  .review-doc [data-block-kind='listItem'][data-mark='hand']::after {
+    left: calc(-1 * (var(--space-6) + var(--space-2)));
+  }
+  .review-doc pre[data-mark='comment'] {
+    box-shadow: inset 2px 0 0 var(--ai);
+  }
+  .review-doc pre[data-mark='hand'] {
+    box-shadow: inset 2px 0 0 var(--ink);
+  }
+  .review-doc blockquote[data-block-start] {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  .review-doc tr[data-mark='comment'] > *:first-child {
+    box-shadow: inset 2px 0 0 var(--ai);
+  }
+  .review-doc tr[data-mark='comment'] > * {
+    background: var(--ai-tint);
+  }
+  .review-doc tr[data-mark='hand'] > *:first-child {
+    box-shadow: inset 2px 0 0 var(--ink);
+  }
+  .review-doc tr[data-mark='hand'] > * {
+    background: var(--surface-subtle);
+  }
+  .review-doc tr[data-mark='pending'],
+  .review-doc tr[data-mark='applying'],
+  .review-doc tr[data-selected='true'],
+  .review-doc tr[data-block-start]:focus-visible {
+    outline-offset: -1px;
+  }
+  .review-doc tr[data-mark-label] > :first-child {
+    position: relative;
+  }
+  .review-doc tr[data-mark-label] > :first-child::before {
+    content: var(--mark-label);
+    position: absolute;
+    top: var(--space-3);
+    right: 100%;
+    margin-right: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--ink-secondary);
+  }
+  .review-doc div:has(> table) {
+    position: relative;
+    left: calc(-1 * var(--space-5));
+    width: calc(100% + var(--space-5));
+    padding-left: var(--space-5);
+  }
+  .review-doc :not(tr)[data-mark-label]::before {
+    content: attr(data-mark-label);
+    position: absolute;
+    top: 0;
+    right: 100%;
+    margin-right: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-secondary);
+  }
+  .review-doc[data-readonly='true'] [data-block-start] {
+    cursor: default;
+  }
+  .review-doc[data-readonly='true'] [data-block-start]:not([data-mark='comment']):not([data-mark='hand']):hover {
+    background: transparent;
+  }
+  .review-doc [data-block-kind='listItem'][data-mark-label]::before {
+    right: calc(100% + var(--space-5));
+  }
+} /* end @layer components — semantic type ramp + editorial moments */
+
+/* --- Inter OpenType features --------------------------------------------
+ * cv05 (lowercase l with tail), cv08 (uppercase i with serifs), ss03
+ * (curved r) tune Inter for an editorial register. Applied to sans body
+ * by default; .tnum opts a node into tabular figures (data/financials). */
+body {
+  font-feature-settings: "cv05" 1, "cv08" 1, "ss03" 1;
+}
+
+.tnum,
+[data-tabular] {
+  font-feature-settings: "tnum" 1, "lnum" 1, "cv05" 1, "cv08" 1, "ss03" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ---- Conductia brand palette (conductia.com, 2026-08-01) ----------------
+ * The marketing site's system: deep navy chrome, electric signal-blue accent,
+ * paper-light working surfaces. Selectable via data-palette='conductia'
+ * (persisted by the sidebar palette setting); the logo mark itself is
+ * palette-independent and uses the --brand-shield tokens in :root. */
+[data-palette='conductia'] {
+  --ink: #14161C;
+  --ink-secondary: #3A3F4B;
+  --ink-tertiary: #6E7DA6;
+  --surface: #ffffff;
+  --surface-subtle: #EEF1F8;
+  --surface-warm: #F4F6FB;
+  --surface-dark: #0B1226;
+  --stroke: #E2E4EA;
+  --accent: #3D6BFF;
+  --accent-dark: #2447D6;
+  --accent-contrast: #FFFFFF;
+  --accent-soft: #E6ECFF;
+  --positive: #2D7E54;
+  --positive-deep: #1B4D33;
+  --negative: #B8432B;
+  /* Hold = caution amber (Storm's green/yellow/red language): must read
+   * as a warning at a glance and stay distinct from the blue accent
+   * family. Deep variant carries light-surface text contrast. */
+  --hold: #BD861F;
+  --hold-deep: #7A5210;
+  --canvas-bg: #0B1226;
+
+  --sidebar-bg: #F4F6FB;
+  --sidebar-border: #E2E4EA;
+  --sidebar-title: #0B1226;
+  --sidebar-item: #5E6A94;
+  --sidebar-item-hover-bg: #E6ECFF;
+  --sidebar-item-hover-text: #2447D6;
+  --sidebar-item-active-bg: #DCE6FF;
+  --sidebar-item-active-text: #2447D6;
+  --sidebar-toggle-bg: #0B1226;
+  --sidebar-toggle-text: #F4F6FB;
+  --sidebar-avatar-ring: #F4F6FB;
+  --home-stage-bg-light: var(--surface-warm);
+}
+
+/* Conductia palette keeps a genuinely dark canvas (#0B1226) even in light
+ * style mode, so surfaces built on --canvas-bg (sign-in / accept-invite
+ * cards, cinematic stages) must keep truly light on-dark ink. Without this,
+ * the light-mode remap of the on-dark trio to dark ink lands dark text on
+ * the navy card. Values are the conductia.com dark-surface text ramp. */
+[data-palette='conductia'][data-style-mode='light'] {
+  --ink-on-dark: #e8ecf7;
+  --ink-on-dark-secondary: #b6c0da;
+  --ink-on-dark-tertiary: #6e7da6;
+}
+
+/* Error text tokens. --status-blocked was referenced by sign-in / accept /
+ * dev-api but never defined, so it inherited the surrounding color (dark ink
+ * on the navy auth cards = invisible). Base maps to the negative verdict;
+ * the on-dark variant is lifted for readability on --canvas-bg surfaces. */
+:root {
+  --status-blocked: var(--negative);
+  --status-blocked-on-dark: #f0937d;
+}
+
+/* ============================================================================
+ * WORKBENCH PALETTE — the Conductia register of record (handover 2026-08-27).
+ * Warm neutrals, ink-black primary, violet reserved for the AI actor (Casey),
+ * solid pastel status fills, hairlines over shadows. Tier-1 payload from
+ * docs/design/workbench/tokens.css, plus the leak-list overrides that keep
+ * base navy tokens from surviving the palette swap. One-line revert: set
+ * data-palette back to "conductia" in src/app/layout.tsx.
+ * ========================================================================== */
+[data-palette='workbench'] {
+  /* ink on light (contrast contract: light surfaces take dark ink) */
+  --ink: #191919;
+  --ink-secondary: #55534e;
+  --ink-tertiary: #6b6b68; /* kit's #6E6E6B, 3 points darker: #6E6E6B is 4.49:1 on --surface-subtle */
+  --ink-quiet: #9c9a94; /* placeholders and decoration only; never text a reader must read */
+  /* surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f1f0ec; /* filled inputs, quiet fills */
+  --surface-warm: #f5f4f1; /* page canvas */
+  --surface-raised: #faf9f6; /* hover/selected wash */
+  --surface-dark: #191919;
+  --stroke: #eceae5;
+  --stroke-strong: #e0ded8;
+  /* on-dark kept for the few dark moments; canvas-bg stays ink */
+  --canvas-bg: #191919;
+  /* accent = ink; electric blue retired as accent */
+  --accent: #191919;
+  --accent-dark: #2f2f2f;
+  --accent-contrast: #ffffff;
+  --accent-soft: #f1f0ec;
+  /* AI actor (Casey) — the ONLY violet in the system.
+   * --ai-deep added for small AI text on --ai-soft washes (AA 6.5:1);
+   * bare --ai on washes is large-text/600-weight only (4.34:1). */
+  --ai: #5e5ce6;
+  --ai-deep: #4340c4;
+  --ai-soft: #edecfb;
+  --ai-tint: #f3f2fc;
+  /* status — DOT and FILL tones; the -deep variants are the text tones */
+  --positive: #17b26a;
+  --positive-deep: #0b5c3b;
+  --positive-fill: #8fe6bf;
+  --hold: #f5a524;
+  --hold-deep: #6e5308;
+  --hold-fill: #fae6a8;
+  --hold-tint: #fbf3d9;
+  --negative: #e5484d;
+  --negative-deep: #8e2440;
+  --negative-fill: #f8c9d1;
+  --sync: #2e90fa;
+  /* data viz: muted categorical scale for graphs (CRM network clusters).
+   * No violet (Casey only), no status hue (>=15deg from positive, hold,
+   * negative, sync); each >=3.9:1 on --surface-warm. Labels carry identity.
+   * Mirrored in src/lib/leads/crmNetwork.ts; a test pins the three. */
+  --viz-client: #66635c;
+  --viz-1: #2f7d78;
+  --viz-2: #a8553a;
+  --viz-3: #2b6f86;
+  --viz-4: #827a2c;
+  --viz-5: #a3476b;
+  --viz-6: #4a7a40;
+  --viz-7: #7f6252;
+  --viz-8: #5f7330;
+  /* selection / links */
+  --sidebar-item-active-bg: #e9e7e2;
+  /* shape — workbench geometry (controls 8, cards/modals 12, composer 18) */
+  --radius-input: 8px;
+  --radius-button: 8px;
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --radius-composer: 18px;
+  /* elevation: hairlines; ONE ambient shadow for floating surfaces */
+  --shadow-ambient: 0 14px 40px rgb(25 25 25 / 0.09);
+  --elev-0: inset 0 0 0 1px var(--stroke);
+  --elev-1: 0 1px 2px rgb(25 25 25 / 0.05), inset 0 0 0 1px var(--stroke);
+  --elev-2: var(--shadow-ambient);
+  --elev-3: var(--shadow-ambient);
+  --elev-float: var(--shadow-ambient);
+  /* leak-list overrides — base tokens that would otherwise survive the swap */
+  --brand-shield: #f5f4f1;
+  --brand-shield-deep: #191919;
+  --ink-strong: #191919;
+  --status-blocked-on-dark: #f8c9d1;
+  --bg-cinematic: linear-gradient(#f5f4f1, #f5f4f1);
+  --bg-canvas-stage: linear-gradient(#191919, #191919);
+  --home-stage-bg-light: #f5f4f1;
+  --pulse-halo-color: color-mix(in srgb, var(--positive) 24%, transparent);
+  /* type: Georgia serif ONLY for deal identity + source excerpts */
+  --font-display: Georgia, 'Times New Roman', serif;
+  /* kit §01 body is 14/400 (rows are tall, spacing generous) */
+  --text-base: 14px;
+}
+
+/* Workbench keeps a genuinely dark (ink) canvas even in light style mode for
+ * the few on-dark moments (auth cards, stamps), so on-dark ink must stay
+ * truly light — same mechanism as the conductia palette above, warm ramp. */
+[data-palette='workbench'][data-style-mode='light'] {
+  --canvas-bg: #191919;
+  --ink-on-dark: #f5f4f1;
+  --ink-on-dark-secondary: #d6d4cf;
+  --ink-on-dark-tertiary: #a8a5a0;
+}

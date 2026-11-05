@@ -1,0 +1,110 @@
+name: E2E discovery demo (Gmail replay)
+
+# The deal-discovery demo journey a second time, on the Gmail replay: the real
+# Gmail reader over the committed demo twin, behind the mailbox guard
+# (cdt-261-demo-gmail D7), on its own local stack (the journey mutates state,
+# and a stack seeds one mail path).
+#
+# Advisory, opt-in, never a required check (owner decision 2026-10-08). It runs:
+# - from CI (ci.yml job e2e_gmail) on a push to develop, and on every push to a
+#   pull request that carries the `e2e-gmail` label and is not a draft;
+# - here, when that label is added to a pull request that is not a draft, so
+#   labelling starts the journey without re-running the rest of CI;
+# - nightly, and by hand (workflow_dispatch).
+# Rob or Storm may promote it to a required check.
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+  schedule:
+    # 05:00 UTC nightly, against develop. NOTE: GitHub only fires `schedule`
+    # from the repository DEFAULT branch (`main`), so this cron stays inert
+    # until a release snapshot carries this file there (as with E2E (live)).
+    - cron: '0 5 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  journey:
+    name: Gmail replay journey
+    # A label event runs it only for the e2e-gmail label on a non-draft PR.
+    # Called from CI, the event is CI's own (never `labeled`), so the condition
+    # holds there.
+    if: ${{ github.event.action != 'labeled' || (github.event.label.name == 'e2e-gmail' && !github.event.pull_request.draft) }}
+    # ADR-0027: a repository variable moves this job to the self-hosted fleet; unset, it stays GitHub-hosted.
+    runs-on: ${{ vars.CI_RUNNER_HEAVY || 'ubuntu-latest' }}
+    timeout-minutes: 25
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The nightly reads develop; every other event checks out its own ref.
+          ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Demo corpus outputs are current
+        run: node --import tsx scripts/discovery/build-demo-corpus.ts --check
+
+      - name: Stub model replies are current
+        run: node --import tsx tests/helpers/stubReplies.ts --check
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          # The same pin as the integration and E2E jobs.
+          version: 2.116.0
+
+      - name: Start local Supabase and apply migrations
+        run: |
+          # As in the E2E job: no `supabase init --force`, Storage kept, the
+          # registry fallback restored after setup-cli, and no `db reset`
+          # after a first start that already applied every migration.
+          unset SUPABASE_INTERNAL_IMAGE_REGISTRY
+          supabase start --exclude studio,postgres-meta,edge-runtime,realtime,logflare,vector
+
+      - name: Seed the Gmail replay and run the demo journey
+        run: |
+          eval "$(supabase status -o env)"
+          export NEXT_PUBLIC_SUPABASE_URL="$API_URL"
+          export NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY"
+          export SUPABASE_SECRET_KEY="$SERVICE_ROLE_KEY"
+          node --import tsx scripts/seed-flags.ts
+          node --import tsx scripts/enable-flags.ts
+          node --import tsx scripts/seed-users.ts
+          node --import tsx scripts/seed-discovery.ts --google-replay --corpus demo --phase seeded
+          REPLIES=tests/fixtures/discovery/demo/model-replies/extract.v1.json
+          [ -f "$REPLIES" ] || REPLIES=tests/fixtures/discovery/demo/model-replies/extract.v1.stub.json
+          node --import tsx worker/extract.ts --once --strict --replies "$REPLIES"
+          npm run test:e2e:discovery-gmail
+        env:
+          NEXT_PUBLIC_APP_ENV: dev
+          SEED_PASSWORD: e2e-ci-password
+          INVITE_VERIFICATION_PEPPER: e2e-ci-pepper
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Upload the report and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-gmail-report
+          path: |
+            playwright-report/
+            e2e-results.json
+            test-results/
+          retention-days: 7

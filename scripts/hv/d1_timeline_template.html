@@ -1,0 +1,375 @@
+<title>Conductia · Horizontal/Vertical Map</title>
+<style>
+:root{
+  --paper:#FCFDFB; --surface:#FFFFFF; --ink:#151312; --muted:#655E59;
+  --hair:#EAE9E7; --hair2:#F2F2F1; --acc:#163561; --acc-ink:#163561; --acc-soft:#E9EEF6;
+  --fp:#3E5B80; --fp-soft:#EBF0F7; --rts:#5B564F; --rts-soft:#F0EFEC;
+  --rail:#D8D6D2; --shadow:0 10px 30px rgba(21,19,18,.10);
+  --drawer-bg:#FFFFFF; --grid:rgba(21,19,18,.035);
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#171514; --surface:#1F1C1B; --ink:#ECE9E6; --muted:#A39D97;
+  --hair:#2E2A28; --hair2:#262322; --acc:#1B3A66; --acc-ink:#8FB2DE; --acc-soft:#20293A;
+  --fp:#9DB6D6; --fp-soft:#232A36; --rts:#B5AFA7; --rts-soft:#282522;
+  --rail:#3A3633; --shadow:0 10px 30px rgba(0,0,0,.5);
+  --drawer-bg:#1B1918; --grid:rgba(236,233,230,.04);
+}}
+:root[data-theme="light"]{
+  --paper:#FCFDFB; --surface:#FFFFFF; --ink:#151312; --muted:#655E59;
+  --hair:#EAE9E7; --hair2:#F2F2F1; --acc:#163561; --acc-ink:#163561; --acc-soft:#E9EEF6;
+  --fp:#3E5B80; --fp-soft:#EBF0F7; --rts:#5B564F; --rts-soft:#F0EFEC;
+  --rail:#D8D6D2; --shadow:0 10px 30px rgba(21,19,18,.10); --drawer-bg:#FFFFFF; --grid:rgba(21,19,18,.035);
+}
+:root[data-theme="dark"]{
+  --paper:#171514; --surface:#1F1C1B; --ink:#ECE9E6; --muted:#A39D97;
+  --hair:#2E2A28; --hair2:#262322; --acc:#1B3A66; --acc-ink:#8FB2DE; --acc-soft:#20293A;
+  --fp:#9DB6D6; --fp-soft:#232A36; --rts:#B5AFA7; --rts-soft:#282522;
+  --rail:#3A3633; --shadow:0 10px 30px rgba(0,0,0,.5); --drawer-bg:#1B1918; --grid:rgba(236,233,230,.04);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:13.5px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0}
+.serif{font-family:ui-serif,Georgia,"Times New Roman",serif}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* Masthead */
+header.mast{border-bottom:1px solid var(--hair);padding:34px 0 0;position:relative;background:var(--paper) linear-gradient(var(--grid) 1px,transparent 1px),var(--paper) linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;background-color:var(--paper)}
+.kicker{letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--acc-ink);font-weight:600}
+h1{font-family:ui-serif,Georgia,serif;font-size:clamp(26px,3.4vw,40px);line-height:1.12;margin:8px 0 6px;text-wrap:balance;font-weight:600}
+.sub{color:var(--muted);max-width:70ch;margin:0 0 18px}
+.counts{display:flex;gap:26px;flex-wrap:wrap;padding:14px 0 16px;border-top:1px solid var(--hair2)}
+.count b{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
+.count span{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted);padding-bottom:14px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:1px}
+
+/* Filters */
+.bar{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--hair);padding:10px 0}
+.bar .wrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chipbtn{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 13px;font-size:12.5px;cursor:pointer}
+.chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chipbtn:focus-visible,.station:focus-visible,.jump:focus-visible{outline:2px solid var(--acc-ink);outline-offset:2px}
+.spacer{flex:1}
+input.search{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 11px;font-size:13px;min-width:190px}
+.jumps{display:flex;gap:4px;flex-wrap:wrap}
+.jump{border:0;background:none;color:var(--muted);font-size:12px;cursor:pointer;padding:5px 8px;border-radius:6px}
+.jump:hover{color:var(--ink);background:var(--hair2)}
+
+/* Gate 0 */
+section.gate{padding:30px 0 8px}
+.gate h2, .always h2, .oq h2{font-family:ui-serif,Georgia,serif;font-size:21px;margin:0 0 4px;font-weight:600}
+.gate p.note,.always p.note{color:var(--muted);font-size:13.5px;margin:0 0 16px;max-width:78ch}
+.gatecards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.gatecard{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--acc-ink);border-radius:10px;padding:13px 15px}
+.gatecard .n{font-family:ui-serif,Georgia,serif;color:var(--acc-ink);font-size:19px;font-weight:600}
+.gatecard .t{font-weight:600;font-size:14px;margin-top:2px}
+
+/* Rail */
+section.railsec{padding:26px 0 6px}
+.railscroller{overflow-x:auto;padding:6px 0 22px;scrollbar-width:thin}
+.railtrack{display:flex;align-items:stretch;gap:0;min-width:max-content;position:relative;padding:0 28px}
+.phase{position:relative;padding:0 34px 0 0;border-right:1px dashed var(--hair)}
+.phase:last-child{border-right:0}
+.phasehead{position:sticky;left:28px;display:inline-block;max-width:340px;padding-bottom:12px}
+.phasehead .pnum{font-family:ui-serif,Georgia,serif;color:var(--acc-ink);font-size:26px;font-weight:600;line-height:1}
+.phasehead .pname{font-family:ui-serif,Georgia,serif;font-size:16.5px;font-weight:600;line-height:1.25;margin-top:2px;text-wrap:balance}
+.phasehead .pmeta{font-size:11.5px;color:var(--muted);margin-top:3px}
+.stations{display:flex;gap:10px;padding-top:14px;position:relative}
+.stations::before{content:"";position:absolute;left:-34px;right:0;top:6px;height:2px;background:var(--rail)}
+.station{width:172px;flex:none;background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:10px 11px 9px;cursor:pointer;position:relative;text-align:left;color:var(--ink);box-shadow:none;transition:border-color .15s, transform .15s}
+.station::before{content:"";position:absolute;top:-11px;left:16px;width:8px;height:8px;border-radius:50%;background:var(--rail)}
+.station.pri::before{background:var(--acc-ink)}
+.station:hover{border-color:var(--muted);transform:translateY(-2px)}
+@media (prefers-reduced-motion: reduce){.station{transition:none}.station:hover{transform:none}}
+.station .seq{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted)}
+.station .name{font-size:13px;font-weight:600;line-height:1.3;margin:2px 0 7px;min-height:34px}
+.station .chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{font-size:10px;letter-spacing:.04em;border-radius:5px;padding:2px 6px;font-weight:600}
+.chip.fp{background:var(--fp-soft);color:var(--fp)}
+.chip.rts{background:var(--rts-soft);color:var(--rts)}
+.chip.hyb{background:var(--fp-soft);color:var(--fp);border:1px dashed var(--fp)}
+.chip.cls{background:var(--hair2);color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+.star{color:var(--acc-ink);font-size:12px;position:absolute;top:8px;right:9px}
+.station.dim{opacity:.22;pointer-events:none}
+
+/* Always-on band */
+section.always{padding:26px 0 8px;border-top:1px solid var(--hair)}
+.appgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+.app{background:var(--surface);border:1px solid var(--hair);border-radius:9px;padding:9px 12px;cursor:pointer;text-align:left;color:var(--ink)}
+.app:hover{border-color:var(--muted)}
+.app .an{font-size:13px;font-weight:600}
+.app .ad{font-size:11.5px;color:var(--muted);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.app .os{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--muted);float:right}
+
+/* Open questions + footer */
+section.oq{padding:26px 0 10px;border-top:1px solid var(--hair)}
+.oq ol{margin:10px 0 0;padding-left:20px;max-width:88ch}
+.oq li{margin-bottom:9px;font-size:13.5px}
+footer{color:var(--muted);font-size:12px;padding:18px 0 44px;border-top:1px solid var(--hair);margin-top:26px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,18,30,.45);z-index:40;display:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,94vw);background:var(--drawer-bg);border-left:1px solid var(--hair);z-index:50;box-shadow:var(--shadow);transform:translateX(102%);transition:transform .22s ease;display:flex;flex-direction:column}
+@media (prefers-reduced-motion: reduce){.drawer{transition:none}}
+.drawer.open{transform:none}
+.scrim.open{display:block}
+.dhead{padding:20px 24px 14px;border-bottom:1px solid var(--hair)}
+.dhead .seq{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+.dhead h3{font-family:ui-serif,Georgia,serif;font-size:21px;margin:4px 0 8px;line-height:1.2;font-weight:600}
+.dbody{padding:16px 24px 30px;overflow-y:auto}
+.dsec{margin-bottom:16px}
+.dsec h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.dsec p,.dsec li{font-size:13.5px;margin:0}
+.dsec ul{margin:0;padding-left:18px}
+.io{display:grid;grid-template-columns:1fr;gap:6px}
+.io .lane{background:var(--hair2);border-radius:8px;padding:8px 11px;font-size:13px}
+.io .lane b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;font-weight:600}
+.xbtn{position:absolute;top:14px;right:14px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:15px;line-height:1}
+.refline{font-size:11px;color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+
+/* Print */
+@media print{
+  .bar,.scrim,.drawer,.xbtn{display:none !important}
+  .railscroller{overflow:visible}
+  .railtrack{display:block;padding:0}
+  .phase{border-right:0;page-break-inside:avoid;padding:0}
+  .stations{flex-wrap:wrap}
+  .stations::before{display:none}
+  .station{width:31%;margin-bottom:8px;break-inside:avoid}
+  body{font-size:12px}
+}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="kicker">Conductia · Ignatious Sell-Side M&amp;A</div>
+    <h1>The Horizontal/Vertical Map</h1>
+    <p class="sub">One picture of the platform. The horizontal rails carry every deal through five phases and sixty-five steps. The vertical skills do the work at each step. Futureproofing builds the rails and the always-on layer. RTS builds the skills.</p>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--fp)"></span>Futureproofing (OS) builds</span>
+      <span><span class="dot" style="background:var(--rts)"></span>RTS builds</span>
+      <span><span class="dot" style="background:var(--acc)"></span>★ Storm's 16 priority builds</span>
+      <span class="mono">A agent · A+H agent then human approval · H+A human leads, agent checks · H human</span>
+    </div>
+    <div class="counts" id="counts"></div>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Filters">
+  <div class="wrap">
+    <button class="chipbtn" data-f="owner:rts" aria-pressed="false">RTS builds</button>
+    <button class="chipbtn" data-f="owner:futureproofing-os" aria-pressed="false">Futureproofing builds</button>
+    <button class="chipbtn" data-f="pri" aria-pressed="false">★ Priorities</button>
+    <button class="chipbtn" data-f="cls:A" aria-pressed="false">Agent-run</button>
+    <button class="chipbtn" data-f="cls:H" aria-pressed="false">Human-run</button>
+    <input class="search" id="q" type="search" placeholder="Find a step…" aria-label="Find a step">
+    <span class="spacer"></span>
+    <span class="jumps" id="jumps"></span>
+  </div>
+</nav>
+
+<section class="gate">
+  <div class="wrap">
+    <h2>Before the rails: Gate 0</h2>
+    <p class="note">Four actions at deal creation, before Step 1, every time. A mandate can enter mid-lifecycle: Gate 0 confirms where the rails begin. Every step below can be skipped with logged approval, edited after completion (outputs are versioned), and is assigned to a human or an agent with a deadline or priority tag.</p>
+    <div class="gatecards" id="gate0"></div>
+  </div>
+</section>
+
+<section class="railsec">
+  <div class="wrap"><h2 class="serif" style="font-size:21px;margin:0">The rail: 5 phases · 65 steps</h2>
+  <p class="note" style="color:var(--muted);font-size:13.5px;margin:4px 0 0">Scroll right to travel the deal. Click any step for its full contract: inputs, transformation, outputs, tools, approval gate, compliance.</p></div>
+  <div class="railscroller"><div class="railtrack" id="rail"></div></div>
+</section>
+
+<section class="always">
+  <div class="wrap">
+    <h2>Three layers</h2>
+    <p class="note">Storm 07-08: "always-on is different than horizontal" — correct. The platform is three layers, not two. Click any app for detail.</p>
+    <h3 style="font-family:ui-serif,Georgia,serif;font-size:15px;margin:14px 0 2px">Layer 1 — Platform (always-on substrate)</h3>
+    <p class="note" style="margin-bottom:8px">Runs regardless of any deal or step: security/isolation, audit log, access control, storage, search, comms surveillance, cost/time metering, knowledge graph. Built by Futureproofing (OS).</p>
+    <div class="appgrid" id="apps-substrate"></div>
+    <h3 style="font-family:ui-serif,Georgia,serif;font-size:15px;margin:20px 0 2px">Layer 2 — Horizontal workflow rails</h3>
+    <p class="note" style="margin-bottom:8px">The engine that carries a deal through the 65 steps: orchestration, the next-step recommender (after each step, a ranked suggestion + full-step dropdown), QC gates, verification. Built by Futureproofing (OS). Layer 3 is the vertical step-skills on the rail above (RTS).</p>
+    <div class="appgrid" id="apps-rail"></div>
+  </div>
+</section>
+
+<section class="always">
+  <div class="wrap">
+    <h2>Compliance &amp; Trust spine</h2>
+    <p class="note" id="compliance-regimes"></p>
+    <div class="appgrid" id="compliance-phases"></div>
+  </div>
+</section>
+
+<section class="oq">
+  <div class="wrap">
+    <h2>Open questions for Storm</h2>
+    <ol>
+      <li><b>Step count (answered).</b> Nothing was cut: the earlier ~82 was a flat count that folded platform services into the sequence; v2 lifts the always-on apps out, leaving 65 sequenced steps + 21 apps = 86. Same universe, re-partitioned. Confirm you're happy with it.</li>
+      <li><b>Ownership + "Conductia" (needs confirm).</b> Our canon is Futureproofing = horizontal, RTS = vertical; your note reads that inverted and names "Conductia," which is in none of our sources. Confirm the direction, and tell us what "Conductia" is.</li>
+      <li><b>Phases are 5.</b> The whiteboard and Master Process v2 agree; the 7-phase deck slide maps in (Diligence + Negotiation into P4, Signing + Close into P5). Update the deck, not the process?</li>
+      <li><b>V1 cut of the always-on layer.</b> 21 catalogued; the four shaded priorities (External-Send QC, Pipeline CRM, Work-Check, Sector Intelligence) look like the v1 subset. Bless it?</li>
+      <li><b>CIM drafting (Seq 37) and Negotiation Copilot (OS 16)</b> carry build numbers, while the v1 exclusions defer both. Confirm: in catalog, not in v1.</li>
+      <li><b>Models v1.</b> Single provider behind the router seam now; Multi-Model Verification (OS 7) and Model Optimization (OS 24) activate that seam later. Confirm.</li>
+      <li><b>Pre-Send QC verdict.</b> Binary block vs green/yellow/red with logged yellow vs rush-send override. One canonical answer before the QC surface is built.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Sources: Master Process &amp; Build Sequence v2 · Execution Guide v2 · process whiteboard 07-07 · Compliance Build Plan v2 · call notes 07-07 · Conductia 101 canon. Full traceability in docs/06-research/hv-extraction/.</span>
+    <span>Extracted 2026-07-08 · for Storm's review before the wider group</span>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle">
+  <button class="xbtn" id="xbtn" aria-label="Close">×</button>
+  <div class="dhead"><div class="seq" id="dseq"></div><h3 id="dtitle"></h3><div id="dchips" class="chips" style="display:flex;gap:5px;flex-wrap:wrap"></div></div>
+  <div class="dbody" id="dbody"></div>
+</aside>
+
+<script>
+const LEDGER = __LEDGER_JSON__;
+const RUNS = {"A":"Agent","A+H":"Agent, human approves","H+A":"Human leads, agent checks","H":"Human"};
+const $ = (s)=>document.querySelector(s);
+const esc = (s)=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* counts */
+const steps = LEDGER.steps, apps = LEDGER.horizontalApps;
+const pri = steps.filter(s=>s.priorityBuild).length + apps.filter(a=>a.priorityBuild).length;
+$("#counts").innerHTML = [
+  ["5","Phases"],[steps.length,"Steps on the rail"],[apps.length,"Always-on apps"],
+  [steps.filter(s=>s.buildOwner==="rts").length,"RTS builds"],
+  [steps.filter(s=>s.buildOwner!=="rts").length+apps.length,"Futureproofing builds"],
+  [pri,"Priority builds"],["4","Gate 0 actions"]
+].map(([n,l])=>`<div class="count"><b>${n}</b><span>${l}</span></div>`).join("");
+
+/* gate 0 */
+$("#gate0").innerHTML = LEDGER.gate0.map((g,i)=>
+  `<div class="gatecard"><div class="n">${i+1}</div><div class="t">${esc(g.action)}</div></div>`).join("");
+
+/* rail */
+const railEl = $("#rail");
+LEDGER.phases.forEach(p=>{
+  const ps = steps.filter(s=>s.phase===p.num);
+  const div = document.createElement("div");
+  div.className = "phase"; div.id = "phase"+p.num;
+  div.innerHTML = `<div class="phasehead"><div class="pnum">${p.num}</div>
+    <div class="pname">${esc(p.name)}</div>
+    <div class="pmeta">${ps.length} steps${p.roles?.length?` · today: ${esc(p.roles.map(r=>r.split(" — ")[0]).join(", "))}`:""}</div></div>
+    <div class="stations">${ps.map(s=>stationHTML(s)).join("")}</div>`;
+  railEl.appendChild(div);
+});
+function ownerChip(s){
+  if(s.buildOwner==="rts") return `<span class="chip rts">RTS</span>`;
+  return `<span class="chip ${s.layer==="hybrid"?"hyb":"fp"}">FP·OS</span>`;
+}
+function stationHTML(s){
+  return `<button class="station${s.priorityBuild?" pri":""}" data-seq="${s.seq}" aria-haspopup="dialog">
+    ${s.priorityBuild?`<span class="star">★</span>`:""}
+    <span class="seq">${String(s.seq).padStart(2,"0")}</span>
+    <div class="name">${esc(s.name)}</div>
+    <div class="chips">${ownerChip(s)}<span class="chip cls">${esc(s.executionClass)}</span></div>
+  </button>`;
+}
+
+/* phase jumps */
+$("#jumps").innerHTML = LEDGER.phases.map(p=>
+  `<button class="jump" data-p="${p.num}">P${p.num}</button>`).join("");
+$("#jumps").addEventListener("click",e=>{
+  const b=e.target.closest(".jump"); if(!b) return;
+  document.getElementById("phase"+b.dataset.p)?.scrollIntoView({behavior:"smooth",inline:"start",block:"nearest"});
+});
+
+/* always-on apps — split by layer class (substrate vs rail) */
+function appCard(a,i){
+  return `<button class="app" data-app="${i}"><span class="os">${a.osBuildNum?("OS "+a.osBuildNum):(a.proposed?"proposed":"")}</span>
+   <div class="an">${a.priorityBuild?"★ ":""}${esc(a.name)}</div><div class="ad">${esc(a.what)}</div></button>`;
+}
+$("#apps-substrate").innerHTML = apps.map((a,i)=>[a,i]).filter(([a])=>a.layerClass==="substrate").map(([a,i])=>appCard(a,i)).join("");
+$("#apps-rail").innerHTML = apps.map((a,i)=>[a,i]).filter(([a])=>a.layerClass==="rail").map(([a,i])=>appCard(a,i)).join("");
+
+/* compliance spine */
+const cs = LEDGER.complianceSpine;
+if(cs){
+  $("#compliance-regimes").innerHTML = "Regimes covered by the Compliance Build Plan: <b>"+cs.regimes.map(esc).join(" · ")+"</b>. "+esc(cs.gdprNote||"");
+  $("#compliance-phases").innerHTML = cs.phases.map(p=>`<div class="app" style="cursor:default"><div class="ad" style="-webkit-line-clamp:4">${esc(p)}</div></div>`).join("");
+}
+
+/* filters */
+const active = new Set();
+function applyFilters(){
+  const q = $("#q").value.trim().toLowerCase();
+  document.querySelectorAll(".station").forEach(el=>{
+    const s = steps.find(x=>x.seq==el.dataset.seq);
+    let ok = true;
+    for(const f of active){
+      if(f==="pri") ok = ok && s.priorityBuild;
+      else if(f.startsWith("owner:")) ok = ok && s.buildOwner===f.slice(6);
+      else if(f==="cls:A") ok = ok && (s.executionClass==="A"||s.executionClass==="A+H");
+      else if(f==="cls:H") ok = ok && (s.executionClass==="H"||s.executionClass==="H+A");
+    }
+    if(q) ok = ok && (s.name.toLowerCase().includes(q) || String(s.seq)===q);
+    el.classList.toggle("dim",!ok);
+  });
+}
+document.querySelectorAll(".chipbtn").forEach(b=>b.addEventListener("click",()=>{
+  const f=b.dataset.f, on=b.getAttribute("aria-pressed")==="true";
+  if(f.startsWith("owner:")) document.querySelectorAll('[data-f^="owner:"]').forEach(o=>{if(o!==b){o.setAttribute("aria-pressed","false");active.delete(o.dataset.f);}});
+  if(f.startsWith("cls:")) document.querySelectorAll('[data-f^="cls:"]').forEach(o=>{if(o!==b){o.setAttribute("aria-pressed","false");active.delete(o.dataset.f);}});
+  b.setAttribute("aria-pressed",String(!on));
+  on?active.delete(f):active.add(f);
+  applyFilters();
+}));
+$("#q").addEventListener("input",applyFilters);
+
+/* drawer */
+function openDrawer(html,seqLabel,title,chips){
+  $("#dseq").textContent=seqLabel; $("#dtitle").textContent=title;
+  $("#dchips").innerHTML=chips; $("#dbody").innerHTML=html;
+  $("#drawer").classList.add("open"); $("#scrim").classList.add("open");
+}
+function closeDrawer(){$("#drawer").classList.remove("open");$("#scrim").classList.remove("open");}
+$("#scrim").addEventListener("click",closeDrawer);
+$("#xbtn").addEventListener("click",closeDrawer);
+addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer();});
+
+function lane(label,items){
+  if(!items||!items.length) return "";
+  const txt = items.map(x=>typeof x==="string"?esc(x):esc([x.what,x.format&&`(${x.format})`,x.source&&`from ${x.source}`].filter(Boolean).join(" "))).join("</li><li>");
+  return `<div class="lane"><b>${label}</b><ul style="margin:0;padding-left:16px"><li>${txt}</li></ul></div>`;
+}
+railEl.addEventListener("click",e=>{
+  const el=e.target.closest(".station"); if(!el) return;
+  const s=steps.find(x=>x.seq==el.dataset.seq);
+  const io=s.io||{};
+  const html = `
+    <div class="dsec"><p>${esc(s.description)}</p></div>
+    <div class="dsec"><h4>Contract</h4><div class="io">
+      ${lane("Inputs",io.inputs)}
+      ${io.transformation?`<div class="lane"><b>Transformation</b>${esc(io.transformation)}</div>`:""}
+      ${lane("Outputs",io.outputs)}
+      ${lane("Constraints and guardrails",io.constraints)}
+    </div></div>
+    ${s.tools?.length?`<div class="dsec"><h4>Tools and systems</h4><p>${esc(s.tools.join(", "))}</p></div>`:""}
+    ${s.approval?`<div class="dsec"><h4>Approval gate</h4><p>${s.approval.required===false?"None stated":esc(s.approval.by||"Required")}</p></div>`:""}
+    ${s.compliance?.length?`<div class="dsec"><h4>Compliance</h4><ul>${s.compliance.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
+    <div class="dsec"><h4>Rules that apply to every step</h4><p>Skippable with logged approval, the reason routes onward. Editable after completion, outputs versioned. Assigned human or agent, with a deadline or priority tag.</p></div>
+    <div class="dsec"><h4>Provenance</h4><p class="refline">${(s.sourceRefs||[]).map(esc).join(" · ")}</p></div>`;
+  const chips = `${ownerChip(s)}<span class="chip cls">${esc(s.executionClass)}: ${esc(RUNS[s.executionClass]||"")}</span>${s.priorityBuild?'<span class="chip" style="background:var(--acc-soft);color:var(--acc)">★ priority</span>':""}${s.layer==="hybrid"?'<span class="chip hyb">hybrid: FP-built, step-level</span>':""}`;
+  openDrawer(html,`Phase ${s.phase} · Step ${s.seq} of 65`,s.name,chips);
+});
+$("#apps").addEventListener("click",e=>{
+  const el=e.target.closest(".app"); if(!el) return;
+  const a=apps[+el.dataset.app];
+  openDrawer(`<div class="dsec"><p>${esc(a.what)}</p></div>
+    <div class="dsec"><h4>Provenance</h4><p class="refline">${esc(a.sourceRef||"")}</p></div>`,
+    `Always-on · OS build ${a.osBuildNum??""}`,a.name,
+    `<span class="chip fp">FP·OS</span>${a.priorityBuild?'<span class="chip" style="background:var(--acc-soft);color:var(--acc)">★ priority</span>':""}`);
+});
+</script>

@@ -1,0 +1,78 @@
+name: Bug report
+description: Something broken in the app, tests, or tooling
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reproduce locally with Node 22 (`nvm use`) and the gates in `README.md`: lint, `tsc`, `npm test`, `npm run build`.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What went wrong?
+      description: One or two sentences; include route or component if UI-related.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. npm run dev
+        2. Open /team
+        3. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Mandate / intake
+        - Acquirers / deep-dive
+        - Team / compliance messaging
+        - Skills
+        - Shell / command console
+        - API seam / fixtures / scoring
+        - Tests / CI
+        - Docs only
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Node version, browser, branch if not default.
+      placeholder: Node 22.x · Chrome · branch main
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: Local gates (if you ran them)
+      options:
+        - label: `npm run lint` — clean
+        - label: `npx tsc --noEmit` — clean
+        - label: `npm test` — clean (note any skips)
+        - label: `npm run build` — clean

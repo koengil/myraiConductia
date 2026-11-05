@@ -1,0 +1,136 @@
+#!/bin/bash
+# Boot script of a deploy runner VM (infra/deploy-runner, ADR-0028). Tofu renders
+# it into the launcher's package; the launcher puts one runner's JIT config in
+# place of the placeholder below and passes the result as this VM's user data.
+#
+# The JIT config is a live runner credential until a runner session claims it, so
+# the runner starts before anything slow (design R4):
+#   1. a hard cap: the VM powers off, and so terminates, after 120 minutes;
+#   2. the pinned runner release, checked against its SHA-256 (design R12);
+#   3. the runner's .env, with the job-started hook and a default PATH. sudo
+#      resets this shell's environment, so .env is the only way they reach
+#      run.sh (round 2, #2);
+#   4. run.sh claims the config, within seconds of boot;
+#   5. the toolchain, only into directories already on that PATH. The hook holds
+#      the job's first step until it is ready.
+# No xtrace anywhere. The config is never echoed or logged: it reaches run.sh
+# through a file on tmpfs that only the runner user reads and that is removed
+# before run.sh starts, so it is in no sudo log line. It does stay in this
+# script, which cloud-init keeps root-only on disk and EC2 serves as user data
+# (the guard denies reading it), and in run.sh's own argv, which any local
+# process can read in /proc/<pid>/cmdline (no hidepid). On this single-use VM
+# the only other accounts are system ones, and the job itself runs as the
+# runner user with sudo, so that adds no reach.
+shutdown -h +120
+set -euo pipefail
+set +x
+export DEBIAN_FRONTEND=noninteractive
+
+dir=/opt/actions-runner
+log() { echo "deploy-runner boot: $*"; }
+# A failure before the runner starts leaves nothing to wait for.
+trap 'log "boot failed before the runner started; powering off"; shutdown -h now' ERR
+
+id runner >/dev/null 2>&1 || useradd --create-home --shell /bin/bash runner
+# npx playwright install --with-deps calls apt. On a single-use VM with no
+# instance profile, sudo adds no reach (design R12).
+echo 'runner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-deploy-runner
+chmod 0440 /etc/sudoers.d/90-deploy-runner
+install -d -m 0755 /opt/deploy /var/lib/deploy
+install -d -o runner -g runner -m 0755 "$dir"
+
+cat > /opt/deploy/wait-toolchain.sh <<'HOOK'
+#!/bin/bash
+# Job-started hook: hold the job's first step until the boot script has
+# installed the toolchain, for at most 10 minutes.
+for _ in $(seq 1 120); do
+  if [ -f /var/lib/deploy/toolchain-ready ]; then
+    echo "deploy-runner: toolchain ready"
+    exit 0
+  fi
+  sleep 5
+done
+echo "deploy-runner: toolchain not ready after 10 minutes"
+exit 1
+HOOK
+chmod 0755 /opt/deploy/wait-toolchain.sh
+
+log "runner ${runner_version}"
+asset="actions-runner-linux-x64-${runner_version}.tar.gz"
+# Bounded, like every step before the runner starts (audit V6): a stall powers
+# the VM off through the ERR trap instead of holding a cap slot for 2 hours.
+curl -fsSL --retry 3 --max-time 300 -o "/tmp/$asset" "https://github.com/actions/runner/releases/download/v${runner_version}/$asset"
+echo "${runner_sha256}  /tmp/$asset" | sha256sum -c --quiet -
+tar -xzf "/tmp/$asset" -C "$dir"
+rm -f "/tmp/$asset"
+# The runner's .NET host needs ICU. Ubuntu's server image normally has it; if
+# not, this install is the floor of the window before the config is claimed.
+if ! ldconfig -p | grep -q 'libicuuc\.so'; then
+  log "runner dependencies"
+  timeout 600 "$dir/bin/installdependencies.sh" >/dev/null
+fi
+
+printf '%s\n' \
+  'ACTIONS_RUNNER_HOOK_JOB_STARTED=/opt/deploy/wait-toolchain.sh' \
+  'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
+  > "$dir/.env"
+chown -R runner:runner "$dir"
+
+log "runner starting"
+cd "$dir"
+jit='__JIT_CONFIG__'
+install -d -o runner -g runner -m 0700 /run/deploy
+(umask 077 && printf '%s' "$jit" > /run/deploy/jit)
+unset jit
+chown runner:runner /run/deploy/jit
+# shellcheck disable=SC2016 # expanded by the runner's shell, not this one
+sudo -u runner -H bash -c 'cfg=$(cat /run/deploy/jit) && rm -f /run/deploy/jit && exec ./run.sh --jitconfig "$cfg"' \
+  >/var/log/deploy-runner.log 2>&1 &
+runner_pid=$!
+trap - ERR
+
+# The toolchain the deploy jobs expect (design R12): apt packages land in
+# /usr/bin, gh from GitHub's apt repository, the pinned Node 22 release checked
+# against its pinned SHA-256 into /usr/local, and the pinned Playwright
+# release's Chromium system packages (audit V11). No Docker: no deploy job
+# uses it. A failure leaves toolchain-ready absent, so the hook fails the job.
+cat > /opt/deploy/toolchain.sh <<'TOOLCHAIN'
+#!/bin/bash
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -q
+apt-get install -y -q --no-install-recommends git jq curl ca-certificates postgresql-client xz-utils unzip
+install -d -m 0755 /etc/apt/keyrings
+curl -fsSL --retry 3 --max-time 120 https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /etc/apt/keyrings/githubcli-archive-keyring.gpg
+chmod 0644 /etc/apt/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+  > /etc/apt/sources.list.d/github-cli.list
+apt-get update -q
+apt-get install -y -q gh
+node_tmp=$(mktemp -d)
+file=node-v${node_version}-linux-x64.tar.xz
+curl -fsSL --retry 3 --max-time 300 -o "$node_tmp/$file" "https://nodejs.org/dist/v${node_version}/$file"
+echo "${node_sha256}  $node_tmp/$file" | sha256sum -c --quiet -
+tar -xJf "$node_tmp/$file" -C /usr/local --strip-components=1 --exclude='*.md' --exclude=LICENSE
+rm -rf "$node_tmp"
+if npx -y playwright@${playwright_version} install-deps chromium >/dev/null; then
+  echo "deploy-runner boot: playwright deps installed"
+else
+  echo "deploy-runner boot: WARNING: playwright install-deps failed"
+fi
+rm -rf /root/.npm
+TOOLCHAIN
+chmod 0755 /opt/deploy/toolchain.sh
+
+log "toolchain"
+if /opt/deploy/toolchain.sh; then
+  touch /var/lib/deploy/toolchain-ready
+  log "toolchain ready"
+else
+  log "toolchain failed; the job-started hook will fail the job"
+fi
+
+# The runner serves one job, then exits.
+wait "$runner_pid" || true
+log "runner exited; powering off"
+shutdown -h now

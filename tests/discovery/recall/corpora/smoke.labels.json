@@ -1,0 +1,11 @@
+{
+  "format": "conductia.recall-corpus/v1",
+  "labels": {
+    "<smoke-1@smoke.example>": { "deal": "quill", "form": "project_codename" },
+    "<smoke-2@smoke.example>": { "deal": "quill", "form": "alias_same_source" },
+    "<smoke-3@smoke.example>": { "deal": "fenwick", "form": "real_name", "variant": "full_name_term" },
+    "<smoke-4@smoke.example>": { "deal": null, "form": "noise" },
+    "<smoke-5@smoke.example>": { "deal": null, "form": "noise" },
+    "<smoke-6@smoke.example>": { "deal": null, "form": "noise" }
+  }
+}

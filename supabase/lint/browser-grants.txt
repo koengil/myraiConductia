@@ -1,0 +1,38 @@
+# Tables a migration may grant to the browser roles (anon, authenticated).
+# `npm run check:migrations` fails a new `grant ... on <table> to anon|authenticated`
+# whose table is not listed here. One `table: reason` per line; the reason says
+# who reads the table from the browser and which RLS policy limits the rows.
+# A reviewer approves each new line. `#` starts a comment.
+#
+# Seeded from the grants still in force on develop. Five tables once granted and
+# later revoked (crm_people, feature_flags, lead_relationship_paths,
+# lead_relationships, lead_stakeholders; 20260928120000) are left out on
+# purpose: granting one again needs a reviewed line.
+audit_log: existing grant (seeded 2026-10-21)
+candidate_visibility: existing grant (seeded 2026-10-21)
+companies: existing grant (seeded 2026-10-21)
+company_member_access: existing grant (seeded 2026-10-21)
+company_member_permissions: existing grant (seeded 2026-10-21)
+company_member_roles: existing grant (seeded 2026-10-21)
+company_permissions: existing grant (seeded 2026-10-21)
+company_role_permissions: existing grant (seeded 2026-10-21)
+company_roles: existing grant (seeded 2026-10-21)
+corrections: existing grant (seeded 2026-10-21)
+deal_candidates: existing grant (seeded 2026-10-21)
+deal_memberships: existing grant (seeded 2026-10-21)
+deal_parties: existing grant (seeded 2026-10-21)
+deal_steps: existing grant (seeded 2026-10-21)
+deals: existing grant (seeded 2026-10-21)
+discovery_model_proposal_accepts: select only; the /discovery proposals reader shows the owner's pending and failed accepts (G-02b of issue 173, 20261023140100), and discovery_model_proposal_accepts_select limits rows to the mailbox source's owner (app_owns_mailbox_source)
+discovery_model_proposal_dismissals: select only; the /discovery proposals reader counts the owner's dismissals (G-02a of issue 173, 20261023120100), and discovery_model_proposal_dismissals_select limits rows to the mailbox source's owner (app_owns_mailbox_source)
+discovery_model_proposals: existing grant (seeded 2026-10-21)
+documents: existing grant (seeded 2026-10-21)
+evidence_links: existing grant (seeded 2026-10-21)
+milestone_events: existing grant (seeded 2026-10-21)
+notifications: existing grant (seeded 2026-10-21)
+outbound_messages: existing grant (seeded 2026-10-21)
+roles: existing grant (seeded 2026-10-21)
+source_item_texts: existing grant (seeded 2026-10-21)
+source_items: existing grant (seeded 2026-10-21)
+stage_assessments: existing grant (seeded 2026-10-21)
+users: existing grant (seeded 2026-10-21)

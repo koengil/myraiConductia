@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Docs map
+    url: https://github.com/Conductia/Conductia/blob/develop/docs/README.md
+    about: Product, engineering, brand, and decision artifacts live under docs/
+  - name: Engineering invariants
+    url: https://github.com/Conductia/Conductia/blob/develop/CLAUDE.md
+    about: Seam, compliance, scoring, and mandate gating rules for contributors

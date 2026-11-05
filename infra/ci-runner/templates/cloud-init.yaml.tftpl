@@ -1,0 +1,83 @@
+#cloud-config
+# First boot only. setup.sh installs the toolchain and the Actions runner;
+# ci-runner-register.service registers it with the token the wake function keeps
+# in SSM (it does nothing once registered). Scripts are base64 so their text is
+# not reindented by YAML.
+write_files:
+  - path: /etc/ci-runner.env
+    permissions: "0644"
+    content: |
+      AWS_REGION=${region}
+      REPO=${repo}
+      RUNNER_CLASS=${runner_class}
+      RUNNER_LABELS=${runner_labels}
+      TOKEN_PARAMETER=${token_parameter}
+  # Keep outbound sockets off the fixed ports jobs bind (54320+ is ephemeral).
+  - path: /etc/sysctl.d/90-ci-runner-ports.conf
+    permissions: "0644"
+    content: |
+      net.ipv4.ip_local_reserved_ports = 3000,4310-4311,54320-54329
+  - path: /opt/ci-runner/setup.sh
+    permissions: "0755"
+    encoding: b64
+    content: ${base64encode(scripts.setup)}
+  - path: /opt/ci-runner/register.sh
+    permissions: "0755"
+    encoding: b64
+    content: ${base64encode(scripts.register)}
+  - path: /opt/ci-runner/reregister.sh
+    permissions: "0755"
+    encoding: b64
+    content: ${base64encode(scripts.reregister)}
+  - path: /opt/ci-runner/clean.sh
+    permissions: "0755"
+    encoding: b64
+    content: ${base64encode(scripts.clean)}
+  - path: /opt/ci-runner/idle-stop.sh
+    permissions: "0755"
+    encoding: b64
+    content: ${base64encode(scripts.idle_stop)}
+  - path: /opt/aws/amazon-cloudwatch-agent/etc/ci-runner.json
+    permissions: "0644"
+    encoding: b64
+    content: ${base64encode(scripts.cwagent)}
+  - path: /etc/systemd/system/ci-runner-register.service
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=Register this host's GitHub Actions runner
+      Wants=network-online.target
+      After=network-online.target
+
+      [Service]
+      Type=oneshot
+      EnvironmentFile=/etc/ci-runner.env
+      ExecStart=/opt/ci-runner/register.sh
+      RemainAfterExit=yes
+
+      [Install]
+      WantedBy=multi-user.target
+  - path: /etc/systemd/system/ci-runner-idle-stop.service
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=Stop this host when the runner has been idle
+
+      [Service]
+      Type=oneshot
+      ExecStart=/opt/ci-runner/idle-stop.sh
+  - path: /etc/systemd/system/ci-runner-idle-stop.timer
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=Idle check every 2 minutes
+
+      [Timer]
+      OnBootSec=5min
+      OnUnitActiveSec=2min
+
+      [Install]
+      WantedBy=timers.target
+runcmd:
+  - [sysctl, --system]
+  - [/opt/ci-runner/setup.sh]

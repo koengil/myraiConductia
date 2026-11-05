@@ -1,0 +1,45 @@
+# Dependabot version updates (#473). Dependabot reads this file from the default
+# branch (main), so it takes effect at the next promotion, not when it merges to
+# develop. Version updates honour target-branch; security updates always target
+# main and stay off for this repo (docs/04-operations/github-security-runbook.md).
+# scripts/ci/dependabot.test.mjs pins the invariants below.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - "/"
+      - "/evals/deal-discovery"
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      production-minor-patch:
+        dependency-type: production
+        update-types: [minor, patch]
+      development-minor-patch:
+        dependency-type: development
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: "/"
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]

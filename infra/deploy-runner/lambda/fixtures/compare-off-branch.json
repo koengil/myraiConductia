@@ -1,0 +1,13 @@
+{
+  "_source": "gh api repos/Conductia/Conductia/compare/<head_sha>...<main tip> (GET, 2026-10-21); commits and files stripped",
+  "status": "behind",
+  "ahead_by": 0,
+  "behind_by": 93,
+  "total_commits": 0,
+  "base_commit": {
+    "sha": "953e0692e0b5175a7436e3810782f649bd4f8a72"
+  },
+  "merge_base_commit": {
+    "sha": "39c7d05a6d25e8661d72fa0405e2b0029fa2689c"
+  }
+}

@@ -1,0 +1,1149 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Conductia Skill Publication Contract",
+    "version": "1.0.0"
+  },
+  "x-conductia-contract-version": 1,
+  "paths": {
+    "/deals/{dealId}/skill-drafts/{draftId}/publish": {
+      "servers": [{ "url": "/api/v1" }],
+      "post": {
+        "operationId": "publishSkillDraft",
+        "description": "Conductia browser command. candidateId is the browser CandidatePreview.id (Conductia's skill_authoring_candidates.id), not the Ignatious provider candidate ID.",
+        "parameters": [
+          { "$ref": "#/components/parameters/DealId" },
+          { "$ref": "#/components/parameters/DraftId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PublishCommand" }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Publication admitted and still in progress",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "200": {
+            "description": "Publication already resolved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/NotAuthenticated" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": {
+            "$ref": "#/components/responses/PublicationCommandConflict"
+          },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/deals/{dealId}/skill-publications/{publicationId}/duplicate-decision": {
+      "servers": [{ "url": "/api/v1" }],
+      "post": {
+        "operationId": "decideSkillPublicationDuplicate",
+        "parameters": [
+          { "$ref": "#/components/parameters/DealId" },
+          { "$ref": "#/components/parameters/PublicationId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicateDecisionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Decision recorded, publication still in progress",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "200": {
+            "description": "Publication resolved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/NotAuthenticated" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": {
+            "$ref": "#/components/responses/PublicationCommandConflict"
+          },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/deals/{dealId}/skill-publications/{publicationId}/placement": {
+      "servers": [{ "url": "/api/v1" }],
+      "post": {
+        "operationId": "replaceSkillPublicationPlacement",
+        "parameters": [
+          { "$ref": "#/components/parameters/DealId" },
+          { "$ref": "#/components/parameters/PublicationId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PlacementCommand" }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Placement replaced, publication still in progress",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "200": {
+            "description": "Publication resolved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationRead" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/NotAuthenticated" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": {
+            "$ref": "#/components/responses/PublicationCommandConflict"
+          },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/conductia/skill-publications/{operationId}/prepare": {
+      "servers": [{ "url": "/v1" }],
+      "post": {
+        "operationId": "prepareSkillPublication",
+        "description": "Ignatious-owned operation. Ignatious never receives deal step IDs, only opaque targetId values.",
+        "parameters": [{ "$ref": "#/components/parameters/OperationId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PrepareRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preparation receipt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PreparationReceipt" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/conductia/skill-publications/{operationId}/publish": {
+      "servers": [{ "url": "/v1" }],
+      "post": {
+        "operationId": "publishSkillPublication",
+        "description": "Ignatious-owned operation. candidateId here is the provider candidate ID, distinct from the browser CandidatePreview.id.",
+        "parameters": [{ "$ref": "#/components/parameters/OperationId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PublishRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Publication receipt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationReceipt" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/conductia/skill-publications/{operationId}": {
+      "servers": [{ "url": "/v1" }],
+      "get": {
+        "operationId": "lookupSkillPublication",
+        "parameters": [{ "$ref": "#/components/parameters/OperationId" }],
+        "responses": {
+          "200": {
+            "description": "Publication lookup",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PublicationLookup" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/conductia/rail-templates/revisions/{revisionId}/retain": {
+      "servers": [{ "url": "/v1" }],
+      "post": {
+        "operationId": "retainRailTemplateSkills",
+        "description": "Ignatious-owned operation. Archives the exact package bytes each named source resolves to, under one revision scoped to the calling company.",
+        "parameters": [{ "$ref": "#/components/parameters/RevisionId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RetainRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receipt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RetainReceipt" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/TemplateNotFound" },
+          "409": { "$ref": "#/components/responses/TemplateConflict" },
+          "422": { "$ref": "#/components/responses/TemplateUnprocessable" },
+          "503": { "$ref": "#/components/responses/TemplateUnavailable" }
+        }
+      }
+    },
+    "/conductia/rail-templates/imports/{requestId}": {
+      "servers": [{ "url": "/v1" }],
+      "post": {
+        "operationId": "importRailTemplateSkills",
+        "description": "Ignatious-owned operation. Republishes every retained asset of a revision into the destination project under the destination identities the caller names.",
+        "parameters": [{ "$ref": "#/components/parameters/RequestId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ImportRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receipt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ImportReceipt" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/TemplateNotFound" },
+          "409": { "$ref": "#/components/responses/TemplateConflict" },
+          "422": { "$ref": "#/components/responses/TemplateUnprocessable" },
+          "503": { "$ref": "#/components/responses/TemplateUnavailable" }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "DealId": {
+        "name": "dealId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "DraftId": {
+        "name": "draftId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "PublicationId": {
+        "name": "publicationId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "OperationId": {
+        "name": "operationId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "RevisionId": {
+        "name": "revisionId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "RequestId": {
+        "name": "requestId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Not authenticated or not authorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "NotAuthenticated": {
+        "description": "Not authenticated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Not permitted",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "Invalid or unparseable command",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "State, identity, or digest conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "PublicationCommandConflict": {
+        "description": "Publish, duplicate-decision, or placement command conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": {
+                "error": {
+                  "$ref": "#/components/schemas/PublicationConflictCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Unable to process request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["error"],
+              "properties": { "error": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "TemplateNotFound": {
+        "description": "No revision is available under that id for the calling company",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/TemplateError" }
+          }
+        }
+      },
+      "TemplateConflict": {
+        "description": "Conflicting replay, or a source version that can no longer be retained",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/TemplateError" }
+          }
+        }
+      },
+      "TemplateUnprocessable": {
+        "description": "Invalid or unparseable command",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/TemplateError" }
+          }
+        }
+      },
+      "TemplateUnavailable": {
+        "description": "Rail template retention is not serviceable",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/TemplateError" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "PublicationState": {
+        "type": "string",
+        "enum": [
+          "preparing",
+          "confirmation_required",
+          "publishing",
+          "attaching",
+          "reconciling",
+          "needs_placement",
+          "published",
+          "failed"
+        ]
+      },
+      "DuplicateClassification": {
+        "type": "string",
+        "enum": ["exact", "equivalent", "similar"]
+      },
+      "DuplicateReasonCode": {
+        "type": "string",
+        "enum": [
+          "identity_match",
+          "name_match",
+          "contract_match",
+          "capability_equivalent",
+          "capability_similar"
+        ]
+      },
+      "ComparisonTargetState": {
+        "type": "string",
+        "enum": ["active", "removed", "admitted"]
+      },
+      "PublicationErrorCode": {
+        "type": "string",
+        "enum": [
+          "candidate_invalid",
+          "candidate_stale",
+          "duplicate_active",
+          "duplicate_removed",
+          "duplicate_declined",
+          "access_lost",
+          "feature_disabled",
+          "anchor_removed",
+          "receipt_conflict",
+          "step_removed",
+          "publish_exhausted"
+        ]
+      },
+      "PublicationConflictCode": {
+        "type": "string",
+        "enum": [
+          "idempotency_conflict",
+          "stale_edit_revision",
+          "stale_candidate",
+          "generation_active",
+          "publication_exists",
+          "stale_publication_revision",
+          "assessment_mismatch",
+          "placement_not_allowed"
+        ]
+      },
+      "SkillBinding": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skillId", "versionId", "digest"],
+        "properties": {
+          "skillId": { "type": "string", "format": "uuid" },
+          "versionId": { "type": "string", "format": "uuid" },
+          "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      },
+      "SkillStepInputV1": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "kind", "label", "helperText", "required"],
+        "properties": {
+          "key": { "const": "primary" },
+          "kind": { "const": "text" },
+          "label": { "const": "Input" },
+          "helperText": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "required": { "const": true }
+        }
+      },
+      "SkillStepDefinitionV1": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schemaVersion",
+          "type",
+          "title",
+          "description",
+          "inputs",
+          "skillBinding"
+        ],
+        "properties": {
+          "schemaVersion": { "const": 1 },
+          "type": { "const": "skill" },
+          "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "inputs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": { "$ref": "#/components/schemas/SkillStepInputV1" }
+          },
+          "skillBinding": { "$ref": "#/components/schemas/SkillBinding" }
+        }
+      },
+      "PublishCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestId",
+          "expectedEditRevision",
+          "candidateId",
+          "candidateDigest"
+        ],
+        "properties": {
+          "requestId": { "type": "string", "format": "uuid" },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "candidateId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Conductia's skill_authoring_candidates.id (the browser CandidatePreview.id)."
+          },
+          "candidateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      },
+      "DuplicateDecisionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["expectedRevision", "assessmentDigest", "decision"],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "assessmentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "decision": { "type": "string", "enum": ["confirm", "decline"] }
+        }
+      },
+      "Placement": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "phaseIndex"],
+            "properties": {
+              "kind": { "const": "phase_start" },
+              "phaseIndex": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "phaseIndex"],
+            "properties": {
+              "kind": { "const": "phase_end" },
+              "phaseIndex": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "phaseIndex", "afterStepId"],
+            "properties": {
+              "kind": { "const": "after" },
+              "phaseIndex": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "afterStepId": { "type": "string", "minLength": 1 }
+            }
+          }
+        ]
+      },
+      "PlacementCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["expectedRevision", "placement"],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "placement": { "$ref": "#/components/schemas/Placement" }
+        }
+      },
+      "CapabilityContract": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["purpose", "expectedInput", "expectedOutput"],
+        "properties": {
+          "purpose": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "expectedInput": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "expectedOutput": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      },
+      "ComparisonTargetCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["candidateId", "candidateDigest"],
+        "properties": {
+          "candidateId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Ignatious provider candidate ID."
+          },
+          "candidateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      },
+      "ComparisonTarget": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "targetId",
+          "state",
+          "displayName",
+          "capabilityContract",
+          "skillBinding",
+          "candidate"
+        ],
+        "properties": {
+          "targetId": { "type": "string", "format": "uuid" },
+          "state": { "$ref": "#/components/schemas/ComparisonTargetState" },
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "capabilityContract": {
+            "$ref": "#/components/schemas/CapabilityContract"
+          },
+          "skillBinding": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/SkillBinding" },
+              { "type": "null" }
+            ]
+          },
+          "candidate": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/ComparisonTargetCandidate" },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "DuplicateMatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["targetId", "classification", "reasonCode", "confidence"],
+        "properties": {
+          "targetId": { "type": "string", "format": "uuid" },
+          "classification": {
+            "$ref": "#/components/schemas/DuplicateClassification"
+          },
+          "reasonCode": { "$ref": "#/components/schemas/DuplicateReasonCode" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      },
+      "SafeDuplicateMatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dealStepId", "name", "classification", "reasonCode"],
+        "properties": {
+          "dealStepId": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ]
+          },
+          "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "classification": {
+            "$ref": "#/components/schemas/DuplicateClassification"
+          },
+          "reasonCode": { "$ref": "#/components/schemas/DuplicateReasonCode" }
+        }
+      },
+      "PrepareRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidateId",
+          "candidateDigest",
+          "candidateName",
+          "reservedSkillId",
+          "companyId",
+          "projectId",
+          "displayName",
+          "capabilityContract",
+          "comparisonSetDigest",
+          "targets"
+        ],
+        "properties": {
+          "candidateId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Ignatious provider candidate ID, distinct from the browser CandidatePreview.id."
+          },
+          "candidateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "candidateName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "The Ignatious candidate preview name, used for fingerprint verification. Distinct from displayName, which is the editable draft name."
+          },
+          "reservedSkillId": { "type": "string", "format": "uuid" },
+          "companyId": { "type": "string", "format": "uuid" },
+          "projectId": { "type": "string", "format": "uuid" },
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "capabilityContract": {
+            "$ref": "#/components/schemas/CapabilityContract"
+          },
+          "comparisonSetDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "targets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ComparisonTarget" }
+          }
+        }
+      },
+      "PreparationReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operationId",
+          "preparationId",
+          "candidateDigest",
+          "capabilityContract",
+          "comparisonSetDigest",
+          "assessmentDigest",
+          "matches"
+        ],
+        "properties": {
+          "operationId": { "type": "string", "format": "uuid" },
+          "preparationId": { "type": "string", "format": "uuid" },
+          "candidateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "capabilityContract": {
+            "$ref": "#/components/schemas/CapabilityContract"
+          },
+          "comparisonSetDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "assessmentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "matches": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DuplicateMatch" }
+          }
+        }
+      },
+      "PublishRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "preparationId",
+          "assessmentDigest",
+          "candidateId",
+          "candidateDigest",
+          "reservedSkillId",
+          "companyId",
+          "projectId"
+        ],
+        "properties": {
+          "preparationId": { "type": "string", "format": "uuid" },
+          "assessmentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "candidateId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Ignatious provider candidate ID, distinct from the browser CandidatePreview.id."
+          },
+          "candidateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "reservedSkillId": { "type": "string", "format": "uuid" },
+          "companyId": { "type": "string", "format": "uuid" },
+          "projectId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "PublicationReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operationId",
+          "skillId",
+          "versionId",
+          "digest",
+          "projectId",
+          "publishedAt"
+        ],
+        "properties": {
+          "operationId": { "type": "string", "format": "uuid" },
+          "skillId": { "type": "string", "format": "uuid" },
+          "versionId": { "type": "string", "format": "uuid" },
+          "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "projectId": { "type": "string", "format": "uuid" },
+          "publishedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "PublicationLookup": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status"],
+            "properties": {
+              "status": { "const": "not_published" }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "preparation"],
+            "properties": {
+              "status": { "const": "prepared" },
+              "preparation": {
+                "$ref": "#/components/schemas/PreparationReceipt"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "publication"],
+            "properties": {
+              "status": { "const": "published" },
+              "publication": {
+                "$ref": "#/components/schemas/PublicationReceipt"
+              }
+            }
+          }
+        ]
+      },
+      "PublicationError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "dealStepId"],
+        "properties": {
+          "code": { "$ref": "#/components/schemas/PublicationErrorCode" },
+          "dealStepId": {
+            "anyOf": [
+              { "type": "string", "format": "uuid" },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "PublicationResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stepId", "skillBinding"],
+        "properties": {
+          "stepId": { "type": "string", "format": "uuid" },
+          "skillBinding": { "$ref": "#/components/schemas/SkillBinding" }
+        }
+      },
+      "PublicationRead": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "available",
+          "id",
+          "state",
+          "revision",
+          "matches",
+          "error",
+          "result",
+          "assessmentDigest"
+        ],
+        "properties": {
+          "available": { "const": true },
+          "id": { "type": "string", "format": "uuid" },
+          "state": { "$ref": "#/components/schemas/PublicationState" },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "matches": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SafeDuplicateMatch" }
+          },
+          "error": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/PublicationError" },
+              { "type": "null" }
+            ]
+          },
+          "result": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/PublicationResult" },
+              { "type": "null" }
+            ]
+          },
+          "assessmentDigest": {
+            "description": "The stored assessment digest, present only while state is confirmation_required; null in every other state.",
+            "anyOf": [
+              { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              { "type": "null" }
+            ]
+          }
+        }
+      },
+      "TemplateErrorCode": {
+        "type": "string",
+        "enum": [
+          "name_taken",
+          "stale_template",
+          "source_changed",
+          "idempotency_conflict",
+          "skill_unavailable",
+          "provider_unavailable",
+          "not_found",
+          "forbidden",
+          "invalid_command"
+        ]
+      },
+      "TemplateError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["error", "code", "retryable"],
+        "properties": {
+          "error": { "type": "string" },
+          "code": { "$ref": "#/components/schemas/TemplateErrorCode" },
+          "requestId": { "type": "string", "format": "uuid" },
+          "retryable": { "type": "boolean" }
+        }
+      },
+      "TemplateSkillReference": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "skillId", "versionId", "digest"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["publication"] },
+              "skillId": { "type": "string", "format": "uuid" },
+              "versionId": { "type": "string", "format": "uuid" },
+              "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "name", "version", "digest"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["mount"] },
+              "name": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$" },
+              "version": { "type": "integer", "minimum": 1 },
+              "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          }
+        ]
+      },
+      "RetainRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["companyId", "sourceProjectId", "skills"],
+        "properties": {
+          "companyId": { "type": "string", "format": "uuid" },
+          "sourceProjectId": { "type": "string", "format": "uuid" },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "source"],
+              "properties": {
+                "key": { "type": "string", "minLength": 1, "maxLength": 100 },
+                "source": { "$ref": "#/components/schemas/TemplateSkillReference" }
+              }
+            }
+          }
+        }
+      },
+      "RetainReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["revisionId", "assets"],
+        "properties": {
+          "revisionId": { "type": "string", "format": "uuid" },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "packageDigest"],
+              "properties": {
+                "key": { "type": "string", "minLength": 1, "maxLength": 100 },
+                "packageDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+              }
+            }
+          }
+        }
+      },
+      "ImportTarget": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "operationId", "skillId", "versionId"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "operationId": { "type": "string", "format": "uuid" },
+          "skillId": { "type": "string", "format": "uuid" },
+          "versionId": { "type": "string", "format": "uuid" }
+        }
+      },
+      "ImportRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["companyId", "revisionId", "projectId", "targets"],
+        "properties": {
+          "companyId": { "type": "string", "format": "uuid" },
+          "revisionId": { "type": "string", "format": "uuid" },
+          "projectId": { "type": "string", "format": "uuid" },
+          "targets": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/components/schemas/ImportTarget" }
+          }
+        }
+      },
+      "ImportReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["requestId", "projectId", "skills"],
+        "properties": {
+          "requestId": { "type": "string", "format": "uuid" },
+          "projectId": { "type": "string", "format": "uuid" },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "binding"],
+              "properties": {
+                "key": { "type": "string", "minLength": 1, "maxLength": 100 },
+                "binding": { "$ref": "#/components/schemas/SkillBinding" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

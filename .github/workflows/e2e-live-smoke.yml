@@ -1,0 +1,117 @@
+name: E2E live smoke
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag or commit whose journey runs against staging
+        required: true
+        default: staging
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Live smoke on staging
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_DEPLOY || '"ubuntu-latest"') }}
+    timeout-minutes: 30
+    environment: e2e-staging
+    concurrency:
+      group: e2e-staging
+      cancel-in-progress: false
+    steps:
+      - name: Pin the ref to a release-branch commit
+        id: pin
+        env:
+          REF: ${{ inputs.ref }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # #639: this job holds the e2e-staging secrets, so it only runs a commit already on staging
+          # or main. Each tip is read from refs/heads, so a tag named staging or main cannot stand in
+          # for the branch. Checkout takes the resolved SHA, never the name, so a moved ref changes nothing.
+          case "${REF}" in
+            '' | -* | /* | */ | *..* | *//* | *[!A-Za-z0-9._/-]*)
+              echo "❌ The ref input is not a branch, tag or commit name. Use letters, digits and . _ / - only."
+              exit 1
+              ;;
+          esac
+          if ! sha="$(gh api "repos/${REPO}/commits/${REF//\//%2F}" --jq .sha)" || ! [[ "${sha}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "❌ ${REF} does not name a commit in ${REPO}."
+            exit 1
+          fi
+          for branch in staging main; do
+            if ! tip="$(gh api "repos/${REPO}/git/ref/heads/${branch}" --jq .object.sha)" || ! [[ "${tip}" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "❌ The tip of ${branch} could not be read. Re-run the job."
+              exit 1
+            fi
+            # A comparison that fails is never a pass, whatever it printed; the next branch is still tried.
+            if behind="$(gh api "repos/${REPO}/compare/${sha}...${tip}" --jq .behind_by)" && [ "${behind}" = "0" ]; then
+              echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+              echo "${REF} @ ${sha:0:7} is on ${branch}."
+              exit 0
+            fi
+          done
+          echo "❌ ${REF} @ ${sha:0:7} is on neither staging nor main. The live smoke only runs a commit already on a release branch."
+          exit 1
+
+      - name: Require the staging secrets
+        env:
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+          E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          E2E_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+          E2E_SEED_PASSWORD: ${{ secrets.E2E_SEED_PASSWORD }}
+        run: |
+          missing=''
+          for name in E2E_BASE_URL E2E_SUPABASE_URL E2E_SUPABASE_PUBLISHABLE_KEY E2E_SEED_PASSWORD; do
+            [ -n "${!name:-}" ] || missing="${missing} ${name}"
+          done
+          if [ -n "${missing}" ]; then
+            echo "❌ Set${missing} on the e2e-staging environment. A release does not promote without its live smoke."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pin.outputs.sha }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the MD spine against staging
+        run: npx playwright test --project=live e2e/journeys/md-spine.spec.ts
+        env:
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+          SEED_PASSWORD: ${{ secrets.E2E_SEED_PASSWORD }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+
+      - name: Upload the report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-live-smoke-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

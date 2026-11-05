@@ -1,0 +1,287 @@
+{
+  "mailbox": "alex.chen@bank.example",
+  "messages": [
+    {
+      "id": "AAMk-alex-001",
+      "internetMessageId": "<offsite-001@bank.example>",
+      "conversationId": "conv-offsite",
+      "subject": "Team offsite agenda",
+      "sentDateTime": "2026-02-05T09:00:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Office Manager",
+          "address": "office@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "The offsite agenda is attached. Coaches leave at 8:00."
+      }
+    },
+    {
+      "id": "AAMk-alex-002",
+      "internetMessageId": "<lunch-006@bank.example>",
+      "conversationId": "conv-lunch",
+      "subject": "Lunch?",
+      "sentDateTime": "2026-02-19T11:10:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Alex Chen",
+          "address": "alex.chen@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Lunch at noon?"
+      }
+    },
+    {
+      "id": "AAMk-alex-003",
+      "internetMessageId": "<expenses-003@bank.example>",
+      "conversationId": "conv-expenses",
+      "subject": "Expense report reminder",
+      "sentDateTime": "2026-02-27T17:00:00Z",
+      "from": {
+        "emailAddress": {
+          "name": "Finance",
+          "address": "finance@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "February expense reports are due on Friday."
+      }
+    },
+    {
+      "id": "74a5a01dd199525f",
+      "internetMessageId": "<noise-001@bank.example>",
+      "conversationId": "rfc822:<noise-001@bank.example>",
+      "subject": "Team offsite: save the date",
+      "sentDateTime": "2026-06-02T08:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Events Team",
+          "address": "events@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Please save the date for the team offsite on the second Thursday of October. Lunch and a facilitated session are planned."
+      }
+    },
+    {
+      "id": "1dcdf809b024132c",
+      "internetMessageId": "<noise-002@bank.example>",
+      "conversationId": "rfc822:<noise-002@bank.example>",
+      "subject": "Canteen menu changes this month",
+      "sentDateTime": "2026-06-15T07:30:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Facilities",
+          "address": "facilities@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>The canteen adds a vegetarian option on Tuesdays and a soup of the day from this week.</p></body></html>"
+      }
+    },
+    {
+      "id": "223108957397c598",
+      "internetMessageId": "<noise-004@bank.example>",
+      "conversationId": "rfc822:<noise-004@bank.example>",
+      "subject": "Planned maintenance on Saturday",
+      "sentDateTime": "2026-07-20T12:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "IT Helpdesk",
+          "address": "it-helpdesk@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Email will be unavailable on Saturday between 22:00 and 23:30 while the servers are patched. No action is needed."
+      }
+    },
+    {
+      "id": "175ce61bb1b90979",
+      "internetMessageId": "<noise-005@bank.example>",
+      "conversationId": "rfc822:<noise-005@bank.example>",
+      "subject": "Parking permit renewals",
+      "sentDateTime": "2026-08-03T07:45:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Facilities",
+          "address": "facilities@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Morgan Vale",
+            "address": "morgan.vale@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "html",
+        "content": "<html><body><p>Parking permits renew at the end of the month. Reply to this note if you no longer need one.</p></body></html>"
+      }
+    },
+    {
+      "id": "00a9228ff2e9047f",
+      "internetMessageId": "<bidq-003@castellan.example>",
+      "conversationId": "rfc822:<bidq-002@castellan.example>",
+      "subject": "RE: Bid clarifications",
+      "sentDateTime": "2026-08-07T08:50:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Marcus Oyelaran",
+          "address": "marcus.oyelaran@castellan.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Alex,\n\nFollowing up on the working capital question. Our finance team will send the schedule on Monday.\n\nMarcus"
+      },
+      "internetMessageHeaders": [
+        {
+          "name": "In-Reply-To",
+          "value": "<bidq-002@castellan.example>"
+        }
+      ]
+    },
+    {
+      "id": "2ea6aceb832475ad",
+      "internetMessageId": "<noise-006@bank.example>",
+      "conversationId": "rfc822:<noise-006@bank.example>",
+      "subject": "Annual training reminder",
+      "sentDateTime": "2026-08-24T09:00:00.000Z",
+      "from": {
+        "emailAddress": {
+          "name": "Learning and Development",
+          "address": "learning@bank.example"
+        }
+      },
+      "toRecipients": [
+        {
+          "emailAddress": {
+            "name": "Storm Duncan",
+            "address": "storm.duncan@bank.example"
+          }
+        },
+        {
+          "emailAddress": {
+            "name": "Alex Chen",
+            "address": "alex.chen@bank.example"
+          }
+        }
+      ],
+      "ccRecipients": [],
+      "body": {
+        "contentType": "text",
+        "content": "Your annual training modules are due by the end of the month. Each module takes about twenty minutes."
+      }
+    }
+  ]
+}

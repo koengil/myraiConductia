@@ -1,0 +1,421 @@
+{
+ "root": "Project Destiny \u2014 Sample Deal (Ignatious)",
+ "note": "The complete sample sell-side deal folder provided by the Ignatious team.",
+ "children": [
+  {
+   "name": "00. Received from Client",
+   "kind": "folder",
+   "children": []
+  },
+  {
+   "name": "01. Admin",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Engagement Letter",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Ignatious Destiny EL Nov 24 (Ignatious Response v1).docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0.0 MB",
+       "bytes": 1989905,
+       "href": "/data-room/01.-admin/engagement-letter/ignatious-destiny-el-nov-24-ignatious-response-v1.docx",
+       "preview": "/data-room-previews/01.-admin/engagement-letter/ignatious-destiny-el-nov-24-ignatious-response-v1.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "Invoice",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Project Destiny Retainer Invoice - 12.11.14.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 208729,
+       "href": "/data-room/01.-admin/invoice/project-destiny-retainer-invoice-12.11.14.docx",
+       "preview": "/data-room-previews/01.-admin/invoice/project-destiny-retainer-invoice-12.11.14.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "NDA",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "2024 MNDA DocuSign Template.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 36611,
+       "href": "/data-room/01.-admin/nda/2024-mnda-docusign-template.docx",
+       "preview": "/data-room-previews/01.-admin/nda/2024-mnda-docusign-template.docx.html"
+      },
+      {
+       "name": "REDLINE - Destiny _ Ignatious - 2024 MNDA (Client Draft - 11.04.24).docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 40144,
+       "href": "/data-room/01.-admin/nda/redline-destiny-ignatious-2024-mnda-client-draft-11.04.24.docx",
+       "preview": "/data-room-previews/01.-admin/nda/redline-destiny-ignatious-2024-mnda-client-draft-11.04.24.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "WGL and Team",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Project Destiny WGL - 03.19.2026.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0.0 MB",
+       "bytes": 1855807,
+       "href": "/data-room/01.-admin/wgl-and-team/project-destiny-wgl-03.19.2026.docx",
+       "preview": "/data-room-previews/01.-admin/wgl-and-team/project-destiny-wgl-03.19.2026.docx.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "02. Client Presentations",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "01. Pitch Deck (Sample from another engagement)",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Discussion Materials 11.13.2024_vF.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 6847284,
+       "href": "/data-room/02.-client-presentations/01.-pitch-deck-sample-from-another-engagement/discussion-materials-11.13.2024-vf.pptx",
+       "preview": "/data-room-previews/02.-client-presentations/01.-pitch-deck-sample-from-another-engagement/discussion-materials-11.13.2024-vf.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "02. Other Discussion Materials",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Destiny Discussion Materials 11.11.2024 vF.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5610350,
+       "href": "/data-room/02.-client-presentations/02.-other-discussion-materials/destiny-discussion-materials-11.11.2024-vf.pptx",
+       "preview": "/data-room-previews/02.-client-presentations/02.-other-discussion-materials/destiny-discussion-materials-11.11.2024-vf.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "03. Organizational Meeting",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Proj. Destiny Organizational Meeting - 12.06.24.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5655085,
+       "href": "/data-room/02.-client-presentations/03.-organizational-meeting/proj.-destiny-organizational-meeting-12.06.24.pptx",
+       "preview": "/data-room-previews/02.-client-presentations/03.-organizational-meeting/proj.-destiny-organizational-meeting-12.06.24.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "04. Process Update",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Proj. Destiny - T&R - 05.11.26 (DRAFT).xlsx",
+       "kind": "file",
+       "ext": "xlsx",
+       "size": "0 KB",
+       "bytes": 18711,
+       "href": "/data-room/02.-client-presentations/04.-process-update/proj.-destiny-tr-05.11.26-draft.xlsx"
+      },
+      {
+       "name": "Proj. Destiny - Workstreams - 05.27.26_v2.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5601833,
+       "href": "/data-room/02.-client-presentations/04.-process-update/proj.-destiny-workstreams-05.27.26-v2.pptx",
+       "preview": "/data-room-previews/02.-client-presentations/04.-process-update/proj.-destiny-workstreams-05.27.26-v2.pptx.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "03. Marketing Materials",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "01. Management Presentation",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Destiny Management Presentation - 08.28.25.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 4236743,
+       "href": "/data-room/03.-marketing-materials/01.-management-presentation/destiny-management-presentation-08.28.25.pptx",
+       "preview": "/data-room-previews/03.-marketing-materials/01.-management-presentation/destiny-management-presentation-08.28.25.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "02. Teaser",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Project Destiny Teaser - November 2025.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5569055,
+       "href": "/data-room/03.-marketing-materials/02.-teaser/project-destiny-teaser-november-2025.pptx",
+       "preview": "/data-room-previews/03.-marketing-materials/02.-teaser/project-destiny-teaser-november-2025.pptx.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "04. Buyers",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "01. Buyers Log",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Destiny European Buyers Overview - 8.29.25.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5638704,
+       "href": "/data-room/04.-buyers/01.-buyers-log/destiny-european-buyers-overview-8.29.25.pptx",
+       "preview": "/data-room-previews/04.-buyers/01.-buyers-log/destiny-european-buyers-overview-8.29.25.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "02. NDA",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "2024 MNDA DocuSign Template.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 36606,
+       "href": "/data-room/04.-buyers/02.-nda/2024-mnda-docusign-template.docx",
+       "preview": "/data-room-previews/04.-buyers/02.-nda/2024-mnda-docusign-template.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "04. Q&A",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Proj. Destiny - Buyer Q&A Dry-Run - 02.24.25.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 34430,
+       "href": "/data-room/04.-buyers/04.-qa/proj.-destiny-buyer-qa-dry-run-02.24.25.docx",
+       "preview": "/data-room-previews/04.-buyers/04.-qa/proj.-destiny-buyer-qa-dry-run-02.24.25.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "05. Process Letter and Bid Summary",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "01. Process Letter",
+       "kind": "folder",
+       "children": [
+        {
+         "name": "Proj. Destiny - Initial Bid Process Letter 06.16.2025.docx",
+         "kind": "file",
+         "ext": "docx",
+         "size": "0.0 MB",
+         "bytes": 2915682,
+         "href": "/data-room/04.-buyers/05.-process-letter-and-bid-summary/01.-process-letter/proj.-destiny-initial-bid-process-letter-06.16.2025.docx",
+         "preview": "/data-room-previews/04.-buyers/05.-process-letter-and-bid-summary/01.-process-letter/proj.-destiny-initial-bid-process-letter-06.16.2025.docx.html"
+        }
+       ]
+      },
+      {
+       "name": "02. LOIs and Term Sheets",
+       "kind": "folder",
+       "children": [
+        {
+         "name": "Project Destiny Bid Summary 10.04.25 v5.pptx",
+         "kind": "file",
+         "ext": "pptx",
+         "size": "0.0 MB",
+         "bytes": 3875479,
+         "href": "/data-room/04.-buyers/05.-process-letter-and-bid-summary/02.-lois-and-term-sheets/project-destiny-bid-summary-10.04.25-v5.pptx",
+         "preview": "/data-room-previews/04.-buyers/05.-process-letter-and-bid-summary/02.-lois-and-term-sheets/project-destiny-bid-summary-10.04.25-v5.pptx.html"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "05. Data Room",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "Proj. Destiny - Phase II Data Room Index_vF.xlsx",
+     "kind": "file",
+     "ext": "xlsx",
+     "size": "0 KB",
+     "bytes": 62644,
+     "href": "/data-room/05.-data-room/proj.-destiny-phase-ii-data-room-index-vf.xlsx"
+    }
+   ]
+  },
+  {
+   "name": "06. Due Diligence",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "01. Business DD",
+     "kind": "folder",
+     "children": []
+    },
+    {
+     "name": "02. Financial DD",
+     "kind": "folder",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "07. Closing",
+   "kind": "folder",
+   "children": [
+    {
+     "name": "01. Stock Purchase Agreement",
+     "kind": "folder",
+     "children": []
+    },
+    {
+     "name": "02. Marketing at Closing",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Destiny Case Study 2026.06.30 v4.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 4406011,
+       "href": "/data-room/07.-closing/02.-marketing-at-closing/destiny-case-study-2026.06.30-v4.pptx",
+       "preview": "/data-room-previews/07.-closing/02.-marketing-at-closing/destiny-case-study-2026.06.30-v4.pptx.html"
+      },
+      {
+       "name": "Project Destiny Email to Outlets v1.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 19498,
+       "href": "/data-room/07.-closing/02.-marketing-at-closing/project-destiny-email-to-outlets-v1.docx",
+       "preview": "/data-room-previews/07.-closing/02.-marketing-at-closing/project-destiny-email-to-outlets-v1.docx.html"
+      },
+      {
+       "name": "Project Destiny Linkedin Post v1.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 19049,
+       "href": "/data-room/07.-closing/02.-marketing-at-closing/project-destiny-linkedin-post-v1.docx",
+       "preview": "/data-room-previews/07.-closing/02.-marketing-at-closing/project-destiny-linkedin-post-v1.docx.html"
+      },
+      {
+       "name": "Project Destiny Press Release v1.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 20707,
+       "href": "/data-room/07.-closing/02.-marketing-at-closing/project-destiny-press-release-v1.docx",
+       "preview": "/data-room-previews/07.-closing/02.-marketing-at-closing/project-destiny-press-release-v1.docx.html"
+      },
+      {
+       "name": "Project Destiny Tombstone v3.pptx",
+       "kind": "file",
+       "ext": "pptx",
+       "size": "0.0 MB",
+       "bytes": 5807735,
+       "href": "/data-room/07.-closing/02.-marketing-at-closing/project-destiny-tombstone-v3.pptx",
+       "preview": "/data-room-previews/07.-closing/02.-marketing-at-closing/project-destiny-tombstone-v3.pptx.html"
+      }
+     ]
+    },
+    {
+     "name": "03. Invoices",
+     "kind": "folder",
+     "children": [
+      {
+       "name": "Project Destiny Transaction Fee Invoice - 06.29.26.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "0 KB",
+       "bytes": 209470,
+       "href": "/data-room/07.-closing/03.-invoices/project-destiny-transaction-fee-invoice-06.29.26.docx",
+       "preview": "/data-room-previews/07.-closing/03.-invoices/project-destiny-transaction-fee-invoice-06.29.26.docx.html"
+      },
+      {
+       "name": "Project Destiny Transaction Fee Letter - 06.25.26_vF.docx",
+       "kind": "file",
+       "ext": "docx",
+       "size": "1 KB",
+       "bytes": 600278,
+       "href": "/data-room/07.-closing/03.-invoices/project-destiny-transaction-fee-letter-06.25.26-vf.docx",
+       "preview": "/data-room-previews/07.-closing/03.-invoices/project-destiny-transaction-fee-letter-06.25.26-vf.docx.html"
+      }
+     ]
+    },
+    {
+     "name": "Project Destiny - Closing Statement - 06.23.26.xlsx",
+     "kind": "file",
+     "ext": "xlsx",
+     "size": "0 KB",
+     "bytes": 40402,
+     "href": "/data-room/07.-closing/project-destiny-closing-statement-06.23.26.xlsx"
+    }
+   ]
+  },
+  {
+   "name": "Folder Guide.docx",
+   "kind": "file",
+   "ext": "docx",
+   "size": "0 KB",
+   "bytes": 14411,
+   "href": "/data-room/folder-guide.docx",
+   "preview": "/data-room-previews/folder-guide.docx.html"
+  }
+ ],
+ "counts": {
+  "files": 27,
+  "previews": 24,
+  "folders": 29
+ }
+}

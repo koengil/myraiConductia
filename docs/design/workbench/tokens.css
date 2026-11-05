@@ -1,0 +1,60 @@
+/* Conductia — Workbench palette (Tier 1 payload)
+   Paste into src/app/globals.css alongside the other [data-palette] blocks,
+   then set data-palette="workbench" in src/app/layout.tsx. One-line revert. */
+[data-palette='workbench'] {
+  /* ink on light (contrast contract: light surfaces take dark ink) */
+  --ink: #191919;
+  --ink-secondary: #55534e;
+  --ink-tertiary: #6b6b68;         /* globals.css value: the kit's #6e6e6b is 4.49:1 on --surface-subtle */
+  --ink-quiet: #9c9a94;            /* new: placeholders, meta; never <18px essential text */
+  /* surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f1f0ec;       /* filled inputs, quiet fills */
+  --surface-warm: #f5f4f1;         /* page canvas */
+  --surface-raised: #faf9f6;       /* hover/selected wash */
+  --stroke: #eceae5;
+  --stroke-strong: #e0ded8;
+  /* on-dark kept for the few dark moments; canvas-bg stays ink */
+  --canvas-bg: #191919;
+  /* accent = ink; electric blue retired as accent */
+  --accent: #191919;
+  --accent-dark: #2f2f2f;
+  --accent-soft: #f1f0ec;
+  /* AI actor (Casey) — the ONLY violet in the system */
+  --ai: #5e5ce6;
+  --ai-soft: #edecfb;
+  --ai-tint: #f3f2fc;
+  /* status — dot/text tones + SOLID pastel fills */
+  --positive: #17b26a;  --positive-deep: #0b5c3b;  --positive-fill: #8fe6bf;
+  --hold: #f5a524;      --hold-deep: #6e5308;      --hold-fill: #fae6a8;  --hold-tint: #fbf3d9;
+  --negative: #e5484d;  --negative-deep: #8e2440;  --negative-fill: #f8c9d1;
+  --sync: #2e90fa;
+  /* data viz: muted categorical scale for graphs (CRM network clusters).
+   * No violet (Casey only), no status hue (>=15deg from positive, hold,
+   * negative, sync); each >=3.9:1 on --surface-warm. Labels carry identity.
+   * Mirrored in src/lib/leads/crmNetwork.ts; a test pins the three. */
+  --viz-client: #66635c;
+  --viz-1: #2f7d78;
+  --viz-2: #a8553a;
+  --viz-3: #2b6f86;
+  --viz-4: #827a2c;
+  --viz-5: #a3476b;
+  --viz-6: #4a7a40;
+  --viz-7: #7f6252;
+  --viz-8: #5f7330;
+  /* selection / links */
+  --sidebar-item-active-bg: #e9e7e2;
+  --link: #191919;
+  /* shape */
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-composer: 18px;
+  /* elevation: hairlines; one ambient for floating surfaces */
+  --shadow-ambient: 0 14px 40px rgb(25 25 25 / 0.09);
+}
+/* Type: keep --font-bank (Inter) as the interface face.
+   DROP the Fraunces load in layout.tsx; point --font-display at the serif stack below,
+   used ONLY for project identity + source excerpts. */
+[data-palette='workbench'] {
+  --font-display: Georgia, 'Times New Roman', serif;
+}

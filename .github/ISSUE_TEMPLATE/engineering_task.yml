@@ -1,0 +1,43 @@
+name: Engineering task
+description: Refactor, tooling, tests, or docs without a product pitch
+title: "[Engineering]: "
+labels: ["engineering"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be true when this is done?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Files or systems in scope; call out what is explicitly out of scope.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Refactor
+        - Tests
+        - CI / tooling
+        - Dependencies
+        - Documentation
+        - ADR
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: Definition of done
+      options:
+        - label: All README gates pass locally
+        - label: No drift from CLAUDE.md invariants
+        - label: New or updated tests where behavior changed

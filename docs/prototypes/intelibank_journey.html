@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conductia — The full swing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0f1c; --ink-2:#11172a; --ink-3:#1a2238;
+  --paper:#f4f3ef; --card:#ffffff; --cream:#faf9f5;
+  --line:rgba(15,23,42,.09); --line-2:rgba(15,23,42,.06);
+  --line-dk:rgba(255,255,255,.08); --line-dk-2:rgba(255,255,255,.05);
+  --text:#161c2b; --text-2:#5a6373; --text-3:#8b93a3;
+  --text-inv:#eef0f4; --text-inv-2:#9aa3b5;
+  --green:#2e7d5b; --green-2:#1f5e43; --green-soft:#e6f1ea; --green-line:rgba(46,125,91,.25);
+  --gold:#b58a42; --gold-2:#a3792f; --gold-soft:#f1e8d6; --gold-line:rgba(181,138,66,.35);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Hanken Grotesk",-apple-system,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--paper);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.app{display:grid;grid-template-columns:300px 1fr;height:100vh}
+
+/* ---------- SIDEBAR ---------- */
+.side{background:var(--ink);color:var(--text-inv);display:flex;flex-direction:column;padding:26px 22px;position:relative;overflow:hidden}
+.side::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 0% 0%,rgba(181,138,66,.06),transparent 60%);pointer-events:none}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:34px;position:relative}
+.shield{width:22px;height:22px;border-radius:6px;background:var(--green);display:grid;place-items:center;flex:none;box-shadow:0 0 0 3px rgba(46,125,91,.18)}
+.shield svg{width:13px;height:13px;stroke:#fff;stroke-width:2.4;fill:none}
+.brand h1{font-family:var(--serif);font-weight:500;font-size:21px;letter-spacing:.2px}
+
+.jrny-label{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-inv-2);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.jrny-label .of{font-family:var(--mono);font-size:10px;color:var(--text-3)}
+.steps{list-style:none;display:flex;flex-direction:column;gap:1px;position:relative;flex:1}
+.steps::before{content:"";position:absolute;left:11px;top:14px;bottom:18px;width:1.5px;background:var(--line-dk);z-index:0}
+.step{display:flex;align-items:center;gap:13px;padding:6px 8px;border-radius:9px;position:relative;z-index:1;cursor:pointer;transition:background .2s}
+.step:hover{background:rgba(255,255,255,.03)}
+.dot{width:23px;height:23px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-family:var(--mono);background:var(--ink-2);border:1.5px solid var(--line-dk);color:var(--text-3);transition:all .35s}
+.step .name{font-size:13px;color:var(--text-inv-2);transition:color .25s;line-height:1.25}
+.step.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.step.done .name{color:var(--text-inv-2)}
+.step.active .dot{background:var(--gold);border-color:var(--gold);color:var(--ink);box-shadow:0 0 0 4px rgba(181,138,66,.16)}
+.step.active .name{color:#fff;font-weight:600}
+.dot svg{width:11px;height:11px;stroke:#fff;stroke-width:3;fill:none}
+
+.who{margin-top:18px;padding-top:18px;border-top:1px solid var(--line-dk);display:flex;align-items:center;gap:11px;position:relative}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a3450,#161d30);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--text-inv);border:1px solid var(--line-dk)}
+.who .nm{font-size:13.5px;font-weight:600}
+.who .rl{font-size:11px;color:var(--text-3);font-family:var(--mono);letter-spacing:.04em}
+.always{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-inv-2)}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(46,125,91,.5);animation:pulse 2.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,125,91,.45)}70%{box-shadow:0 0 0 7px rgba(46,125,91,0)}100%{box-shadow:0 0 0 0 rgba(46,125,91,0)}}
+
+/* ---------- STAGE ---------- */
+.stage{position:relative;overflow-y:auto;overflow-x:hidden}
+.stage::-webkit-scrollbar{width:9px}
+.stage::-webkit-scrollbar-thumb{background:rgba(15,23,42,.13);border-radius:9px}
+.wrap{max-width:920px;margin:0 auto;padding:62px 60px 150px}
+.beat{display:none}
+.beat.active{display:block}
+.beat.dark{} /* handled at stage level */
+.stage.dark{background:var(--ink)}
+.stage.dark .wrap{color:var(--text-inv)}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.stage.dark .eyebrow{color:var(--gold)}
+.eyebrow .bar{width:22px;height:1.5px;background:var(--gold-line)}
+h2.title{font-family:var(--serif);font-weight:500;font-size:42px;line-height:1.08;letter-spacing:-.01em;margin-bottom:18px}
+.stage.dark h2.title{color:#fff}
+.lede{font-size:17px;line-height:1.6;color:var(--text-2);max-width:620px;margin-bottom:38px}
+.stage.dark .lede{color:var(--text-inv-2)}
+
+.factor{display:inline-flex;align-items:center;gap:9px;font-size:12px;color:var(--text-2);background:var(--cream);border:1px solid var(--line);padding:7px 13px;border-radius:999px;margin-bottom:34px;font-weight:500}
+.stage.dark .factor{background:var(--ink-2);border-color:var(--line-dk);color:var(--text-inv-2)}
+.factor b{color:var(--gold-2);font-weight:600}
+.stage.dark .factor b{color:var(--gold)}
+.factor .fdot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+/* cards / surfaces */
+.surface{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+.stage.dark .surface{background:var(--ink-2);border-color:var(--line-dk);box-shadow:none}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(14px)}
+.beat.active .reveal{animation:rise .7s cubic-bezier(.16,1,.3,1) forwards}
+.beat.active .reveal:nth-child(1){animation-delay:.04s}
+.beat.active .reveal:nth-child(2){animation-delay:.1s}
+.beat.active .reveal:nth-child(3){animation-delay:.16s}
+.beat.active .reveal:nth-child(4){animation-delay:.22s}
+.beat.active .reveal:nth-child(5){animation-delay:.28s}
+.beat.active .reveal:nth-child(6){animation-delay:.34s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* clear / chips */
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-family:var(--mono);font-weight:500;padding:4px 10px;border-radius:7px;letter-spacing:.02em}
+.chip.clear{background:var(--green-soft);color:var(--green-2);border:1px solid var(--green-line)}
+.chip.live{background:var(--green);color:#fff}
+.chip.watch{background:var(--gold-soft);color:var(--gold-2);border:1px solid var(--gold-line)}
+.chip.gold{background:var(--gold-soft);color:var(--gold-2);border:1px solid var(--gold-line)}
+.chip svg{width:11px;height:11px;stroke-width:2.6;fill:none}
+.chip.clear svg{stroke:var(--green-2)}
+
+/* incoming call (beat1) */
+.incoming{display:flex;align-items:center;gap:18px;padding:22px 24px;border-radius:14px;border:1px solid var(--line);background:var(--cream);position:relative;overflow:hidden}
+.incoming .ring{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;flex:none;animation:ring 1.8s infinite}
+@keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(181,138,66,.3)}50%{box-shadow:0 0 0 8px rgba(181,138,66,0)}}
+.incoming .ring svg{width:20px;height:20px;stroke:var(--gold-2);stroke-width:2;fill:none}
+.incoming .it h4{font-family:var(--serif);font-size:18px;font-weight:500}
+.incoming .it p{font-size:13px;color:var(--text-2);margin-top:2px}
+.codeline{font-family:var(--mono);font-size:13px;display:flex;align-items:center;gap:10px;margin-top:18px;color:var(--text-2);opacity:0;height:0;overflow:hidden;transition:opacity .4s}
+.codeline.show{opacity:1;height:auto;margin-top:22px}
+.codeline .code{background:var(--ink);color:#fff;padding:5px 11px;border-radius:7px;letter-spacing:.06em;font-weight:500}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;transition:all .2s}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.gold:hover{background:var(--gold-2);transform:translateY(-1px)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.stage.dark .btn.ghost{border-color:var(--line-dk);color:var(--text-inv)}
+.btn.ghost:hover{background:var(--cream)}
+.stage.dark .btn.ghost:hover{background:var(--ink-3)}
+.btn svg{width:15px;height:15px;stroke-width:2.2;fill:none;stroke:currentColor}
+.btn:disabled{opacity:.4;cursor:default;transform:none!important}
+
+/* scan list (beat2) */
+.scan{display:flex;flex-direction:column;gap:0}
+.scan li{display:flex;align-items:center;justify-content:space-between;padding:13px 2px;border-bottom:1px solid var(--line-2);font-size:14px;list-style:none}
+.scan li:last-child{border:none}
+.scan .mname{color:var(--text)}
+.scan .mcode{font-family:var(--mono);font-size:11px;color:var(--text-3)}
+.scan .res{font-size:12px;font-family:var(--mono);color:var(--text-3);opacity:0;transition:opacity .3s}
+.scan .res.ok{color:var(--green-2);opacity:1}
+
+/* log / notice (beat3) */
+.notice{border-left:3px solid var(--green);padding:18px 22px;background:var(--green-soft);border-radius:0 12px 12px 0}
+.notice .nt{font-size:13.5px;color:var(--green-2);font-weight:600;display:flex;align-items:center;gap:9px}
+.logline{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.logline:last-child{border:none}
+.logline .ts{font-family:var(--mono);font-size:11px;color:var(--text-3);flex:none;width:62px}
+.logline .lt{color:var(--text)}
+.logline .lt span{color:var(--text-2)}
+
+/* team (beat4) */
+.member{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.member:last-child{border:none}
+.member .av{width:34px;height:34px;border-radius:50%;background:var(--cream);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--text-2);flex:none}
+.member .mn{font-size:14px;font-weight:600}
+.member .ms{font-size:12px;color:var(--text-3)}
+.member .badge{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--text-2);background:var(--cream);border:1px solid var(--line);padding:4px 9px;border-radius:7px}
+.locked-note{margin-top:18px;font-size:13px;color:var(--green-2);display:none;align-items:center;gap:9px;font-weight:600}
+.locked-note.show{display:flex}
+
+/* ndas (beat5) */
+.ndarow{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line-2)}
+.ndarow:last-child{border:none}
+.ndarow .ni{font-size:14px;font-weight:600}
+.ndarow .nd{font-size:12px;color:var(--text-3);margin-top:1px}
+.ndarow .ns{margin-left:auto}
+
+/* data room (beat6) */
+.docgrid{display:flex;flex-direction:column;gap:10px}
+.doc{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
+.doc .dn{font-size:14px;font-weight:600}
+.doc .dmeta{font-size:11.5px;color:var(--text-3);margin-top:2px;font-family:var(--mono)}
+.doc .access{font-size:11px;font-family:var(--mono);color:var(--text-2);text-align:right;line-height:1.5}
+.doc .access b{color:var(--text);font-weight:600}
+.stagetabs{display:flex;gap:8px;margin:6px 0 20px}
+.stagetab{font-size:12.5px;padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--text-2);font-weight:500;font-family:var(--mono)}
+.stagetab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.gatemsg{font-size:12.5px;color:var(--gold-2);margin-top:14px;display:none;align-items:center;gap:8px}
+.gatemsg.show{display:flex}
+
+/* brief (beat7) */
+.snapshot{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.snapshot .cell{padding:22px 24px;border-right:1px solid var(--line-2)}
+.snapshot .cell:last-child{border:none}
+.snapshot .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);font-family:var(--mono)}
+.snapshot .v{font-family:var(--serif);font-size:30px;font-weight:500;margin-top:8px}
+.snapshot .v small{font-size:15px;color:var(--text-2)}
+.sect-h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:34px 0 14px;display:flex;justify-content:space-between;align-items:center}
+
+/* football field */
+.ff{display:flex;flex-direction:column;gap:14px}
+.ffrow{display:grid;grid-template-columns:130px 1fr 150px;gap:16px;align-items:center;font-size:13px}
+.ffrow .lab{color:var(--text-2)}
+.track{height:9px;border-radius:6px;background:var(--cream);border:1px solid var(--line-2);position:relative;overflow:hidden}
+.track .fill{position:absolute;top:0;bottom:0;background:var(--gold);border-radius:6px}
+.track .band{position:absolute;top:0;bottom:0;background:rgba(46,125,91,.22);border-radius:6px}
+.track.pending .fill{background:repeating-linear-gradient(45deg,var(--line),var(--line) 5px,transparent 5px,transparent 10px);left:0;right:0;border-radius:6px}
+.ffrow .meta{font-family:var(--mono);font-size:11px;color:var(--text-3);text-align:right}
+.ffrow .meta b{color:var(--text);font-weight:500}
+
+/* acquirer table */
+.acqt{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.acqh,.acqr{display:grid;grid-template-columns:36px 1fr 110px 70px 60px 60px;gap:10px;align-items:center;padding:13px 18px}
+.acqh{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);background:var(--cream);border-bottom:1px solid var(--line)}
+.acqr{border-bottom:1px solid var(--line-2)}
+.acqr:last-child{border:none}
+.acqr.lead{background:linear-gradient(90deg,rgba(181,138,66,.07),transparent);box-shadow:inset 3px 0 0 var(--gold)}
+.acqr .rk{font-family:var(--mono);font-size:14px;color:var(--text-3);text-align:center}
+.acqr.lead .rk{color:var(--gold-2);font-weight:600}
+.acqr .an{font-size:14px;font-weight:600}
+.acqr .ad{font-size:11.5px;color:var(--text-3);margin-top:1px}
+.acqr .comp{font-family:var(--serif);font-size:22px;font-weight:500;text-align:center}
+.acqr.lead .comp{color:var(--green-2)}
+.acqr .sub{font-family:var(--mono);font-size:13px;color:var(--text-2);text-align:center}
+.verdict{font-size:11.5px;font-family:var(--mono)}
+.verdict .vd{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}
+.v-lead{color:var(--green-2)} .v-lead .vd{background:var(--green)}
+.v-strong{color:var(--green-2)} .v-strong .vd{background:var(--green)}
+.v-watch{color:var(--gold-2)} .v-watch .vd{background:var(--gold)}
+
+/* connections */
+.conn{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;background:var(--green-soft);border:1px solid var(--green-line);border-radius:12px}
+.conn svg{width:18px;height:18px;stroke:var(--green-2);stroke-width:2;fill:none;flex:none;margin-top:2px}
+.conn p{font-size:13.5px;color:var(--green-2);line-height:1.55}
+.conn b{font-weight:700}
+
+/* message check (beat8) */
+.promises{display:flex;flex-direction:column;gap:0;margin-bottom:26px}
+.promise{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.promise:last-child{border:none}
+.promise svg{width:15px;height:15px;stroke:var(--green-2);stroke-width:2.4;fill:none;flex:none;margin-top:2px}
+.msgbox{border:1px solid var(--line);border-radius:13px;padding:18px;background:var(--card)}
+.msgbox textarea{width:100%;border:none;resize:none;font-family:var(--sans);font-size:14px;color:var(--text);min-height:54px;outline:none;background:transparent}
+.msgbox textarea::placeholder{color:var(--text-3)}
+.trybar{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}
+.trybar .tl{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.08em}
+.trybtn{font-size:12.5px;padding:7px 13px;border:1px solid var(--line);border-radius:8px;color:var(--text-2);background:var(--card);font-weight:500;transition:all .15s}
+.trybtn:hover{border-color:var(--gold-line);color:var(--text)}
+.send{margin-left:auto;padding:9px 18px;border-radius:9px;background:var(--gold);color:#fff;font-weight:600;font-size:13px}
+.verdict-out{margin-top:16px;padding:15px 18px;border-radius:11px;font-size:13.5px;display:none;align-items:flex-start;gap:11px;line-height:1.5}
+.verdict-out.show{display:flex;animation:rise .4s ease forwards}
+.verdict-out svg{width:17px;height:17px;flex:none;margin-top:1px;stroke-width:2.4;fill:none}
+.vo-clear{background:var(--green-soft);color:var(--green-2);border:1px solid var(--green-line)}
+.vo-clear svg{stroke:var(--green-2)}
+.vo-held{background:var(--gold-soft);color:var(--gold-2);border:1px solid var(--gold-line)}
+.vo-held svg{stroke:var(--gold-2)}
+.vo-block{background:#fbeceb;color:#9c2b22;border:1px solid rgba(156,43,34,.25)}
+.vo-block svg{stroke:#9c2b22}
+.vo b{font-weight:700}
+.rewrite{margin-top:9px;font-size:12.5px;padding:9px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-style:italic}
+
+/* pitch (beat9) */
+.assemble{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.asmrow{display:flex;align-items:center;gap:13px;padding:14px 18px;border:1px solid var(--line);border-radius:11px;background:var(--card);opacity:.4;transition:opacity .4s,border-color .4s}
+.asmrow.in{opacity:1;border-color:var(--green-line)}
+.asmrow .ic{width:28px;height:28px;border-radius:8px;background:var(--cream);display:grid;place-items:center;flex:none}
+.asmrow.in .ic{background:var(--green-soft)}
+.asmrow .ic svg{width:14px;height:14px;stroke:var(--text-3);stroke-width:2.2;fill:none}
+.asmrow.in .ic svg{stroke:var(--green-2)}
+.asmrow .at{font-size:14px;font-weight:600}
+.asmrow .as{font-size:12px;color:var(--text-3)}
+.asmrow .ok{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--green-2);opacity:0;transition:opacity .3s}
+.asmrow.in .ok{opacity:1}
+
+/* closing vision (beat10) */
+.skillgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.skillcard{padding:16px 18px;border:1px solid var(--line-dk);border-radius:12px;background:var(--ink-2)}
+.skillcard .sc-k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);display:flex;justify-content:space-between}
+.skillcard .sc-n{font-family:var(--serif);font-size:16px;font-weight:500;margin:7px 0 5px;color:#fff}
+.skillcard .sc-d{font-size:12px;color:var(--text-inv-2);line-height:1.5}
+.inherit{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-family:var(--mono);color:var(--green);margin-top:11px}
+.inherit svg{width:12px;height:12px;stroke:var(--green);stroke-width:2.4;fill:none}
+
+/* footer nav */
+.foot{position:fixed;bottom:0;left:300px;right:0;background:linear-gradient(to top,var(--paper) 55%,transparent);padding:20px 60px 22px;display:flex;align-items:center;gap:18px;z-index:20}
+.stage.dark ~ .foot,.foot.dark{background:linear-gradient(to top,var(--ink) 55%,transparent)}
+.foot.dark .btn.ghost{border-color:var(--line-dk);color:var(--text-inv)}
+.compliance-strip{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:11.5px;color:var(--text-2);background:var(--card);border:1px solid var(--line);padding:9px 15px;border-radius:10px;transition:all .4s}
+.foot.dark .compliance-strip{background:var(--ink-2);border-color:var(--line-dk);color:var(--text-inv-2)}
+.compliance-strip.alert{background:var(--green-soft);border-color:var(--green-line);color:var(--green-2)}
+.compliance-strip .pulse{position:relative}
+.compliance-strip .tags{color:var(--text-3);letter-spacing:.06em}
+.spacer{flex:1}
+.foot .btn.gold svg{stroke:#fff}
+.kbd{font-family:var(--mono);font-size:10px;color:var(--text-3);margin-left:4px}
+
+/* team bench (beat4) */
+.teamhead,.benchhead{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+.benchhead{margin-top:22px;padding-top:20px;border-top:1px solid var(--line-2);display:flex;justify-content:space-between;align-items:center}
+.member .act{margin-left:auto}
+.addbtn{font-size:12px;font-family:var(--mono);padding:6px 13px;border-radius:8px;border:1px solid var(--gold-line);color:var(--gold-2);background:var(--gold-soft);font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.addbtn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.addbtn svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.6;fill:none}
+.rmbtn{font-size:11px;font-family:var(--mono);color:var(--text-3);background:none;border:none;padding:5px 7px;border-radius:6px}
+.rmbtn:hover{color:#9c2b22;background:#fbeceb}
+.member.added{animation:rise .45s cubic-bezier(.16,1,.3,1)}
+.scopenote{font-size:12.5px;color:var(--text-3);font-family:var(--mono)}
+
+/* closing stacked floorplan (beat10) — Design style */
+.stack{display:flex;flex-direction:column;gap:11px;margin:4px 0 8px}
+.sroom{background:var(--ink-2);border:1px solid var(--line-dk);border-radius:13px;padding:19px 24px;display:flex;align-items:center;gap:16px}
+.sroom.today{background:linear-gradient(90deg,rgba(181,138,66,.10),var(--ink-2));border-color:var(--gold-line)}
+.srhead{display:flex;align-items:center;gap:11px}
+.sroom .sn{font-family:var(--serif);font-size:20px;color:#fff;font-weight:500}
+.sroom .stag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);border:1px solid var(--line-dk);padding:3px 9px;border-radius:6px}
+.sroom.today .stag{color:var(--gold);border-color:var(--gold-line)}
+.sroom .sd{font-size:12.5px;color:var(--text-inv-2);margin-top:5px}
+.sroom .inh{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--text-3);white-space:nowrap}
+.sfloor{display:flex;align-items:center;gap:15px;background:linear-gradient(90deg,rgba(46,125,91,.16),rgba(46,125,91,.07));border:1px solid var(--green-line);border-radius:13px;padding:18px 24px;margin-top:3px;box-shadow:0 16px 38px -16px rgba(46,125,91,.5)}
+.shieldsm{width:30px;height:30px;border-radius:8px;background:var(--green);display:grid;place-items:center;flex:none}
+.shieldsm svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none}
+.flh{display:flex;align-items:center;gap:12px}
+.fln{font-family:var(--serif);font-size:18px;color:#fff;font-weight:500}
+.fon{font-family:var(--mono);font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px}
+.fon .fp{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(46,125,91,.5);animation:pulse 2.6s infinite}
+.fld{font-size:12.5px;color:var(--text-inv-2);margin-top:4px;font-family:var(--mono);letter-spacing:.01em}
+.bigline{font-family:var(--serif);font-size:22px;line-height:1.45;font-weight:470;color:#fff;max-width:660px;margin:30px 0 26px}
+
+@media (max-width:1080px){
+  .sroom{flex-wrap:wrap}.sroom .inh{margin-left:0;margin-top:6px}
+  .app{grid-template-columns:1fr}
+  .side{display:none}
+  .foot{left:0}
+  .wrap{padding:42px 28px 150px}
+  h2.title{font-size:32px}
+  .snapshot{grid-template-columns:1fr}
+  .acqh,.acqr{grid-template-columns:30px 1fr 60px 50px;font-size:12px}
+  .acqh .h-fin,.acqh .h-cul,.acqr .c-fin,.acqr .c-cul{display:none}
+}
+</style>
+<style>
+/* ===== v2 additions ===== */
+/* entity team (beat 4) */
+.entity{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);margin-bottom:14px}
+.entity:last-of-type{margin-bottom:0}
+.entity.future{opacity:.62;border-style:dashed}
+.enthead{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--cream);border-bottom:1px solid var(--line-2)}
+.enthead .ek{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-3)}
+.enthead .en{font-size:14px;font-weight:600}
+.enthead .eside{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-3);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+.entbody{padding:4px 18px}
+.scopenote{font-size:12.5px;color:var(--text-3);font-family:var(--mono)}
+.teamhead,.benchhead{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-3)}
+.benchhead{margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2);display:flex;justify-content:space-between;align-items:center;padding-bottom:4px}
+.addbtn{font-size:12px;font-family:var(--mono);padding:6px 13px;border-radius:8px;border:1px solid var(--gold-line);color:var(--gold-2);background:var(--gold-soft);font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.addbtn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.addbtn svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.6;fill:none}
+.rmbtn{font-size:11px;font-family:var(--mono);color:var(--text-3);background:none;border:none;padding:5px 7px;border-radius:6px;margin-left:auto}
+.rmbtn:hover{color:#9c2b22;background:#fbeceb}
+.member{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.member:last-child{border:none}
+.member .av{width:30px;height:30px;border-radius:50%;background:var(--cream);border:1px solid var(--line);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--text-2);flex:none}
+.member .mn{font-size:13.5px;font-weight:600}.member .ms{font-size:11.5px;color:var(--text-3)}
+.member .badge{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--text-2);background:var(--cream);border:1px solid var(--line);padding:4px 9px;border-radius:7px}
+.member.added{animation:rise .45s cubic-bezier(.16,1,.3,1)}
+.locked-note{margin-top:16px;font-size:13px;color:var(--green-2);display:none;align-items:center;gap:9px;font-weight:600}
+.locked-note.show{display:flex}
+
+/* perspective switch (beat 7) */
+.persp-banner{display:flex;align-items:center;gap:11px;background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:11px;padding:13px 18px;font-size:13px;color:var(--gold-2);margin-bottom:24px}
+.persp-banner b{font-weight:700}
+.persp-banner svg{width:16px;height:16px;stroke:var(--gold-2);stroke-width:2;fill:none;flex:none}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.permrow{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.permrow:last-child{border:none}
+.permrow svg{width:15px;height:15px;flex:none;stroke-width:2.4;fill:none}
+.permrow.ok svg{stroke:var(--green-2)} .permrow.no{color:var(--text-3)} .permrow.no svg{stroke:var(--text-3)}
+.subh{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.spreadline{margin-top:20px;font-size:14px;color:var(--text-2);line-height:1.6;border-left:3px solid var(--gold-line);padding:4px 0 4px 16px}
+.spreadline b{color:var(--gold-2);font-weight:600}
+
+/* sidebar buyer state */
+.who.buyer .avatar{background:linear-gradient(135deg,#4a3a1e,#2a2210)}
+
+/* removal (beat 11) */
+.leaver{display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--line);border-radius:13px;background:var(--cream)}
+.leaver .av{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--text-2);flex:none}
+.leaver .ln{font-size:14px;font-weight:600}.leaver .ls{font-size:12px;color:var(--text-3)}
+.revoke{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.revrow{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:var(--card);font-size:13.5px;opacity:.4;transition:opacity .45s,border-color .45s}
+.revrow.done{opacity:1;border-color:var(--green-line)}
+.revrow .rd{font-family:var(--mono);font-size:11px;color:var(--text-3)}
+.revrow .rstamp{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--green-2);opacity:0;transition:opacity .3s}
+.revrow.done .rstamp{opacity:1}
+
+/* shared bits reused from v1 */
+.scan{display:flex;flex-direction:column;gap:0}
+.scan li{display:flex;align-items:center;justify-content:space-between;padding:13px 2px;border-bottom:1px solid var(--line-2);font-size:14px;list-style:none}
+.scan li:last-child{border:none}
+.scan .mcode{font-family:var(--mono);font-size:11px;color:var(--text-3)}
+.scan .res{font-size:12px;font-family:var(--mono);color:var(--text-3);opacity:0;transition:opacity .3s}
+.scan .res.ok{color:var(--green-2);opacity:1}
+.notice{border-left:3px solid var(--green);padding:18px 22px;background:var(--green-soft);border-radius:0 12px 12px 0}
+.notice .nt{font-size:13.5px;color:var(--green-2);font-weight:600;display:flex;align-items:center;gap:9px}
+.logline{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.logline:last-child{border:none}
+.logline .ts{font-family:var(--mono);font-size:11px;color:var(--text-3);flex:none;width:62px}
+.logline .lt span{color:var(--text-2)}
+.ndarow{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line-2)}
+.ndarow:last-child{border:none}
+.ndarow .ni{font-size:14px;font-weight:600}.ndarow .nd{font-size:12px;color:var(--text-3);margin-top:1px}.ndarow .ns{margin-left:auto}
+.docgrid{display:flex;flex-direction:column;gap:10px}
+.doc{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
+.doc .dn{font-size:14px;font-weight:600}.doc .dmeta{font-size:11.5px;color:var(--text-3);margin-top:2px;font-family:var(--mono)}
+.doc .access{font-size:11px;font-family:var(--mono);color:var(--text-2);text-align:right;line-height:1.5}.doc .access b{color:var(--text);font-weight:600}
+.stagetabs{display:flex;gap:8px;margin:6px 0 20px}
+.stagetab{font-size:12.5px;padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--text-2);font-weight:500;font-family:var(--mono)}
+.stagetab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.gatemsg{font-size:12.5px;color:var(--gold-2);margin-top:14px;display:none;align-items:center;gap:8px}
+.gatemsg.show{display:flex}
+.snapshot{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.snapshot .cell{padding:22px 24px;border-right:1px solid var(--line-2)}.snapshot .cell:last-child{border:none}
+.snapshot .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);font-family:var(--mono)}
+.snapshot .v{font-family:var(--serif);font-size:30px;font-weight:500;margin-top:8px}.snapshot .v small{font-size:15px;color:var(--text-2)}
+.sect-h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:34px 0 14px;display:flex;justify-content:space-between;align-items:center}
+.ff{display:flex;flex-direction:column;gap:14px}
+.ffrow{display:grid;grid-template-columns:130px 1fr 150px;gap:16px;align-items:center;font-size:13px}
+.ffrow .lab{color:var(--text-2)}
+.track{height:9px;border-radius:6px;background:var(--cream);border:1px solid var(--line-2);position:relative;overflow:hidden}
+.track .fill{position:absolute;top:0;bottom:0;background:var(--gold);border-radius:6px}
+.track .band{position:absolute;top:0;bottom:0;background:rgba(46,125,91,.22);border-radius:6px}
+.track.pending .fill{background:repeating-linear-gradient(45deg,var(--line),var(--line) 5px,transparent 5px,transparent 10px);left:0;right:0;border-radius:6px}
+.ffrow .meta{font-family:var(--mono);font-size:11px;color:var(--text-3);text-align:right}.ffrow .meta b{color:var(--text);font-weight:500}
+.acqt{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.acqh,.acqr{display:grid;grid-template-columns:36px 1fr 110px 70px 60px 60px;gap:10px;align-items:center;padding:13px 18px}
+.acqh{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);background:var(--cream);border-bottom:1px solid var(--line)}
+.acqr{border-bottom:1px solid var(--line-2)}.acqr:last-child{border:none}
+.acqr.lead{background:linear-gradient(90deg,rgba(181,138,66,.07),transparent);box-shadow:inset 3px 0 0 var(--gold)}
+.acqr .rk{font-family:var(--mono);font-size:14px;color:var(--text-3);text-align:center}.acqr.lead .rk{color:var(--gold-2);font-weight:600}
+.acqr .an{font-size:14px;font-weight:600}.acqr .ad{font-size:11.5px;color:var(--text-3);margin-top:1px}
+.acqr .comp{font-family:var(--serif);font-size:22px;font-weight:500;text-align:center}.acqr.lead .comp{color:var(--green-2)}
+.acqr .sub{font-family:var(--mono);font-size:13px;color:var(--text-2);text-align:center}
+.verdict{font-size:11.5px;font-family:var(--mono)}.verdict .vd{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}
+.v-lead,.v-strong{color:var(--green-2)} .v-lead .vd,.v-strong .vd{background:var(--green)} .v-watch{color:var(--gold-2)} .v-watch .vd{background:var(--gold)}
+.conn{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;background:var(--green-soft);border:1px solid var(--green-line);border-radius:12px}
+.conn svg{width:18px;height:18px;stroke:var(--green-2);stroke-width:2;fill:none;flex:none;margin-top:2px}
+.conn p{font-size:13.5px;color:var(--green-2);line-height:1.55}.conn b{font-weight:700}
+.promises{display:flex;flex-direction:column;margin-bottom:26px}
+.promise{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}.promise:last-child{border:none}
+.promise svg{width:15px;height:15px;stroke:var(--green-2);stroke-width:2.4;fill:none;flex:none;margin-top:2px}
+.msgbox{border:1px solid var(--line);border-radius:13px;padding:18px;background:var(--card)}
+.msgbox textarea{width:100%;border:none;resize:none;font-family:var(--sans);font-size:14px;color:var(--text);min-height:54px;outline:none;background:transparent}
+.msgbox textarea::placeholder{color:var(--text-3)}
+.trybar{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}
+.trybar .tl{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.08em}
+.trybtn{font-size:12.5px;padding:7px 13px;border:1px solid var(--line);border-radius:8px;color:var(--text-2);background:var(--card);font-weight:500;transition:all .15s}
+.trybtn:hover{border-color:var(--gold-line);color:var(--text)}
+.send{margin-left:auto;padding:9px 18px;border-radius:9px;background:var(--gold);color:#fff;font-weight:600;font-size:13px}
+.verdict-out{margin-top:16px;padding:15px 18px;border-radius:11px;font-size:13.5px;display:none;align-items:flex-start;gap:11px;line-height:1.5}
+.verdict-out.show{display:flex;animation:rise .4s ease forwards}
+.verdict-out svg{width:17px;height:17px;flex:none;margin-top:1px;stroke-width:2.4;fill:none}
+.vo-clear{background:var(--green-soft);color:var(--green-2);border:1px solid var(--green-line)}.vo-clear svg{stroke:var(--green-2)}
+.vo-held{background:var(--gold-soft);color:var(--gold-2);border:1px solid var(--gold-line)}.vo-held svg{stroke:var(--gold-2)}
+.vo-block{background:#fbeceb;color:#9c2b22;border:1px solid rgba(156,43,34,.25)}.vo-block svg{stroke:#9c2b22}
+.vo b{font-weight:700}.rewrite{margin-top:9px;font-size:12.5px;padding:9px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-style:italic}
+.assemble{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.asmrow{display:flex;align-items:center;gap:13px;padding:14px 18px;border:1px solid var(--line);border-radius:11px;background:var(--card);opacity:.4;transition:opacity .4s,border-color .4s}
+.asmrow.in{opacity:1;border-color:var(--green-line)}
+.asmrow .ic{width:28px;height:28px;border-radius:8px;background:var(--cream);display:grid;place-items:center;flex:none}.asmrow.in .ic{background:var(--green-soft)}
+.asmrow .ic svg{width:14px;height:14px;stroke:var(--text-3);stroke-width:2.2;fill:none}.asmrow.in .ic svg{stroke:var(--green-2)}
+.asmrow .at{font-size:14px;font-weight:600}.asmrow .as{font-size:12px;color:var(--text-3)}
+.asmrow .ok{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--green-2);opacity:0;transition:opacity .3s}.asmrow.in .ok{opacity:1}
+/* closing stacked floorplan reused */
+.stack{display:flex;flex-direction:column;gap:11px;margin:4px 0 8px}
+.sroom{background:var(--ink-2);border:1px solid var(--line-dk);border-radius:13px;padding:19px 24px;display:flex;align-items:center;gap:16px}
+.sroom.today{background:linear-gradient(90deg,rgba(181,138,66,.10),var(--ink-2));border-color:var(--gold-line)}
+.srhead{display:flex;align-items:center;gap:11px}
+.sroom .sn{font-family:var(--serif);font-size:20px;color:#fff;font-weight:500}
+.sroom .stag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);border:1px solid var(--line-dk);padding:3px 9px;border-radius:6px}
+.sroom.today .stag{color:var(--gold);border-color:var(--gold-line)}
+.sroom .sd{font-size:12.5px;color:var(--text-inv-2);margin-top:5px}
+.sroom .inh{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--text-3);white-space:nowrap}
+.sfloor{display:flex;align-items:center;gap:15px;background:linear-gradient(90deg,rgba(46,125,91,.16),rgba(46,125,91,.07));border:1px solid var(--green-line);border-radius:13px;padding:18px 24px;margin-top:3px;box-shadow:0 16px 38px -16px rgba(46,125,91,.5)}
+.shieldsm{width:30px;height:30px;border-radius:8px;background:var(--green);display:grid;place-items:center;flex:none}
+.shieldsm svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none}
+.flh{display:flex;align-items:center;gap:12px}.fln{font-family:var(--serif);font-size:18px;color:#fff;font-weight:500}
+.fon{font-family:var(--mono);font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px}
+.fon .fp{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(46,125,91,.5);animation:pulse 2.6s infinite}
+.fld{font-size:12.5px;color:var(--text-inv-2);margin-top:4px;font-family:var(--mono);letter-spacing:.01em}
+.bigline{font-family:var(--serif);font-size:22px;line-height:1.45;font-weight:470;color:#fff;max-width:660px;margin:30px 0 26px}
+.foot{position:fixed;bottom:0;left:300px;right:0;background:linear-gradient(to top,var(--paper) 55%,transparent);padding:20px 60px 22px;display:flex;align-items:center;gap:18px;z-index:20}
+.foot.dark{background:linear-gradient(to top,var(--ink) 55%,transparent)}
+.foot.dark .btn.ghost{border-color:var(--line-dk);color:var(--text-inv)}
+.compliance-strip{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:11.5px;color:var(--text-2);background:var(--card);border:1px solid var(--line);padding:9px 15px;border-radius:10px;transition:all .4s}
+.foot.dark .compliance-strip{background:var(--ink-2);border-color:var(--line-dk);color:var(--text-inv-2)}
+.compliance-strip.alert{background:var(--green-soft);border-color:var(--green-line);color:var(--green-2)}
+.compliance-strip .tags{color:var(--text-3);letter-spacing:.06em}
+.spacer{flex:1}
+@media (max-width:1080px){.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="shield"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h1>Conductia</h1>
+    </div>
+    <div class="jrny-label"><span>The full swing</span><span class="of" id="ofCount">01 / 12</span></div>
+    <ul class="steps" id="steps"></ul>
+    <div class="who" id="who">
+      <div class="avatar" id="sideAv">SD</div>
+      <div><div class="nm" id="sideNm">Storm Duncan</div><div class="rl" id="sideRl">MD · your bank</div></div>
+    </div>
+    <div class="always"><span class="pulse"></span> Compliance · Always on</div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <div class="wrap">
+
+      <!-- 1 INTAKE -->
+      <section class="beat" data-beat="0">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 01 · Intake</div>
+        <h2 class="title reveal">A call comes in.</h2>
+        <p class="lede reveal">Atlassian is exploring a sale. The instant you open the mandate, the deal gets a code and the record starts, compliantly, from second one.</p>
+        <div class="factor reveal"><span class="fdot"></span> Minimise <b>time &amp; disruption</b> — seconds, not a kickoff meeting.</div>
+        <div class="surface reveal">
+          <div class="incoming">
+            <div class="ring"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a14 14 0 006 6l2-3 5 2v4a2 2 0 01-2 2A18 18 0 013 6a2 2 0 012-2z"/></svg></div>
+            <div class="it"><h4>Inbound — Atlassian</h4><p>Founder exploring strategic options · routed to you</p></div>
+            <button class="btn gold" id="openMandate" style="margin-left:auto"><span>Open the mandate</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+          <div class="codeline" id="codeReveal"><span>Project code issued</span><span class="code">PRJ-ATL-0426</span><span class="chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Mandate live · <span id="ts1"></span></span></div>
+        </div>
+      </section>
+
+      <!-- 2 CONFLICTS -->
+      <section class="beat" data-beat="1">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 02 · Conflicts</div>
+        <h2 class="title reveal">Are we clear to act?</h2>
+        <p class="lede reveal">Before a single document moves, Conductia checks every active mandate across the firm for a competing engagement. A simple, decisive yes or no.</p>
+        <div class="factor reveal"><span class="fdot"></span> Minimise <b>risk</b> — catch a conflict before it becomes one.</div>
+        <div class="surface reveal">
+          <ul class="scan" id="scanList">
+            <li><span><span class="mname">Project Helix</span> &nbsp;<span class="mcode">PRJ-HLX-0231</span></span><span class="res">checking…</span></li>
+            <li><span><span class="mname">Project Vector</span> &nbsp;<span class="mcode">PRJ-VEC-0188</span></span><span class="res">checking…</span></li>
+            <li><span><span class="mname">Project Cobalt</span> &nbsp;<span class="mcode">PRJ-CBT-0402</span></span><span class="res">checking…</span></li>
+            <li><span><span class="mname">Project Marin</span> &nbsp;<span class="mcode">PRJ-MRN-0359</span></span><span class="res">checking…</span></li>
+          </ul>
+          <div class="row" style="margin-top:20px">
+            <span class="chip clear" id="conflictResult" style="opacity:0;transition:opacity .4s"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Clear — no competing engagement</span>
+            <button class="btn ghost" id="runScan">Run conflict check</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 NOTICE -->
+      <section class="beat" data-beat="2">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 03 · Notice</div>
+        <h2 class="title reveal">Compliance already knows.</h2>
+        <p class="lede reveal">No one had to remember. The moment the mandate opened, compliance was notified and the record was written. This is exactly where fines usually start, and where they now stop.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>certainty</b> — the notice can't be forgotten, because no one performs it.</div>
+        <div class="surface reveal" style="display:flex;flex-direction:column;gap:20px">
+          <div class="notice"><div class="nt"><span class="pulse"></span> Compliance notified automatically — PRJ-ATL-0426</div></div>
+          <div>
+            <div class="logline"><span class="ts">10:04:02</span><span class="lt"><span>Mandate opened ·</span> Atlassian sell-side · MD: Storm Duncan</span></div>
+            <div class="logline"><span class="ts">10:04:02</span><span class="lt"><span>Conflict screen ·</span> Clear, 4 mandates checked</span></div>
+            <div class="logline"><span class="ts">10:04:03</span><span class="lt"><span>Compliance desk notified ·</span> auto, no action required</span></div>
+            <div class="logline"><span class="ts">10:04:03</span><span class="lt"><span>Regulatory basis ·</span> FINRA Reg. Notice 24-09 · MNPI · KYC</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 TEAM (entities then people) -->
+      <section class="beat" data-beat="3">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 04 · The team</div>
+        <h2 class="title reveal">Entities first, then people.</h2>
+        <p class="lede reveal">Every deal is built from entities: your bank and its client on this side, the buyer and its advisors on the other. People sit inside an entity and inherit its permissions. Build it, then lock it, and the deal is walled off from every other one in the firm.</p>
+        <div class="factor reveal"><span class="fdot"></span> Minimise <b>risk</b> — who-can-see-what, set right the first time.</div>
+        <div class="surface reveal">
+          <div class="entity">
+            <div class="enthead"><span class="ek">Entity</span><span class="en">Your bank · the advisory</span><span class="eside">Sell side</span></div>
+            <div class="entbody">
+              <div id="teamList">
+                <div class="member"><div class="av">SD</div><div><div class="mn">Storm Duncan</div><div class="ms">Managing Director · deal lead</div></div><span class="badge">MD</span></div>
+              </div>
+              <div id="benchWrap">
+                <div class="benchhead"><span>Bench · cleared to add</span><span id="benchCount">4 available</span></div>
+                <div id="bench"></div>
+              </div>
+            </div>
+          </div>
+          <div class="entity">
+            <div class="enthead"><span class="ek">Entity</span><span class="en">Client · Atlassian (seller)</span><span class="eside">Sell side</span></div>
+            <div class="entbody"><div class="member"><div class="av">MB</div><div><div class="mn">Mike Brennan</div><div class="ms">CEO · edits its own documents, not the valuation</div></div><span class="badge">Client</span></div></div>
+          </div>
+          <div class="entity future">
+            <div class="enthead"><span class="ek">Entity</span><span class="en">Buy side · buyer and their advisors</span><span class="eside">Joins later</span></div>
+            <div class="entbody"><div class="member" style="border:none"><div class="av">+</div><div><div class="mn">Added when they enter the process</div><div class="ms">Same model, fewer permissions</div></div></div></div>
+          </div>
+          <div class="locked-note" id="lockedNote"><span class="chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span> Deal team locked — walled off from all other mandates</div>
+          <div class="row" style="margin-top:18px">
+            <span class="scopenote">Access scoped to PRJ-ATL-0426 only</span>
+            <button class="btn gold" id="lockTeam"><svg viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0112 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg> Lock the deal team</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 NDAs -->
+      <section class="beat" data-beat="4">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 05 · NDAs</div>
+        <h2 class="title reveal">Papers swap both ways.</h2>
+        <p class="lede reveal">NDAs go out and come back, tracked end to end, nothing lost to an inbox. Then we request exactly what we need to value the company.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>certainty</b> — the system always knows where every document stands.</div>
+        <div class="surface reveal">
+          <div class="ndarow"><div><div class="ni">Mutual NDA — Atlassian</div><div class="nd">Sent 10:11 · countersigned 14:38</div></div><span class="ns chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Executed</span></div>
+          <div class="ndarow"><div><div class="ni">Engagement letter</div><div class="nd">Drafted · held for win</div></div><span class="ns chip watch"><span class="vd" style="width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block"></span>Staged</span></div>
+          <div class="ndarow"><div><div class="ni">Information request</div><div class="nd">14 items · sent to Atlassian CFO</div></div><span class="ns chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Sent</span></div>
+        </div>
+      </section>
+
+      <!-- 6 DATA ROOM -->
+      <section class="beat" data-beat="5">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 06 · Data room</div>
+        <h2 class="title reveal">A room where everyone sees only their part.</h2>
+        <p class="lede reveal">Documents land in a secure room. Buyers see staged folders, never the next stage early. And inside the room, who-can-edit-what is set per document, not per person. This is the thing we cannot get wrong.</p>
+        <div class="factor reveal"><span class="fdot"></span> Minimise <b>risk</b> — staged access and per-document edit rights, by construction.</div>
+        <div class="reveal">
+          <div class="stagetabs">
+            <button class="stagetab on" data-stage="1">Stage 1 · Teaser</button>
+            <button class="stagetab" data-stage="2">Stage 2 · Diligence</button>
+            <button class="stagetab" data-stage="3">Stage 3 · Confirmatory</button>
+          </div>
+          <div class="docgrid" id="docGrid"></div>
+          <div class="gatemsg" id="gateMsg"><span class="pulse" style="background:var(--gold)"></span> Compliance gated — buyers are cleared into Stage 2 only after Stage 1 review is signed off.</div>
+        </div>
+      </section>
+
+      <!-- 7 THE OTHER SIDE (perspective switch) -->
+      <section class="beat" data-beat="6">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 07 · The other side</div>
+        <h2 class="title reveal">The buyer logs into the same room.</h2>
+        <p class="lede reveal">Anthropic was invited into the deal. They open the very same platform you do. Same interface, but their permissions are computed from their role: they see their stage and their thread, and nothing that isn't theirs.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>certainty</b> — one interface, permissions computed per actor.</div>
+        <div class="persp-banner reveal"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg> You are now seeing <b style="margin:0 3px">Anthropic's</b> view of PRJ-ATL-0426. Same platform, fewer permissions.</div>
+        <div class="split reveal">
+          <div class="surface">
+            <div class="subh"><span class="pulse" style="background:var(--green)"></span> Visible to them</div>
+            <div class="permrow ok"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Data room, Stage 1 only (teaser, process letter)</div>
+            <div class="permrow ok"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> The deal timeline and key dates</div>
+            <div class="permrow ok"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Their screened message thread with the bank</div>
+          </div>
+          <div class="surface">
+            <div class="subh">Sealed from them</div>
+            <div class="permrow no"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> The valuation work</div>
+            <div class="permrow no"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> The other bidders, and the ranking</div>
+            <div class="permrow no"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> The bank's internal brief</div>
+          </div>
+        </div>
+        <p class="spreadline reveal">They experience the system from inside a live deal. <b>That is how it spreads:</b> the buyer, and the bankers they bring, end up wanting it for their own mandates. The product grows itself.</p>
+      </section>
+
+      <!-- 8 THE BRIEF -->
+      <section class="beat" data-beat="7">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 08 · The brief</div>
+        <h2 class="title reveal">Five pages. The decisions, not the data.</h2>
+        <p class="lede reveal">Back on your side. The moment the room filled, you wanted one thing: how big, how fast, what it's worth, who buys it, and who we already know there. Here it is.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>value</b> — senior judgment surfaced, analyst-hours absorbed.</div>
+        <div class="snapshot reveal">
+          <div class="cell"><div class="k">Revenue · TTM</div><div class="v">$6.2<small>B</small></div></div>
+          <div class="cell"><div class="k">Gross margin</div><div class="v">86.5<small>%</small></div></div>
+          <div class="cell"><div class="k">Last-qtr growth</div><div class="v">+32<small>%</small></div></div>
+        </div>
+        <div class="reveal">
+          <div class="sect-h"><span>Valuation envelope · football field</span><span>contested, not settled</span></div>
+          <div class="surface" style="padding:24px 26px">
+            <div class="ff">
+              <div class="ffrow"><span class="lab">Trading (today)</span><div class="track"><div class="fill" style="left:48%;width:8%"></div></div><span class="meta"><b>~$23B</b> · market cap</span></div>
+              <div class="ffrow"><span class="lab">52-week range</span><div class="track"><div class="band" style="left:8%;width:46%"></div></div><span class="meta"><b>~$10.4B–$30B</b></span></div>
+              <div class="ffrow"><span class="lab">Comp set</span><div class="track pending"><div class="fill"></div></div><span class="meta">Figma, Canva · pending</span></div>
+              <div class="ffrow"><span class="lab">DCF</span><div class="track pending"><div class="fill"></div></div><span class="meta">WACC not yet wired</span></div>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-2);line-height:1.6;margin-top:18px;border-top:1px solid var(--line-2);padding-top:14px"><b>Read:</b> the band is wide on purpose. A ~55% drawdown over the year, then a 30% single-session rally, leaves trading well off both extremes. Entry price is contested. DCF and a real comp set still need wiring before the floor is defensible.</p>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="sect-h"><span>Likely buyers · ranked</span><span>composite fit · compliance-cleared</span></div>
+          <div class="acqt">
+            <div class="acqh"><span>Rk</span><span>Acquirer</span><span>Verdict</span><span style="text-align:center">Comp</span><span class="h-fin" style="text-align:center">Fin</span><span class="h-cul" style="text-align:center">Cul</span></div>
+            <div class="acqr lead"><span class="rk">1</span><div><div class="an">Anthropic</div><div class="ad">Responsible AI for enterprise — safety and capability, unified.</div></div><span class="verdict v-lead"><span class="vd"></span>Lead candidate</span><span class="comp">87</span><span class="sub c-fin">84</span><span class="sub c-cul">91</span></div>
+            <div class="acqr"><span class="rk">2</span><div><div class="an">Microsoft</div><div class="ad">SaaS incumbent</div></div><span class="verdict v-strong"><span class="vd"></span>Strong fit</span><span class="comp">77</span><span class="sub c-fin">79</span><span class="sub c-cul">74</span></div>
+            <div class="acqr"><span class="rk">3</span><div><div class="an">Adobe</div><div class="ad">SaaS incumbent</div></div><span class="verdict v-strong"><span class="vd"></span>Strong fit</span><span class="comp">75</span><span class="sub c-fin">73</span><span class="sub c-cul">77</span></div>
+            <div class="acqr"><span class="rk">4</span><div><div class="an">Salesforce</div><div class="ad">SaaS incumbent</div></div><span class="verdict v-watch"><span class="vd"></span>Watch</span><span class="comp">67</span><span class="sub c-fin">71</span><span class="sub c-cul">62</span></div>
+            <div class="acqr"><span class="rk">5</span><div><div class="an">ServiceNow</div><div class="ad">AI-native</div></div><span class="verdict v-watch"><span class="vd"></span>Watch</span><span class="comp">67</span><span class="sub c-fin">67</span><span class="sub c-cul">68</span></div>
+          </div>
+        </div>
+        <div class="reveal" style="margin-top:22px">
+          <div class="conn"><svg viewBox="0 0 24 24"><path d="M8 12a4 4 0 014-4h0a4 4 0 014 4M8 12a4 4 0 004 4h0a4 4 0 004-4M2 12h4M18 12h4"/></svg><p><b>Our connections:</b> the deal lead sat on a panel with Anthropic's Head of Corp Dev last quarter, and the firm has a warm line to their CFO's office. A direct, credible first approach, no cold intro needed.</p></div>
+        </div>
+      </section>
+
+      <!-- 9 THE CALL -->
+      <section class="beat" data-beat="8">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 09 · The call</div>
+        <h2 class="title reveal">Talk to the buyer. Nothing slips.</h2>
+        <p class="lede reveal">The conversation is captured and every promise logged. And when you message Anthropic, clean language goes straight through, anything risky is caught before it sends, with a clean rewrite offered.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>certainty</b> and minimise <b>risk</b> — every commitment recorded, every message screened.</div>
+        <div class="reveal"><div class="sect-h"><span>Captured from the call · promises made</span><span>auto-logged</span></div>
+          <div class="surface" style="margin-bottom:24px">
+            <div class="promises">
+              <div class="promise"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Data pack to be delivered to Anthropic corp dev by Friday.</div>
+              <div class="promise"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> No exclusivity discussed or implied.</div>
+              <div class="promise"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Management call to follow NDA on the comp set.</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal"><div class="sect-h"><span>Outbound to buyer · Dana Cole, Corp Dev, Anthropic</span><span class="chip clear" style="font-size:10px"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Screened before send</span></div>
+          <div class="msgbox">
+            <textarea id="msgInput" placeholder="Write a message to the buyer…"></textarea>
+            <div class="trybar">
+              <span class="tl">TRY</span>
+              <button class="trybtn" data-kind="clean">Clean message</button>
+              <button class="trybtn" data-kind="held">Borderline</button>
+              <button class="trybtn" data-kind="risky">Risky message</button>
+              <button class="send" id="sendMsg">Send →</button>
+            </div>
+            <div class="verdict-out" id="msgVerdict"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 PITCH -->
+      <section class="beat" data-beat="9">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 10 · The pitch</div>
+        <h2 class="title reveal">Compose the pitch — already cleared.</h2>
+        <p class="lede reveal">Research, the call, and the brief fold into a first draft aimed at Anthropic. Compliance screened it as it assembled. You review and send.</p>
+        <div class="factor reveal"><span class="fdot"></span> Maximise <b>value</b> and minimise <b>time</b> — the teaser writes itself from work already done.</div>
+        <div class="reveal">
+          <div class="assemble" id="assemble">
+            <div class="asmrow" data-d="200"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><div class="at">The brief</div><div class="as">Snapshot, valuation, ranked buyers</div></div><span class="ok">pulled in</span></div>
+            <div class="asmrow" data-d="700"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a14 14 0 006 6l2-3 5 2v4a2 2 0 01-2 2A18 18 0 013 6a2 2 0 012-2z"/></svg></div><div><div class="at">The call</div><div class="as">Promises and context captured</div></div><span class="ok">pulled in</span></div>
+            <div class="asmrow" data-d="1200"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><div><div class="at">Market research</div><div class="as">Comp read-throughs, recent take-privates</div></div><span class="ok">pulled in</span></div>
+            <div class="asmrow" data-d="1700"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><div><div class="at">Compliance screen</div><div class="as">FINRA · MNPI · KYC — cleared as drafted</div></div><span class="ok">cleared</span></div>
+          </div>
+          <div class="surface" style="display:flex;align-items:center;justify-content:space-between;gap:18px">
+            <div><div style="font-family:var(--serif);font-size:19px;font-weight:500">Teaser draft ready</div><div style="font-size:13px;color:var(--text-2);margin-top:3px">Atlassian → Anthropic · <span class="chip clear" style="font-size:10px;vertical-align:middle"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Compliance cleared</span></div></div>
+            <button class="btn gold" id="composePitch"><span>Compose the pitch</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 LIFECYCLE / REMOVAL -->
+      <section class="beat" data-beat="10">
+        <div class="eyebrow reveal"><span class="bar"></span> Beat 11 · Lifecycle</div>
+        <h2 class="title reveal">Someone leaves. Access closes itself.</h2>
+        <p class="lede reveal">An associate on this deal resigns from the firm. The instant their company association ends, compliance revokes their access across every deal they touched. The deals stay. The team stays. The person is gone, and no one had to remember to off-board them.</p>
+        <div class="factor reveal"><span class="fdot"></span> Minimise <b>risk</b> — entitlements follow employment, automatically.</div>
+        <div class="surface reveal">
+          <div class="leaver">
+            <div class="av">DK</div>
+            <div><div class="ln">Devin Kerr</div><div class="ls">Associate · resigned from the firm, 16:20</div></div>
+            <button class="btn gold" id="processLeave" style="margin-left:auto"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Process the departure</button>
+          </div>
+          <div class="revoke" id="revoke">
+            <div class="revrow" data-d="200"><span>PRJ-ATL-0426 · Atlassian</span><span class="rd">&nbsp;this deal</span><span class="rstamp">access revoked</span></div>
+            <div class="revrow" data-d="650"><span>PRJ-HLX-0231 · Helix</span><span class="rd">&nbsp;another mandate</span><span class="rstamp">access revoked</span></div>
+            <div class="revrow" data-d="1100"><span>PRJ-CBT-0402 · Cobalt</span><span class="rd">&nbsp;another mandate</span><span class="rstamp">access revoked</span></div>
+          </div>
+          <div class="locked-note" id="leaveDone"><span class="chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span> Removed from 3 deals · compliance and admin signed off · deals intact</div>
+        </div>
+      </section>
+
+      <!-- 12 WHAT'S NEXT -->
+      <section class="beat" data-beat="11">
+        <div class="eyebrow reveal"><span class="bar"></span> What's next</div>
+        <h2 class="title reveal">Build the floor once.<br>Every room above inherits it.</h2>
+        <p class="lede reveal">A skills marketplace, a fully automated bank — when those products arrive, they don't <em style="font-style:normal;color:var(--green)">re-litigate compliance</em>. Every room above inherits the same floor, by construction.</p>
+        <div class="factor reveal"><span class="fdot"></span> <b>The four factors</b> — value, certainty, risk, time — held by construction.</div>
+        <div class="stack reveal">
+          <div class="sroom"><div><div class="srhead"><span class="sn">Fully automated bank</span><span class="stag">Later</span></div><div class="sd">deals that run themselves, end to end</div></div><span class="inh">inherits ↓</span></div>
+          <div class="sroom"><div><div class="srhead"><span class="sn">Skills marketplace</span><span class="stag">Later</span></div><div class="sd">buy a new analytical unit, drop it on a deal</div></div><span class="inh">inherits ↓</span></div>
+          <div class="sroom today"><div><div class="srhead"><span class="sn">The full swing</span><span class="stag">Today</span></div><div class="sd">this deal flow — the call to the pitch, both sides</div></div><span class="inh">inherits ↓</span></div>
+          <div class="sfloor">
+            <div class="shieldsm"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <div><div class="flh"><span class="fln">Compliance · the floor</span><span class="fon"><span class="fp"></span>always on</span></div><div class="fld">FINRA · MNPI · KYC — screened silently, surfaced only when it must. Poured once. Never re-poured.</div></div>
+          </div>
+        </div>
+        <p class="bigline reveal">Compliance was never a feature. It's the foundation — and the deal just moved the whole way on top of it.</p>
+        <button class="btn ghost reveal" id="restart" style="margin-top:6px"><svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M4 12a8 8 0 018-8 8 8 0 017 4M20 4v4h-4"/><path d="M20 12a8 8 0 01-8 8 8 8 0 01-7-4M4 20v-4h4"/></svg> Replay the swing</button>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="foot" id="foot">
+  <div class="compliance-strip" id="cstrip"><span class="pulse"></span> <span id="cstext">Compliant</span> <span class="tags">· FINRA · MNPI · KYC</span></div>
+  <div class="spacer"></div>
+  <button class="btn ghost" id="back" disabled><svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back</button>
+  <button class="btn gold" id="next"><span id="nextLabel">Continue</span><svg viewBox="0 0 24 24" style="stroke:#fff;fill:none;stroke-width:2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+</div>
+
+<script>
+const STEPS=["A call comes in","Conflict check","Compliance notified","Build the team","NDAs swap","Secure data room","The other side","The MD's brief","The call","Compose the pitch","Someone leaves","What's next"];
+const GATED={0:"openMandate",1:"runScan",3:"lockTeam"};
+const COMPLIANCE_MOMENT={2:"Compliance notified — PRJ-ATL-0426 logged",5:"Staged access enforced in the data room",6:"Same interface · permissions computed per actor",8:"Every message screened before send",10:"Access revoked across every deal, automatically"};
+const DARK_BEAT=11, BUYER_BEAT=6;
+let cur=0, unlocked={};
+
+const stepsEl=document.getElementById('steps');
+STEPS.forEach((s,i)=>{const li=document.createElement('li');li.className='step';li.dataset.i=i;li.innerHTML=`<span class="dot">${i+1}</span><span class="name">${s}</span>`;li.onclick=()=>{if(i<=furthest())go(i);};stepsEl.appendChild(li);});
+
+const beats=[...document.querySelectorAll('.beat')];
+const stage=document.getElementById('stage'),foot=document.getElementById('foot');
+const backBtn=document.getElementById('back'),nextBtn=document.getElementById('next'),nextLabel=document.getElementById('nextLabel');
+const cstrip=document.getElementById('cstrip'),cstext=document.getElementById('cstext'),ofCount=document.getElementById('ofCount');
+const who=document.getElementById('who'),sideAv=document.getElementById('sideAv'),sideNm=document.getElementById('sideNm'),sideRl=document.getElementById('sideRl');
+
+function furthest(){let f=0;for(let i=0;i<beats.length;i++){if(i===0||!GATED[i-1]||unlocked[i-1])f=i;else break;}return f;}
+function gateOk(i){return !GATED[i]||unlocked[i];}
+
+function go(i){
+  cur=i;
+  beats.forEach((b,bi)=>b.classList.toggle('active',bi===i));
+  document.querySelectorAll('.step').forEach((s,si)=>{
+    s.classList.toggle('active',si===i);s.classList.toggle('done',si<i);
+    s.querySelector('.dot').innerHTML = si<i ? '<svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>' : (si+1);
+  });
+  const dark=(i===DARK_BEAT);
+  stage.classList.toggle('dark',dark);foot.classList.toggle('dark',dark);
+  // persona switch on the buyer beat
+  if(i===BUYER_BEAT){who.classList.add('buyer');sideAv.textContent='DC';sideNm.textContent='Dana Cole';sideRl.textContent='Corp Dev · Anthropic (buyer)';}
+  else{who.classList.remove('buyer');sideAv.textContent='SD';sideNm.textContent='Storm Duncan';sideRl.textContent='MD · your bank';}
+  ofCount.textContent=String(i+1).padStart(2,'0')+' / 12';
+  backBtn.disabled=i===0;
+  nextBtn.style.display=i===beats.length-1?'none':'inline-flex';
+  nextLabel.textContent=i===beats.length-2?'See where it goes':'Continue';
+  if(COMPLIANCE_MOMENT[i]){cstrip.classList.add('alert');cstext.textContent=COMPLIANCE_MOMENT[i];}
+  else{cstrip.classList.remove('alert');cstext.textContent='Compliant';}
+  refreshGate();
+  onEnter(i);
+  stage.scrollTo({top:0,behavior:'instant'});
+}
+function refreshGate(){const ok=gateOk(cur);nextBtn.disabled=!ok;nextBtn.style.opacity=ok?1:.4;}
+function onEnter(i){
+  if(i===9 && !beats[9].dataset.ran){beats[9].dataset.ran="1";runAssemble();}
+}
+
+nextBtn.onclick=()=>{if(cur<beats.length-1&&gateOk(cur))go(cur+1);};
+backBtn.onclick=()=>{if(cur>0)go(cur-1);};
+document.getElementById('restart').onclick=()=>{unlocked={};resetAll();go(0);};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'&&!nextBtn.disabled&&nextBtn.style.display!=='none')nextBtn.click();if(e.key==='ArrowLeft'&&!backBtn.disabled)backBtn.click();});
+
+/* Beat 1 */
+document.getElementById('openMandate').onclick=function(){
+  document.getElementById('ts1').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('codeReveal').classList.add('show');
+  this.disabled=true;this.querySelector('span').textContent='Mandate opened';unlocked[0]=true;refreshGate();
+};
+/* Beat 2 */
+document.getElementById('runScan').onclick=function(){
+  this.disabled=true;this.textContent='Checking…';
+  const items=[...document.querySelectorAll('#scanList .res')];
+  items.forEach((r,idx)=>setTimeout(()=>{r.textContent='clear';r.classList.add('ok');},350*(idx+1)));
+  setTimeout(()=>{document.getElementById('conflictResult').style.opacity=1;this.textContent='Re-run';unlocked[1]=true;refreshGate();},350*items.length+250);
+};
+/* Beat 4 team bench */
+const BENCH=[{id:"SR",n:"Sarah Reid",r:"Advisory · analysis & materials",b:"M&A Advisor"},{id:"DK",n:"Devin Kerr",r:"Associate · diligence support",b:"Associate"},{id:"PA",n:"Priya Anand",r:"Sector · enterprise SaaS",b:"Specialist"},{id:"TV",n:"Tom Vega",r:"Compliance liaison",b:"Compliance"}];
+let onTeam=[],teamLocked=false;
+const benchEl=document.getElementById('bench'),teamListEl=document.getElementById('teamList'),benchCountEl=document.getElementById('benchCount');
+function renderTeam(){
+  benchEl.innerHTML='';
+  const avail=BENCH.filter(m=>!onTeam.includes(m.id));
+  avail.forEach(m=>{const el=document.createElement('div');el.className='member';el.innerHTML=`<div class="av">${m.id}</div><div><div class="mn">${m.n}</div><div class="ms">${m.r}</div></div><span class="badge">${m.b}</span><button class="addbtn" data-add="${m.id}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add</button>`;benchEl.appendChild(el);});
+  benchCountEl.textContent=avail.length+' available';
+  teamListEl.querySelectorAll('.member[data-added]').forEach(n=>n.remove());
+  onTeam.forEach(id=>{const m=BENCH.find(x=>x.id===id);const el=document.createElement('div');el.className='member added';el.dataset.added=id;el.innerHTML=`<div class="av">${m.id}</div><div><div class="mn">${m.n}</div><div class="ms">${m.r}</div></div><span class="badge">${m.b}</span>${teamLocked?'':`<button class="rmbtn" data-rm="${id}">Remove</button>`}`;teamListEl.appendChild(el);});
+  document.getElementById('benchWrap').style.display=teamLocked?'none':'block';
+}
+benchEl.addEventListener('click',e=>{const a=e.target.closest('[data-add]');if(a&&!teamLocked){onTeam.push(a.dataset.add);renderTeam();}});
+teamListEl.addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r&&!teamLocked){onTeam=onTeam.filter(x=>x!==r.dataset.rm);renderTeam();}});
+renderTeam();
+document.getElementById('lockTeam').onclick=function(){teamLocked=true;renderTeam();document.getElementById('lockedNote').classList.add('show');this.disabled=true;this.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Locked';unlocked[3]=true;refreshGate();};
+/* Beat 6 data room */
+const DOCS={1:[{n:"Teaser (anonymised)",m:"PDF · 2 pp",a:"Buyers <b>view</b> · banker <b>edit</b>"},{n:"Process letter",m:"PDF · 1 p",a:"Buyers <b>view</b> · banker <b>edit</b>"}],2:[{n:"Management presentation",m:"PPTX · 38 pp",a:"CEO <b>edit</b> · buyers <b>view</b>"},{n:"Financial model",m:"XLSX",a:"Banker <b>edit</b> · buyers <b>view</b>"},{n:"Valuation",m:"XLSX",a:"Banker <b>only</b> — buyers <b>no access</b>"}],3:[{n:"Confirmatory diligence pack",m:"ZIP",a:"Cleared buyer <b>view</b> · legal <b>edit</b>"},{n:"Draft SPA",m:"DOCX",a:"Legal <b>edit</b> · MD <b>view</b>"}]};
+const docGrid=document.getElementById('docGrid');
+function renderDocs(s){docGrid.innerHTML='';DOCS[s].forEach(d=>{const el=document.createElement('div');el.className='doc';el.innerHTML=`<div><div class="dn">${d.n}</div><div class="dmeta">${d.m}</div></div><span class="chip clear"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Sealed</span><div class="access">${d.a}</div>`;docGrid.appendChild(el);});}
+renderDocs(1);
+document.querySelectorAll('.stagetab').forEach(t=>{t.onclick=function(){document.querySelectorAll('.stagetab').forEach(x=>x.classList.remove('on'));this.classList.add('on');const s=+this.dataset.stage;renderDocs(s);document.getElementById('gateMsg').classList.toggle('show',s>1);};});
+/* Beat 9 message check */
+const MSG={
+  clean:{t:"Following up on our conversation — happy to share the data pack once the NDA is countersigned. Let me know a good time for the management call.",cls:"vo-clear",icon:'<path d="M5 12l4 4 10-10"/>',h:"Clear to send.",b:"Clean language. No MNPI, no implied terms. Logged and sent.",rw:null},
+  held:{t:"We think this one clears north of the last comparable — should be an easy decision for your team.",cls:"vo-held",icon:'<path d="M12 9v4M12 17h.01M10.3 4l-8 14a2 2 0 001.7 3h16a2 2 0 001.7-3l-8-14a2 2 0 00-3.4 0z"/>',h:"Held for review.",b:"Forward-looking value language can read as a price signal. Routed to compliance, a small rewrite usually clears it.",rw:"Suggested: \"Valuation work is underway; we'll share the comp set after NDA.\""},
+  risky:{t:"Between us — the founder already told me privately he'll take anything over $25B, so come in strong.",cls:"vo-block",icon:'<path d="M12 9v4M12 17h.01M10.3 4l-8 14a2 2 0 001.7 3h16a2 2 0 001.7-3l-8-14a2 2 0 00-3.4 0z"/>',h:"Stopped before send.",b:"Shares material non-public information and an off-record price. Blocked, logged, and never left the building.",rw:"Suggested: \"We'll run a structured process; guidance follows the data room.\""}
+};
+const msgInput=document.getElementById('msgInput'),msgVerdict=document.getElementById('msgVerdict');
+document.querySelectorAll('.trybtn').forEach(b=>{b.onclick=()=>{msgInput.value=MSG[b.dataset.kind].t;showVerdict(b.dataset.kind);};});
+document.getElementById('sendMsg').onclick=()=>{const v=msgInput.value.toLowerCase();let k='clean';if(/privately|between us|\$25b|told me|off the record/.test(v))k='risky';else if(/north of|easy decision|come in strong|clears/.test(v))k='held';showVerdict(k);};
+function showVerdict(k){const m=MSG[k];msgVerdict.className='verdict-out show '+m.cls;msgVerdict.innerHTML=`<svg viewBox="0 0 24 24">${m.icon}</svg><div><b>${m.h}</b> ${m.b}${m.rw?`<div class="rewrite">${m.rw}</div>`:''}</div>`;}
+/* Beat 10 assemble */
+let asmTimers=[];
+function runAssemble(){document.querySelectorAll('#assemble .asmrow').forEach(r=>{asmTimers.push(setTimeout(()=>r.classList.add('in'),+r.dataset.d));});}
+document.getElementById('composePitch').onclick=function(){this.innerHTML='<svg viewBox="0 0 24 24" style="stroke:#fff;fill:none;stroke-width:2.2"><path d="M5 12l4 4 10-10"/></svg><span>Sent to Anthropic</span>';this.disabled=true;};
+/* Beat 11 removal */
+let revTimers=[];
+document.getElementById('processLeave').onclick=function(){
+  this.disabled=true;this.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Processed';
+  document.querySelectorAll('#revoke .revrow').forEach(r=>{revTimers.push(setTimeout(()=>r.classList.add('done'),+r.dataset.d));});
+  revTimers.push(setTimeout(()=>document.getElementById('leaveDone').classList.add('show'),1500));
+};
+
+function resetAll(){
+  document.getElementById('codeReveal').classList.remove('show');
+  const om=document.getElementById('openMandate');om.disabled=false;om.querySelector('span').textContent='Open the mandate';
+  document.getElementById('conflictResult').style.opacity=0;
+  document.querySelectorAll('#scanList .res').forEach(r=>{r.textContent='checking…';r.classList.remove('ok');});
+  const rs=document.getElementById('runScan');rs.disabled=false;rs.textContent='Run conflict check';
+  onTeam=[];teamLocked=false;renderTeam();document.getElementById('lockedNote').classList.remove('show');
+  const lt=document.getElementById('lockTeam');lt.disabled=false;lt.innerHTML='<svg viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0112 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg> Lock the deal team';
+  document.querySelectorAll('.stagetab').forEach((x,i)=>x.classList.toggle('on',i===0));renderDocs(1);document.getElementById('gateMsg').classList.remove('show');
+  msgVerdict.className='verdict-out';msgInput.value='';
+  asmTimers.forEach(clearTimeout);asmTimers=[];document.querySelectorAll('#assemble .asmrow').forEach(r=>r.classList.remove('in'));beats[9].dataset.ran='';
+  const cp=document.getElementById('composePitch');cp.disabled=false;cp.innerHTML='<span>Compose the pitch</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  revTimers.forEach(clearTimeout);revTimers=[];document.querySelectorAll('#revoke .revrow').forEach(r=>r.classList.remove('done'));document.getElementById('leaveDone').classList.remove('show');
+  const pl=document.getElementById('processLeave');pl.disabled=false;pl.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> Process the departure';
+}
+go(0);
+</script>
+</body>
+</html>

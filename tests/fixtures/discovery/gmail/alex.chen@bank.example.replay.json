@@ -1,0 +1,939 @@
+{
+  "format": "conductia.gmail-replay/v1",
+  "mailbox": "alex.chen@bank.example",
+  "synthetic": false,
+  "transformed": "Request keys rewritten to the reader's queries (fields masks and metadata header list) and snippet, sizeEstimate, payload.mimeType and other fields outside those masks removed from listing, history and metadata answers (#263), and metadata headers the reader no longer asks for removed (#337). Not the bytes Google sent; replace with a fresh live recording (thread T2).",
+  "phases": {
+    "after-imports": {
+      "GET /gmail/v1/users/alex.chen@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "alex.chen@bank.example",
+            "messagesTotal": 3,
+            "threadsTotal": 3,
+            "historyId": "2055"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19ca00afb70bc414",
+                "historyId": "2021"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "historyId": "1764"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "historyId": "1729"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19ca00afb70bc414?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "historyId": "2021",
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<expenses-003@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Finance <finance@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "2021",
+                "internalDate": "1772211600000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c7597aaecf364b?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "historyId": "1764",
+            "messages": [
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1764",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c2d079f00daa21?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "historyId": "1729",
+            "messages": [
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<offsite-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Office Manager <office@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1729",
+                "internalDate": "1770282000000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21"
+              }
+            ],
+            "resultSizeEstimate": 3
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<expenses-003@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Finance <finance@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "February expense reports are due on Friday.",
+            "sizeEstimate": 915,
+            "raw": "TWVzc2FnZS1JRDogPGV4cGVuc2VzLTAwM0BiYW5rLmV4YW1wbGU-DQpEYXRlOiBGcmksIDI3IEZlYiAyMDI2IDE3OjAwOjAwICswMDAwDQpGcm9tOiAiRmluYW5jZSIgPGZpbmFuY2VAYmFuay5leGFtcGxlPg0KVG86ICJBbGV4IENoZW4iIDxhbGV4LmNoZW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogRXhwZW5zZSByZXBvcnQgcmVtaW5kZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KRmVicnVhcnkgZXhwZW5zZSByZXBvcnRzIGFyZSBkdWUgb24gRnJpZGF5Lg0K",
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 873,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<offsite-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Office Manager <office@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "The offsite agenda is attached. Coaches leave at 8:00.",
+            "sizeEstimate": 927,
+            "raw": "TWVzc2FnZS1JRDogPG9mZnNpdGUtMDAxQGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMDUgRmViIDIwMjYgMDk6MDA6MDAgKzAwMDANCkZyb206ICJPZmZpY2UgTWFuYWdlciIgPG9mZmljZUBiYW5rLmV4YW1wbGU-DQpUbzogIkFsZXggQ2hlbiIgPGFsZXguY2hlbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBUZWFtIG9mZnNpdGUgYWdlbmRhDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClRoZSBvZmZzaXRlIGFnZW5kYSBpcyBhdHRhY2hlZC4gQ29hY2hlcyBsZWF2ZSBhdCA4OjAwLg0K",
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=2055": [
+        {
+          "status": 200,
+          "body": {
+            "historyId": "2055"
+          }
+        }
+      ]
+    },
+    "after-unspam": {
+      "GET /gmail/v1/users/alex.chen@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "alex.chen@bank.example",
+            "messagesTotal": 3,
+            "threadsTotal": 3,
+            "historyId": "2055"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19ca00afb70bc414",
+                "historyId": "2021"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "historyId": "1764"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "historyId": "1729"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19ca00afb70bc414?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "historyId": "2021",
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<expenses-003@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Finance <finance@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "2021",
+                "internalDate": "1772211600000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c7597aaecf364b?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "historyId": "1764",
+            "messages": [
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1764",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c2d079f00daa21?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "historyId": "1729",
+            "messages": [
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<offsite-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Office Manager <office@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1729",
+                "internalDate": "1770282000000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21"
+              }
+            ],
+            "resultSizeEstimate": 3
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<expenses-003@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Finance <finance@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "February expense reports are due on Friday.",
+            "sizeEstimate": 915,
+            "raw": "TWVzc2FnZS1JRDogPGV4cGVuc2VzLTAwM0BiYW5rLmV4YW1wbGU-DQpEYXRlOiBGcmksIDI3IEZlYiAyMDI2IDE3OjAwOjAwICswMDAwDQpGcm9tOiAiRmluYW5jZSIgPGZpbmFuY2VAYmFuay5leGFtcGxlPg0KVG86ICJBbGV4IENoZW4iIDxhbGV4LmNoZW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogRXhwZW5zZSByZXBvcnQgcmVtaW5kZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KRmVicnVhcnkgZXhwZW5zZSByZXBvcnRzIGFyZSBkdWUgb24gRnJpZGF5Lg0K",
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 873,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<offsite-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Office Manager <office@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "The offsite agenda is attached. Coaches leave at 8:00.",
+            "sizeEstimate": 927,
+            "raw": "TWVzc2FnZS1JRDogPG9mZnNpdGUtMDAxQGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMDUgRmViIDIwMjYgMDk6MDA6MDAgKzAwMDANCkZyb206ICJPZmZpY2UgTWFuYWdlciIgPG9mZmljZUBiYW5rLmV4YW1wbGU-DQpUbzogIkFsZXggQ2hlbiIgPGFsZXguY2hlbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBUZWFtIG9mZnNpdGUgYWdlbmRhDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClRoZSBvZmZzaXRlIGFnZW5kYSBpcyBhdHRhY2hlZC4gQ29hY2hlcyBsZWF2ZSBhdCA4OjAwLg0K",
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/history?fields=history(id,messagesAdded/message(id,threadId,labelIds),labelsRemoved(message(id,threadId,labelIds),labelIds)),historyId,nextPageToken&historyTypes=messageAdded&historyTypes=labelRemoved&maxResults=100&startHistoryId=2055": [
+        {
+          "status": 200,
+          "body": {
+            "historyId": "2055"
+          }
+        }
+      ]
+    },
+    "seeded": {
+      "GET /gmail/v1/users/alex.chen@bank.example/profile": [
+        {
+          "status": 200,
+          "body": {
+            "emailAddress": "alex.chen@bank.example",
+            "messagesTotal": 3,
+            "threadsTotal": 3,
+            "historyId": "2055"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads?fields=threads(id,historyId),nextPageToken&includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "threads": [
+              {
+                "id": "19ca00afb70bc414",
+                "historyId": "2021"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "historyId": "1764"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "historyId": "1729"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19ca00afb70bc414?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "historyId": "2021",
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<expenses-003@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Finance <finance@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "2021",
+                "internalDate": "1772211600000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c7597aaecf364b?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "historyId": "1764",
+            "messages": [
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<lunch-006@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Morgan Vale <morgan.vale@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1764",
+                "internalDate": "1771499400000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/threads/19c2d079f00daa21?fields=id,historyId,messages(id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues)&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "historyId": "1729",
+            "messages": [
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21",
+                "labelIds": [
+                  "INBOX"
+                ],
+                "payload": {
+                  "headers": [
+                    {
+                      "name": "Message-ID",
+                      "value": "<offsite-001@bank.example>"
+                    },
+                    {
+                      "name": "From",
+                      "value": "Office Manager <office@bank.example>"
+                    },
+                    {
+                      "name": "To",
+                      "value": "Alex Chen <alex.chen@bank.example>"
+                    }
+                  ]
+                },
+                "historyId": "1729",
+                "internalDate": "1770282000000"
+              }
+            ]
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages?includeSpamTrash=false&maxResults=100": [
+        {
+          "status": 200,
+          "body": {
+            "messages": [
+              {
+                "id": "19ca00afb70bc414",
+                "threadId": "19ca00afb70bc414"
+              },
+              {
+                "id": "19c7597aaecf364b",
+                "threadId": "19c7597aaecf364b"
+              },
+              {
+                "id": "19c2d079f00daa21",
+                "threadId": "19c2d079f00daa21"
+              }
+            ],
+            "resultSizeEstimate": 3
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<expenses-003@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Finance <finance@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19ca00afb70bc414?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19ca00afb70bc414",
+            "threadId": "19ca00afb70bc414",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "February expense reports are due on Friday.",
+            "sizeEstimate": 915,
+            "raw": "TWVzc2FnZS1JRDogPGV4cGVuc2VzLTAwM0BiYW5rLmV4YW1wbGU-DQpEYXRlOiBGcmksIDI3IEZlYiAyMDI2IDE3OjAwOjAwICswMDAwDQpGcm9tOiAiRmluYW5jZSIgPGZpbmFuY2VAYmFuay5leGFtcGxlPg0KVG86ICJBbGV4IENoZW4iIDxhbGV4LmNoZW5AYmFuay5leGFtcGxlPg0KU3ViamVjdDogRXhwZW5zZSByZXBvcnQgcmVtaW5kZXINCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KRmVicnVhcnkgZXhwZW5zZSByZXBvcnRzIGFyZSBkdWUgb24gRnJpZGF5Lg0K",
+            "historyId": "2021",
+            "internalDate": "1772211600000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<lunch-006@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Morgan Vale <morgan.vale@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c7597aaecf364b?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c7597aaecf364b",
+            "threadId": "19c7597aaecf364b",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "Lunch at noon?",
+            "sizeEstimate": 873,
+            "raw": "TWVzc2FnZS1JRDogPGx1bmNoLTAwNkBiYW5rLmV4YW1wbGU-DQpEYXRlOiBUaHUsIDE5IEZlYiAyMDI2IDExOjEwOjAwICswMDAwDQpGcm9tOiAiQWxleCBDaGVuIiA8YWxleC5jaGVuQGJhbmsuZXhhbXBsZT4NClRvOiAiTW9yZ2FuIFZhbGUiIDxtb3JnYW4udmFsZUBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBMdW5jaD8NCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KTHVuY2ggYXQgbm9vbj8NCg",
+            "historyId": "1764",
+            "internalDate": "1771499400000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?fields=id,threadId,labelIds,internalDate,historyId,payload/headers,classificationLabelValues&format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Bcc&metadataHeaders=Reply-To&metadataHeaders=Sender&metadataHeaders=Message-ID&metadataHeaders=Sensitivity&metadataHeaders=msip_labels": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "payload": {
+              "headers": [
+                {
+                  "name": "Message-ID",
+                  "value": "<offsite-001@bank.example>"
+                },
+                {
+                  "name": "From",
+                  "value": "Office Manager <office@bank.example>"
+                },
+                {
+                  "name": "To",
+                  "value": "Alex Chen <alex.chen@bank.example>"
+                }
+              ]
+            },
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ],
+      "GET /gmail/v1/users/alex.chen@bank.example/messages/19c2d079f00daa21?format=raw": [
+        {
+          "status": 200,
+          "body": {
+            "id": "19c2d079f00daa21",
+            "threadId": "19c2d079f00daa21",
+            "labelIds": [
+              "INBOX"
+            ],
+            "snippet": "The offsite agenda is attached. Coaches leave at 8:00.",
+            "sizeEstimate": 927,
+            "raw": "TWVzc2FnZS1JRDogPG9mZnNpdGUtMDAxQGJhbmsuZXhhbXBsZT4NCkRhdGU6IFRodSwgMDUgRmViIDIwMjYgMDk6MDA6MDAgKzAwMDANCkZyb206ICJPZmZpY2UgTWFuYWdlciIgPG9mZmljZUBiYW5rLmV4YW1wbGU-DQpUbzogIkFsZXggQ2hlbiIgPGFsZXguY2hlbkBiYW5rLmV4YW1wbGU-DQpTdWJqZWN0OiBUZWFtIG9mZnNpdGUgYWdlbmRhDQpNSU1FLVZlcnNpb246IDEuMA0KQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04DQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlDQoNClRoZSBvZmZzaXRlIGFnZW5kYSBpcyBhdHRhY2hlZC4gQ29hY2hlcyBsZWF2ZSBhdCA4OjAwLg0K",
+            "historyId": "1729",
+            "internalDate": "1770282000000"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "file": "src/lib/graph/reader/extractText.ts",
+    "reason": "The sandboxed document extractor (#243): createRequire(<cwd>/package.json).resolve('unpdf') only resolves unpdf's path, so the child's --allow-fs-read can name that one directory; it loads nothing. Inside the reader directory, behind the reader capability."
+  },
+  {
+    "file": "src/lib/graph/reader/extract/child.mjs",
+    "reason": "The sandboxed extractor's child process (#243): it imports unpdf from the entry path its parent resolved, because under --permission it may read only its own script and that directory, so a bare specifier cannot resolve. It runs with an empty environment and parses one document."
+  }
+]
